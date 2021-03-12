@@ -39,8 +39,6 @@ public class StartFragment extends Fragment {
 
     //OkHttp
     private OkHttpClient client = new OkHttpClient();
-    String resp = "";
-
 
     //кнопки
     Button btnSignIn;
