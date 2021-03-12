@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/frgmChat"
+    android:background="@drawable/fon_menu">
+
+    <Button
+        android:id="@+id/btnExitChat"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
+    <TextView
+        android:id="@+id/day_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lobby"
+        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        android:layout_above="@id/timer"
+        android:layout_marginLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/ListUsers"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="30dp"
+        android:text="--"
+        android:textColor="@color/colorWhite"
+        android:textSize="40sp" />
+
+    <ListView
+        android:id="@+id/ListUsers"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_toRightOf="@id/btnExitChat"
+        android:divider="@drawable/ic_snow"
+        android:dividerHeight="2dp"
+        android:layout_margin="15dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnSendMes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:src="@drawable/ic_send"
+        app:backgroundTint="#2888C8"
+        app:fabSize="mini" />
+
+    <EditText
+        android:id="@+id/InputMes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/btnSendMes"
+        android:hint="Введите сообщение"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:layout_alignParentLeft="true" />
+
+
+    <ListView
+        android:id="@+id/ListMes"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/answerCard"
+        android:layout_below="@+id/ListUsers"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:divider="@color/colorWhite"
+        android:dividerHeight="2dp"
+        android:layout_margin="15dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:layout_above="@id/InputMes"
+        android:id="@+id/answerCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginRight="5sp"
+        android:layout_marginBottom="5sp"
+
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/answerNickChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="Vova_Vor" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/answerTextChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/answerNickChat"
+                android:textColor="@color/colorWhite"
+                android:text="Кто ты?" />
+            <Button
+                android:id="@+id/btnDeleteAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="закрыть"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/colorWhite"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/fon_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/FragmentStart"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/mainText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/mafiago"
+        android:textColor="@color/colorWhite" />
+
+    <TextView
+        android:id="@+id/textbotton"
+        android:textSize="15sp"
+        android:textColor="@color/text_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-20dp"
+        android:layout_marginBottom="20dp"
+        android:text="Приветстсвуем вас в MafiaGo!"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/ETemail"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:hint="Введите Ник"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/ETpassword"
+        android:layout_width="160dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:hint="Введите пароль"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"
+        android:layout_gravity="center"/>
+
+
+    <Button
+        android:id="@+id/btnSignIn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:text="Войти"
+        android:textColor="@color/colorWhite"
+        android:layout_marginTop="25dp"
+        android:layout_gravity="center"/>
+
+
+
+    <Button
+        android:id="@+id/btnReg"
+        android:layout_width="190dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/round_button"
+        android:text="Зарегистрироваться"
+        android:textColor="@color/colorWhite"
+        android:layout_gravity="center"/>
+
+</LinearLayout>

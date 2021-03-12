@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icFire"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_snow"/>
+    <TextView
+        android:id="@+id/NameRoom"
+        android:layout_toRightOf="@+id/icFire"
+        android:text="Синий чаёк"
+        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textStyle="bold"
+        android:layout_toEndOf="@+id/icFire" />
+
+    <TextView
+        android:id="@+id/MaxMinPeople"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:text="18/21" />
+    <TextView
+        android:id="@+id/NumPeople"
+        android:gravity="right"
+        android:text="1 игрок"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="5dp"
+        android:layout_below="@+id/NameRoom"
+        android:textSize="16sp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+</RelativeLayout>

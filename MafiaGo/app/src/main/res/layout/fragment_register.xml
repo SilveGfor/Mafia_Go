@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/fon_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/FragmentRegistration"
+    android:orientation="vertical">
+
+    <Button
+        android:id="@+id/btnExitRegister"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
+    <EditText
+        android:id="@+id/ETemailReg"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:hint="Введите Почту"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"/>
+
+
+
+    <EditText
+        android:id="@+id/ETnickReg"
+        android:layout_width="160dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:hint="Введите Ник"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"/>
+
+
+
+    <EditText
+        android:id="@+id/ETpasswordReg1"
+        android:layout_width="160dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="Введите пароль"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"/>
+
+    <EditText
+        android:id="@+id/ETpasswordReg2"
+        android:layout_width="160dp"
+        android:layout_height="35dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:hint="Повторите пароль"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"/>
+
+    <Button
+        android:id="@+id/btnReg"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/round_button"
+        android:text="Зарегистрироваться"
+        android:textColor="@color/colorWhite"
+        android:textSize="20dp" />
+
+    <TextView
+        android:id="@+id/TVcode"
+        android:layout_marginTop="20sp"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textColor="@color/colorWhite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Введите код, отправленный на вашу почту" />
+
+    <EditText
+        android:id="@+id/ETcodeReg"
+        android:layout_width="160dp"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:hint="Введите Код"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"/>
+
+
+    <Button
+        android:id="@+id/btnSendCode"
+        android:layout_width="210dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/round_button"
+        android:text="Отправить код"
+        android:textColor="@color/colorWhite"
+        android:textSize="18dp" />
+
+    <Button
+        android:id="@+id/btnTryReg"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Повторить"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
+
+
+
+
+    <ImageView
+        android:layout_marginTop="20sp"
+        android:layout_gravity="center"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:background="@drawable/mafiago"
+        />
+
+</LinearLayout>

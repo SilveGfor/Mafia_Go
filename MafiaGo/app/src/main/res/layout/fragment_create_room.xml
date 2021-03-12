@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/fon_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/FragmentCreate">
+
+
+    <EditText
+        android:id="@+id/ETRoomName"
+        android:layout_marginTop="50dp"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:hint="Введите название комнаты"
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/ETMinPeople"
+        android:layout_below="@id/ETRoomName"
+        android:layout_marginTop="30dp"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:hint="Введите мин. кол. чел."
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"
+        android:layout_centerHorizontal="true"/>
+
+    <EditText
+        android:id="@+id/ETMaxPeople"
+        android:layout_below="@id/ETMinPeople"
+        android:layout_marginTop="30dp"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:gravity="center"
+        android:hint="Введите мин. кол. чел."
+        android:textColorHint="@color/colorWhite"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_edit_text"
+        android:layout_centerHorizontal="true"/>
+
+
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/round_button"
+        android:text="Создать"
+        android:textColor="@color/colorWhite"
+        android:layout_marginTop="25dp"
+        android:layout_gravity="center"
+        android:layout_centerInParent="true"/>
+
+
+</RelativeLayout>
