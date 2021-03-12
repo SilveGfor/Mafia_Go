@@ -43,8 +43,6 @@ public class MenuFragment extends Fragment {
 
 
         bubbleButton.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View view) {
                 pressedTimes += 1;
