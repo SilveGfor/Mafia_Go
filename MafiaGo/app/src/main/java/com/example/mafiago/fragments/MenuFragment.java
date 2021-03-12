@@ -30,6 +30,7 @@ public class MenuFragment extends Fragment {
         // Inflate the layout for this fragment
         View view;
         view = inflater.inflate(R.layout.fragment_menu, container, false);
+
         btnRules = view.findViewById(R.id.btnRules);
         btnGames = view.findViewById(R.id.btnGame);
         btnProfile = view.findViewById(R.id.btnProfile);
