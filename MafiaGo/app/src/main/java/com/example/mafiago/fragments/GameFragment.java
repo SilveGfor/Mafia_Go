@@ -78,7 +78,6 @@ public class GameFragment extends Fragment {
         }
     }
 
-
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -106,7 +105,7 @@ public class GameFragment extends Fragment {
         list_users2.add(new UserModel("Sil1"));
         list_users2.add(new UserModel("Sil2"));
         list_users2.add(new UserModel("Sil3"));
-        gridView_users.setAdapter(new PlayersAdapter(list_users2, Objects.requireNonNull(getContext())));
+        gridView_users.setAdapter(new PlayersAdapter(list_users2, getActivity()));
 
 
         socket.connect();
@@ -304,6 +303,7 @@ public class GameFragment extends Fragment {
                         }
                         time = data.getString("time");
                         Log.d("kkk", num + "  onLeaveUser2  " + data.getInt("num"));
+
                         MessageModel model = new MessageModel("", time.substring(11,16), nick, "DisconnectMes");
                         list_chat.add(model);
                         MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
@@ -429,6 +429,7 @@ public class GameFragment extends Fragment {
             });
         }
     };
+
     private Emitter.Listener onGetInRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {

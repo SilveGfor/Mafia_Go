@@ -14,7 +14,8 @@ import com.example.mafiago.models.UserModel;
 
 import java.util.ArrayList;
 
-public class PlayersAdapter extends BaseAdapter {
+public class PlayersAdapter extends BaseAdapter
+{
 
     public ArrayList<UserModel> list_users;
     public Context context;
@@ -57,17 +58,15 @@ public class PlayersAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return list_users.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return list_users.get(position);
     }
 
 
     @Override
-    public long getItemId(int position) {
-        return 0;
-    }
+    public long getItemId(int position) { return position; }
 }

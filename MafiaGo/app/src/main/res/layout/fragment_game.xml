@@ -52,7 +52,7 @@
         android:layout_marginRight="5dp"
         android:layout_marginBottom="5dp"
         android:layout_toRightOf="@id/ListMes"
-        android:numColumns="1"
+        android:numColumns="2"
         android:verticalSpacing="2dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
