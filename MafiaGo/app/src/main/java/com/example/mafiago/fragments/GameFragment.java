@@ -105,8 +105,10 @@ public class GameFragment extends Fragment {
         list_users2.add(new UserModel("Sil1"));
         list_users2.add(new UserModel("Sil2"));
         list_users2.add(new UserModel("Sil3"));
+        list_users2.add(new UserModel("Sil4"));
+        list_users2.add(new UserModel("Sil5"));
+        list_users2.add(new UserModel("Sil6"));
         gridView_users.setAdapter(new PlayersAdapter(list_users2, getActivity()));
-
 
         socket.connect();
 
@@ -199,7 +201,7 @@ public class GameFragment extends Fragment {
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                editText.setText(list_users.get(position).nick + " ");
+
             }
         });
 

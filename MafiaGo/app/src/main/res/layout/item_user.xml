@@ -1,26 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
-        android:id="@+id/nick"
-        android:text="SilveGfor"
-        android:layout_margin="10dp"
-        android:textSize="20sp"
-        android:textColor="#0EE3EA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:textStyle="normal"/>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="5dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/icon_cher"
-        android:layout_centerHorizontal="true"
-        android:layout_toLeftOf="@id/nick"
-        android:layout_centerVertical="true"/>
+            <ImageView
+                android:layout_marginTop="15dp"
+                android:id="@+id/IVrole"
+                android:src="@drawable/citizen"
+                android:layout_width="70dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true"
+                android:scaleType="centerCrop"/>
 
-</RelativeLayout>
+            <TextView
+                android:id="@+id/nick"
+                android:layout_below="@id/IVrole"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="SilveGfor"
+                android:textColor="#0EE3EA"
+                android:textSize="13sp"
+                android:textStyle="normal" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

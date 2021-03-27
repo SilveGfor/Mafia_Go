@@ -31,7 +31,7 @@ public class PlayersAdapter extends BaseAdapter
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        /*
+
         View view = convertView;
 
         view = layout.inflate(R.layout.item_user, null);
@@ -42,7 +42,8 @@ public class PlayersAdapter extends BaseAdapter
         txt_nick.setText(list_users.get(position).nick);
         return view;
 
-         */
+
+        /*
         Button button;
 
         if (convertView == null) {
@@ -54,6 +55,8 @@ public class PlayersAdapter extends BaseAdapter
         button.setId(position);
 
         return button;
+
+         */
     }
 
     @Override
