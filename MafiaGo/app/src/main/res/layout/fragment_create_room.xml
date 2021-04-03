@@ -1,62 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/fon_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/FragmentCreate">
 
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="30dp"
+        app:cardCornerRadius="30dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/ETRoomName"
-        android:layout_marginTop="50dp"
-        android:layout_width="250dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:hint="Введите название комнаты"
-        android:textColorHint="@color/colorWhite"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_edit_text"
-        android:layout_centerHorizontal="true"/>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/citizen"
+                android:alpha="0.25"/>
 
-    <EditText
-        android:id="@+id/ETMinPeople"
-        android:layout_below="@id/ETRoomName"
-        android:layout_marginTop="30dp"
-        android:layout_width="250dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:hint="Введите мин. кол. чел."
-        android:textColorHint="@color/colorWhite"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_edit_text"
-        android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/fragmentCreateRoom_TV_name_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Создание комнаты"
+                android:textSize="20dp" />
 
-    <EditText
-        android:id="@+id/ETMaxPeople"
-        android:layout_below="@id/ETMinPeople"
-        android:layout_marginTop="30dp"
-        android:layout_width="250dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:hint="Введите мин. кол. чел."
-        android:textColorHint="@color/colorWhite"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_edit_text"
-        android:layout_centerHorizontal="true"/>
+            <TextView
+                android:id="@+id/fragmentCreateRoom_TV_num_users"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/fragmentCreateRoom_TV_name_view"
+                android:text="Колличество пользователей"
+                android:textSize="15dp" />
+
+            <EditText
+                android:id="@+id/ETRoomName"
+                android:layout_marginTop="15dp"
+                android:layout_width="250dp"
+                android:layout_height="35dp"
+                android:layout_below="@id/FragmentCreateRoom_seekBar_players"
+                android:hint="Введите название комнаты"
+                android:textColorHint="@color/colorWhite"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/round_edit_text"
+                android:layout_centerHorizontal="true"/>
+
+            <SeekBar
+                android:id="@+id/FragmentCreateRoom_seekBar_players"
+                android:layout_marginTop="15dp"
+                android:layout_below="@id/fragmentCreateRoom_TV_num_users"
+                android:layout_centerHorizontal="true"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:max="255"/>
+
+            <EditText
+                android:id="@+id/ETMinPeople"
+                android:layout_below="@id/ETRoomName"
+                android:layout_marginTop="30dp"
+                android:layout_width="250dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:hint="Введите мин. кол. чел."
+                android:textColorHint="@color/colorWhite"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/round_edit_text"
+                android:layout_centerHorizontal="true"/>
+
+            <EditText
+                android:id="@+id/ETMaxPeople"
+                android:layout_below="@id/ETMinPeople"
+                android:layout_marginTop="30dp"
+                android:layout_width="250dp"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:hint="Введите мин. кол. чел."
+                android:textColorHint="@color/colorWhite"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/round_edit_text"
+                android:layout_centerHorizontal="true"/>
 
 
-    <Button
-        android:id="@+id/btnCreate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
-        android:text="Создать"
-        android:textColor="@color/colorWhite"
-        android:layout_marginTop="25dp"
-        android:layout_gravity="center"
-        android:layout_centerInParent="true"/>
+            <Button
+                android:id="@+id/btnCreate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="15dp"
+                android:background="@drawable/round_button"
+                android:text="Создать"
+                android:textColor="@color/colorWhite"
+                android:layout_marginTop="25dp" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
 
 
-</RelativeLayout>
+</LinearLayout>

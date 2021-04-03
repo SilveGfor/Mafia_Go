@@ -211,7 +211,7 @@ public class GameFragment extends Fragment {
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.d("kkk", list_users2.get(position).nick);
             }
         });
 
@@ -329,7 +329,6 @@ public class GameFragment extends Fragment {
                             {
                                 Log.d("kkk", "remove" + list_users.get(i).nick);
                                 list_users.remove(i);
-
                             }
                         }
                         for (int i=list_users.size()-1; i>=0; i--)

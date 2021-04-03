@@ -12,10 +12,13 @@ import com.example.mafiago.fragments.StartFragment;
 
 public class MainActivity extends AppCompatActivity {
 
+    //Всё ли хорошо в коде
+    //какие элементы UI можно добавить
+
     public static String NickName = "";
     public static String Session_id = "";
     public static int Game_id;
-    public static String url = "15cc90d406f310.localhost.run";
+    public static String url = "ae60e8f8ba9d66.localhost.run";
 
     public static String password = "";
     public static String nick = "";
