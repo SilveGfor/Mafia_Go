@@ -112,20 +112,8 @@ public class GameFragment extends Fragment {
         list_users2.add(new UserModel("Sil8", R.drawable.citizen));
         list_users2.add(new UserModel("Sil9", R.drawable.citizen));
         list_users2.add(new UserModel("Sil10", R.drawable.citizen));
-       // Log.d("kkk", list_users2.get(position).nick);
-       // Log.d("kkk", "Gagaga");
         gridView_users.setAdapter(new PlayersAdapter(list_users2, getActivity()));
 
-        /*
-        gridView_users.setOnItemClickListener((parent, view1, position, id) ->
-        {
-              Log.d("kkk", list_users2.get(position).nick);
-            Log.d("kkk", "Gagaga");
-        });
-        
-         */
-
-        /*
         socket.connect();
 
         SocketTask socketTask = new SocketTask();
@@ -142,8 +130,6 @@ public class GameFragment extends Fragment {
         }
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
-         */
-
 
 
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -265,6 +251,7 @@ public class GameFragment extends Fragment {
             socket.on("timer", onTimer);
             socket.on("time", onTime);
             socket.on("role", onRole);
+            socket.on("restart", onRestart);
             return null;
         }
 
@@ -490,6 +477,7 @@ public class GameFragment extends Fragment {
         }
     };
 
+    //принимает таймер
     private Emitter.Listener onTimer = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -512,6 +500,7 @@ public class GameFragment extends Fragment {
         }
     };
 
+    //принимает время дня
     private Emitter.Listener onTime = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -558,6 +547,31 @@ public class GameFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+            });
+        }
+    };
+
+    //запускается при падении сервера, чтобы продолжать игру
+    private Emitter.Listener onRestart = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    final JSONObject json2 = new JSONObject();
+                    try {
+                        json2.put("nick", MainActivity.NickName);
+                        json2.put("room", room_num);
+                        json2.put("last_message_num", num);
+                        json2.put("session_id", MainActivity.Session_id);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("connect_to_room", json2);
+                    Log.d("kkk", "CONNECT");
                 }
             });
         }
