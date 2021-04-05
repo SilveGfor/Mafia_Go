@@ -102,14 +102,30 @@ public class GameFragment extends Fragment {
 
         ArrayList<UserModel> list_users2 = new ArrayList<>();
 
-        list_users2.add(new UserModel("Sil1"));
-        list_users2.add(new UserModel("Sil2"));
-        list_users2.add(new UserModel("Sil3"));
-        list_users2.add(new UserModel("Sil4"));
-        list_users2.add(new UserModel("Sil5"));
-        list_users2.add(new UserModel("Sil6"));
+        list_users2.add(new UserModel("Sil1", R.drawable.citizen));
+        list_users2.add(new UserModel("SilVegfor", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil3", R.drawable.citizen));
+        list_users2.add(new UserModel("SilveGfor", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil5", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil6", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil7", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil8", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil9", R.drawable.citizen));
+        list_users2.add(new UserModel("Sil10", R.drawable.citizen));
+       // Log.d("kkk", list_users2.get(position).nick);
+       // Log.d("kkk", "Gagaga");
         gridView_users.setAdapter(new PlayersAdapter(list_users2, getActivity()));
 
+        /*
+        gridView_users.setOnItemClickListener((parent, view1, position, id) ->
+        {
+              Log.d("kkk", list_users2.get(position).nick);
+            Log.d("kkk", "Gagaga");
+        });
+        
+         */
+
+        /*
         socket.connect();
 
         SocketTask socketTask = new SocketTask();
@@ -126,6 +142,9 @@ public class GameFragment extends Fragment {
         }
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+         */
+
+
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,9 +165,6 @@ public class GameFragment extends Fragment {
                 answer_id = -1;
                 cardAnswer.setVisibility(View.GONE);
 
-
-
-
                 /* Для Офлайн-тестов
                 if(answer_id == -1)
                 {
@@ -168,14 +184,8 @@ public class GameFragment extends Fragment {
                     listView_chat.setSelection(customList.getCount() - 1);
                 }
                 answer_id = -1;
-
                  */
-
                 editText.setText("");
-
-
-
-
             }
         });
         btnExit.setOnClickListener(new View.OnClickListener() {
@@ -201,7 +211,7 @@ public class GameFragment extends Fragment {
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+                Log.d("kkk", list_users2.get(position).nick);
             }
         });
 
@@ -319,7 +329,6 @@ public class GameFragment extends Fragment {
                             {
                                 Log.d("kkk", "remove" + list_users.get(i).nick);
                                 list_users.remove(i);
-
                             }
                         }
                         for (int i=list_users.size()-1; i>=0; i--)
@@ -364,6 +373,7 @@ public class GameFragment extends Fragment {
                             {
                                 Log.d("kkk", "UsersMes");
                                 MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
+                                //list_chat.add(0, messageModel);
                                 list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
