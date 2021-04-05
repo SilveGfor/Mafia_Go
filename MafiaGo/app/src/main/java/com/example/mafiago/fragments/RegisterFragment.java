@@ -60,6 +60,8 @@ public class RegisterFragment extends Fragment {
     Boolean sendCode = false;
     Boolean error = false;
 
+    Boolean incorrect_email= false, incorrect_nick = false, incorrect_code = false, mat_nick = false, code_time_out = false, reg_in = false;
+
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
@@ -86,6 +88,7 @@ public class RegisterFragment extends Fragment {
         ETpassword2 = view.findViewById(R.id.ETpasswordReg2);
         text_reg = view.findViewById(R.id.TVcode);
 
+        // TODO: Починить разметку
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -137,12 +140,12 @@ public class RegisterFragment extends Fragment {
                 if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
 
                     Log.d("kkk", "Запуск Asycs");
-                    RegisterFragment.LoginTask loginTask = new RegisterFragment.LoginTask();
+                    RegisterFragment.CodeTask loginTask = new RegisterFragment.CodeTask();
                     loginTask.execute();
                 } else {
                     Log.d("kkk", "Неправильный пароль");
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Пользователь с такой почтой уже есть")
+                    builder.setTitle("Ошибка!")
                             .setMessage("")
                             .setIcon(R.drawable.ic_error)
                             .setCancelable(false)
@@ -211,7 +214,7 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    class LoginTask extends AsyncTask<Void, Void, Void> {
+    class CodeTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {
@@ -246,21 +249,23 @@ public class RegisterFragment extends Fragment {
                 public void onResponse(Call call, Response response) throws IOException {
                     resp = response.body().string().toString();
                     Log.d("kkk", "Принял - " + resp);
-                    if (resp.equals("incorrect_email")) {
-                        incorrectEmail = true;
-                        Log.d("kkk", "111");
-                    } else if (resp.equals("send_code")) {
-                        sendCode = true;
-                        Log.d("kkk", "2222");
-                        SharedPreferences.Editor editor = mSettings.edit();
-                        editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
-                        editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ETemail.getText()));
-                        editor.putString(APP_PREFERENCES_NICKNAME, String.valueOf(ETnick.getText()));
-                        editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
-                        editor.apply();
-                    } else {
-                        error = true;
-                        Log.d("kkk", "33333");
+                    switch (resp)
+                    {
+                        case "incorrect_email":
+                            incorrectEmail = true;
+                            break;
+                        case "send_code":
+                            sendCode = true;
+                            SharedPreferences.Editor editor = mSettings.edit();
+                            editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
+                            editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ETemail.getText()));
+                            editor.putString(APP_PREFERENCES_NICKNAME, String.valueOf(ETnick.getText()));
+                            editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
+                            editor.apply();
+                            break;
+                        default:
+                            error = true;
+                            break;
                     }
                 }
             });
@@ -327,6 +332,194 @@ public class RegisterFragment extends Fragment {
                     AlertDialog alert = builder.create();
                     alert.show();
                     error = false;
+                }
+                Log.d("kkk", "onPostExecute" + incorrectEmail + sendCode + error);
+            } catch (Exception e) {
+
+            }
+        }
+    }
+
+    class RegisterTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d("kkk", "onPreExecute");
+        }
+
+        @Override
+        protected Void doInBackground(Void... urs) {
+
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_WAIT_CODE, false);
+            editor.apply();
+            if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
+                final JSONObject json = new JSONObject();
+                try {
+                    json.put("code", ETcode.getText());
+                    json.put("nick", mSettings.getString(APP_PREFERENCES_NICKNAME, ""));
+                    json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
+                    json.put("password", mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "Отправил: " + json);
+
+                RequestBody body = RequestBody.create(
+                        MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
+                Request request = new Request.Builder().url(url2).post(body).build();
+                Call call = client.newCall(request);
+
+                call.enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d("kkk", "Всё плохо");
+                        Log.d("kkk", e.toString());
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        resp = response.body().string().toString();
+                        Log.d("kkk", "Принял - " + resp);
+                        switch (resp)
+                        {
+                            //incorrect_email incorrect_nick incorrect_code mat_nick code_time_out reg_in
+                            case "incorrect_email":
+                                incorrect_email = true;
+                                break;
+                            case "incorrect_nick":
+                                incorrect_nick = true;
+                                break;
+                            case "incorrect_code":
+                                incorrect_code = true;
+                                break;
+                            case "mat_nick":
+                                mat_nick = true;
+                                break;
+                            case "code_time_out":
+                                code_time_out = true;
+                                break;
+                            case "reg_in":
+                                reg_in = true;
+                                break;
+                            default:
+                                error = true;
+                                break;
+                        }
+                    }
+                });
+
+
+            } else {
+                Log.d("kkk", "пароли не сопадают");
+            }
+            return null;
+        }
+        @Override
+        protected void onPostExecute (Void aVoid){
+            super.onPostExecute(aVoid);
+            try {
+                Thread.sleep(2000); //Приостанавливает поток на 1 секунду
+
+                Log.d("kkk", String.valueOf(sendCode));
+                //incorrect_email incorrect_nick incorrect_code mat_nick code_time_out reg_in
+                if (incorrect_email) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Пользователь с такой почтой уже есть!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    incorrect_email = false;
+                }
+                else if (incorrect_nick) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Пользователь с таким ником уже есть!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    incorrect_nick = false;
+                }
+                else if (incorrect_code) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Неверный код!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    incorrect_code = false;
+                }
+                else if (mat_nick) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Ваш ник не проходит цензуру!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    mat_nick = false;
+                }
+                else if (code_time_out) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Время действия кода истекло!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    code_time_out = false;
+                }
+                else if (reg_in) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Регистрация прошла успешно!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ok)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                    reg_in = false;
                 }
                 Log.d("kkk", "onPostExecute" + incorrectEmail + sendCode + error);
             } catch (Exception e) {
