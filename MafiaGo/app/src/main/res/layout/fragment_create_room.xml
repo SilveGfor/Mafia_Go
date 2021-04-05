@@ -30,40 +30,55 @@
                 android:text="Создание комнаты"
                 android:textSize="20dp" />
 
-            <TextView
-                android:id="@+id/fragmentCreateRoom_TV_num_users"
-                android:layout_marginTop="15dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_below="@id/fragmentCreateRoom_TV_name_view"
-                android:text="Колличество пользователей"
-                android:textSize="15dp" />
-
             <EditText
-                android:id="@+id/ETRoomName"
+                android:id="@+id/fragmentCreateRoom_ET_room_name"
                 android:layout_marginTop="15dp"
                 android:layout_width="250dp"
                 android:layout_height="35dp"
-                android:layout_below="@id/FragmentCreateRoom_seekBar_players"
+                android:layout_below="@id/fragmentCreateRoom_TV_name_view"
                 android:hint="Введите название комнаты"
                 android:textColorHint="@color/colorWhite"
                 android:textColor="@color/colorWhite"
                 android:background="@drawable/round_edit_text"
                 android:layout_centerHorizontal="true"/>
 
+            <TextView
+                android:id="@+id/fragmentCreateRoom_TV_num_users"
+                android:layout_marginTop="15dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@id/fragmentCreateRoom_ET_room_name"
+                android:text="Колличество пользователей"
+                android:textSize="15dp" />
+
             <SeekBar
-                android:id="@+id/FragmentCreateRoom_seekBar_players"
+                android:id="@+id/fragmentCreateRoom_SB_max_players"
                 android:layout_marginTop="15dp"
                 android:layout_below="@id/fragmentCreateRoom_TV_num_users"
                 android:layout_centerHorizontal="true"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:max="255"/>
+                android:max="18"
+                android:min="5"/>
+
+            <TextView
+                android:id="@+id/fragmentCreateRoom_TV_max_people"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textSize="15sp"
+                android:layout_marginRight="15dp"
+                android:layout_alignBottom="@id/fragmentCreateRoom_SB_max_players"
+                android:layout_toLeftOf="@id/fragmentCreateRoom_SB_max_players"/>
+
+
+
+
 
             <EditText
                 android:id="@+id/ETMinPeople"
-                android:layout_below="@id/ETRoomName"
+                android:layout_below="@id/fragmentCreateRoom_SB_max_players"
                 android:layout_marginTop="30dp"
                 android:layout_width="250dp"
                 android:layout_height="35dp"

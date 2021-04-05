@@ -1,5 +1,7 @@
 package com.example.mafiago.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -25,12 +29,20 @@ import io.socket.emitter.Emitter;
 public class CreateRoomFragment extends Fragment {
 
     EditText ET_RoomName;
-    EditText ET_MinPeople;
-    EditText ET_MaxPeople;
+
+    TextView TV_max_people;
+
+    SeekBar SB_max_people;
 
     Button btnCreateRoom;
 
 
+    public static final String APP_PREFERENCES = "create_room";
+    public static final String APP_PREFERENCES_ROOM_NAME = "room_name";
+    public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
+    public static final String APP_PREFERENCES_ROLES = "roles";
+
+    private SharedPreferences mSettings;
 
     private Socket socket;
     {
@@ -47,9 +59,13 @@ public class CreateRoomFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_create_room, container, false);
 
-        ET_RoomName = view.findViewById(R.id.ETRoomName);
-        ET_MinPeople = view.findViewById(R.id.ETMinPeople);
-        ET_MaxPeople = view.findViewById(R.id.ETMaxPeople);
+        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        ET_RoomName = view.findViewById(R.id.fragmentCreateRoom_ET_room_name);
+
+        TV_max_people = view.findViewById(R.id.fragmentCreateRoom_TV_max_people);
+
+        SB_max_people = view.findViewById(R.id.fragmentCreateRoom_SB_max_players);
 
         btnCreateRoom = view.findViewById(R.id.btnCreate);
 
@@ -57,16 +73,24 @@ public class CreateRoomFragment extends Fragment {
 
         socket.on("create_room", onCreateRoom);
 
+        TV_max_people.setText("");
+
+        SB_max_people.setOnSeekBarChangeListener(seekBarChangeListener);
+
+        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, null));
+        SB_max_people.setProgress(mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 5));
+
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 final JSONObject json = new JSONObject();
                 try {
                     json.put("nick", MainActivity.NickName);
                     json.put("session_id", MainActivity.Session_id);
                     json.put("name", ET_RoomName.getText());
-                    json.put("min_people_num", ET_MinPeople.getText());
-                    json.put("max_people_num", ET_MaxPeople.getText());
+                    json.put("min_people_num", 5);
+                    json.put("max_people_num", SB_max_people.getProgress());
                     json.put("roles", "{peaceful: [], mafia: []}");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -75,12 +99,25 @@ public class CreateRoomFragment extends Fragment {
                 Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
             }
         });
-
-
-
-
         return view;
     }
+
+    private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            TV_max_people.setText(String.valueOf(SB_max_people.getProgress()));
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
+    };
 
     private Emitter.Listener onCreateRoom = new Emitter.Listener() {
         @Override
