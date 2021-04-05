@@ -131,7 +131,7 @@ public class GameFragment extends Fragment {
         SocketTask socketTask = new SocketTask();
         socketTask.execute();
 
-
+ 
         final JSONObject json3 = new JSONObject();
         try {
             json3.put("nick", MainActivity.NickName);
