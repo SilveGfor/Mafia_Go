@@ -36,8 +36,8 @@ import okhttp3.Response;
 
 public class RegisterFragment extends Fragment {
 
-    private static final String url1 = "http://" + MainActivity.url + "/reg-code/";
-    private static final String url2 = "http://" + MainActivity.url + "/registration/";
+    private static final String url1 = "http://" + MainActivity.url + "/reg-code";
+    private static final String url2 = "http://" + MainActivity.url + "/registration";
 
     //OkHttp
     private OkHttpClient client = new OkHttpClient();
@@ -248,8 +248,10 @@ public class RegisterFragment extends Fragment {
                     Log.d("kkk", "Принял - " + resp);
                     if (resp.equals("incorrect_email")) {
                         incorrectEmail = true;
+                        Log.d("kkk", "111");
                     } else if (resp.equals("send_code")) {
                         sendCode = true;
+                        Log.d("kkk", "2222");
                         SharedPreferences.Editor editor = mSettings.edit();
                         editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
                         editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ETemail.getText()));
@@ -258,9 +260,8 @@ public class RegisterFragment extends Fragment {
                         editor.apply();
                     } else {
                         error = true;
+                        Log.d("kkk", "33333");
                     }
-
-
                 }
             });
             return null;
@@ -269,7 +270,9 @@ public class RegisterFragment extends Fragment {
         protected void onPostExecute (Void aVoid){
             super.onPostExecute(aVoid);
             try {
-                Thread.sleep(1000); //Приостанавливает поток на 1 секунду
+                Thread.sleep(2000); //Приостанавливает поток на 1 секунду
+
+                Log.d("kkk", String.valueOf(sendCode));
 
                 if (incorrectEmail) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
