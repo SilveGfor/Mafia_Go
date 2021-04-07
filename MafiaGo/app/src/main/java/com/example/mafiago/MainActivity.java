@@ -8,13 +8,12 @@ import android.view.View;
 
 import com.example.mafiago.fragments.CreateRoomFragment;
 import com.example.mafiago.fragments.GameFragment;
+import com.example.mafiago.fragments.GamesListFragment;
 import com.example.mafiago.fragments.MenuFragment;
 import com.example.mafiago.fragments.StartFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    //Всё ли хорошо в коде
-    //какие элементы UI можно добавить
 
     public static String NickName = "";
     public static String Session_id = "";
@@ -29,6 +28,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
     }
 }
