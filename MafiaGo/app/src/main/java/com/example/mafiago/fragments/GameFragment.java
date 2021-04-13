@@ -26,6 +26,7 @@ import com.example.mafiago.adapters.MessageAdapter;
 import com.example.mafiago.adapters.PlayersAdapter;
 import com.example.mafiago.adapters.UsersAdapter;
 import com.example.mafiago.models.MessageModel;
+import com.example.mafiago.models.Player;
 import com.example.mafiago.models.UserModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -42,6 +43,7 @@ import io.socket.emitter.Emitter;
 
 
 public class GameFragment extends Fragment {
+    public Player player;
     public ListView listView_chat;
     public GridView gridView_users;
 
@@ -65,6 +67,8 @@ public class GameFragment extends Fragment {
     int room_num = MainActivity.Game_id;
     int answer_id = -1;
     public boolean Not_First = false;
+
+    JSONObject js;
 
     int num = -1;
 
@@ -114,6 +118,9 @@ public class GameFragment extends Fragment {
         list_users2.add(new UserModel("Sil10", R.drawable.citizen));
         gridView_users.setAdapter(new PlayersAdapter(list_users2, getActivity()));
 
+        player = new Player(MainActivity.nick, MainActivity.Session_id);
+
+
         socket.connect();
 
         SocketTask socketTask = new SocketTask();
@@ -122,8 +129,8 @@ public class GameFragment extends Fragment {
  
         final JSONObject json3 = new JSONObject();
         try {
-            json3.put("nick", MainActivity.NickName);
-            json3.put("session_id", MainActivity.Session_id);
+            json3.put("nick", player.getNick());
+            json3.put("session_id", player.getSession_id());
             json3.put("room", room_num);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -131,14 +138,113 @@ public class GameFragment extends Fragment {
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
+        gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                switch (player.getTime())
+                {
+
+                    case "night_love":
+
+                        if (player.getRole().equals("lover"))
+                        {
+
+                            js = new JSONObject();
+                            try {
+                                js.put("nick", player.getNick());
+                                js.put("session_id", player.getSession_id());
+                                js.put("influence_on_nick", list_users2.get(position).nick);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("get_in_room", json3);
+                            Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Ошибка!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ваша роль не может сейчас действовать!",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+
+                        break;
+                    case "night_other":
+
+                        if (player.getRole().equals("mafia") || player.getRole().equals("sheriff") || player.getRole().equals("doctor"))
+                        {
+
+                            js = new JSONObject();
+                            try {
+                                js.put("nick", player.getNick());
+                                js.put("session_id", player.getSession_id());
+                                js.put("influence_on_nick", list_users2.get(position).nick);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("get_in_room", json3);
+                            Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Ошибка!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ваша роль не может сейчас действовать!",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+
+                        break;
+                    case "day":
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Ошибка!")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("Днём нельзя голосовать!",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                        break;
+                    case "voting":
+                        break;
+                    case "lobby":
+                        break;
+                    default:
+                        Log.d("kkk", "ЧТО_ТО ЯВНО ПОШЛО НЕ ТАК! Такого времени не может быть!");
+                        break;
+                }
+            }
+        });
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final JSONObject json2 = new JSONObject();
                 try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id",  MainActivity.Session_id);
+                    json2.put("nick", player.getNick());
+                    json2.put("session_id",  player.getSession_id());
                     json2.put("room", room_num);
                     json2.put("message", editText.getText().toString());
                     json2.put("link", answer_id);
@@ -174,14 +280,15 @@ public class GameFragment extends Fragment {
                 editText.setText("");
             }
         });
+
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 final JSONObject json2 = new JSONObject();
                 try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id",  MainActivity.Session_id);
+                    json2.put("nick", player.getNick());
+                    json2.put("session_id",  player.getSession_id());
                     json2.put("room", room_num);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -191,13 +298,6 @@ public class GameFragment extends Fragment {
                 editText.setText("");
                 //socket.close();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
-            }
-        });
-
-        gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("kkk", list_users2.get(position).nick);
             }
         });
 
@@ -252,8 +352,7 @@ public class GameFragment extends Fragment {
             socket.on("time", onTime);
             socket.on("role", onRole);
             socket.on("restart", onRestart);
-            socket.on("role_action_mafia", onRoleActionMafia);
-            socket.on("role_action_sheriff", onRoleActionSheriff);
+            socket.on("get_my_game_info", onGetMyGameInfo);
             return null;
         }
 
@@ -402,10 +501,10 @@ public class GameFragment extends Fragment {
                     if (Not_First) {
                         final JSONObject json2 = new JSONObject();
                         try {
-                            json2.put("nick", MainActivity.NickName);
+                            json2.put("nick", player.getNick());
                             json2.put("room", room_num);
                             json2.put("last_message_num", num);
-                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("session_id", player.getSession_id());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -514,9 +613,9 @@ public class GameFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     String time;
                     try {
-                        time = data.getString("time");
-                        day_time.setText(time);
-                        Log.d("kkk", "Socket_принять - day_time " + time);
+                        player.setTime(data.getString("time"));
+                        day_time.setText(player.getTime());
+                        Log.d("kkk", "Socket_принять - day_time " + player.getTime());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -525,6 +624,7 @@ public class GameFragment extends Fragment {
         }
     };
 
+    //Принимает роль
     private Emitter.Listener onRole = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -534,12 +634,11 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String role;
                     try {
-                        role = data.getString("role");
-                        Log.d("kkk", "Socket_принять - role " + role);
+                        player.setRole(data.getString("role"));
+                        Log.d("kkk", "Socket_принять - role " + player.getRole());
                         AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                        builder.setTitle("Вам выдали роль!").setMessage("Неужели вы стали доктором лёгкого поведения! Главное не волнуйтесь, просто такие как вы делятся на 2 типа... Одни из них кстати доктора...").setIcon(R.drawable.icon_mir).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+                        builder.setTitle("Вам выдали роль!").setMessage("Ваша роль - " + player.getRole()).setIcon(R.drawable.icon_mir).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
@@ -565,10 +664,10 @@ public class GameFragment extends Fragment {
                 public void run() {
                     final JSONObject json2 = new JSONObject();
                     try {
-                        json2.put("nick", MainActivity.NickName);
+                        json2.put("nick",player.getNick());
                         json2.put("room", room_num);
                         json2.put("last_message_num", num);
-                        json2.put("session_id", MainActivity.Session_id);
+                        json2.put("session_id", player.getSession_id());
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -579,7 +678,8 @@ public class GameFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onRoleActionMafia = new Emitter.Listener() {
+    //принимает актуальное значение игры (роль, статус и т.д.) при connect_to_room, если игра уже началась
+    private Emitter.Listener onGetMyGameInfo = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -588,52 +688,23 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String mafia_nick;
-                    String user_nick;
+                    String influences;
                     try {
-                        mafia_nick = data.getString("mafia_nick");
-                        user_nick = data.getString("user_nick");
-                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
-                        MessageModel messageModel = new MessageModel(mafia_nick + "проголосовал за " + user_nick, "09-55", "System", "UsersMes");
-                        list_chat.add(messageModel);
-                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                        listView_chat.setAdapter(messageAdapter);
-                        listView_chat.setSelection(messageAdapter.getCount() - 1);
+                        Log.d("kkk", "Socket принял - get_my_game_info " + args[0]);
+                        player.setRole(data.getString("role"));
+                        player.setStatus(data.getString("status"));
+                        influences = data.getString("influences");
+                        num = data.getInt("last_message");
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    Log.d("kkk", "CONNECT");
                 }
             });
         }
     };
 
-    private Emitter.Listener onRoleActionSheriff = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            if(getActivity() == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String mafia_nick;
-                    String user_nick;
-                    try {
-                        mafia_nick = data.getString("mafia_nick");
-                        user_nick = data.getString("user_nick");
-                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
-                        MessageModel messageModel = new MessageModel(mafia_nick + "проголосовал за " + user_nick, "09-55", "System", "UsersMes");
-                        list_chat.add(messageModel);
-                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                        listView_chat.setAdapter(messageAdapter);
-                        listView_chat.setSelection(messageAdapter.getCount() - 1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    };
     ////////////////
     ////////////////
     //       SOCKETS end
