@@ -252,6 +252,8 @@ public class GameFragment extends Fragment {
             socket.on("time", onTime);
             socket.on("role", onRole);
             socket.on("restart", onRestart);
+            socket.on("role_action_mafia", onRoleActionMafia);
+            socket.on("role_action_sheriff", onRoleActionSheriff);
             return null;
         }
 
@@ -572,6 +574,62 @@ public class GameFragment extends Fragment {
                     }
                     socket.emit("connect_to_room", json2);
                     Log.d("kkk", "CONNECT");
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onRoleActionMafia = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String mafia_nick;
+                    String user_nick;
+                    try {
+                        mafia_nick = data.getString("mafia_nick");
+                        user_nick = data.getString("user_nick");
+                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
+                        MessageModel messageModel = new MessageModel(mafia_nick + "проголосовал за " + user_nick, "09-55", "System", "UsersMes");
+                        list_chat.add(messageModel);
+                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                        listView_chat.setAdapter(messageAdapter);
+                        listView_chat.setSelection(messageAdapter.getCount() - 1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onRoleActionSheriff = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String mafia_nick;
+                    String user_nick;
+                    try {
+                        mafia_nick = data.getString("mafia_nick");
+                        user_nick = data.getString("user_nick");
+                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
+                        MessageModel messageModel = new MessageModel(mafia_nick + "проголосовал за " + user_nick, "09-55", "System", "UsersMes");
+                        list_chat.add(messageModel);
+                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                        listView_chat.setAdapter(messageAdapter);
+                        listView_chat.setSelection(messageAdapter.getCount() - 1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }
