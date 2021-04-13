@@ -616,13 +616,11 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String mafia_nick;
-                    String user_nick;
+                    String sheriff_role;
                     try {
-                        mafia_nick = data.getString("mafia_nick");
-                        user_nick = data.getString("user_nick");
+                        sheriff_role = data.getString("role");
                         Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
-                        MessageModel messageModel = new MessageModel(mafia_nick + "проголосовал за " + user_nick, "09-55", "System", "UsersMes");
+                        MessageModel messageModel = new MessageModel("шериф проверил " + sheriff_role, "09-55", "System", "UsersMes");
                         list_chat.add(messageModel);
                         MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                         listView_chat.setAdapter(messageAdapter);
