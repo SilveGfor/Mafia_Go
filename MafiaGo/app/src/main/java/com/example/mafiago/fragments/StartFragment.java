@@ -35,7 +35,7 @@ import okhttp3.Response;
 
 public class StartFragment extends Fragment {
 
-    private static final String url= "http://" + MainActivity.url + "/login";
+    private static final String url= "https://" + MainActivity.url + "/login";
 
     //OkHttp
     private OkHttpClient client = new OkHttpClient();

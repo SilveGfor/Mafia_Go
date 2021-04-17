@@ -21,6 +21,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -72,6 +73,8 @@ public class CreateRoomFragment extends Fragment {
         socket.connect();
 
         socket.on("create_room", onCreateRoom);
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
 
         TV_max_people.setText("");
 
@@ -85,13 +88,18 @@ public class CreateRoomFragment extends Fragment {
             public void onClick(View v) {
 
                 final JSONObject json = new JSONObject();
+                final JSONObject json_roles = new JSONObject();
                 try {
+                    ArrayList<String> peaceful = new ArrayList<String>();
+                    ArrayList<String> mafia = new ArrayList<String>();
+                    json_roles.put("peaceful", peaceful);
+                    json_roles.put("mafia", mafia);
                     json.put("nick", MainActivity.NickName);
                     json.put("session_id", MainActivity.Session_id);
                     json.put("name", ET_RoomName.getText());
-                    json.put("min_people_num", 5);
+                    json.put("min_people_num", 1);
                     json.put("max_people_num", SB_max_people.getProgress());
-                    json.put("roles", "{peaceful: [], mafia: []}");
+                    json.put("roles", json_roles);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -116,6 +124,42 @@ public class CreateRoomFragment extends Fragment {
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
 
+        }
+    };
+
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        //socket.emit("connect_to_room", json2);
+                        Log.d("kkk", "CONNECT");
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("kkk", "DISCONNECT");
+                }
+            });
         }
     };
 

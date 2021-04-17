@@ -36,8 +36,8 @@ import okhttp3.Response;
 
 public class RegisterFragment extends Fragment {
 
-    private static final String url1 = "http://" + MainActivity.url + "/reg-code";
-    private static final String url2 = "http://" + MainActivity.url + "/registration";
+    private static final String url1 = "https://" + MainActivity.url + "/reg-code";
+    private static final String url2 = "https://" + MainActivity.url + "/registration";
 
     //OkHttp
     private OkHttpClient client = new OkHttpClient();

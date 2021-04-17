@@ -100,20 +100,6 @@ public class GameFragment extends Fragment {
 
         cardAnswer.setVisibility(View.GONE);
 
-        ArrayList<UserModel> list_users2 = new ArrayList<>();
-
-        list_users2.add(new UserModel("Sil1", R.drawable.citizen));
-        list_users2.add(new UserModel("SilVegfor", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil3", R.drawable.citizen));
-        list_users2.add(new UserModel("SilveGfor", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil5", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil6", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil7", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil8", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil9", R.drawable.citizen));
-        list_users2.add(new UserModel("Sil10", R.drawable.citizen));
-        gridView_users.setAdapter(new PlayersAdapter(list_users2, getActivity()));
-
         socket.connect();
 
         SocketTask socketTask = new SocketTask();
@@ -197,7 +183,7 @@ public class GameFragment extends Fragment {
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("kkk", list_users2.get(position).nick);
+                Log.d("kkk", list_users.get(position).nick);
             }
         });
 
@@ -457,14 +443,15 @@ public class GameFragment extends Fragment {
                             listView_chat.setAdapter(messageAdapter);
                             Not_First = true;
 
+                            list_users.add(new UserModel(nick, R.drawable.citizen));
+                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                            gridView_users.setAdapter(playersAdapter);
+
                             //прошлый вариант
                             //UserModel user_model = new UserModel(nick);
                             //list_users.add(user_model);
                             //UsersAdapter usersAdapter = new UsersAdapter(list_users, getContext());
                             //listView_users.setAdapter(usersAdapter);
-
-
-
                         }
                         else
                         {
@@ -632,6 +619,7 @@ public class GameFragment extends Fragment {
             });
         }
     };
+
     ////////////////
     ////////////////
     //       SOCKETS end
