@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import static  com.example.mafiago.MainActivity.socket;
+
 
 public class CreateRoomFragment extends Fragment {
 
@@ -45,6 +47,7 @@ public class CreateRoomFragment extends Fragment {
 
     private SharedPreferences mSettings;
 
+    /*
     private Socket socket;
     {
         try{
@@ -53,6 +56,7 @@ public class CreateRoomFragment extends Fragment {
             throw new RuntimeException();
         }
     }
+    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -70,7 +74,7 @@ public class CreateRoomFragment extends Fragment {
 
         btnCreateRoom = view.findViewById(R.id.btnCreate);
 
-        socket.connect();
+        //socket.connect();
 
         socket.on("create_room", onCreateRoom);
         socket.on("connect", onConnect);
@@ -118,7 +122,6 @@ public class CreateRoomFragment extends Fragment {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
         }
 
         @Override
@@ -166,6 +169,8 @@ public class CreateRoomFragment extends Fragment {
     private Emitter.Listener onCreateRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

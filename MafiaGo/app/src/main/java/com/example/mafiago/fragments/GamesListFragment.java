@@ -27,6 +27,7 @@ import java.util.Objects;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import static  com.example.mafiago.MainActivity.socket;
 
 public class GamesListFragment extends Fragment {
 
@@ -39,14 +40,7 @@ public class GamesListFragment extends Fragment {
 
     public boolean First = true;
 
-    private final Socket socket;
-    {
-        try{
-            socket = IO.socket("https://" + MainActivity.url);
-        }catch (URISyntaxException e){
-            throw new RuntimeException();
-        }
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,7 +52,6 @@ public class GamesListFragment extends Fragment {
         btnCreateRoom = view.findViewById(R.id.btnCreateRoom);
         btnExit = view.findViewById(R.id.btnExitGamesList);
 
-        socket.connect();
 
         SocketTask socketTask = new SocketTask();
         socketTask.execute();
@@ -66,8 +59,6 @@ public class GamesListFragment extends Fragment {
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                socket.close();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateRoomFragment()).commit();
 
             }
@@ -87,7 +78,6 @@ public class GamesListFragment extends Fragment {
                 }
                 Log.d("kkk", "Socket_отправка - "+ json2.toString());
                 socket.emit("disconnect_from_list_of_rooms", json2);
-                socket.close();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
             }
         });
@@ -96,7 +86,6 @@ public class GamesListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainActivity.Game_id = list_room.get(position).id;
-                socket.close();
                 Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
             }
