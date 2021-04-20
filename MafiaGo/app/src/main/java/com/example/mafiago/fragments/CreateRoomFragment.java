@@ -1,10 +1,7 @@
 package com.example.mafiago.fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,20 +20,14 @@ import com.example.mafiago.R;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import static  com.example.mafiago.MainActivity.socket;
+
 
 public class CreateRoomFragment extends Fragment {
 
@@ -56,6 +47,7 @@ public class CreateRoomFragment extends Fragment {
 
     private SharedPreferences mSettings;
 
+    /*
     private Socket socket;
     {
         try{
@@ -64,6 +56,7 @@ public class CreateRoomFragment extends Fragment {
             throw new RuntimeException();
         }
     }
+    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -81,13 +74,13 @@ public class CreateRoomFragment extends Fragment {
 
         btnCreateRoom = view.findViewById(R.id.btnCreate);
 
-        socket.connect();
+        //socket.connect();
 
+        socket.on("create_room", onCreateRoom);
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
 
-        CreateRoomTask createRoomTask = new CreateRoomTask();
-        createRoomTask.execute();
-
-        TV_max_people.setText("5");
+        TV_max_people.setText("");
 
         SB_max_people.setOnSeekBarChangeListener(seekBarChangeListener);
 
@@ -129,7 +122,6 @@ public class CreateRoomFragment extends Fragment {
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
         }
 
         @Override
@@ -137,31 +129,6 @@ public class CreateRoomFragment extends Fragment {
 
         }
     };
-
-
-    class CreateRoomTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            socket.on("connect", onConnect);
-            socket.on("disconnect", onDisconnect);
-            socket.on("create_room", onCreateRoom);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("kkk", "onPostExecute");
-        }
-    }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
@@ -171,7 +138,6 @@ public class CreateRoomFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    /*
                         final JSONObject json2 = new JSONObject();
                         try {
                             json2.put("nick", MainActivity.NickName);
@@ -179,9 +145,8 @@ public class CreateRoomFragment extends Fragment {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        */
-                    //socket.emit("connect_to_room", json2);
-                    Log.d("kkk", "CONNECT");
+                        //socket.emit("connect_to_room", json2);
+                        Log.d("kkk", "CONNECT");
                 }
             });
         }
@@ -204,6 +169,8 @@ public class CreateRoomFragment extends Fragment {
     private Emitter.Listener onCreateRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -219,6 +186,5 @@ public class CreateRoomFragment extends Fragment {
             });
         }
     };
-
 
 }
