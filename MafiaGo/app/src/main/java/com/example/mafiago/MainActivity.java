@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
     public static String NickName = "";
     public static String Session_id = "";
     public static int Game_id;
-    public static String url = "f58098762b3e7d.localhost.run";
+    public static String url = "c137d19fd4ff9a.localhost.run";
 
     public static String password = "";
     public static String nick = "";
