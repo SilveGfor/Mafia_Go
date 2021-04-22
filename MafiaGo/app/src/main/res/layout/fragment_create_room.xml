@@ -73,9 +73,10 @@
                 android:layout_toLeftOf="@id/fragmentCreateRoom_SB_max_players"/>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/fragmentCreateRoom_CV_doctor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
+                android:layout_marginTop="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_below="@id/fragmentCreateRoom_SB_max_players"
                 app:cardCornerRadius="30dp">
@@ -96,7 +97,7 @@
                     android:src="@drawable/citizen" />
 
                 <CheckBox
-                    android:id="@+id/fragmentCreateRoom_CH_мафия"
+                    android:id="@+id/fragmentCreateRoom_CB_doctor"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/fragmentCreateRoom_SB_max_players"
                     android:layout_width="wrap_content"
@@ -105,16 +106,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Мафия"/>
+                    android:text="Доктор"/>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/fragmentCreateRoom_CV_lover"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="30dp"
+                android:layout_marginTop="15dp"
                 android:layout_centerHorizontal="true"
-                android:layout_below="@id/fragmentCreateRoom_SB_max_players"
+                android:layout_below="@id/fragmentCreateRoom_CV_doctor"
                 app:cardCornerRadius="30dp">
 
             <LinearLayout
@@ -133,7 +135,7 @@
                     android:src="@drawable/citizen" />
 
                 <CheckBox
-                    android:id="@+id/fragmentCreateRoom_CH_citizen"
+                    android:id="@+id/fragmentCreateRoom_CB_lover"
                     android:layout_centerHorizontal="true"
                     android:layout_below="@id/fragmentCreateRoom_SB_max_players"
                     android:layout_width="wrap_content"
@@ -142,10 +144,9 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Мирный житель"/>
+                    android:text="Любовница"/>
             </LinearLayout>
             </androidx.cardview.widget.CardView>
-
 
             <Button
                 android:id="@+id/btnCreate"
@@ -153,11 +154,10 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="15dp"
+                android:layout_margin="30dp"
                 android:background="@drawable/round_button"
                 android:text="Создать"
-                android:textColor="@color/colorWhite"
-                android:layout_marginTop="25dp" />
+                android:textColor="@color/colorWhite" />
 
         </RelativeLayout>
 

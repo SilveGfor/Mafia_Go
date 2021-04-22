@@ -61,6 +61,6 @@ public static Socket socket;
 
         socket.connect();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 }

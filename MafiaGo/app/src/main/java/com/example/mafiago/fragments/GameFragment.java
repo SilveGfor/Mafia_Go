@@ -26,6 +26,7 @@ import com.example.mafiago.adapters.MessageAdapter;
 import com.example.mafiago.adapters.PlayersAdapter;
 import com.example.mafiago.adapters.UsersAdapter;
 import com.example.mafiago.models.MessageModel;
+import com.example.mafiago.models.Player;
 import com.example.mafiago.models.UserModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -51,6 +52,8 @@ public class GameFragment extends Fragment {
     public TextView day_time;
     public TextView answer_nick;
     public TextView answer_mes;
+
+    public Player player;
 
     public EditText editText;
 
@@ -97,6 +100,8 @@ public class GameFragment extends Fragment {
 
         timer = view.findViewById(R.id.timer);
         day_time = view.findViewById(R.id.day_time);
+
+        player = new Player(MainActivity.NickName, MainActivity.Session_id);
 
         cardAnswer.setVisibility(View.GONE);
 
@@ -160,6 +165,7 @@ public class GameFragment extends Fragment {
                 editText.setText("");
             }
         });
+
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +189,18 @@ public class GameFragment extends Fragment {
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("kkk", list_users.get(position).nick);
+                String nick = list_users.get(position).nick;
+                Log.d("kkk", "Нажатие на ник: " + list_users.get(position).nick);
+                if (player.Can_click())
+                {
+                    switch (player.getTime())
+                    {
+                        case "lobby":
+
+                            break;
+                    }
+                }
+
             }
         });
 

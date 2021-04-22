@@ -4,6 +4,7 @@ import android.util.Log;
 
 public class Player {
     private String nick, role, status, session_id, time;
+    private  boolean can_click;
 
     public Player(String nick, String session_id)
     {
@@ -12,10 +13,17 @@ public class Player {
         role = "";
         time = "lobby";
         status = "alive";
+        can_click = false;
     }
+
+
 
     public String getNick() {
         return nick;
+    }
+
+    public boolean Can_click() {
+        return can_click;
     }
 
     public String getTime() {
@@ -36,6 +44,10 @@ public class Player {
 
     public void setTime(String time) {
         this.time = time;
+    }
+
+    public void setCan_click(boolean can_click) {
+        this.can_click = can_click;
     }
 
     public void setRole(String role) {
