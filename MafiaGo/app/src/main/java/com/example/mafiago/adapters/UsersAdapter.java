@@ -51,6 +51,11 @@ public class UsersAdapter extends BaseAdapter {
 
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
+        if (list_users.get(position).getAnimation())
+        {
+            //анимация
+        }
+
         txt_nick.setText(list_users.get(position).nick);
         return view;
     }

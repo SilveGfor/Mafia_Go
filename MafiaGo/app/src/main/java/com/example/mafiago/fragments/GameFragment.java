@@ -94,6 +94,7 @@ public class GameFragment extends Fragment {
         answer_nick = view.findViewById(R.id.answerNickChat);
         answer_mes = view.findViewById(R.id.answerTextChat);
         sendText = view.findViewById(R.id.InputMes);
+        influence = view.findViewById(R.id.influence);
 
         btnSend = view.findViewById(R.id.btnSendMes);
         btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
@@ -123,6 +124,15 @@ public class GameFragment extends Fragment {
         }
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+
+        list_users.add(new UserModel("GG", R.drawable.citizen));
+        list_users.add(new UserModel("GG", R.drawable.citizen));
+        list_users.add(new UserModel("GG", R.drawable.citizen));
+        PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+        gridView_users.setAdapter(playersAdapter);
+        player.setTime("night_love");
+        player.setRole("lover");
+        player.setCan_click(true);
 
 
         btnSend.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +193,6 @@ public class GameFragment extends Fragment {
                 Log.d("kkk", "Socket_отправка_leave_user - "+ json2.toString());
                 socket.emit("leave_room", json2);
                 sendText.setText("");
-                //socket.close();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
         });
@@ -565,10 +574,58 @@ public class GameFragment extends Fragment {
                     String time;
                     try {
                         time = data.getString("time");
+                        player.setTime(time);
                         day_time.setText(time);
                         Log.d("kkk", "Socket_принять - day_time " + time);
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }
+
+                    if (player.getStatus().equals("alive"))
+                    {
+                        switch (player.getTime())
+                        {
+                            case "night_love":
+                                switch (player.getRole())
+                                {
+                                    case "lover":
+                                        StartAnimation();
+                                        break;
+                                    default:
+                                        Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                                }
+                                break;
+                            case "night_other":
+                                switch (player.getRole())
+                                {
+                                    case "sheriff":
+                                        final JSONObject json3 = new JSONObject();
+                                        try {
+                                            json3.put("nick", MainActivity.NickName);
+                                            json3.put("session_id", MainActivity.Session_id);
+                                            json3.put("room", room_num);
+                                        } catch (JSONException e) {
+                                            e.printStackTrace();
+                                        }
+                                        socket.emit("get_in_room", json3);
+                                        Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+                                        break;
+                                    case "doktor":
+                                        break;
+                                    case "mafia":
+                                        break;
+                                    default:
+                                        Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                                }
+                                break;
+                            case "day":
+                                break;
+                            case "voting":
+                                break;
+                        }
+                    }
+                    else
+                    {
                     }
                 }
             });
@@ -716,4 +773,19 @@ public class GameFragment extends Fragment {
     //       SOCKETS end
     ////////////////
     ////////////////
+
+    public void StartAnimation() {
+        player.setCan_click(true);
+        for (int i = 0; i < list_users.size(); i++)
+        {
+            list_users.get(i).setAnimation(true);
+        }
+    }
+    public void StopAnimation() {
+        player.setCan_click(false);
+        for (int i = 0; i < list_users.size(); i++)
+        {
+            list_users.get(i).setAnimation(false);
+        }
+    }
 }

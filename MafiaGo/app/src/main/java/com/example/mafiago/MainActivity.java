@@ -18,6 +18,7 @@ import java.net.URISyntaxException;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 
+
 public class MainActivity extends AppCompatActivity {
 
 
@@ -51,7 +52,6 @@ public static Socket socket;
                 .build();
         socket = IO.socket(URI.create("https://" + MainActivity.url), options); // the main namespace
         //socket = IO.socket("https://" + MainActivity.url);
-
     }
 
     @Override
@@ -61,6 +61,6 @@ public static Socket socket;
 
         socket.connect();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
     }
 }
