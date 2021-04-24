@@ -19,6 +19,17 @@
         android:background="@drawable/round_button" />
 
     <TextView
+        android:id="@+id/influence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/day_time"
+        android:layout_alignBaseline="@id/day_time"
+        android:text="DOCTOR"
+        android:textSize="20sp"
+        android:textColor="@color/colorWhite"
+        android:layout_margin="10dp"/>
+
+    <TextView
         android:id="@+id/day_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

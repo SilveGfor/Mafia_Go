@@ -50,12 +50,13 @@ public class GameFragment extends Fragment {
 
     public TextView timer;
     public TextView day_time;
+    public TextView influence;
     public TextView answer_nick;
     public TextView answer_mes;
 
     public Player player;
 
-    public EditText editText;
+    public EditText sendText;
 
     public FloatingActionButton btnSend;
 
@@ -92,7 +93,7 @@ public class GameFragment extends Fragment {
         cardAnswer = view.findViewById(R.id.answerCard);
         answer_nick = view.findViewById(R.id.answerNickChat);
         answer_mes = view.findViewById(R.id.answerTextChat);
-        editText = view.findViewById(R.id.InputMes);
+        sendText = view.findViewById(R.id.InputMes);
 
         btnSend = view.findViewById(R.id.btnSendMes);
         btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
@@ -104,6 +105,7 @@ public class GameFragment extends Fragment {
         player = new Player(MainActivity.NickName, MainActivity.Session_id);
 
         cardAnswer.setVisibility(View.GONE);
+        influence.setVisibility(View.GONE);
 
         socket.connect();
 
@@ -131,7 +133,7 @@ public class GameFragment extends Fragment {
                     json2.put("nick", MainActivity.NickName);
                     json2.put("session_id",  MainActivity.Session_id);
                     json2.put("room", room_num);
-                    json2.put("message", editText.getText().toString());
+                    json2.put("message", sendText.getText().toString());
                     json2.put("link", answer_id);
                     answer_id = -1;
                 } catch (JSONException e) {
@@ -162,7 +164,7 @@ public class GameFragment extends Fragment {
                 }
                 answer_id = -1;
                  */
-                editText.setText("");
+                sendText.setText("");
             }
         });
 
@@ -180,7 +182,7 @@ public class GameFragment extends Fragment {
                 }
                 Log.d("kkk", "Socket_отправка_leave_user - "+ json2.toString());
                 socket.emit("leave_room", json2);
-                editText.setText("");
+                sendText.setText("");
                 //socket.close();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
@@ -196,9 +198,52 @@ public class GameFragment extends Fragment {
                     switch (player.getTime())
                     {
                         case "lobby":
-
+                            sendText.setText(sendText.getText() + nick);
+                            break;
+                        case "night_love":
+                            switch (player.getRole())
+                            {
+                                case "lover":
+                                    break;
+                                case "mafia":
+                                    break;
+                                default:
+                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                            }
+                            break;
+                        case "night_other":
+                            switch (player.getRole())
+                            {
+                                case "sheriff":
+                                    final JSONObject json3 = new JSONObject();
+                                    try {
+                                        json3.put("nick", MainActivity.NickName);
+                                        json3.put("session_id", MainActivity.Session_id);
+                                        json3.put("room", room_num);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    socket.emit("get_in_room", json3);
+                                    Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+                                    break;
+                                case "doktor":
+                                    break;
+                                case "mafia":
+                                    break;
+                                default:
+                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                            }
+                            break;
+                        case "day":
+                            sendText.setText(sendText.getText() + nick);
+                            break;
+                        case "voting":
                             break;
                     }
+                }
+                else
+                {
+                    sendText.setText(sendText.getText() + nick);
                 }
 
             }
@@ -255,6 +300,7 @@ public class GameFragment extends Fragment {
             socket.on("time", onTime);
             socket.on("role", onRole);
             socket.on("restart", onRestart);
+            socket.on("role_action", onRoleAction);
             socket.on("role_action_mafia", onRoleActionMafia);
             socket.on("role_action_sheriff", onRoleActionSheriff);
             return null;
@@ -578,6 +624,34 @@ public class GameFragment extends Fragment {
                     }
                     socket.emit("connect_to_room", json2);
                     Log.d("kkk", "CONNECT");
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onRoleAction = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String role;
+                    try {
+                        role = data.getString("role");
+                        Log.d("kkk", "Socket_принять - role_action " + args[0]);
+                        influence.setText(role);
+                        influence.setVisibility(View.VISIBLE);
+                        MessageModel messageModel = new MessageModel("На вас походил " + role, "09-55", "System", "UsersMes");
+                        list_chat.add(messageModel);
+                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                        listView_chat.setAdapter(messageAdapter);
+                        listView_chat.setSelection(messageAdapter.getCount() - 1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
         }

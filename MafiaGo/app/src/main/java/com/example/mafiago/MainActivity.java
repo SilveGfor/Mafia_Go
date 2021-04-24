@@ -42,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException();
         }
     }
-
  */
+
 public static Socket socket;
     {
         IO.Options options = IO.Options.builder()
