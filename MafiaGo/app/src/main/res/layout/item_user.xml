@@ -15,14 +15,27 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+
+
             <ImageView
-                android:layout_marginTop="15dp"
                 android:id="@+id/IVrole"
+                android:layout_marginTop="15dp"
                 android:src="@drawable/citizen"
                 android:layout_width="70dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/IV_Animation"
+                android:visibility="invisible"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_lover"/>
+
+
 
             <TextView
                 android:id="@+id/nick"

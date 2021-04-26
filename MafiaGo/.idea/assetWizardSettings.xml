@@ -24,8 +24,9 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_check_box_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_medical_services_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
+                                                <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -36,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/check_box/baseline_check_box_24.xml" />
+                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/medical_services/baseline_medical_services_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -85,9 +86,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_ok" />
+                                      <entry key="outputName" value="ic_doctor" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="11ff00" />
+                                      <entry key="themeColor" value="ff000f" />
                                     </map>
                                   </option>
                                 </PersistentState>

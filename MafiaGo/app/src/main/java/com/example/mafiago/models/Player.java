@@ -4,19 +4,36 @@ import android.util.Log;
 
 public class Player {
     private String nick, role, status, session_id, time;
-    private  boolean can_click;
+    private  boolean can_click, can_write;
+    private int room_num;
 
-    public Player(String nick, String session_id)
+    public Player(String nick, String session_id, int room_num)
     {
         this.nick = nick;
         this.session_id = session_id;
+        this.room_num = room_num;
         role = "";
         time = "lobby";
         status = "alive";
         can_click = false;
+        can_write = true;
     }
 
+    public int getRoom_num() {
+        return room_num;
+    }
 
+    public void setRoom_num(int room_num) {
+        this.room_num = room_num;
+    }
+
+    public boolean Can_write() {
+        return can_write;
+    }
+
+    public void setCan_write(boolean can_write) {
+        this.can_write = can_write;
+    }
 
     public String getNick() {
         return nick;

@@ -2,10 +2,12 @@ package com.example.mafiago.adapters;
 
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -48,11 +50,15 @@ public class UsersAdapter extends BaseAdapter {
 
         view = layout.inflate(R.layout.item_user, null);
         TextView txt_nick = view.findViewById(R.id.nick);
+        ImageView IV_action = view.findViewById(R.id.IV_Animation);
 
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
+        Log.d("kkk", String.valueOf(list_users.get(position).getAnimation()) + position);
         if (list_users.get(position).getAnimation())
         {
+            Log.d("kkk", "OOO");
+            IV_action.setVisibility(View.VISIBLE);
             //анимация
         }
 

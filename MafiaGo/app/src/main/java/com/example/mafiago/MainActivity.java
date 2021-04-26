@@ -64,3 +64,5 @@ public static Socket socket;
         getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
     }
 }
+
+
