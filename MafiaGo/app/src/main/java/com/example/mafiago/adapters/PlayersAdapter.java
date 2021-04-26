@@ -1,13 +1,19 @@
 package com.example.mafiago.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.example.mafiago.R;
 import com.example.mafiago.models.UserModel;
@@ -36,27 +42,41 @@ public class PlayersAdapter extends BaseAdapter
 
         view = layout.inflate(R.layout.item_user, null);
         TextView txt_nick = view.findViewById(R.id.nick);
+        ImageView IV_action = view.findViewById(R.id.IV_Animation);
 
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
+        if (list_users.get(position).getAnimation())
+        {
+            IV_action.setVisibility(View.VISIBLE);
+            Log.d("kkk", list_users.get(position).getAnimation_type());
+            if (list_users.get(position).getAnimation_type().equals("voting"))
+            {
+                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
+            }
+            else if (list_users.get(position).getAnimation_type().equals("lover"))
+            {
+                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
+            }
+            else if (list_users.get(position).getAnimation_type().equals("mafia"))
+            {
+                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia));
+            }
+            else if (list_users.get(position).getAnimation_type().equals("doctor"))
+            {
+                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_doctor));
+            }
+            else if (list_users.get(position).getAnimation_type().equals("sheriff"))
+            {
+                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
+            }
+            //анимация
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+            IV_action.startAnimation(animation);
+        }
+
         txt_nick.setText(list_users.get(position).nick);
         return view;
-
-
-        /*
-        Button button;
-
-        if (convertView == null) {
-            button = new Button(context);
-            button.setText(list_users.get(position).nick);
-        } else {
-            button = (Button) convertView;
-        }
-        button.setId(position);
-
-        return button;
-
-         */
     }
 
     @Override

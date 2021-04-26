@@ -115,9 +115,11 @@ public class GameFragment extends Fragment {
         list_users.add(new UserModel("GG1", R.drawable.citizen));
         list_users.add(new UserModel("GG2", R.drawable.citizen));
         list_users.add(new UserModel("GG3", R.drawable.citizen));
-        list_users.get(1).setAnimation(true);
-        PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-        gridView_users.setAdapter(playersAdapter);
+
+        StartAnimation("sheriff");
+        //StopAnimation();
+
+
         player.setTime("night_love");
         player.setRole("lover");
         player.setCan_click(true);
@@ -584,7 +586,7 @@ public class GameFragment extends Fragment {
                                 switch (player.getRole())
                                 {
                                     case "lover":
-                                        StartAnimation();
+                                        StartAnimation("lover");
                                         break;
                                     case "mafia":
                                         player.setCan_write(true);
@@ -597,13 +599,13 @@ public class GameFragment extends Fragment {
                                 switch (player.getRole())
                                 {
                                     case "sheriff":
-                                        StartAnimation();
+                                        StartAnimation("sheriff");
                                         break;
                                     case "doktor":
-                                        StartAnimation();
+                                        StartAnimation("doctor");
                                         break;
                                     case "mafia":
-                                        StartAnimation();
+                                        StartAnimation("mafia");
                                         break;
                                     default:
                                         Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
@@ -613,7 +615,7 @@ public class GameFragment extends Fragment {
                                 player.setCan_write(true);
                                 break;
                             case "voting":
-                                StartAnimation();
+                                StartAnimation("voting");
                                 break;
                         }
                     }
@@ -768,11 +770,14 @@ public class GameFragment extends Fragment {
     ////////////////
     ////////////////
 
-    public void StartAnimation() {
+    public void StartAnimation(String type) {
         player.setCan_click(true);
         for (int i = 0; i < list_users.size(); i++)
         {
             list_users.get(i).setAnimation(true);
+            list_users.get(i).setAnimation_type(type);
+            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+            gridView_users.setAdapter(playersAdapter);
         }
     }
     public void StopAnimation() {
@@ -780,6 +785,8 @@ public class GameFragment extends Fragment {
         for (int i = 0; i < list_users.size(); i++)
         {
             list_users.get(i).setAnimation(false);
+            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+            gridView_users.setAdapter(playersAdapter);
         }
     }
     public void RoleAction(String nick) {

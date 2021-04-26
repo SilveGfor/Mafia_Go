@@ -2,7 +2,7 @@ package com.example.mafiago.models;
 
 public class UserModel {
     private int image;
-    public String nick;
+    public String nick, animation_type;
     private boolean animation;
     private boolean alive;
 
@@ -15,6 +15,15 @@ public class UserModel {
         this.image = image;
         animation = false;
         alive = true;
+        animation_type = "voting";
+    }
+
+    public String getAnimation_type() {
+        return animation_type;
+    }
+
+    public void setAnimation_type(String animation_type) {
+        this.animation_type = animation_type;
     }
 
     public boolean getAnimation() {
