@@ -9,6 +9,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -41,7 +44,6 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import static  com.example.mafiago.MainActivity.socket;
-
 
 public class GameFragment extends Fragment {
     public ListView listView_chat;
@@ -112,9 +114,9 @@ public class GameFragment extends Fragment {
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
-        list_users.add(new UserModel("GG1", R.drawable.citizen));
-        list_users.add(new UserModel("GG2", R.drawable.citizen));
-        list_users.add(new UserModel("GG3", R.drawable.citizen));
+        list_users.add(new UserModel("SilveGfor", R.drawable.citizen));
+        list_users.add(new UserModel("VovaVor", R.drawable.citizen));
+        list_users.add(new UserModel("CloudWhisp", R.drawable.citizen));
 
         StartAnimation("sheriff");
         //StopAnimation();
@@ -126,6 +128,15 @@ public class GameFragment extends Fragment {
 
 
         btnSend.setOnClickListener(v -> {
+
+            final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+
+            // amplitude 0.2 and frequency 20
+            BounceInterpolator interpolator = new BounceInterpolator();
+            animation.setInterpolator(interpolator);
+
+            btnSend.startAnimation(animation);
+
             if (player.Can_write()) {
                 final JSONObject json2 = new JSONObject();
                 try {
@@ -628,6 +639,7 @@ public class GameFragment extends Fragment {
         }
     };
 
+    //принимает роль
     private Emitter.Listener onRole = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
