@@ -4,7 +4,7 @@ import android.util.Log;
 
 public class Player {
     private String nick, role, status, session_id, time;
-    private  boolean can_click, can_write;
+    private  boolean can_click, can_write, voted_at_night;
     private int room_num;
 
     public Player(String nick, String session_id, int room_num)
@@ -15,8 +15,17 @@ public class Player {
         role = "";
         time = "lobby";
         status = "alive";
+        voted_at_night = false;
         can_click = false;
         can_write = true;
+    }
+
+    public boolean getVoted_at_night() {
+        return voted_at_night;
+    }
+
+    public void setVoted_at_night(boolean voted_at_night) {
+        this.voted_at_night = voted_at_night;
     }
 
     public int getRoom_num() {

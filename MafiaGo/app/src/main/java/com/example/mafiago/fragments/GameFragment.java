@@ -227,6 +227,10 @@ public class GameFragment extends Fragment {
                                 case "lover":
                                     RoleAction(nick);
                                     break;
+                                case "doctor_of_easy_virtue":
+                                    player.setVoted_at_night(true);
+                                    RoleAction(nick);
+                                    break;
                                 default:
                                     Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
                             }
@@ -238,6 +242,9 @@ public class GameFragment extends Fragment {
                                     RoleAction(nick);
                                     break;
                                 case "doktor":
+                                    RoleAction(nick);
+                                    break;
+                                case "doctor_of_easy_virtue":
                                     RoleAction(nick);
                                     break;
                                 case "mafia":
@@ -318,6 +325,7 @@ public class GameFragment extends Fragment {
             socket.on("role_action", onRoleAction);
             socket.on("role_action_mafia", onRoleActionMafia);
             socket.on("role_action_sheriff", onRoleActionSheriff);
+            socket.on("system_message", onSystemMessage);
             return null;
         }
 
@@ -599,7 +607,13 @@ public class GameFragment extends Fragment {
                                     case "lover":
                                         StartAnimation("lover");
                                         break;
+                                    case "doctor_of_easy_virtue":
+                                        StartAnimation("lover");
+                                        break;
                                     case "mafia":
+                                        player.setCan_write(true);
+                                        break;
+                                    case "mafia_don":
                                         player.setCan_write(true);
                                         break;
                                     default:
@@ -609,6 +623,11 @@ public class GameFragment extends Fragment {
                             case "night_other":
                                 switch (player.getRole())
                                 {
+                                    case "doctor_of_easy_virtue":
+                                        if (!player.getVoted_at_night()) {
+                                            StartAnimation("doctor");
+                                        }
+                                        break;
                                     case "sheriff":
                                         StartAnimation("sheriff");
                                         break;
@@ -618,11 +637,15 @@ public class GameFragment extends Fragment {
                                     case "mafia":
                                         StartAnimation("mafia");
                                         break;
+                                    case "mafi_don":
+                                        StartAnimation("mafia");
+                                        break;
                                     default:
                                         Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
                                 }
                                 break;
                             case "day":
+                                player.setVoted_at_night(false);
                                 player.setCan_write(true);
                                 break;
                             case "voting":
@@ -771,6 +794,21 @@ public class GameFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onSystemMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    Log.d("kkk", String.valueOf(data));
                 }
             });
         }

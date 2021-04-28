@@ -6,9 +6,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
@@ -21,6 +25,8 @@ public class MenuFragment extends Fragment {
     Button btnProfile;
     Button btnTools;
     TextView txtNick;
+
+    CardView CV_info;
 
     int pressedTimes = 0;
 
@@ -36,11 +42,27 @@ public class MenuFragment extends Fragment {
         btnProfile = view.findViewById(R.id.btnProfile);
         btnTools = view.findViewById(R.id.btnTools);
         txtNick = view.findViewById(R.id.txtNick);
-        txtNick.setText(MainActivity.NickName);
+        //txtNick.setText(MainActivity.NickName);
+        txtNick.setText("SilveGfor");
+
+        CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
         Button bubbleButton = (Button) view.findViewById(R.id.bubble_button);
         TextView tvNotification = (TextView)view.findViewById(R.id.tvNotification);
 
+
+        CV_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
+
+                // amplitude 0.2 and frequency 20
+                BounceInterpolator interpolator = new BounceInterpolator();
+                animation.setInterpolator(interpolator);
+
+                CV_info.startAnimation(animation);
+            }
+        });
 
         bubbleButton.setOnClickListener(new View.OnClickListener() {
             @Override
