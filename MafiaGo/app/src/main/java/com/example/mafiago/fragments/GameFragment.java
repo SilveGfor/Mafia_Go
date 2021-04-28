@@ -118,7 +118,7 @@ public class GameFragment extends Fragment {
         list_users.add(new UserModel("VovaVor", R.drawable.citizen));
         list_users.add(new UserModel("CloudWhisp", R.drawable.citizen));
 
-        StartAnimation("sheriff");
+        StartAnimation("mafia");
         //StopAnimation();
 
 
