@@ -96,7 +96,7 @@ public class GamesListFragment extends Fragment {
         return view;
     }
 
-    class SocketTask extends AsyncTask<Void, Void, Void> {
+    public class SocketTask extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected void onPreExecute() {

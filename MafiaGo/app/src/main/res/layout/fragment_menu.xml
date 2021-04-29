@@ -84,31 +84,6 @@
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
 
-    <LinearLayout
-        android:layout_alignParentBottom="true"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <Button
-            android:id="@+id/bubble_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/dark_button"
-            android:text="Счётчик мышек"
-            android:textColor="#FFFFFF" />
-
-            <TextView
-                android:id="@+id/tvNotification"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/count_bubble"
-                android:text="00"
-                android:textColor="#FFFFFF"
-                android:textSize="10sp"
-                android:textStyle="bold" />
-
-    </LinearLayout>
 
     <ImageView
         android:id="@+id/MafGo"

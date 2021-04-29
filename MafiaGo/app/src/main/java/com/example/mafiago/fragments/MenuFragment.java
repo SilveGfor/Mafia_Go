@@ -47,9 +47,6 @@ public class MenuFragment extends Fragment {
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
-        Button bubbleButton = (Button) view.findViewById(R.id.bubble_button);
-        TextView tvNotification = (TextView)view.findViewById(R.id.tvNotification);
-
 
         CV_info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,15 +58,6 @@ public class MenuFragment extends Fragment {
                 animation.setInterpolator(interpolator);
 
                 CV_info.startAnimation(animation);
-            }
-        });
-
-        bubbleButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pressedTimes += 1;
-                tvNotification.setText(String.valueOf(pressedTimes));
-
             }
         });
 

@@ -311,7 +311,6 @@ public class GameFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... voids) {
-
             socket.on("connect", onConnect);
             socket.on("disconnect", onDisconnect);
             socket.on("get_in_room", onGetInRoom);
@@ -326,6 +325,7 @@ public class GameFragment extends Fragment {
             socket.on("role_action_mafia", onRoleActionMafia);
             socket.on("role_action_sheriff", onRoleActionSheriff);
             socket.on("system_message", onSystemMessage);
+            socket.on("user_error", onUserError);
             return null;
         }
 
@@ -336,11 +336,12 @@ public class GameFragment extends Fragment {
         }
     }
 
-    ////////////////
-    ////////////////
-    //       SOCKETS start
-    ////////////////
-    ////////////////
+    /*******************************
+     *                             *
+     *       SOCKETS start         *
+     *                             *
+     *******************************/
+
 
     private Emitter.Listener onConnectToRoom = new Emitter.Listener() {
         @Override
@@ -814,11 +815,96 @@ public class GameFragment extends Fragment {
         }
     };
 
-    ////////////////
-    ////////////////
-    //       SOCKETS end
-    ////////////////
-    ////////////////
+    private Emitter.Listener onUserError = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String error;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    AlertDialog alert;
+                    try {
+                        error = data.getString("error");
+                        switch (error)
+                        {
+                            case "game_has_been_started":
+                                builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Извините, но игра уже началась")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                alert = builder.create();
+                                alert.show();
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                            case "max_people_in_room":
+                                builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Извините, но в комнате нет мест")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                alert = builder.create();
+                                alert.show();
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                            case "you_are_playing_in_other_room":
+                                builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Извините, но вы играете в другой игре")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                alert = builder.create();
+                                alert.show();
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                            case "game_is_over":
+                                builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Извините, но вы играете в другой игре")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                alert = builder.create();
+                                alert.show();
+                        }
+                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    /*******************************
+     *                             *
+     *       SOCKETS end           *
+     *                             *
+     *******************************/
 
     public void StartAnimation(String type) {
         player.setCan_click(true);
