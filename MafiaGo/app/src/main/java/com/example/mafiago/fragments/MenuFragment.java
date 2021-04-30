@@ -2,6 +2,7 @@ package com.example.mafiago.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,6 +48,7 @@ public class MenuFragment extends Fragment {
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
+        //Nastroiki nastroiki = new Nastroiki();
 
         CV_info.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +60,13 @@ public class MenuFragment extends Fragment {
                 animation.setInterpolator(interpolator);
 
                 CV_info.startAnimation(animation);
+            }
+        });
+
+        btnTools.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
             }
         });
 

@@ -1,12 +1,52 @@
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="wifi"
-        android:summary="@string/wifi_summary"
-        android:title="@string/wifi_title"/>
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="hints"
-        android:summary="@string/hints_summary"
-        android:title="@string/hints_title"/>
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Работа с файлами">
+        <CheckBoxPreference
+            android:key="pref_openmode"
+            android:title="Открыть файл"
+            android:summary="Открывать файл при запуске приложения" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Настройки шрифта">
+        <EditTextPreference
+            android:key="text_size"
+            android:title="Размер шрифта"
+            android:summary="Устанавливает новый размер шрифта"
+            android:defaultValue="14"
+            android:dialogTitle="Введите размер шрифта (от 10 до 32)" />
+
+        <ListPreference
+            android:key="text_style"
+            android:title="Стиль для шрифта"
+            android:summary="Устанавливает стиль для шрифта"
+            android:defaultValue="1"
+            android:dialogTitle="Выберите стиль для шрифта" />
+
+        <PreferenceScreen
+            android:key="text_color"
+            android:title="Цвет текста"
+            android:summary="Устанавливает цвет для текста">
+
+            <CheckBoxPreference
+                android:key="text_color_black"
+                android:title="Черный"
+                android:defaultValue="true"
+                android:summary="Устанавливает черный цвет" />
+            <CheckBoxPreference
+                android:key="text_color_red"
+                android:title="Красный"
+                android:summary="Устанавливает красный цвет" />
+            <CheckBoxPreference
+                android:key="text_color_green"
+                android:title="Зеленый"
+                android:summary="Устанавливает зеленый цвет" />
+            <CheckBoxPreference
+                android:key="text_color_blue"
+                android:title="Синий"
+                android:summary="Устанавливает синий цвет" />
+        </PreferenceScreen>
+
+    </PreferenceCategory>
 </PreferenceScreen>
