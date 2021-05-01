@@ -342,7 +342,6 @@ public class GameFragment extends Fragment {
      *                             *
      *******************************/
 
-
     private Emitter.Listener onConnectToRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
