@@ -126,11 +126,6 @@ public class GameFragment extends Fragment {
         //StopAnimation();
 
 
-        player.setTime("night_love");
-        player.setRole("lover");
-        player.setCan_click(true);
-
-
         btnSend.setOnClickListener(v -> {
 
             final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
@@ -809,23 +804,25 @@ public class GameFragment extends Fragment {
                     String message, time, type, number, status;
 
                     try {
-                        if (data.getInt("num") > num)
-                        {
+                        if (data.getInt("num") > num) {
                             num = data.getInt("num");
+
+                            time = data.getString("time");
+                            message = data.getString("message");
+                            status = data.getString("status");
+                            MessageModel messageModel = new MessageModel(message, time.substring(11, 16), "Server", "UsersMes");
+                            list_chat.add(num, messageModel);
+                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                            listView_chat.setAdapter(messageAdapter);
+                            listView_chat.setSelection(messageAdapter.getCount() - 1);
                         }
-                        time = data.getString("time");
-                        message = data.getString("message");
-                        status = data.getString("status");
-                        type = data.getString("type");
-                        MessageModel messageModel = new MessageModel(message, time.substring(11,16), "Server", "UsersMes");
-                        list_chat.add(num, messageModel);
-                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                        listView_chat.setAdapter(messageAdapter);
-                        listView_chat.setSelection(messageAdapter.getCount() - 1);
+                        else
+                        {
+                            Log.d("kkk", "num_message - : " + num);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("kkk", "UsersMes");
 
 
                     Log.d("kkk", "system message - " + String.valueOf(data));
