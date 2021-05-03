@@ -38,44 +38,56 @@ public class PlayersAdapter extends BaseAdapter
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        View view = convertView;
+        View view;
 
         view = layout.inflate(R.layout.item_user, null);
-        TextView txt_nick = view.findViewById(R.id.nick);
-        ImageView IV_action = view.findViewById(R.id.IV_Animation);
-
+        TextView TV_nick = view.findViewById(R.id.Item_user_TV_nick);
+        ImageView IV_action = view.findViewById(R.id.Item_user_IV_Animation);
+        ImageView IV_role = view.findViewById(R.id.Item_user_IV_role);
+        switch (list_users.get(position).getRole())
+        {
+            case "unknown":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+            case "mafia":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+            case "citizen":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+            case "sheriff":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+            case "doctor":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+            case "lover":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+        }
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
         if (list_users.get(position).getAnimation())
         {
             IV_action.setVisibility(View.VISIBLE);
             Log.d("kkk", list_users.get(position).getAnimation_type());
-            if (list_users.get(position).getAnimation_type().equals("voting"))
-            {
-                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
-            }
-            else if (list_users.get(position).getAnimation_type().equals("lover"))
-            {
-                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
-            }
-            else if (list_users.get(position).getAnimation_type().equals("mafia"))
-            {
-                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia));
-            }
-            else if (list_users.get(position).getAnimation_type().equals("doctor"))
-            {
-                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_doctor));
-            }
-            else if (list_users.get(position).getAnimation_type().equals("sheriff"))
-            {
-                IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
+            switch (list_users.get(position).getAnimation_type()) {
+                case "voting":
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
+                    break;
+                case "lover":
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
+                    break;
+                case "mafia":
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia));
+                    break;
+                case "doctor":
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_doctor));
+                    break;
+                case "sheriff":
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
+                    break;
             }
             //анимация
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.voting);
             IV_action.startAnimation(animation);
         }
 
-        txt_nick.setText(list_users.get(position).nick);
+        TV_nick.setText(list_users.get(position).getNick());
         return view;
     }
 

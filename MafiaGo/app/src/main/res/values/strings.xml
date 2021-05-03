@@ -1,7 +1,4 @@
 <resources>
-    <string name="app_name">MafiaGo</string>
-    <string name="wifi_title">Wi-Fi</string>
-    <string name="wifi_summary">Вкл. или выкл. сеть WiFi</string>
-    <string name="hints_title">Подсказки</string>
-    <string name="hints_summary">Показывать подсказки</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Mafia Go</string>
 </resources>

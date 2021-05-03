@@ -71,7 +71,7 @@ public static Socket socket;
         MainActivity.SocketTask socketTask = new SocketTask();
         socketTask.execute();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
     }
 
     class SocketTask extends AsyncTask<Void, Void, Void> {

@@ -18,7 +18,7 @@
 
 
             <ImageView
-                android:id="@+id/IVrole"
+                android:id="@+id/Item_user_IV_role"
                 android:layout_marginTop="15dp"
                 android:src="@drawable/citizen"
                 android:layout_width="70dp"
@@ -27,7 +27,7 @@
                 android:scaleType="centerCrop" />
 
             <ImageView
-                android:id="@+id/IV_Animation"
+                android:id="@+id/Item_user_IV_Animation"
                 android:visibility="invisible"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
@@ -38,8 +38,8 @@
 
 
             <TextView
-                android:id="@+id/nick"
-                android:layout_below="@id/IVrole"
+                android:id="@+id/Item_user_TV_nick"
+                android:layout_below="@id/Item_user_IV_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"

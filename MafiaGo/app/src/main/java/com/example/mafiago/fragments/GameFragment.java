@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +12,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -27,21 +25,17 @@ import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.example.mafiago.adapters.MessageAdapter;
 import com.example.mafiago.adapters.PlayersAdapter;
-import com.example.mafiago.adapters.UsersAdapter;
 import com.example.mafiago.models.MessageModel;
 import com.example.mafiago.models.Player;
 import com.example.mafiago.models.UserModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import static  com.example.mafiago.MainActivity.socket;
 
@@ -114,9 +108,9 @@ public class GameFragment extends Fragment {
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
-        list_users.add(new UserModel("SilveGfor", R.drawable.citizen));
-        list_users.add(new UserModel("VovaVor", R.drawable.citizen));
-        list_users.add(new UserModel("CloudWhisp", R.drawable.citizen));
+        list_users.add(new UserModel("SilveGfor"));
+        list_users.add(new UserModel("VovaVor"));
+        list_users.add(new UserModel("CloudWhisp"));
 
         StartAnimation("mafia");
         //StopAnimation();
@@ -212,8 +206,8 @@ public class GameFragment extends Fragment {
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String nick = list_users.get(position).nick;
-                Log.d("kkk", "Нажатие на ник: " + list_users.get(position).nick);
+                String nick = list_users.get(position).getNick();
+                Log.d("kkk", "Нажатие на ник: " + list_users.get(position).getNick());
                 if (player.Can_click())
                 {
                     switch (player.getTime())
@@ -326,6 +320,7 @@ public class GameFragment extends Fragment {
             socket.on("role_action_sheriff", onRoleActionSheriff);
             socket.on("system_message", onSystemMessage);
             socket.on("user_error", onUserError);
+            socket.on("mafias", onMafias);
             return null;
         }
 
@@ -350,6 +345,7 @@ public class GameFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    // TODO: доделать событие OnConnectToRoom
                     Log.d("kkk", "data - : " + args[0].toString());
                 }
             });
@@ -382,19 +378,17 @@ public class GameFragment extends Fragment {
                         MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                         listView_chat.setAdapter(messageAdapter);
 
-                        //UserModel user_model = new UserModel(nick);
-                        //list_users.remove(user_model);
                         for (int i=list_users.size()-1; i>=0; i--)
                         {
-                            if (list_users.get(i).nick.equals(nick))
+                            if (list_users.get(i).getNick().equals(nick))
                             {
-                                Log.d("kkk", "remove" + list_users.get(i).nick);
+                                Log.d("kkk", "remove" + list_users.get(i).getNick());
                                 list_users.remove(i);
                             }
                         }
                         for (int i=list_users.size()-1; i>=0; i--)
                         {
-                            Log.d("kkk", list_users.get(i).nick);
+                            Log.d("kkk", list_users.get(i).getNick());
                         }
                         PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                         gridView_users.setAdapter(playersAdapter);
@@ -435,7 +429,7 @@ public class GameFragment extends Fragment {
                                 Log.d("kkk", "UsersMes");
                                 MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
                                 //list_chat.add(0, messageModel);
-                                list_chat.add(messageModel);
+                                list_chat.add(num, messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -443,8 +437,8 @@ public class GameFragment extends Fragment {
                             else
                             {
                                 Log.d("kkk", "AnswerMes");
-                                   MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
-                                list_chat.add(messageModel);
+                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                list_chat.add(num, messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -529,15 +523,9 @@ public class GameFragment extends Fragment {
                             listView_chat.setAdapter(messageAdapter);
                             Not_First = true;
 
-                            list_users.add(new UserModel(nick, R.drawable.citizen));
+                            list_users.add(new UserModel(nick));
                             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                             gridView_users.setAdapter(playersAdapter);
-
-                            //прошлый вариант
-                            //UserModel user_model = new UserModel(nick);
-                            //list_users.add(user_model);
-                            //UsersAdapter usersAdapter = new UsersAdapter(list_users, getContext());
-                            //listView_users.setAdapter(usersAdapter);
                         }
                         else
                         {
@@ -894,6 +882,23 @@ public class GameFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onMafias = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    //JSONArray
+                    // TODO: доделать событие OnMafias
+                    Log.d("kkk", "Socket_принять - mafias - " + args[0]);
                 }
             });
         }

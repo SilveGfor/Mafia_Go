@@ -1,8 +1,7 @@
 package com.example.mafiago.models;
 
 public class UserModel {
-    private int image;
-    public String nick, animation_type;
+    private String nick, animation_type, role;
     private boolean animation;
     private boolean alive;
 
@@ -10,12 +9,20 @@ public class UserModel {
     {
     }
 
-    public UserModel(String nick, int image) {
+    public UserModel(String nick) {
         this.nick = nick;
-        this.image = image;
         animation = false;
         alive = true;
         animation_type = "voting";
+        role = "unknown";
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getAnimation_type() {
@@ -42,11 +49,7 @@ public class UserModel {
         this.alive = alive;
     }
 
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
+    public String getNick() {
+        return nick;
     }
 }
