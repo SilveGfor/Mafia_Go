@@ -36,21 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static String password = "";
     public static String nick = "";
-/*
-    public static Socket socket;
-    {
-        try{
-            IO.Options options = IO.Options.builder()
-                    .setReconnection(false)
-                    .build();
-            socket = IO.socket(URI.create("https://" + MainActivity.url), options); // the main namespace
-            //socket = IO.socket("https://" + MainActivity.url);
 
-        }catch (URISyntaxException e){
-            throw new RuntimeException();
-        }
-    }
- */
 
 public static Socket socket;
     {
@@ -85,8 +71,8 @@ public static Socket socket;
         @Override
         protected Void doInBackground(Void... voids) {
 
-            //socket.on("connect", onConnect);
-            //socket.on("disconnect", onDisconnect);
+            socket.on("connect", onConnect);
+            socket.on("disconnect", onDisconnect);
             return null;
         }
 
@@ -96,15 +82,10 @@ public static Socket socket;
             Log.d("kkk", "onPostExecute");
         }
     }
-/*
+
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if(this == null)
-                return;
-            Activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
                         final JSONObject json2 = new JSONObject();
                         try {
                             json2.put("nick", NickName);
@@ -112,27 +93,18 @@ public static Socket socket;
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        socket.emit("connect_to_room", json2);
-                        Log.d("kkk", "CONNECT");
-                }
-            });
+                        socket.emit("connection", json2);
+                        Log.d("kkk", "CONNECTION");
         }
     };
 
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if(this == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("kkk", "DISCONNECT");
-                }
-            });
+                    Log.d("kkk", "DISCONNECTION");
         }
     };
- */
+
 }
 
 
