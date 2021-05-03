@@ -783,7 +783,7 @@ public class GameFragment extends Fragment {
                     String sheriff_role;
                     try {
                         sheriff_role = data.getString("role");
-                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
+                        Log.d("kkk", "Socket_принять - role_action_sheriff " + args[0]);
                         MessageModel messageModel = new MessageModel("шериф проверил " + sheriff_role, "09-55", "System", "UsersMes");
                         list_chat.add(messageModel);
                         MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
@@ -888,7 +888,7 @@ public class GameFragment extends Fragment {
                                 alert = builder.create();
                                 alert.show();
                         }
-                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
+                        Log.d("kkk", "Socket_принять - user_error " + args[0]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
