@@ -670,9 +670,10 @@ public class GameFragment extends Fragment {
                     String role;
                     try {
                         role = data.getString("role");
+                        player.setRole(role);
                         Log.d("kkk", "Socket_принять - role " + role);
                         AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                        builder.setTitle("Вам выдали роль!").setMessage("Неужели вы стали доктором лёгкого поведения! Главное не волнуйтесь, просто такие как вы делятся на 2 типа... Одни из них кстати доктора...").setIcon(R.drawable.icon_mir).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
+                        builder.setTitle("Вам выдали роль!").setMessage("Ваша роль - " + role).setIcon(R.drawable.icon_mir).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
@@ -896,7 +897,7 @@ public class GameFragment extends Fragment {
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                             case "game_is_over":
                                 builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("Извините, но вы играете в другой игре")
+                                builder.setTitle("Извините, но игра закончена")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
                                         .setCancelable(false)
