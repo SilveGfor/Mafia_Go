@@ -254,6 +254,7 @@ public class GameFragment extends Fragment {
                             }
                             break;
                         case "day":
+                            Voting(nick);
                             break;
                         case "voting":
                             break;
@@ -970,5 +971,18 @@ public class GameFragment extends Fragment {
         }
         socket.emit("role_action", json3);
         Log.d("kkk", "Socket_отправка - role_action"+ json3.toString());
+    }
+    public void Voting(String nick) {
+        final JSONObject json3 = new JSONObject();
+        try {
+            json3.put("nick", player.getNick());
+            json3.put("session_id", player.getSession_id());
+            json3.put("room", player.getRoom_num());
+            json3.put("influence_on_nick", nick);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("voting", json3);
+        Log.d("kkk", "Socket_отправка - voting"+ json3.toString());
     }
 }
