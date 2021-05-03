@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     public static String NickName = "";
     public static String Session_id = "";
     public static int Game_id;
-    public static String url = "66167057bb8a68.localhost.run";
+    public static String url = "436e2e0981aaa1.localhost.run";
 
     public static String password = "";
     public static String nick = "";
