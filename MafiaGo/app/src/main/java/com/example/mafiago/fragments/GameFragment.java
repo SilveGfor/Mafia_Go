@@ -439,7 +439,7 @@ public class GameFragment extends Fragment {
                                 Log.d("kkk", "UsersMes");
                                 MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
                                 //list_chat.add(0, messageModel);
-                                list_chat.add(messageModel);
+                                list_chat.add(num, messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -448,7 +448,7 @@ public class GameFragment extends Fragment {
                             {
                                 Log.d("kkk", "AnswerMes");
                                 MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
-                                list_chat.add(messageModel);
+                                list_chat.add(num, messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -806,6 +806,28 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
+                    String message, time, type, number, status;
+
+                    try {
+                        if (data.getInt("num") > num)
+                        {
+                            num = data.getInt("num");
+                        }
+                        time = data.getString("time");
+                        message = data.getString("message");
+                        status = data.getString("status");
+                        type = data.getString("type");
+                        MessageModel messageModel = new MessageModel(message, time.substring(11,16), "Server", "UsersMes");
+                        list_chat.add(num, messageModel);
+                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                        listView_chat.setAdapter(messageAdapter);
+                        listView_chat.setSelection(messageAdapter.getCount() - 1);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("kkk", "UsersMes");
+
+
                     Log.d("kkk", "system message - " + String.valueOf(data));
                 }
             });
