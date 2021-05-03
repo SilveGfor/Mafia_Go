@@ -101,7 +101,7 @@ public class CreateRoomFragment extends Fragment {
                     json.put("nick", MainActivity.NickName);
                     json.put("session_id", MainActivity.Session_id);
                     json.put("name", ET_RoomName.getText());
-                    json.put("min_people_num", 1);
+                    json.put("min_people_num", 2);
                     json.put("max_people_num", SB_max_people.getProgress());
                     json.put("roles", json_roles);
                 } catch (JSONException e) {

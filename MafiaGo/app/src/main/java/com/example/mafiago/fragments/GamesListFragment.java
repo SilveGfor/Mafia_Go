@@ -125,6 +125,8 @@ public class GamesListFragment extends Fragment {
     private final Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -162,15 +164,16 @@ public class GamesListFragment extends Fragment {
     private final Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            /*
-            Objects.requireNonNull(getActivity()).runOnUiThread(new Runnable() {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     Log.d("kkk", "Disconnect");
                 }
             });
 
-             */
+
             Log.d("kkk", "Disconnect");
         }
     };
@@ -180,6 +183,8 @@ public class GamesListFragment extends Fragment {
     private final Emitter.Listener onDeleteRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -211,6 +216,8 @@ public class GamesListFragment extends Fragment {
     private final Emitter.Listener onNewRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -243,6 +250,8 @@ public class GamesListFragment extends Fragment {
     private final Emitter.Listener onUpdateRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {

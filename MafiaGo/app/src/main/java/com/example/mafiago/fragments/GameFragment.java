@@ -97,6 +97,19 @@ public class GameFragment extends Fragment {
         SocketTask socketTask = new SocketTask();
         socketTask.execute();
 
+
+        final JSONObject json = new JSONObject();
+        try {
+            json.put("nick", player.getNick());
+            json.put("room", player.getRoom_num());
+            json.put("last_message_num", num);
+            json.put("session_id", player.getSession_id());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("connect_to_room", json);
+        Log.d("kkk", "connect_to_room - " + json);
+
         final JSONObject json3 = new JSONObject();
         try {
             json3.put("nick", player.getNick());
@@ -108,11 +121,8 @@ public class GameFragment extends Fragment {
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
-        list_users.add(new UserModel("SilveGfor"));
-        list_users.add(new UserModel("VovaVor"));
-        list_users.add(new UserModel("CloudWhisp"));
 
-        StartAnimation("mafia");
+        //StartAnimation("mafia");
         //StopAnimation();
 
 
@@ -796,7 +806,7 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    Log.d("kkk", String.valueOf(data));
+                    Log.d("kkk", "system message - " + String.valueOf(data));
                 }
             });
         }

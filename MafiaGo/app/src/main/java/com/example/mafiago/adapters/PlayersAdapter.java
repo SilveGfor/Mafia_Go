@@ -64,7 +64,6 @@ public class PlayersAdapter extends BaseAdapter
         if (list_users.get(position).getAnimation())
         {
             IV_action.setVisibility(View.VISIBLE);
-            Log.d("kkk", list_users.get(position).getAnimation_type());
             switch (list_users.get(position).getAnimation_type()) {
                 case "voting":
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
