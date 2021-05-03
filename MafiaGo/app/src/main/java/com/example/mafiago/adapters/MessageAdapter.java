@@ -23,7 +23,10 @@ public class MessageAdapter extends BaseAdapter {
     {
         this.list_mess = list_mess;
         this.context = context;
-        layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (context != null) {
+            layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
+
     }
     //количество сообщений
     @Override
