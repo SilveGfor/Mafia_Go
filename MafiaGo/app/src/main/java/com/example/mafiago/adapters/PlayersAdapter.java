@@ -32,7 +32,9 @@ public class PlayersAdapter extends BaseAdapter
 
         this.list_users = list_users;
         this.context = context;
-        layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        if (context != null) {
+            layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        }
     }
 
     @Override
