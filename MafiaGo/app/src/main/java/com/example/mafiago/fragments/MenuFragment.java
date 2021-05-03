@@ -43,8 +43,7 @@ public class MenuFragment extends Fragment {
         btnProfile = view.findViewById(R.id.btnProfile);
         btnTools = view.findViewById(R.id.btnTools);
         txtNick = view.findViewById(R.id.txtNick);
-        //txtNick.setText(MainActivity.NickName);
-        txtNick.setText("SilveGfor");
+        txtNick.setText(MainActivity.NickName);
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
