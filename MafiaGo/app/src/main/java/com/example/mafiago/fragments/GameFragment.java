@@ -98,6 +98,17 @@ public class GameFragment extends Fragment {
         socketTask.execute();
 
 
+        final JSONObject json3 = new JSONObject();
+        try {
+            json3.put("nick", player.getNick());
+            json3.put("session_id", player.getSession_id());
+            json3.put("room", player.getRoom_num());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_in_room", json3);
+        Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+
         final JSONObject json = new JSONObject();
         try {
             json.put("nick", player.getNick());
@@ -109,17 +120,6 @@ public class GameFragment extends Fragment {
         }
         socket.emit("connect_to_room", json);
         Log.d("kkk", "connect_to_room - " + json);
-
-        final JSONObject json3 = new JSONObject();
-        try {
-            json3.put("nick", player.getNick());
-            json3.put("session_id", player.getSession_id());
-            json3.put("room", player.getRoom_num());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        socket.emit("get_in_room", json3);
-        Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
 
         //StartAnimation("mafia");
