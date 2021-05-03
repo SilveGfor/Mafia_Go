@@ -254,9 +254,9 @@ public class GameFragment extends Fragment {
                             }
                             break;
                         case "day":
-                            Voting(nick);
                             break;
                         case "voting":
+                            Voting(nick);
                             break;
                         default:
                             Log.d("kkk", "Что-то пошло не так. Такого времени дня не может быть!");
@@ -327,6 +327,7 @@ public class GameFragment extends Fragment {
             socket.on("system_message", onSystemMessage);
             socket.on("user_error", onUserError);
             socket.on("mafias", onMafias);
+            socket.on("get_my_game_info", onGetMyGameInfo);
             return null;
         }
 
@@ -929,6 +930,44 @@ public class GameFragment extends Fragment {
                     //JSONArray
                     // TODO: доделать событие OnMafias
                     Log.d("kkk", "Socket_принять - mafias - " + args[0]);
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onGetMyGameInfo = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String role, status, influences, time;
+                    boolean can_act, can_vote, last_message;
+                    try {
+                        role = data.getString("role");
+                        status = data.getString("status");
+                        time = data.getString("time");
+                        can_vote = data.getBoolean("can_vote");
+                        can_act = data.getBoolean("can_act");
+                        player.setRole(role);
+                        player.setStatus(status);
+                        if (time.equals("voting"))
+                        {
+                            player.setCan_click(can_vote);
+                        }
+                        else
+                        {
+                            player.setCan_click(can_act);
+                        }
+                        // TODO: player.setCan_write(true); - СДЕЛАТЬ SWITH
+                        player.setCan_write(true);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("kkk", "Socket_принять - get_my_game_info - " + args[0]);
                 }
             });
         }
