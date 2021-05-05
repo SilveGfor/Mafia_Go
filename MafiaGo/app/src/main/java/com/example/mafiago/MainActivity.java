@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
 public static Socket socket;
     {
         IO.Options options = IO.Options.builder()
+                //.setTimeout(30000)
                 .setReconnectionDelay(0)
                 .build();
         socket = IO.socket(URI.create("https://" + MainActivity.url), options); // the main namespace
@@ -56,7 +57,7 @@ public static Socket socket;
 
         socket.connect();
 
-        client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.MILLISECONDS).build();
+        client = new OkHttpClient.Builder().connectTimeout(30000, TimeUnit.MILLISECONDS).build();
 
         MainActivity.SocketTask socketTask = new SocketTask();
         socketTask.execute();
