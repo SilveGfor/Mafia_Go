@@ -212,7 +212,7 @@ public class StartFragment extends Fragment {
 
                             Log.d("kkk", "НИК: " + NickName);
                             Log.d("kkk", "Переход в MenuFragment");
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                              getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
                             //ETpassword.setText("");
                         }
                     } catch (JSONException e) {
