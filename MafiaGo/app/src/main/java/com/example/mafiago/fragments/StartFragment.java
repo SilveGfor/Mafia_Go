@@ -179,6 +179,9 @@ public class StartFragment extends Fragment {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
+                    Log.d("kkk", "Failure: " + e.getMessage());
+                    LoginTask loginTask = new LoginTask();
+                    loginTask.execute();
                 }
 
                 @Override

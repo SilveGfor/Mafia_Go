@@ -328,18 +328,26 @@ public class GameFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     String nick;
                     String time;
+                    int test_num;
                     try {
+                        test_num = data.getInt("num");
                         nick = data.getString("nick");
-                        Log.d("kkk", num + "  onLeaveUser1  " + data.getInt("num"));
-                        if (data.getInt("num") > num)
-                        {
-                            num = data.getInt("num");
-                        }
                         time = data.getString("time");
-                        Log.d("kkk", num + "  onLeaveUser2  " + data.getInt("num"));
-
                         MessageModel model = new MessageModel("", time.substring(11,16), nick, "DisconnectMes");
-                        list_chat.add(model);
+
+                        if (test_num > num)
+                        {
+                            num = test_num;
+                            list_chat.add(model);
+                        }
+                        else
+                        {
+                            list_chat.add(test_num, model);
+                        }
+
+                        Log.d("kkk", num + "  onLeaveUser2  " + test_num);
+
+                        
                         MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                         listView_chat.setAdapter(messageAdapter);
 
@@ -494,17 +502,19 @@ public class GameFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Log.d("kkk", "Принял - get_in_room: " );
+                    Log.d("kkk", "Принял - get_in_room: " + args[0]);
                     JSONObject data = (JSONObject) args[0];
                     String nick;
                     String time;
+                    int test_num;
                     try {
+                        test_num = data.getInt("num");
                         nick = data.getString("nick");
-                        if (data.getInt("num") > num)
+                        if (test_num > num)
                         {
                             num = data.getInt("num");
                             time = data.getString("time");
-                            Log.d("kkk", num + "  onGetInRoom  " + data.getInt("num"));
+                            Log.d("kkk", test_num + "  onGetInRoom1  " + num);
 
                             MessageModel messageModel = new MessageModel("", time.substring(11,16), nick, "ConnectMes");
                             list_chat.add(messageModel);
@@ -518,7 +528,18 @@ public class GameFragment extends Fragment {
                         }
                         else
                         {
-                            Log.d("kkk", num + "  onGetInRoom  " + "что-то пошло не так " + data.getInt("num"));
+                            time = data.getString("time");
+                            Log.d("kkk", test_num + "  onGetInRoom2  " + num);
+
+                            MessageModel messageModel = new MessageModel("", time.substring(11,16), nick, "ConnectMes");
+                            list_chat.add(test_num, messageModel);
+                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                            listView_chat.setAdapter(messageAdapter);
+                            Not_First = true;
+
+                            list_users.add(new UserModel(nick));
+                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                            gridView_users.setAdapter(playersAdapter);
                         }
 
                     } catch (JSONException e) {
@@ -800,14 +821,14 @@ public class GameFragment extends Fragment {
                                 break;
                             case "role_action_mafia":
                                 data2 = data.getJSONObject("message");
-                                mafia_nick = data2.getString("voter");
-                                user_nick = data2.getString("voter");
+                                mafia_nick = data2.getString("mafia_nick");
+                                user_nick = data2.getString("user_nick");
                                 messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), mafia_nick, "UsersMes");
                                 break;
                             case "voting":
                                 Log.d("kkk", message);
                                 data2 = data.getJSONObject("message");
-                                voter = data2.getString("mafia_nick");
+                                voter = data2.getString("voter");
                                 user_nick = data2.getString("user_nick");
                                 messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), voter, "UsersMes");
                                 break;
