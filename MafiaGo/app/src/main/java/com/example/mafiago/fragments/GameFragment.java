@@ -347,7 +347,7 @@ public class GameFragment extends Fragment {
 
                         Log.d("kkk", num + "  onLeaveUser2  " + test_num);
 
-                        
+
                         MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                         listView_chat.setAdapter(messageAdapter);
 
