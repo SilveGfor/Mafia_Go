@@ -33,14 +33,14 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static com.example.mafiago.MainActivity.client;
+
 
 public class RegisterFragment extends Fragment {
 
     private static final String url1 = "https://" + MainActivity.url + "/reg-code";
     private static final String url2 = "https://" + MainActivity.url + "/registration";
 
-    //OkHttp
-    private OkHttpClient client = new OkHttpClient();
     String resp = "";
 
     Button btnReg;
@@ -164,45 +164,9 @@ public class RegisterFragment extends Fragment {
         btnSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putBoolean(APP_PREFERENCES_WAIT_CODE, false);
-                editor.apply();
-                if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
-                    final JSONObject json = new JSONObject();
-                    try {
-                        json.put("code", ETcode.getText());
-                        json.put("nick", mSettings.getString(APP_PREFERENCES_NICKNAME, ""));
-                        json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
-                        json.put("password", mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Отправил: " + json);
+                RegisterFragment.RegisterTask regTask = new RegisterFragment.RegisterTask();
+                regTask.execute();
 
-                    RequestBody body = RequestBody.create(
-                            MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
-                    Request request = new Request.Builder().url(url2).post(body).build();
-                    Call call = client.newCall(request);
-
-                    call.enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Log.d("kkk", "Всё плохо");
-                            Log.d("kkk", e.toString());
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            resp = response.body().string().toString();
-                            Log.d("kkk", "Принял - " + resp);
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-                        }
-                    });
-
-
-                } else {
-                    Log.d("kkk", "пароли не сопадают");
-                }
             }
         });
         btnExit.setOnClickListener(new View.OnClickListener() {
