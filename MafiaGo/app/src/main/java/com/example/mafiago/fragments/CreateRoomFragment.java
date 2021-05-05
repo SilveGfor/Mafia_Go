@@ -86,13 +86,14 @@ public class CreateRoomFragment extends Fragment {
                 final JSONObject json_roles = new JSONObject();
                 try {
                     ArrayList<String> peaceful = new ArrayList<String>();
+                    peaceful.add("doctor");
                     ArrayList<String> mafia = new ArrayList<String>();
                     json_roles.put("peaceful", peaceful);
                     json_roles.put("mafia", mafia);
                     json.put("nick", MainActivity.NickName);
                     json.put("session_id", MainActivity.Session_id);
                     json.put("name", ET_RoomName.getText());
-                    json.put("min_people_num", 2);
+                    json.put("min_people_num", 5);
                     json.put("max_people_num", SB_max_people.getProgress());
                     json.put("roles", json_roles);
                 } catch (JSONException e) {

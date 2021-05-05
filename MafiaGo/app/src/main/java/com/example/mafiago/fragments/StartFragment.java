@@ -23,6 +23,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -97,6 +98,7 @@ public class StartFragment extends Fragment {
         {
             Log.d("kkk", "SharedPref mEmail, mPassword - нет данных");
         }
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +132,8 @@ public class StartFragment extends Fragment {
                 }
             }
         });
+
+
 
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +170,9 @@ public class StartFragment extends Fragment {
             Log.d("kkk", "Отправил: " + json);
             RequestBody body = RequestBody.create(
                     MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
-            Request request = new Request.Builder().url(url).post(body).build();
+            Request request = new Request.Builder()
+                    .url(url).post(body)
+                    .build();
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override

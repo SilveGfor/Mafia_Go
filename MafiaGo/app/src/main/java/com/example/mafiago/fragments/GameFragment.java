@@ -911,13 +911,9 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    try {
-                        JSONArray jsonArray = data.getJSONArray("mafias");
-                        Log.d("kkk", "Socket_принять - mafias - " + jsonArray);
-                        Log.d("kkk", "Socket_принять - mafias - " + jsonArray.get(0));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                    //JSONArray jsonArray = data.getJSONArray("mafias");
+                    //Log.d("kkk", "Socket_принять - mafias - " + jsonArray);
+                    //Log.d("kkk", "Socket_принять - mafias - " + jsonArray.get(0));
                     // TODO: доделать событие OnMafias
                     Log.d("kkk", "Socket_принять - mafias - " + args[0]);
                 }
