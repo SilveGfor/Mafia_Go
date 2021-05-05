@@ -378,7 +378,6 @@ public class GameFragment extends Fragment {
                     String time;
                     String status;
                     int test_num;
-                    Log.d("kkk", String.valueOf(data));
                     int link;
                     try {
                         nick = data.getString("nick");
@@ -764,11 +763,6 @@ public class GameFragment extends Fragment {
                     try {
                         sheriff_role = data.getString("role");
                         Log.d("kkk", "Socket_принять - role_action_sheriff " + args[0]);
-                        MessageModel messageModel = new MessageModel("шериф проверил " + sheriff_role, "09-55", "System", "UsersMes");
-                        list_chat.add(messageModel);
-                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                        listView_chat.setAdapter(messageAdapter);
-                        listView_chat.setSelection(messageAdapter.getCount() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -786,41 +780,52 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String message, time, type, number, status;
+                    String message, time, type, number, status, mafia_nick, user_nick, voter;
                     int test_num;
 
                     try {
+                        status = data.getString("status");
                         test_num = data.getInt("num");
+                        time = data.getString("time");
+                        message = data.getString("message");
+                        MessageModel messageModel = new MessageModel("Ошибка вывода сообщения", time.substring(11, 16), "Server", "SystemMes");;
+                        MessageAdapter messageAdapter;
+                        switch (status)
+                        {
+                            case "game_over":
+                            case "system_message":
+                                messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
+                                break;
+                            case "role_action_mafia":
+                                mafia_nick = data.getString("mafia_nick");
+                                user_nick = data.getString("user_nick");
+                                messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), mafia_nick, "UsersMes");
+                                break;
+                            case "voting":
+                                voter = data.getString("voter");
+                                user_nick = data.getString("user_nick");
+                                messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), voter, "UsersMes");
+                                break;
+                        }
+
                         //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
                         if (test_num > num) {
                             num = test_num;
-
-                            time = data.getString("time");
-                            message = data.getString("message");
-                            status = data.getString("status");
-                            MessageModel messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
                             list_chat.add(messageModel);
-                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                            listView_chat.setAdapter(messageAdapter);
-                            listView_chat.setSelection(messageAdapter.getCount() - 1);
                         }
                         else
                         {
-                            time = data.getString("time");
-                            message = data.getString("message");
-                            status = data.getString("status");
-                            MessageModel messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
                             list_chat.add(test_num, messageModel);
-                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                            listView_chat.setAdapter(messageAdapter);
-                            listView_chat.setSelection(messageAdapter.getCount() - 1);
                         }
+                        messageAdapter = new MessageAdapter(list_chat, getContext());
+                        listView_chat.setAdapter(messageAdapter);
+                        listView_chat.setSelection(messageAdapter.getCount() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
 
 
-                    Log.d("kkk", "system message - " + String.valueOf(data));
+                    Log.d("kkk", "system message - " + data);
                 }
             });
         }
@@ -842,7 +847,6 @@ public class GameFragment extends Fragment {
                         AlertDialog alert;
                         switch (error) {
                             case "game_has_been_started":
-
                                 builder.setTitle("Извините, но игра уже началась")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
@@ -855,6 +859,7 @@ public class GameFragment extends Fragment {
                                                 });
 
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
                             case "max_people_in_room":
                                 builder.setTitle("Извините, но в комнате нет мест")
                                         .setMessage("")
@@ -867,6 +872,7 @@ public class GameFragment extends Fragment {
                                                     }
                                                 });
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
                             case "you_are_playing_in_other_room":
                                 builder.setTitle("Извините, но вы играете в другой игре")
                                         .setMessage("")
@@ -879,6 +885,7 @@ public class GameFragment extends Fragment {
                                                     }
                                                 });
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
                             case "game_is_over":
                                 builder.setTitle("Извините, но игра закончена")
                                         .setMessage("")
@@ -890,6 +897,7 @@ public class GameFragment extends Fragment {
                                                         dialog.cancel();
                                                     }
                                                 });
+                                break;
                         }
                         alert = builder.create();
                         alert.show();

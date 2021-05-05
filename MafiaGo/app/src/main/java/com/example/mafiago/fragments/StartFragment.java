@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.media.MediaPlayer;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,23 +22,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+
+import static com.example.mafiago.MainActivity.client;
 
 
 public class StartFragment extends Fragment {
 
     private static final String url= "https://" + MainActivity.url + "/login";
 
-    //OkHttp
-    private OkHttpClient client = new OkHttpClient();
 
     //кнопки
     Button btnSignIn;
@@ -154,7 +151,6 @@ public class StartFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... urs) {
-            OkHttpClient client = new OkHttpClient();
 
             final String[] resp = {""};
             SharedPreferences mSettings;
@@ -168,11 +164,16 @@ public class StartFragment extends Fragment {
                 e.printStackTrace();
             }
             Log.d("kkk", "Отправил: " + json);
+
+
+
             RequestBody body = RequestBody.create(
                     MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
+
             Request request = new Request.Builder()
                     .url(url).post(body)
                     .build();
+
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
