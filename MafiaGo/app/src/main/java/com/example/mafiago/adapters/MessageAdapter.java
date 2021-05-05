@@ -53,61 +53,88 @@ public class MessageAdapter extends BaseAdapter {
         View view = convertView;
         //проверяем шаблон
         //if(convertView==null) {}
-        if (list_mess.get(position).MesType == "UsersMes")
-        {
-            view = layout.inflate(R.layout.item_message, null);
+        switch (list_mess.get(position).MesType) {
+            case "UsersMes":
+                view = layout.inflate(R.layout.item_message, null);
 
-            TextView txt_nick = view.findViewById(R.id.mesNick);
-            TextView txt_time = view.findViewById(R.id.mesTime);
-            TextView txt_mess = view.findViewById(R.id.mesText);
+                TextView txt_nick = view.findViewById(R.id.mesNick);
+                TextView txt_time = view.findViewById(R.id.mesTime);
+                TextView txt_mess = view.findViewById(R.id.mesText);
 
-            txt_nick.setText(list_mess.get(position).nickName);
-            txt_time.setText(list_mess.get(position).time);
-            txt_mess.setText(list_mess.get(position).message);
-        }
-        else if (list_mess.get(position).MesType == "DisconnectMes")
-        {
-            view = layout.inflate(R.layout.item_connect_disconnect, null);
+                txt_nick.setText(list_mess.get(position).nickName);
+                txt_time.setText(list_mess.get(position).time);
+                txt_mess.setText(list_mess.get(position).message);
+                break;
 
-            TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
-            TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
+            case "DisconnectMes":
+                view = layout.inflate(R.layout.item_connect_disconnect, null);
 
-            txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
+                TextView txt_disconnect_mes = view.findViewById(R.id.mesConnect);
+                TextView txt_disconnect_time = view.findViewById(R.id.mesTimeConnect);
 
-            txt_connect_mes.setText(list_mess.get(position).nickName + " вышел(-а) из чата");
-            txt_connect_time.setText(list_mess.get(position).time);
-        }
-        else if (list_mess.get(position).MesType == "ConnectMes")
-        {
-            view = layout.inflate(R.layout.item_connect_disconnect, null);
+                txt_disconnect_mes.setTextColor(Color.parseColor("#FF0000"));
 
-            TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
-            TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
+                txt_disconnect_mes.setText(list_mess.get(position).nickName + " вышел(-а) из чата");
+                txt_disconnect_time.setText(list_mess.get(position).time);
+                break;
 
-            txt_connect_mes.setTextColor(Color.parseColor("#08FB00"));
+            case "ConnectMes":
+                view = layout.inflate(R.layout.item_connect_disconnect, null);
 
-            txt_connect_mes.setText(list_mess.get(position).nickName + " вошёл(-а) в чат");
-            txt_connect_time.setText(list_mess.get(position).time);
-        }
-        else {
+                TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
+                TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
 
-            view = layout.inflate(R.layout.item_answer_message, null);
-            TextView txt_nick = view.findViewById(R.id.mesNick);
-            TextView txt_time = view.findViewById(R.id.mesTime);
-            TextView txt_mess = view.findViewById(R.id.mesText);
-            TextView txt_answer_nick = view.findViewById(R.id.answerNick);
-            TextView txt_answer_mes = view.findViewById(R.id.answerText);
-            TextView txt_answer_time = view.findViewById(R.id.answerTime);
+                txt_connect_mes.setTextColor(Color.parseColor("#08FB00"));
 
-            txt_nick.setText(list_mess.get(position).nickName);
-            txt_time.setText(list_mess.get(position).time);
-            txt_mess.setText(list_mess.get(position).message);
+                txt_connect_mes.setText(list_mess.get(position).nickName + " вошёл(-а) в чат");
+                txt_connect_time.setText(list_mess.get(position).time);
+                break;
 
-            int id = list_mess.get(position).answerId;
+            case "VoteMes":
+                view = layout.inflate(R.layout.item_message, null);
 
-            txt_answer_nick.setText(list_mess.get(id).nickName);
-            txt_answer_mes.setText(list_mess.get(id).message);
-            txt_answer_time.setText(list_mess.get(id).time);
+                txt_nick = view.findViewById(R.id.mesNick);
+                txt_time = view.findViewById(R.id.mesTime);
+                txt_mess = view.findViewById(R.id.mesText);
+
+                txt_nick.setText(list_mess.get(position).nickName);
+                txt_time.setText(list_mess.get(position).time);
+                txt_mess.setText(list_mess.get(position).message);
+
+                txt_mess.setTextColor(Color.parseColor("#08FB00"));
+                break;
+
+            case "AnswerMes":
+                view = layout.inflate(R.layout.item_answer_message, null);
+                txt_nick = view.findViewById(R.id.mesNick);
+                txt_time = view.findViewById(R.id.mesTime);
+                txt_mess = view.findViewById(R.id.mesText);
+                TextView txt_answer_nick = view.findViewById(R.id.answerNick);
+                TextView txt_answer_mes = view.findViewById(R.id.answerText);
+                TextView txt_answer_time = view.findViewById(R.id.answerTime);
+
+                txt_nick.setText(list_mess.get(position).nickName);
+                txt_time.setText(list_mess.get(position).time);
+                txt_mess.setText(list_mess.get(position).message);
+
+                int id = list_mess.get(position).answerId;
+
+                txt_answer_nick.setText(list_mess.get(id).nickName);
+                txt_answer_mes.setText(list_mess.get(id).message);
+                txt_answer_time.setText(list_mess.get(id).time);
+                break;
+
+            case "SystemMes":
+                view = layout.inflate(R.layout.item_connect_disconnect, null);
+
+                TextView txt_system_mes = view.findViewById(R.id.mesConnect);
+                TextView txt_system_time = view.findViewById(R.id.mesTimeConnect);
+
+                txt_system_mes.setTextColor(Color.parseColor("#FF0000"));
+
+                txt_system_mes.setText(list_mess.get(position).message);
+                txt_system_time.setText(list_mess.get(position).time);
+                break;
         }
 
         return view;

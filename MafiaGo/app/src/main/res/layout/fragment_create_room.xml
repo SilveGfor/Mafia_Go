@@ -159,6 +159,16 @@
                 android:text="Создать"
                 android:textColor="@color/colorWhite" />
 
+            <Button
+                android:id="@+id/btnExitCreateRoom"
+                android:layout_width="70dp"
+                android:layout_height="wrap_content"
+                android:text="Назад"
+                android:textColor="@color/colorWhite"
+                android:background="@drawable/round_button"
+                android:layout_toLeftOf="@id/btnCreate"
+                android:layout_alignBaseline="@id/btnCreate"/>
+
         </RelativeLayout>
 
     </androidx.cardview.widget.CardView>

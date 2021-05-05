@@ -47,6 +47,7 @@ public class MenuFragment extends Fragment {
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
+        //настройки от Шлыкова
         //Nastroiki nastroiki = new Nastroiki();
 
         CV_info.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +73,7 @@ public class MenuFragment extends Fragment {
         btnRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RulesFragment()).commit();
             }
         });
 
@@ -88,7 +89,7 @@ public class MenuFragment extends Fragment {
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Профиль")
-                        .setMessage("")
+                        .setMessage("(/!!!/)Вова не сделал профиль(/!!!/)")
                         .setIcon(R.drawable.ic_info)
                         .setCancelable(false)
                         .setNegativeButton("Ок",

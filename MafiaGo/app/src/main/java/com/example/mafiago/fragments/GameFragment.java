@@ -122,10 +122,6 @@ public class GameFragment extends Fragment {
         Log.d("kkk", "connect_to_room - " + json);
 
 
-        //StartAnimation("mafia");
-        //StopAnimation();
-
-
         btnSend.setOnClickListener(v -> {
 
             final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
@@ -152,27 +148,6 @@ public class GameFragment extends Fragment {
                 socket.emit("user_message", json2);
                 answer_id = -1;
                 cardAnswer.setVisibility(View.GONE);
-
-            /* Для Офлайн-тестов
-            if(answer_id == -1)
-            {
-                ChatModel model = new ChatModel(editText.getText().toString(), "2-00", "SilveGfor22", "UsersMes");
-                list_chat.add(model);
-                CustomList customList = new CustomList(list_chat, getContext());
-                listView_chat.setAdapter(customList);
-                listView_chat.setSelection(customList.getCount() - 1);
-            }
-            else
-            {
-                Log.d("kkk", "id - " + answer_id + "  ----  элемент - " + list_chat.get(answer_id).message);
-                ChatModel model = new ChatModel(editText.getText().toString(), "3-00", "SilveGfor22", "AnswerMes", list_chat.get(answer_id).answerNick, list_chat.get(answer_id).message, list_chat.get(answer_id).answerTime, answer_id);
-                list_chat.add(model);
-                CustomList customList = new CustomList(list_chat, getContext());
-                listView_chat.setAdapter(customList);
-                listView_chat.setSelection(customList.getCount() - 1);
-            }
-            answer_id = -1;
-             */
                 sendText.setText("");
             }
             else
@@ -192,18 +167,18 @@ public class GameFragment extends Fragment {
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final JSONObject json2 = new JSONObject();
-                try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id",  MainActivity.Session_id);
-                    json2.put("room", player.getRoom_num());
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (player.getTime().equals("lobby")) {
+                    final JSONObject json2 = new JSONObject();
+                    try {
+                        json2.put("nick", MainActivity.NickName);
+                        json2.put("session_id", MainActivity.Session_id);
+                        json2.put("room", player.getRoom_num());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                    socket.emit("leave_room", json2);
                 }
-                Log.d("kkk", "Socket_отправка_leave_user - "+ json2.toString());
-                socket.emit("leave_room", json2);
-                sendText.setText("");
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
         });
@@ -240,7 +215,7 @@ public class GameFragment extends Fragment {
                                 case "sheriff":
                                     RoleAction(nick);
                                     break;
-                                case "doktor":
+                                case "doctor":
                                     RoleAction(nick);
                                     break;
                                 case "doctor_of_easy_virtue":
@@ -296,8 +271,6 @@ public class GameFragment extends Fragment {
             }
         });
 
-
-
         return view;
     }
 
@@ -315,7 +288,6 @@ public class GameFragment extends Fragment {
             socket.on("disconnect", onDisconnect);
             socket.on("get_in_room", onGetInRoom);
             socket.on("user_message", onNewMessage);
-            socket.on("connect_to_room", onConnectToRoom);
             socket.on("leave_room", onLeaveUser);
             socket.on("timer", onTimer);
             socket.on("time", onTime);
@@ -343,21 +315,6 @@ public class GameFragment extends Fragment {
      *       SOCKETS start         *
      *                             *
      *******************************/
-
-    private Emitter.Listener onConnectToRoom = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            if(getActivity() == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // TODO: доделать событие OnConnectToRoom
-                    Log.d("kkk", "data - : " + args[0].toString());
-                }
-            });
-        }
-    };
 
     private Emitter.Listener onLeaveUser = new Emitter.Listener() {
         @Override
@@ -420,13 +377,15 @@ public class GameFragment extends Fragment {
                     String message;
                     String time;
                     String status;
+                    int test_num;
                     Log.d("kkk", String.valueOf(data));
                     int link;
                     try {
                         nick = data.getString("nick");
-                        if (data.getInt("num") > num)
+                        test_num = data.getInt("num");
+                        if (test_num > num)
                         {
-                            num = data.getInt("num");
+                            num = test_num;
                             time = data.getString("time");
                             message = data.getString("message");
                             status = data.getString("status");
@@ -436,7 +395,7 @@ public class GameFragment extends Fragment {
                                 Log.d("kkk", "UsersMes");
                                 MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
                                 //list_chat.add(0, messageModel);
-                                list_chat.add(num, messageModel);
+                                list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -445,7 +404,7 @@ public class GameFragment extends Fragment {
                             {
                                 Log.d("kkk", "AnswerMes");
                                 MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
-                                list_chat.add(num, messageModel);
+                                list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -453,7 +412,29 @@ public class GameFragment extends Fragment {
                         }
                         else
                         {
-                            Log.d("kkk", "num_message - : " + num);
+                            time = data.getString("time");
+                            message = data.getString("message");
+                            status = data.getString("status");
+                            link = data.getInt("link");
+                            if(link == -1)
+                            {
+                                Log.d("kkk", "UsersMes");
+                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
+                                //list_chat.add(0, messageModel);
+                                list_chat.add(test_num, messageModel);
+                                MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                                listView_chat.setAdapter(messageAdapter);
+                                listView_chat.setSelection(messageAdapter.getCount() - 1);
+                            }
+                            else
+                            {
+                                Log.d("kkk", "AnswerMes");
+                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                list_chat.add(test_num, messageModel);
+                                MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                                listView_chat.setAdapter(messageAdapter);
+                                listView_chat.setSelection(messageAdapter.getCount() - 1);
+                            }
                         }
                     } catch (JSONException e) {
                         Log.d("kkk", "JSONException");
@@ -805,23 +786,33 @@ public class GameFragment extends Fragment {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String message, time, type, number, status;
+                    int test_num;
 
                     try {
-                        if (data.getInt("num") > num) {
-                            num = data.getInt("num");
+                        test_num = data.getInt("num");
+                        //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
+                        if (test_num > num) {
+                            num = test_num;
 
                             time = data.getString("time");
                             message = data.getString("message");
                             status = data.getString("status");
-                            MessageModel messageModel = new MessageModel(message, time.substring(11, 16), "Server", "UsersMes");
-                            list_chat.add(num, messageModel);
+                            MessageModel messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
+                            list_chat.add(messageModel);
                             MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                             listView_chat.setAdapter(messageAdapter);
                             listView_chat.setSelection(messageAdapter.getCount() - 1);
                         }
                         else
                         {
-                            Log.d("kkk", "num_message - : " + num);
+                            time = data.getString("time");
+                            message = data.getString("message");
+                            status = data.getString("status");
+                            MessageModel messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
+                            list_chat.add(test_num, messageModel);
+                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                            listView_chat.setAdapter(messageAdapter);
+                            listView_chat.setSelection(messageAdapter.getCount() - 1);
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -834,10 +825,10 @@ public class GameFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onUserError = new Emitter.Listener() {
+    private final Emitter.Listener onUserError = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            if(getActivity() == null)
+            if (getActivity() == null)
                 return;
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -845,13 +836,12 @@ public class GameFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     String error;
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    AlertDialog alert;
                     try {
                         error = data.getString("error");
-                        switch (error)
-                        {
+                        AlertDialog alert;
+                        switch (error) {
                             case "game_has_been_started":
-                                builder = new AlertDialog.Builder(getContext());
+
                                 builder.setTitle("Извините, но игра уже началась")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
@@ -862,11 +852,9 @@ public class GameFragment extends Fragment {
                                                         dialog.cancel();
                                                     }
                                                 });
-                                alert = builder.create();
-                                alert.show();
+
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                             case "max_people_in_room":
-                                builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Извините, но в комнате нет мест")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
@@ -877,11 +865,8 @@ public class GameFragment extends Fragment {
                                                         dialog.cancel();
                                                     }
                                                 });
-                                alert = builder.create();
-                                alert.show();
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                             case "you_are_playing_in_other_room":
-                                builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Извините, но вы играете в другой игре")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
@@ -892,11 +877,8 @@ public class GameFragment extends Fragment {
                                                         dialog.cancel();
                                                     }
                                                 });
-                                alert = builder.create();
-                                alert.show();
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                             case "game_is_over":
-                                builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Извините, но игра закончена")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
@@ -907,9 +889,9 @@ public class GameFragment extends Fragment {
                                                         dialog.cancel();
                                                     }
                                                 });
-                                alert = builder.create();
-                                alert.show();
                         }
+                        alert = builder.create();
+                        alert.show();
                         Log.d("kkk", "Socket_принять - user_error " + args[0]);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -928,7 +910,13 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    //JSONArray
+                    try {
+                        JSONArray jsonArray = data.getJSONArray("mafias");
+                        Log.d("kkk", "Socket_принять - mafias - " + jsonArray);
+                        Log.d("kkk", "Socket_принять - mafias - " + jsonArray.get(0));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                     // TODO: доделать событие OnMafias
                     Log.d("kkk", "Socket_принять - mafias - " + args[0]);
                 }
@@ -953,18 +941,41 @@ public class GameFragment extends Fragment {
                         time = data.getString("time");
                         can_vote = data.getBoolean("can_vote");
                         can_act = data.getBoolean("can_act");
+                        day_time.setText(time);
+                        player.setTime(time);
                         player.setRole(role);
                         player.setStatus(status);
                         if (time.equals("voting"))
                         {
-                            player.setCan_click(can_vote);
+                            if (can_vote) StartAnimation("voting");
                         }
                         else
                         {
-                            player.setCan_click(can_act);
+                            if (can_act) StartAnimation(role);
                         }
-                        // TODO: player.setCan_write(true); - СДЕЛАТЬ SWITH
-                        player.setCan_write(true);
+                        player.setCan_write(false);
+                        switch (player.getTime())
+                        {
+                            case "night_love":
+                                switch (player.getRole())
+                                {
+                                    case "mafia":
+                                        player.setCan_write(true);
+                                        break;
+                                    case "mafia_don":
+                                        player.setCan_write(true);
+                                        break;
+                                }
+                                break;
+                            case "night_other":
+                                break;
+                            case "day":
+                                player.setVoted_at_night(false);
+                                player.setCan_write(true);
+                                break;
+                            case "voting":
+                                break;
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -980,6 +991,7 @@ public class GameFragment extends Fragment {
      *                             *
      *******************************/
 
+    //запуск анимации
     public void StartAnimation(String type) {
         player.setCan_click(true);
         for (int i = 0; i < list_users.size(); i++)
@@ -990,6 +1002,7 @@ public class GameFragment extends Fragment {
             gridView_users.setAdapter(playersAdapter);
         }
     }
+    //конец анимации
     public void StopAnimation() {
         player.setCan_click(false);
         for (int i = 0; i < list_users.size(); i++)
@@ -999,6 +1012,7 @@ public class GameFragment extends Fragment {
             gridView_users.setAdapter(playersAdapter);
         }
     }
+    //действие роли
     public void RoleAction(String nick) {
         final JSONObject json3 = new JSONObject();
         try {
@@ -1012,6 +1026,7 @@ public class GameFragment extends Fragment {
         socket.emit("role_action", json3);
         Log.d("kkk", "Socket_отправка - role_action"+ json3.toString());
     }
+    //дневное голосование
     public void Voting(String nick) {
         final JSONObject json3 = new JSONObject();
         try {
