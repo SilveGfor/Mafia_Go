@@ -459,6 +459,7 @@ public class GameFragment extends Fragment {
                             json2.put("nick", player.getNick());
                             json2.put("room", player.getRoom_num());
                             json2.put("last_message_num", num);
+                            json2.put("last_dead_message_num", -1);
                             json2.put("session_id", player.getSession_id());
                         } catch (JSONException e) {
                             e.printStackTrace();
