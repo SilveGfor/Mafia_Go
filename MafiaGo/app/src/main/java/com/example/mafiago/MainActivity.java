@@ -56,7 +56,7 @@ public static Socket socket;
 
         socket.connect();
 
-        client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.MILLISECONDS).build();
+        client = new OkHttpClient.Builder().connectTimeout(30000, TimeUnit.MILLISECONDS).build();
 
         MainActivity.SocketTask socketTask = new SocketTask();
         socketTask.execute();

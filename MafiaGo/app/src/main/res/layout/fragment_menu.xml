@@ -28,7 +28,7 @@
             android:textSize="25sp"
             android:gravity="center" />
     </androidx.cardview.widget.CardView>
-    
+
     <Button
         android:id="@+id/btnGame"
         android:layout_width="100dp"
