@@ -38,6 +38,7 @@ public class CreateRoomFragment extends Fragment {
     SeekBar SB_max_people;
 
     Button btnCreateRoom;
+    Button btnExitCreateRoom;
 
 
     public static final String APP_PREFERENCES = "create_room";
@@ -46,17 +47,6 @@ public class CreateRoomFragment extends Fragment {
     public static final String APP_PREFERENCES_ROLES = "roles";
 
     private SharedPreferences mSettings;
-
-    /*
-    private Socket socket;
-    {
-        try{
-            socket = IO.socket("https://" + MainActivity.url);
-        }catch (URISyntaxException e){
-            throw new RuntimeException();
-        }
-    }
-    */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -73,6 +63,7 @@ public class CreateRoomFragment extends Fragment {
         SB_max_people = view.findViewById(R.id.fragmentCreateRoom_SB_max_players);
 
         btnCreateRoom = view.findViewById(R.id.btnCreate);
+        btnExitCreateRoom = view.findViewById(R.id.btnExitCreateRoom);
 
         //socket.connect();
 
@@ -111,6 +102,14 @@ public class CreateRoomFragment extends Fragment {
                 Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
             }
         });
+
+        btnExitCreateRoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+            }
+        });
+
         return view;
     }
 
