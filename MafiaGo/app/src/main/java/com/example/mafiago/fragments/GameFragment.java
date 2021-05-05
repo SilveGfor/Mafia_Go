@@ -608,13 +608,13 @@ public class GameFragment extends Fragment {
                                     case "sheriff":
                                         StartAnimation("sheriff");
                                         break;
-                                    case "doktor":
+                                    case "doctor":
                                         StartAnimation("doctor");
                                         break;
                                     case "mafia":
                                         StartAnimation("mafia");
                                         break;
-                                    case "mafi_don":
+                                    case "mafia_don":
                                         StartAnimation("mafia");
                                         break;
                                     default:
@@ -783,6 +783,7 @@ public class GameFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     String message, time, type, number, status, mafia_nick, user_nick, voter;
                     int test_num;
+                    JSONObject data2;
 
                     try {
                         status = data.getString("status");
@@ -798,13 +799,16 @@ public class GameFragment extends Fragment {
                                 messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
                                 break;
                             case "role_action_mafia":
-                                mafia_nick = data.getString("mafia_nick");
-                                user_nick = data.getString("user_nick");
+                                data2 = data.getJSONObject("message");
+                                mafia_nick = data2.getString("voter");
+                                user_nick = data2.getString("voter");
                                 messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), mafia_nick, "UsersMes");
                                 break;
                             case "voting":
-                                voter = data.getString("voter");
-                                user_nick = data.getString("user_nick");
+                                Log.d("kkk", message);
+                                data2 = data.getJSONObject("message");
+                                voter = data2.getString("mafia_nick");
+                                user_nick = data2.getString("user_nick");
                                 messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), voter, "UsersMes");
                                 break;
                         }
@@ -957,6 +961,7 @@ public class GameFragment extends Fragment {
                         }
                         else
                         {
+                            //TODO: доделать тут
                             if (can_act) StartAnimation(role);
                         }
                         player.setCan_write(false);

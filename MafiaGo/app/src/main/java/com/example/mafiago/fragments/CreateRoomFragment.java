@@ -22,6 +22,8 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
@@ -85,8 +87,10 @@ public class CreateRoomFragment extends Fragment {
                 final JSONObject json = new JSONObject();
                 final JSONObject json_roles = new JSONObject();
                 try {
+                    //Map<String,String> dict = new HashMap<String,String>();
+                    //dict = {'mafia': ['mafia_don'], 'peaceful': ['doctor',  'lover']}
                     ArrayList<String> peaceful = new ArrayList<String>();
-                    peaceful.add("doctor");
+                    //peaceful.add("doctor");
                     ArrayList<String> mafia = new ArrayList<String>();
                     json_roles.put("peaceful", peaceful);
                     json_roles.put("mafia", mafia);
