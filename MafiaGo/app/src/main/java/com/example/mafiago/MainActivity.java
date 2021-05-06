@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     public static String NickName = "";
     public static String Session_id = "";
     public static int Game_id;
-    public static String url = "c437eb1190d48b.localhost.run";
+    public static String url = "http://82.148.17.116:5000";
 
     public static String password = "";
     public static String nick = "";
@@ -50,8 +50,7 @@ public static Socket socket;
                 .setRandomizationFactor(0.5)
                 .setTimeout(20_000)
                 .build();
-        socket = IO.socket(URI.create("https://" + MainActivity.url), options); // the main namespace
-        //socket = IO.socket("https://" + MainActivity.url);
+        socket = IO.socket(URI.create(url), options); // the main namespace
     }
 
 

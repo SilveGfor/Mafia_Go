@@ -64,7 +64,7 @@
         android:layout_marginBottom="5dp"
         android:layout_toRightOf="@id/ListMes"
         android:numColumns="2"
-        android:verticalSpacing="5dp"
+        android:verticalSpacing="10dp"
         android:horizontalSpacing="5dp"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

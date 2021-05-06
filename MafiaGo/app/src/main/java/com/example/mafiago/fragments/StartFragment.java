@@ -35,7 +35,7 @@ import static com.example.mafiago.MainActivity.client;
 
 public class StartFragment extends Fragment {
 
-    private static final String url= "https://" + MainActivity.url + "/login";
+    private static final String url= MainActivity.url + "/login";
 
 
     //кнопки
@@ -180,8 +180,8 @@ public class StartFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
 
                     Log.d("kkk", "Failure: " + e.getMessage());
-                    LoginTask loginTask = new LoginTask();
-                    loginTask.execute();
+                    //LoginTask loginTask = new LoginTask();
+                    //loginTask.execute();
                 }
 
                 @Override
