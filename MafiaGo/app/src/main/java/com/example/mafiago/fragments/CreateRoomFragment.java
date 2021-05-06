@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,11 +88,9 @@ public class CreateRoomFragment extends Fragment {
                 final JSONObject json = new JSONObject();
                 final JSONObject json_roles = new JSONObject();
                 try {
-                    //Map<String,String> dict = new HashMap<String,String>();
-                    //dict = {'mafia': ['mafia_don'], 'peaceful': ['doctor',  'lover']}
-                    ArrayList<String> peaceful = new ArrayList<String>();
-                    //peaceful.add("doctor");
-                    ArrayList<String> mafia = new ArrayList<String>();
+                    JSONArray peaceful = new JSONArray();
+                    JSONArray mafia = new JSONArray();
+                    peaceful.put("doctor");
                     json_roles.put("peaceful", peaceful);
                     json_roles.put("mafia", mafia);
                     json.put("nick", MainActivity.NickName);
