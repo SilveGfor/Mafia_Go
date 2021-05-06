@@ -564,8 +564,13 @@ public class GameFragment extends Fragment {
                     String time;
                     try {
                         time = data.getString("timer");
-                        timer.setText(time);
-                        Log.d("kkk", "Socket_принять - Timer " + time);
+                        if (!time.equals("stop"))
+                        {
+                            timer.setText(time);
+                        }
+                        else {
+                            timer.setText("--");
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
