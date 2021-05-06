@@ -43,8 +43,12 @@ public class MainActivity extends AppCompatActivity {
 public static Socket socket;
     {
         IO.Options options = IO.Options.builder()
-                //.setTimeout(30000)
-                .setReconnectionDelay(0)
+                .setReconnection(true)
+                .setReconnectionAttempts(Integer.MAX_VALUE)
+                .setReconnectionDelay(10_000)
+                .setReconnectionDelayMax(15_000)
+                .setRandomizationFactor(0.5)
+                .setTimeout(20_000)
                 .build();
         socket = IO.socket(URI.create("https://" + MainActivity.url), options); // the main namespace
         //socket = IO.socket("https://" + MainActivity.url);
@@ -79,6 +83,7 @@ public static Socket socket;
 
             socket.on("connect", onConnect);
             socket.on("disconnect", onDisconnect);
+            socket.on("ping", onPing);
             return null;
         }
 
@@ -108,6 +113,13 @@ public static Socket socket;
         @Override
         public void call(final Object... args) {
                     Log.d("kkk", "DISCONNECTION");
+        }
+    };
+
+    private Emitter.Listener onPing = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+                    Log.d("kkk", "PING - " + args[0]);
         }
     };
 
