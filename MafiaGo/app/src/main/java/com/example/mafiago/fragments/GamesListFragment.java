@@ -56,6 +56,17 @@ public class GamesListFragment extends Fragment {
         SocketTask socketTask = new SocketTask();
         socketTask.execute();
 
+        final JSONObject json = new JSONObject();
+        try {
+            json.put("nick", MainActivity.NickName);
+            json.put("session_id", MainActivity.Session_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_list_of_rooms", json);
+        Log.d("kkk", "Socket_отправка - get_list_of_rooms - "+ json.toString());
+        First = false;
+
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
