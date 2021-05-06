@@ -45,8 +45,8 @@ public static Socket socket;
         IO.Options options = IO.Options.builder()
                 .setReconnection(true)
                 .setReconnectionAttempts(Integer.MAX_VALUE)
-                .setReconnectionDelay(10_000)
-                .setReconnectionDelayMax(15_000)
+                .setReconnectionDelay(1_000)
+                .setReconnectionDelayMax(3_000)
                 .setRandomizationFactor(0.5)
                 .setTimeout(20_000)
                 .build();
