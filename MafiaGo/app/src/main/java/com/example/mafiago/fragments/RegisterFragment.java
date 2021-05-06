@@ -38,8 +38,8 @@ import static com.example.mafiago.MainActivity.client;
 
 public class RegisterFragment extends Fragment {
 
-    private static final String url1 = "https://" + MainActivity.url + "/reg-code";
-    private static final String url2 = "https://" + MainActivity.url + "/registration";
+    private static final String url1 = MainActivity.url + "/reg-code";
+    private static final String url2 = MainActivity.url + "/registration";
 
     String resp = "";
 
