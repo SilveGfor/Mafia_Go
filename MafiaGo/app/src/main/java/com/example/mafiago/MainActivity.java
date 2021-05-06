@@ -50,6 +50,7 @@ public static Socket socket;
         //socket = IO.socket("https://" + MainActivity.url);
     }
 
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
