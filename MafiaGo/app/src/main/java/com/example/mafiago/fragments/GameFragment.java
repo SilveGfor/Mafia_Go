@@ -64,7 +64,7 @@ public class GameFragment extends Fragment {
     ArrayList<UserModel> list_users = new ArrayList<>();
 
     int answer_id = -1;
-    public boolean Not_First = false;
+    public int StopTimer = 0;
 
     int num = -1;
 
@@ -391,6 +391,7 @@ public class GameFragment extends Fragment {
                     try {
                         nick = data.getString("nick");
                         test_num = data.getInt("num");
+                        Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
                         if (test_num > num)
                         {
                             num = test_num;
@@ -461,7 +462,6 @@ public class GameFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (Not_First) {
                         final JSONObject json2 = new JSONObject();
                         try {
                             json2.put("nick", player.getNick());
@@ -474,7 +474,6 @@ public class GameFragment extends Fragment {
                         }
                         socket.emit("connect_to_room", json2);
                         Log.d("kkk", "CONNECT");
-                    }
                 }
             });
         }
@@ -521,7 +520,6 @@ public class GameFragment extends Fragment {
                             list_chat.add(messageModel);
                             MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                             listView_chat.setAdapter(messageAdapter);
-                            Not_First = true;
 
                             list_users.add(new UserModel(nick));
                             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
@@ -536,7 +534,6 @@ public class GameFragment extends Fragment {
                             list_chat.add(test_num, messageModel);
                             MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                             listView_chat.setAdapter(messageAdapter);
-                            Not_First = true;
 
                             list_users.add(new UserModel(nick));
                             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
@@ -566,9 +563,15 @@ public class GameFragment extends Fragment {
                         time = data.getString("timer");
                         if (!time.equals("stop"))
                         {
+                            if (StopTimer == 1)
+                            {
+                                timer.setText("--");
+                                StopTimer = 0;
+                            }
                             timer.setText(time);
                         }
                         else {
+                            StopTimer = 1;
                             timer.setText("--");
                         }
                     } catch (JSONException e) {
@@ -840,7 +843,7 @@ public class GameFragment extends Fragment {
                                 break;
                         }
 
-                        Log.d("kkk", "Длина listchat" +list_chat.size());
+                        Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
                         //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
                         if (test_num > num) {
                             num = test_num;
