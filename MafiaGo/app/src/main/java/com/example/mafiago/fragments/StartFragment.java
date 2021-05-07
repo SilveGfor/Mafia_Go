@@ -18,10 +18,12 @@ import androidx.fragment.app.Fragment;
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -31,6 +33,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.example.mafiago.MainActivity.client;
+import static com.example.mafiago.MainActivity.socket;
 
 
 public class StartFragment extends Fragment {
@@ -69,6 +72,32 @@ public class StartFragment extends Fragment {
         btnReg = view.findViewById(R.id.btnReg);
         ETemail = view.findViewById(R.id.ETemail);
         ETpassword = view.findViewById(R.id.ETpassword);
+/*
+        final JSONObject json = new JSONObject();
+        final JSONObject json_roles = new JSONObject();
+        try {
+            //Map<String,String> dict = new HashMap<String,String>();
+            //dict = {'mafia': ['mafia_don'], 'peaceful': ['doctor',  'lover']}
+            ArrayList<String> peaceful = new ArrayList<String>();
+            peaceful.add("doctor");
+            peaceful.add("lover");
+            JSONArray JSarray = new JSONArray();
+            JSarray.put(0, "doctor");
+            ArrayList<String> mafia = new ArrayList<String>();
+            json_roles.put("peaceful", JSarray);
+            json_roles.put("mafia", mafia);
+            json.put("nick", MainActivity.NickName);
+            json.put("session_id", MainActivity.Session_id);
+            json.put("name", "game1");
+            json.put("min_people_num", 5);
+            json.put("max_people_num", 5);
+            json.put("roles", json_roles);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
+
+ */
 
         //MainActivity.mPlayer= MediaPlayer.create(getContext(), R.raw.fon_music);
 
