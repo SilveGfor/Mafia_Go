@@ -282,7 +282,6 @@ public class GameFragment extends Fragment {
             socket.on("role", onRole);
             socket.on("restart", onRestart);
             socket.on("role_action", onRoleAction);
-            socket.on("role_action_mafia", onRoleActionMafia);
             socket.on("role_action_sheriff", onRoleActionSheriff);
             socket.on("system_message", onSystemMessage);
             socket.on("user_error", onUserError);
@@ -321,16 +320,22 @@ public class GameFragment extends Fragment {
                         test_num = data.getInt("num");
                         nick = data.getString("nick");
                         time = data.getString("time");
-                        MessageModel model = new MessageModel("", time.substring(11,16), nick, "DisconnectMes");
+                        MessageModel messageModel = new MessageModel(test_num, "", time.substring(11,16), nick, "DisconnectMes");
 
                         if (test_num > num)
                         {
                             num = test_num;
-                            list_chat.add(model);
+                            list_chat.add(messageModel);
                         }
                         else
                         {
-                            list_chat.add(test_num, model);
+                            for (int i = 0; i < list_chat.size(); i++)
+                            {
+                                if (test_num > list_chat.get(i).num)
+                                {
+                                    list_chat.add(i, messageModel);
+                                }
+                            }
                         }
 
                         Log.d("kkk", num + "  onLeaveUser2  " + test_num);
@@ -390,8 +395,7 @@ public class GameFragment extends Fragment {
                             if(link == -1)
                             {
                                 Log.d("kkk", "UsersMes");
-                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
-                                //list_chat.add(0, messageModel);
+                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
                                 list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
@@ -400,7 +404,7 @@ public class GameFragment extends Fragment {
                             else
                             {
                                 Log.d("kkk", "AnswerMes");
-                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
                                 list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
@@ -416,9 +420,14 @@ public class GameFragment extends Fragment {
                             if(link == -1)
                             {
                                 Log.d("kkk", "UsersMes");
-                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "UsersMes");
-                                //list_chat.add(0, messageModel);
-                                list_chat.add(test_num, messageModel);
+                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
+                                for (int i = 0; i < list_chat.size(); i++)
+                                {
+                                    if (test_num > list_chat.get(i).num)
+                                    {
+                                        list_chat.add(i, messageModel);
+                                    }
+                                }
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -426,8 +435,14 @@ public class GameFragment extends Fragment {
                             else
                             {
                                 Log.d("kkk", "AnswerMes");
-                                MessageModel messageModel = new MessageModel(message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
-                                list_chat.add(test_num, messageModel);
+                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                for (int i = 0; i < list_chat.size(); i++)
+                                {
+                                    if (test_num > list_chat.get(i).num)
+                                    {
+                                        list_chat.add(i, messageModel);
+                                    }
+                                }
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -497,36 +512,36 @@ public class GameFragment extends Fragment {
                     try {
                         test_num = data.getInt("num");
                         nick = data.getString("nick");
-                        Log.d("kkk", "Длина listchat" + list_chat.size());
+                        Log.d("kkk", "Длина listchat " + list_chat.size());
                         if (test_num > num)
                         {
-                            num = data.getInt("num");
+                            num = test_num;
                             time = data.getString("time");
                             Log.d("kkk", test_num + "  onGetInRoom1  " + num);
 
-                            MessageModel messageModel = new MessageModel("", time.substring(11,16), nick, "ConnectMes");
+                            MessageModel messageModel = new MessageModel(test_num, "", time.substring(11,16), nick, "ConnectMes");
                             list_chat.add(messageModel);
-                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                            listView_chat.setAdapter(messageAdapter);
-
-                            list_users.add(new UserModel(nick));
-                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                            gridView_users.setAdapter(playersAdapter);
                         }
                         else
                         {
                             time = data.getString("time");
                             Log.d("kkk", test_num + "  onGetInRoom2  " + num);
 
-                            MessageModel messageModel = new MessageModel("", time.substring(11,16), nick, "ConnectMes");
-                            list_chat.add(test_num, messageModel);
-                            MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                            listView_chat.setAdapter(messageAdapter);
-
-                            list_users.add(new UserModel(nick));
-                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                            gridView_users.setAdapter(playersAdapter);
+                            MessageModel messageModel = new MessageModel(test_num, "", time.substring(11,16), nick, "ConnectMes");
+                            for (int i = 0; i < list_chat.size(); i++)
+                            {
+                                if (test_num > list_chat.get(i).num)
+                                {
+                                    list_chat.add(i, messageModel);
+                                }
+                            }
                         }
+                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                        listView_chat.setAdapter(messageAdapter);
+
+                        list_users.add(new UserModel(nick, "none"));
+                        PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                        gridView_users.setAdapter(playersAdapter);
 
                     } catch (JSONException e) {
                         return;
@@ -728,39 +743,6 @@ public class GameFragment extends Fragment {
                         Log.d("kkk", "Socket_принять - role_action " + args[0]);
                         influence.setText(role);
                         influence.setVisibility(View.VISIBLE);
-                        MessageModel messageModel = new MessageModel("На вас походил " + role, "09-55", "System", "UsersMes");
-                        list_chat.add(messageModel);
-                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                        listView_chat.setAdapter(messageAdapter);
-                        listView_chat.setSelection(messageAdapter.getCount() - 1);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
-        }
-    };
-
-    private Emitter.Listener onRoleActionMafia = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            if(getActivity() == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String mafia_nick;
-                    String user_nick;
-                    try {
-                        mafia_nick = data.getString("mafia_nick");
-                        user_nick = data.getString("user_nick");
-                        Log.d("kkk", "Socket_принять - role_action_mafia " + args[0]);
-                        MessageModel messageModel = new MessageModel(mafia_nick + "проголосовал за " + user_nick, "09-55", "System", "UsersMes");
-                        list_chat.add(messageModel);
-                        MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                        listView_chat.setAdapter(messageAdapter);
-                        listView_chat.setSelection(messageAdapter.getCount() - 1);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -799,7 +781,7 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String message, time, type, number, status, mafia_nick, user_nick, voter;
+                    String message, time, status, mafia_nick, user_nick, voter, nick, role;
                     int test_num;
                     JSONObject data2;
 
@@ -808,26 +790,38 @@ public class GameFragment extends Fragment {
                         test_num = data.getInt("num");
                         time = data.getString("time");
                         message = data.getString("message");
-                        MessageModel messageModel = new MessageModel("Ошибка вывода сообщения", time.substring(11, 16), "Server", "SystemMes");;
+                        MessageModel messageModel = new MessageModel(test_num, "Ошибка вывода сообщения", time.substring(11, 16), "Server", "SystemMes");;
                         MessageAdapter messageAdapter;
                         switch (status)
                         {
                             case "game_over":
-                            case "system_message":
-                                messageModel = new MessageModel(message, time.substring(11, 16), "Server", "SystemMes");
+                            case "dead_user":
+                                data2 = data.getJSONObject("message");
+                                message = data2.getString("message");
+                                nick = data2.getString("nick");
+                                role = data2.getString("role");
+                                for (int i = 0; i < list_users.size(); i++)
+                                {
+                                    if (list_users.get(i).getNick().equals(nick))
+                                    {
+                                        list_users.get(i).setRole(role);
+                                        list_users.get(i).setAlive(false);
+                                    }
+                                }
+                                messageModel = new MessageModel(test_num, message, time.substring(11, 16), "Server", "SystemMes");
                                 break;
                             case "role_action_mafia":
                                 data2 = data.getJSONObject("message");
                                 mafia_nick = data2.getString("mafia_nick");
                                 user_nick = data2.getString("user_nick");
-                                messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), mafia_nick, "UsersMes");
+                                messageModel = new MessageModel(test_num, "Голосует за " + user_nick, time.substring(11,16), mafia_nick, "UsersMes");
                                 break;
                             case "voting":
                                 Log.d("kkk", message);
                                 data2 = data.getJSONObject("message");
                                 voter = data2.getString("voter");
                                 user_nick = data2.getString("user_nick");
-                                messageModel = new MessageModel("Голосует за " + user_nick, time.substring(11,16), voter, "UsersMes");
+                                messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time.substring(11,16), voter, "UsersMes");
                                 break;
                         }
 
@@ -839,7 +833,13 @@ public class GameFragment extends Fragment {
                         }
                         else
                         {
-                            list_chat.add(test_num, messageModel);
+                            for (int i = 0; i < list_chat.size(); i++)
+                            {
+                                if (test_num > list_chat.get(i).num)
+                                {
+                                    list_chat.add(i, messageModel);
+                                }
+                            }
                         }
                         messageAdapter = new MessageAdapter(list_chat, getContext());
                         listView_chat.setAdapter(messageAdapter);

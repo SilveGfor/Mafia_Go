@@ -9,12 +9,12 @@ public class UserModel {
     {
     }
 
-    public UserModel(String nick) {
+    public UserModel(String nick, String role) {
         this.nick = nick;
         animation = false;
         alive = true;
         animation_type = "voting";
-        role = "unknown";
+        this.role = role;
     }
 
     public String getRole() {

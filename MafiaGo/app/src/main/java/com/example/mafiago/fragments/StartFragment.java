@@ -72,6 +72,9 @@ public class StartFragment extends Fragment {
         btnReg = view.findViewById(R.id.btnReg);
         ETemail = view.findViewById(R.id.ETemail);
         ETpassword = view.findViewById(R.id.ETpassword);
+
+
+
 /*
         final JSONObject json = new JSONObject();
         final JSONObject json_roles = new JSONObject();
