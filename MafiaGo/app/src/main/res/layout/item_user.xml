@@ -20,7 +20,7 @@
             <ImageView
                 android:id="@+id/Item_user_IV_role"
                 android:layout_marginTop="15dp"
-                android:src="@drawable/citizen"
+                android:src="@drawable/sheriff_alive"
                 android:layout_width="70dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
@@ -36,15 +36,14 @@
                 android:background="@drawable/ic_lover"/>
 
 
-
             <TextView
                 android:id="@+id/Item_user_TV_nick"
-                android:layout_below="@id/Item_user_IV_role"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/Item_user_IV_role"
                 android:layout_centerHorizontal="true"
                 android:text="SilveGfor"
-                android:textColor="#0EE3EA"
+                android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="normal" />
         </RelativeLayout>

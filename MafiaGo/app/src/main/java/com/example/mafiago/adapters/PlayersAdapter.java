@@ -1,15 +1,12 @@
 package com.example.mafiago.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -48,18 +45,23 @@ public class PlayersAdapter extends BaseAdapter
         ImageView IV_role = view.findViewById(R.id.Item_user_IV_role);
         switch (list_users.get(position).getRole())
         {
-            case "unknown":
-                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
-            case "mafia":
-                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+            case "none":
+                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.anonim));
             case "citizen":
-                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+                if (list_users.get(position).getAlive()) { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen_alive)); }
+                else { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen_dead)); }
+            case "mafia":
+                if (list_users.get(position).getAlive()) { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.mafia_alive)); }
+                else { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.mafia_dead)); }
             case "sheriff":
-                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+                if (list_users.get(position).getAlive()) { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.sheriff_alive)); }
+                else { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.mafia_dead)); }
             case "doctor":
-                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+                if (list_users.get(position).getAlive()) { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.doctor_alive)); }
+                else { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.doctor_dead)); }
             case "lover":
-                IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen));
+                if (list_users.get(position).getAlive()) { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen)); }
+                else { IV_role.setBackground(ContextCompat.getDrawable(context, R.drawable.citizen)); }
         }
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
