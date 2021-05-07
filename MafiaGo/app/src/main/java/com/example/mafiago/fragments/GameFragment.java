@@ -109,19 +109,6 @@ public class GameFragment extends Fragment {
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
-        final JSONObject json = new JSONObject();
-        try {
-            json.put("nick", player.getNick());
-            json.put("room", player.getRoom_num());
-            json.put("last_message_num", num);
-            json.put("last_dead_message_num", -1);
-            json.put("session_id", player.getSession_id());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        socket.emit("connect_to_room", json);
-        Log.d("kkk", "connect_to_room - " + json);
-
 
         btnSend.setOnClickListener(v -> {
 
@@ -301,6 +288,7 @@ public class GameFragment extends Fragment {
             socket.on("user_error", onUserError);
             socket.on("mafias", onMafias);
             socket.on("get_my_game_info", onGetMyGameInfo);
+            socket.on("success_get_in_room", onSuccessGetInRoom);
             return null;
         }
 
@@ -392,7 +380,7 @@ public class GameFragment extends Fragment {
                         nick = data.getString("nick");
                         test_num = data.getInt("num");
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
-                        if (test_num > num)
+                        if (test_num >= num)
                         {
                             num = test_num;
                             time = data.getString("time");
@@ -845,7 +833,7 @@ public class GameFragment extends Fragment {
 
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
                         //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
-                        if (test_num > num) {
+                        if (test_num >= num) {
                             num = test_num;
                             list_chat.add(messageModel);
                         }
@@ -1022,6 +1010,32 @@ public class GameFragment extends Fragment {
                         e.printStackTrace();
                     }
                     Log.d("kkk", "Socket_принять - get_my_game_info - " + args[0]);
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onSuccessGetInRoom = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", player.getNick());
+                        json.put("room", player.getRoom_num());
+                        json.put("last_message_num", num);
+                        json.put("last_dead_message_num", -1);
+                        json.put("session_id", player.getSession_id());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("connect_to_room", json);
+                    Log.d("kkk", "connect_to_room - " + json);
                 }
             });
         }
