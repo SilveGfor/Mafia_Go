@@ -392,7 +392,7 @@ public class GameFragment extends Fragment {
                         nick = data.getString("nick");
                         test_num = data.getInt("num");
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
-                        if (test_num > num)
+                        if (test_num >= num)
                         {
                             num = test_num;
                             time = data.getString("time");
@@ -845,7 +845,7 @@ public class GameFragment extends Fragment {
 
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
                         //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
-                        if (test_num > num) {
+                        if (test_num >= num) {
                             num = test_num;
                             list_chat.add(messageModel);
                         }
