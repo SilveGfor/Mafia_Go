@@ -34,11 +34,8 @@ public class MainActivity extends AppCompatActivity {
     public static String NickName = "";
     public static String Session_id = "";
     public static int Game_id;
-<<<<<<< Updated upstream
+
     public static String url = "http://82.148.17.116:5000";
-=======
-    public static String url = "c437eb1190d48b.localhost.run";
->>>>>>> Stashed changes
 
     public static String password = "";
     public static String nick = "";
