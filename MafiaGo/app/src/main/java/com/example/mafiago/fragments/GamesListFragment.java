@@ -238,7 +238,7 @@ public class GamesListFragment extends Fragment {
                     int min_people;
                     int max_people;
                     int num_people;
-                    Log.d("kkk", "принял - NewRoom - " + data);
+                    Log.d("kkk", "принял - add_room_to_list_of_rooms - " + data);
                     try {
                         name = data.getString("name");
                         num = data.getInt("num");

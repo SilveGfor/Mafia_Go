@@ -118,7 +118,7 @@ public static Socket socket;
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-                    Log.d("kkk", "PING - " + args[0]);
+                    //Log.d("kkk", "PING - " + args[0]);
         }
     };
 
