@@ -807,6 +807,7 @@ public class GameFragment extends Fragment {
                         {
                             case "game_over":
                             case "dead_user":
+                                Log.d("kkk", "1");
                                 data2 = data.getJSONObject("message");
                                 message = data2.getString("message");
                                 nick = data2.getString("nick");
