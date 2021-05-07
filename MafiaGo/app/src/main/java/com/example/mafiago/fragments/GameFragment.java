@@ -655,6 +655,7 @@ public class GameFragment extends Fragment {
                                 }
                                 break;
                             case "day":
+                                influence.setVisibility(View.GONE);
                                 player.setVoted_at_night(false);
                                 player.setCan_write(true);
                                 break;
@@ -760,10 +761,20 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String sheriff_role;
+                    String sheriff_role, nick;
                     try {
-                        sheriff_role = data.getString("role");
                         Log.d("kkk", "Socket_принять - role_action_sheriff " + args[0]);
+                        sheriff_role = data.getString("role");
+                        nick = data.getString("nick");
+                        for (int i = 0; i < list_users.size(); i++)
+                        {
+                            if (list_users.get(i).getNick().equals(nick))
+                            {
+                                list_users.get(i).setRole(sheriff_role);
+                            }
+                        }
+                        PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                        gridView_users.setAdapter(playersAdapter);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -808,6 +819,8 @@ public class GameFragment extends Fragment {
                                         list_users.get(i).setAlive(false);
                                     }
                                 }
+                                PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                                gridView_users.setAdapter(playersAdapter);
                                 messageModel = new MessageModel(test_num, message, time.substring(11, 16), "Server", "SystemMes");
                                 break;
                             case "role_action_mafia":

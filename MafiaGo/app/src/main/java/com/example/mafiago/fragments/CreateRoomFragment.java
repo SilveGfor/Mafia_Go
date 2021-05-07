@@ -91,6 +91,7 @@ public class CreateRoomFragment extends Fragment {
                     JSONArray peaceful = new JSONArray();
                     JSONArray mafia = new JSONArray();
                     peaceful.put("doctor");
+                    peaceful.put("sheriff");
                     json_roles.put("peaceful", peaceful);
                     json_roles.put("mafia", mafia);
                     json.put("nick", MainActivity.NickName);
