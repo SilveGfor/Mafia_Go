@@ -295,7 +295,7 @@ public class GameFragment extends Fragment {
             socket.on("role", onRole);
             socket.on("restart", onRestart);
             socket.on("role_action", onRoleAction);
-            socket.on("role_action_sheriff", onRoleActionSheriff);
+            socket.on("know_role", onKnowRole);
             socket.on("system_message", onSystemMessage);
             socket.on("user_error", onUserError);
             socket.on("mafias", onMafias);
@@ -407,7 +407,7 @@ public class GameFragment extends Fragment {
                             link = data.getInt("link");
                             if(link == -1)
                             {
-                                Log.d("kkk", "UsersMes");
+                                Log.d("kkk", "UsersMes + " + nick + " - " + message);
                                 MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
                                 list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
@@ -432,12 +432,14 @@ public class GameFragment extends Fragment {
                             link = data.getInt("link");
                             if(link == -1)
                             {
-                                Log.d("kkk", "UsersMes");
+                                Log.d("kkk", "UsersMes + " + nick + " - " + message);
                                 MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
                                 for (int i = 0; i < list_chat.size(); i++)
                                 {
+                                    Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num );
                                     if (test_num > list_chat.get(i).num)
                                     {
+                                        Log.d("kkk", "GOOD " + i);
                                         list_chat.add(i, messageModel);
                                     }
                                 }
@@ -579,6 +581,7 @@ public class GameFragment extends Fragment {
                         time = data.getString("timer");
                         if (!time.equals("stop"))
                         {
+                            //TODO: починить таймер
                             if (StopTimer == 1)
                             {
                                 timer.setText("--");
@@ -797,7 +800,7 @@ public class GameFragment extends Fragment {
         }
     };
 
-    private Emitter.Listener onRoleActionSheriff = new Emitter.Listener() {
+    private Emitter.Listener onKnowRole = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -806,16 +809,16 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String sheriff_role, nick;
+                    String role, nick;
                     try {
-                        Log.d("kkk", "Socket_принять - role_action_sheriff " + args[0]);
-                        sheriff_role = data.getString("role");
+                        Log.d("kkk", "Socket_принять - know_role " + args[0]);
+                        role = data.getString("role");
                         nick = data.getString("nick");
                         for (int i = 0; i < list_users.size(); i++)
                         {
                             if (list_users.get(i).getNick().equals(nick))
                             {
-                                list_users.get(i).setRole(sheriff_role);
+                                list_users.get(i).setRole(role);
                             }
                         }
                         PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
