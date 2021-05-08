@@ -99,6 +99,10 @@ public class GameFragment extends Fragment {
         IV_influence_sheriff = view.findViewById(R.id.IV_influence_sheriff);
         IV_role = view.findViewById(R.id.IV_role);
 
+        IV_influence_doctor.setVisibility(View.GONE);
+        IV_influence_lover.setVisibility(View.GONE);
+        IV_influence_sheriff.setVisibility(View.GONE);
+
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id);
 
         cardAnswer.setVisibility(View.GONE);
