@@ -18,16 +18,42 @@
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
 
-    <TextView
-        android:id="@+id/influence"
+    <ImageView
+        android:id="@+id/IV_role"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/anonim"
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:scaleType="centerCrop"
+        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@id/ListUsers" />
+
+    <ImageView
+        android:id="@+id/IV_influence_doctor"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/day_time"
-        android:layout_alignBaseline="@id/day_time"
-        android:text="DOCTOR"
-        android:textSize="20sp"
-        android:textColor="@color/colorWhite"
-        android:layout_margin="10dp"/>
+        android:layout_toRightOf="@id/timer"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_doctor"/>
+
+    <ImageView
+        android:id="@+id/IV_influence_lover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_doctor"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_lover"/>
+
+    <ImageView
+        android:id="@+id/IV_influence_sheriff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_lover"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_sheriff"/>
 
     <TextView
         android:id="@+id/day_time"
