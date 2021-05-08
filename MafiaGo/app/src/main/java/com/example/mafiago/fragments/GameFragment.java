@@ -436,11 +436,12 @@ public class GameFragment extends Fragment {
                                 MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
                                 for (int i = 0; i < list_chat.size(); i++)
                                 {
-                                    Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num );
-                                    if (test_num > list_chat.get(i).num)
+                                    Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num + " ; длина списка " + list_chat.size());
+                                    if (test_num < list_chat.get(i).num)
                                     {
                                         Log.d("kkk", "GOOD " + i);
                                         list_chat.add(i, messageModel);
+                                        break;
                                     }
                                 }
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
@@ -854,6 +855,8 @@ public class GameFragment extends Fragment {
                         switch (status)
                         {
                             case "game_over":
+                                messageModel = new MessageModel(test_num, message, time.substring(11, 16), "Server", "SystemMes");
+                                break;
                             case "dead_user":
                                 Log.d("kkk", "1");
                                 data2 = data.getJSONObject("message");
@@ -883,7 +886,7 @@ public class GameFragment extends Fragment {
                                 data2 = data.getJSONObject("message");
                                 voter = data2.getString("voter");
                                 user_nick = data2.getString("user_nick");
-                                messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time.substring(11,16), voter, "UsersMes");
+                                messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time.substring(11,16), voter, "VotingMes");
                                 break;
                         }
 
