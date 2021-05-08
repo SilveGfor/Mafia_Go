@@ -90,7 +90,7 @@ public class MessageAdapter extends BaseAdapter {
                 txt_connect_time.setText(list_mess.get(position).time);
                 break;
 
-            case "VoteMes":
+            case "VotingMes":
                 view = layout.inflate(R.layout.item_message, null);
 
                 txt_nick = view.findViewById(R.id.mesNick);
@@ -101,7 +101,7 @@ public class MessageAdapter extends BaseAdapter {
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
 
-                txt_mess.setTextColor(Color.parseColor("#08FB00"));
+                txt_mess.setTextColor(Color.parseColor("#FFFF00"));
                 break;
 
             case "AnswerMes":
