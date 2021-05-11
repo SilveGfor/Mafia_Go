@@ -8,6 +8,20 @@
     android:id="@+id/frgmChat"
     android:background="@drawable/fon_menu">
 
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        
+    </androidx.cardview.widget.CardView>
+    <TextView
+        android:id="@+id/fragmentGame_room_name"
+        android:text="London Bridge"
+        android:textSize="25sp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <Button
         android:id="@+id/btnExitChat"
         android:layout_width="70dp"

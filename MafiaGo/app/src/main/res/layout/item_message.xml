@@ -24,17 +24,18 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:text="21:00" />
+
     <TextView
         android:id="@+id/mesText"
-        android:text="Однако здравствуйте"
-        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_below="@+id/mesNick"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/mesNick"
-        android:textSize="16sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        android:layout_marginTop="5dp"
+        android:text="Однако здравствуйте"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="#999999"
+        android:textSize="16sp" />
 
 </RelativeLayout>
