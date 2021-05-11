@@ -8,6 +8,7 @@ public class MessageModel {
     public String answerNick;
     public String answerMes;
     public String answerTime;
+    public String type;
     public int answerId;
     public int num;
 
@@ -15,6 +16,14 @@ public class MessageModel {
     {
     }
 
+    public MessageModel(int num, String message, String time, String nickName, String MesType, String type) {
+        this.num = num;
+        this.message = message;
+        this.time = time;
+        this.nickName = nickName;
+        this.MesType = MesType;
+        this.type = type;
+    }
     public MessageModel(int num, String message, String time, String nickName, String MesType) {
         this.num = num;
         this.message = message;

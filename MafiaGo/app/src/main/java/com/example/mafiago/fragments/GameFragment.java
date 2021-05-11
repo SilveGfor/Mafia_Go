@@ -408,7 +408,7 @@ public class GameFragment extends Fragment {
                             if(link == -1)
                             {
                                 Log.d("kkk", "UsersMes + " + nick + " - " + message);
-                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
+                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes", status);
                                 list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                 listView_chat.setAdapter(messageAdapter);
@@ -433,7 +433,7 @@ public class GameFragment extends Fragment {
                             if(link == -1)
                             {
                                 Log.d("kkk", "UsersMes + " + nick + " - " + message);
-                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes");
+                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes", status);
                                 for (int i = 0; i < list_chat.size(); i++)
                                 {
                                     Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num + " ; длина списка " + list_chat.size());
@@ -879,7 +879,7 @@ public class GameFragment extends Fragment {
                                 data2 = data.getJSONObject("message");
                                 mafia_nick = data2.getString("mafia_nick");
                                 user_nick = data2.getString("user_nick");
-                                messageModel = new MessageModel(test_num, "Голосует за " + user_nick, time.substring(11,16), mafia_nick, "UsersMes");
+                                messageModel = new MessageModel(test_num, "Голосует за " + user_nick, time.substring(11,16), mafia_nick, "VotingMes");
                                 break;
                             case "voting":
                                 Log.d("kkk", message);

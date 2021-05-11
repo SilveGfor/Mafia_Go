@@ -66,11 +66,10 @@ public class PlayersAdapter extends BaseAdapter
                 else { IV_role.setImageResource(R.drawable.doctor_dead); }
                 break;
             case "lover":
-                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.anonim); }
-                else { IV_role.setImageResource(R.drawable.anonim); }
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.lover_alive); }
+                else { IV_role.setImageResource(R.drawable.lover_dead); }
                 break;
         }
-        //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
         if (list_users.get(position).getAnimation())
         {

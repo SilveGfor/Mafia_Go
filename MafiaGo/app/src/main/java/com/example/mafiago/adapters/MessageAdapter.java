@@ -61,6 +61,23 @@ public class MessageAdapter extends BaseAdapter {
                 TextView txt_time = view.findViewById(R.id.mesTime);
                 TextView txt_mess = view.findViewById(R.id.mesText);
 
+                String color= "#FFFFFF";
+                switch (list_mess.get(position).type)
+                {
+                    case "alive":
+                        color = "#FFFFFF";
+                        break;
+                    case "dead":
+                        color = "#999999";
+                        break;
+                    case "last_message":
+                        color = "#FF0000";
+                }
+
+                txt_nick.setTextColor(Color.parseColor(color));
+                txt_time.setTextColor(Color.parseColor(color));
+                txt_mess.setTextColor(Color.parseColor(color));
+
                 txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);

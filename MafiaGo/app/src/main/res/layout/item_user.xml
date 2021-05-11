@@ -9,31 +9,32 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/colorPrimaryDark"
         app:cardCornerRadius="5dp">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
 
-
             <ImageView
                 android:id="@+id/Item_user_IV_role"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/sheriff_alive"
                 android:layout_width="70dp"
-                android:layout_height="100dp"
+                android:layout_height="90dp"
                 android:layout_centerHorizontal="true"
-                android:scaleType="centerCrop" />
+                android:layout_marginTop="15dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/lover_alive" />
 
             <ImageView
                 android:id="@+id/Item_user_IV_Animation"
-                android:visibility="invisible"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_lover"/>
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_lover"
+                android:visibility="invisible" />
 
 
             <TextView
