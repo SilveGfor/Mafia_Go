@@ -416,7 +416,7 @@ public class GameFragment extends Fragment {
                             }
                             else
                             {
-                                Log.d("kkk", "AnswerMes");
+                                Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
                                 MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
                                 list_chat.add(messageModel);
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());

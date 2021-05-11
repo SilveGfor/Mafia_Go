@@ -1,4 +1,4 @@
-package com.example.mafiago.adapters;
+ package com.example.mafiago.adapters;
 
 
 import android.content.Context;
