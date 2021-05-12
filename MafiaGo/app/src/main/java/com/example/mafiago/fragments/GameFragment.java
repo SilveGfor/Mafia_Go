@@ -51,6 +51,7 @@ public class GameFragment extends Fragment {
     public TextView day_time;
     public TextView answer_nick;
     public TextView answer_mes;
+    public TextView room_name;
 
     public ImageView IV_influence_doctor;
     public ImageView IV_influence_lover;
@@ -86,6 +87,7 @@ public class GameFragment extends Fragment {
         answer_nick = view.findViewById(R.id.answerNickChat);
         answer_mes = view.findViewById(R.id.answerTextChat);
         sendText = view.findViewById(R.id.InputMes);
+        room_name = view.findViewById(R.id.fragmentGame_TV_room_name);
 
         btnSend = view.findViewById(R.id.btnSendMes);
         btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
@@ -106,6 +108,7 @@ public class GameFragment extends Fragment {
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id);
 
         cardAnswer.setVisibility(View.GONE);
+        room_name.setText(MainActivity.RoomName);
 
         SocketTask socketTask = new SocketTask();
         socketTask.execute();

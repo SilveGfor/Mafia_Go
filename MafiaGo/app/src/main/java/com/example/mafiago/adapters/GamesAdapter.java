@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -45,7 +46,14 @@ public class GamesAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
 
+
         view = layout.inflate(R.layout.item_game, null);
+
+        ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
+
+        PB_users.setMax(list_room.get(position).max_people);
+        PB_users.setProgress(list_room.get(position).num_people);
+
         TextView txt_room_name = view.findViewById(R.id.NameRoom);
         TextView txt_min_max_people = view.findViewById(R.id.MaxMinPeople);
         TextView txt_num_people = view.findViewById(R.id.NumPeople);
@@ -54,7 +62,7 @@ public class GamesAdapter extends BaseAdapter {
 
         txt_room_name.setText(list_room.get(position).name);
         txt_min_max_people.setText(list_room.get(position).min_people + "/" + list_room.get(position).max_people);
-        txt_num_people.setText(list_room.get(position).num_people + "");
+        txt_num_people.setText("Игроки: " + list_room.get(position).num_people);
         return view;
     }
 }

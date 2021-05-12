@@ -26,7 +26,6 @@ public class MessageAdapter extends BaseAdapter {
         if (context != null) {
             layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
-
     }
     //количество сообщений
     @Override

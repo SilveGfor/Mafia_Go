@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -33,13 +34,13 @@ public class MainActivity extends AppCompatActivity {
     public static OkHttpClient client;
     public static String NickName = "";
     public static String Session_id = "";
+    public static String RoomName = "";
     public static int Game_id;
 
     public static String url = "http://82.148.17.116:5000";
 
     public static String password = "";
     public static String nick = "";
-
 
 public static Socket socket;
     {

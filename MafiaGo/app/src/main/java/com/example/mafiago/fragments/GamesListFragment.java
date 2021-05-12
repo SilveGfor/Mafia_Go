@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 
@@ -36,6 +37,7 @@ public class GamesListFragment extends Fragment {
     public Button btnExit;
     public Button btnCreateRoom;
 
+
     ArrayList<RoomModel> list_room = new ArrayList<>();
 
     public boolean First = true;
@@ -51,6 +53,8 @@ public class GamesListFragment extends Fragment {
         listView = view.findViewById(R.id.GamesList);
         btnCreateRoom = view.findViewById(R.id.btnCreateRoom);
         btnExit = view.findViewById(R.id.btnExitGamesList);
+
+
 
 
         SocketTask socketTask = new SocketTask();
@@ -97,6 +101,7 @@ public class GamesListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 MainActivity.Game_id = list_room.get(position).id;
+                MainActivity.RoomName = list_room.get(position).name;
                 Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
             }

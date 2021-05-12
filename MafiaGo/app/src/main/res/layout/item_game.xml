@@ -2,7 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="50dp">
 
     <ImageView
         android:id="@+id/icFire"
@@ -42,5 +42,14 @@
         android:layout_below="@+id/NameRoom"
         android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+    <ProgressBar
+        android:id="@+id/Item_game_progressBar"
+        android:layout_toLeftOf="@id/NumPeople"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:progressDrawable="@drawable/progressbar_states"
+        android:layout_centerVertical="true"
+        android:layout_width="45dp"
+        android:layout_height="45dp" />
 
 </RelativeLayout>
