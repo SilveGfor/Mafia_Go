@@ -1,44 +1,34 @@
 package com.example.mafiago.models;
 
+import com.example.mafiago.enums.Role;
+
 public class UserModel {
-    private String nick, animation_type, role;
-    private boolean animation;
+    private String nick;
+    Role animation_type;
     private boolean alive;
+    private Role role;
 
-    UserModel()
-    {
-    }
-
-    public UserModel(String nick, String role) {
+    public UserModel(String nick, Role role) {
         this.nick = nick;
-        animation = false;
         alive = true;
-        animation_type = "voting";
+        animation_type = Role.NONE;
         this.role = role;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
-    public String getAnimation_type() {
+    public Role getAnimation_type() {
         return animation_type;
     }
 
-    public void setAnimation_type(String animation_type) {
+    public void setAnimation_type(Role animation_type) {
         this.animation_type = animation_type;
-    }
-
-    public boolean getAnimation() {
-        return animation;
-    }
-
-    public void setAnimation(boolean animation) {
-        if (alive) this.animation = animation;
     }
 
     public boolean getAlive() {

@@ -23,7 +23,7 @@ public class GamesAdapter extends BaseAdapter {
     {
         this.list_room = list_room;
         this.context = context;
-        layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
     @Override
     public int getCount()

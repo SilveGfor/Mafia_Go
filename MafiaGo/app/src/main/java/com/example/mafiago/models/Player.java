@@ -2,8 +2,14 @@ package com.example.mafiago.models;
 
 import android.util.Log;
 
+import com.example.mafiago.enums.Role;
+import com.example.mafiago.enums.Time;
+
 public class Player {
-    private String nick, role, status, session_id, time;
+    private String nick, status, session_id;
+
+    private Time time;
+    private Role role;
     private  boolean can_click, can_write, voted_at_night;
     private int room_num;
 
@@ -12,8 +18,8 @@ public class Player {
         this.nick = nick;
         this.session_id = session_id;
         this.room_num = room_num;
-        role = "";
-        time = "lobby";
+        role = Role.NONE;
+        time = Time.LOBBY;
         status = "alive";
         voted_at_night = false;
         can_click = false;
@@ -52,7 +58,7 @@ public class Player {
         return can_click;
     }
 
-    public String getTime() {
+    public Time getTime() {
         return time;
     }
 
@@ -64,11 +70,11 @@ public class Player {
         return session_id;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
-    public void setTime(String time) {
+    public void setTime(Time time) {
         this.time = time;
     }
 
@@ -76,8 +82,8 @@ public class Player {
         this.can_click = can_click;
     }
 
-    public void setRole(String role) {
-        if (this.role.equals("")) this.role = role;
+    public void setRole(Role role) {
+        if (this.role == Role.NONE) this.role = role;
         else Log.d("kkk", "Нельзя задать роль! Она уже есть!");
     }
 
