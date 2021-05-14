@@ -46,56 +46,61 @@ public class PlayersAdapter extends BaseAdapter
         ImageView IV_role = view.findViewById(R.id.Item_user_IV_role);
         switch (list_users.get(position).getRole())
         {
-            case "none":
+            case NONE:
                 IV_role.setImageResource(R.drawable.anonim);
                 break;
-            case "citizen":
+            case CITIZEN:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.citizen_alive); }
                 else { IV_role.setImageResource(R.drawable.citizen_dead); }
                 break;
-            case "mafia":
+            case MAFIA:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.mafia_alive); }
                 else { IV_role.setImageResource(R.drawable.mafia_dead); }
                 break;
-            case "sheriff":
+            case SHERIFF:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.sheriff_alive); }
                 else { IV_role.setImageResource(R.drawable.sheriff_dead); }
                 break;
-            case "doctor":
+            case DOCTOR:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.doctor_alive); }
                 else { IV_role.setImageResource(R.drawable.doctor_dead); }
                 break;
-            case "lover":
+            case LOVER:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.lover_alive); }
                 else { IV_role.setImageResource(R.drawable.lover_dead); }
                 break;
         }
-
-        if (list_users.get(position).getAnimation())
-        {
-            IV_action.setVisibility(View.VISIBLE);
+        Animation animation = null;
+        if (list_users.get(position).getAlive()) {
             switch (list_users.get(position).getAnimation_type()) {
-                case "voting":
+                case NONE:
+                    break;
+                case VOTING:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
-                case "lover":
+                case LOVER:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
-                case "mafia":
+                case MAFIA:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
-                case "doctor":
+                case DOCTOR:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_doctor));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
-                case "sheriff":
+                case SHERIFF:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
             }
-            //анимация
-            Animation animation = AnimationUtils.loadAnimation(context, R.anim.voting);
-            IV_action.startAnimation(animation);
+            if (animation != null) {
+                IV_action.setVisibility(View.VISIBLE);
+                IV_action.startAnimation(animation);
+            }
         }
-
         TV_nick.setText(list_users.get(position).getNick());
         return view;
     }
