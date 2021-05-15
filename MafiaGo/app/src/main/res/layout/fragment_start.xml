@@ -8,6 +8,10 @@
     android:id="@+id/FragmentStart"
     android:orientation="vertical">
 
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
     <ImageView
         android:id="@+id/mainText"
         android:layout_width="wrap_content"
@@ -20,7 +24,7 @@
         android:layout_width="250dp"
         android:layout_height="35dp"
         android:gravity="center"
-        android:hint="Введите Ник"
+        android:hint="Введите почту"
         android:textColorHint="@color/colorWhite"
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_edit_text"
@@ -38,7 +42,6 @@
         android:background="@drawable/round_edit_text"
         android:layout_gravity="center"/>
 
-
     <Button
         android:id="@+id/btnSignIn"
         android:layout_width="wrap_content"
@@ -48,8 +51,6 @@
         android:textColor="@color/colorWhite"
         android:layout_marginTop="25dp"
         android:layout_gravity="center"/>
-
-
 
     <Button
         android:id="@+id/btnReg"

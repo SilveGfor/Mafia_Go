@@ -205,7 +205,7 @@ public class GameFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String nick = list_users.get(position).getNick();
                 Log.d("kkk", "Нажатие на ник: " + list_users.get(position).getNick());
-                if (player.Can_click())
+                if (player.Can_click() && player.getStatus().equals("alive"))
                 {
                     switch (player.getTime())
                     {
@@ -246,6 +246,7 @@ public class GameFragment extends Fragment {
                             }
                             break;
                         case DAY:
+                            sendText.setText(sendText.getText() + nick);
                             break;
                         case VOTING:
                             Voting(nick);
@@ -363,6 +364,7 @@ public class GameFragment extends Fragment {
                                 if (test_num > list_chat.get(i).num)
                                 {
                                     list_chat.add(i, messageModel);
+                                    break;
                                 }
                             }
                         }
@@ -674,6 +676,7 @@ public class GameFragment extends Fragment {
                                         break;
                                     default:
                                         Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                                        break;
                                 }
                                 break;
                             case NIGHT_OTHER:
@@ -786,6 +789,7 @@ public class GameFragment extends Fragment {
                         json2.put("nick", player.getNick());
                         json2.put("room", player.getRoom_num());
                         json2.put("last_message_num", num);
+                        json2.put("last_dead_message_num", -1);
                         json2.put("session_id", MainActivity.Session_id);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -898,6 +902,19 @@ public class GameFragment extends Fragment {
                                     {
                                         list_users.get(i).setRole(role);
                                         list_users.get(i).setAlive(false);
+                                        if (nick.equals(player.getNick()))
+                                        {
+                                            player.setCan_write(true);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Oh No! Oh No!")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.ic_mafia)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Oh no-no-no-no\nК сожалению вас убили... Но вы всё-равно ещё можете отправить последнее сообщение!",
+                                                            (dialog, id) -> dialog.cancel());
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        }
                                     }
                                 }
                                 PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
@@ -1101,8 +1118,6 @@ public class GameFragment extends Fragment {
                         if (player.getRole() == Role.NONE)
                         {
                             player.setRole(ConvertToRole(role));
-                        }
-                        player.setStatus(status);
                             switch (player.getRole())
                             {
                                 case NONE:
@@ -1124,14 +1139,14 @@ public class GameFragment extends Fragment {
                                     IV_role.setImageResource(R.drawable.lover_alive);
                                     break;
                             }
-
+                        }
+                        player.setStatus(status);
+                        if (player.getStatus().equals("alive")) {
                             player.setCan_write(false);
-                            switch (player.getTime())
-                            {
+                            switch (player.getTime()) {
                                 case NIGHT_LOVE:
                                     IV_influence_lover.setVisibility(View.GONE);
-                                    switch (player.getRole())
-                                    {
+                                    switch (player.getRole()) {
                                         case MAFIA:
                                             player.setCan_write(true);
                                             break;
@@ -1143,8 +1158,7 @@ public class GameFragment extends Fragment {
                                     }
                                     break;
                                 case NIGHT_OTHER:
-                                    switch (player.getRole())
-                                    {
+                                    switch (player.getRole()) {
                                         case MAFIA:
                                         case MAFIA_DON:
                                             if (can_act) StartAnimation(Role.MAFIA);
@@ -1166,6 +1180,7 @@ public class GameFragment extends Fragment {
                                     if (can_vote) StartAnimation(Role.VOTING);
                                     break;
                             }
+                        }
 
                     Log.d("kkk", "Socket_принять - get_my_game_info - " + args[0]);
                 }
@@ -1210,7 +1225,10 @@ public class GameFragment extends Fragment {
         player.setCan_click(true);
         for (int i = 0; i < list_users.size(); i++)
         {
-            list_users.get(i).setAnimation_type(type);
+            if (list_users.get(i).getAlive())
+            {
+                list_users.get(i).setAnimation_type(type);
+            }
             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
             gridView_users.setAdapter(playersAdapter);
         }
@@ -1220,6 +1238,7 @@ public class GameFragment extends Fragment {
         player.setCan_click(false);
         for (int i = 0; i < list_users.size(); i++)
         {
+            list_users.get(i).setAnimation_type(Role.NONE);
             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
             gridView_users.setAdapter(playersAdapter);
         }
