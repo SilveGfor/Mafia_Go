@@ -71,7 +71,6 @@ public class PlayersAdapter extends BaseAdapter
                 break;
         }
         Animation animation = null;
-        if (list_users.get(position).getAlive()) {
             switch (list_users.get(position).getAnimation_type()) {
                 case NONE:
                     break;
@@ -100,7 +99,6 @@ public class PlayersAdapter extends BaseAdapter
                 IV_action.setVisibility(View.VISIBLE);
                 IV_action.startAnimation(animation);
             }
-        }
         TV_nick.setText(list_users.get(position).getNick());
         return view;
     }
