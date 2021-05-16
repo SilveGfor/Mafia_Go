@@ -472,6 +472,7 @@ public class GameFragment extends Fragment {
                                     if (test_num > list_chat.get(i).num)
                                     {
                                         list_chat.add(i, messageModel);
+                                        break;
                                     }
                                 }
                                 MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
@@ -564,6 +565,7 @@ public class GameFragment extends Fragment {
                                 if (test_num > list_chat.get(i).num)
                                 {
                                     list_chat.add(i, messageModel);
+                                    break;
                                 }
                             }
                         }
@@ -623,98 +625,103 @@ public class GameFragment extends Fragment {
         public void call(final Object... args) {
             if(getActivity() == null)
                 return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String time;
-                    try {
-                        time = data.getString("time");
-                        switch (time)
-                        {
-                            case "lobby":
-                                player.setTime(Time.LOBBY);
-                            case "night_love":
-                                player.setTime(Time.NIGHT_LOVE);
-                            case "night_other":
-                                player.setTime(Time.NIGHT_OTHER);
-                            case "day":
-                                player.setTime(Time.DAY);
-                            case "voting":
-                                player.setTime(Time.VOTING);
-                        }
-                        day_time.setText(time);
-                        Log.d("kkk", "Socket_принять - day_time " + time);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-
-                    if (player.getStatus().equals("alive"))
+            getActivity().runOnUiThread(() -> {
+                JSONObject data = (JSONObject) args[0];
+                String time;
+                try {
+                    time = data.getString("time");
+                    switch (time)
                     {
-                        player.setCan_write(false);
-                        StopAnimation();
-                        switch (player.getTime())
-                        {
-                            case NIGHT_LOVE:
-                                IV_influence_lover.setVisibility(View.GONE);
-                                switch (player.getRole())
-                                {
-                                    case LOVER:
-                                        StartAnimation(Role.LOVER);
-                                        break;
-                                    case DOCTOR_OF_EASY_VIRTUE:
-                                        StartAnimation(Role.LOVER);
-                                        break;
-                                    case MAFIA:
-                                        player.setCan_write(true);
-                                        break;
-                                    case MAFIA_DON:
-                                        player.setCan_write(true);
-                                        break;
-                                    default:
-                                        Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
-                                        break;
-                                }
-                                break;
-                            case NIGHT_OTHER:
-                                switch (player.getRole())
-                                {
-                                    case DOCTOR_OF_EASY_VIRTUE:
-                                        if (!player.getVoted_at_night()) {
-                                            StartAnimation(Role.DOCTOR);
-                                        }
-                                        break;
-                                    case SHERIFF:
-                                        StartAnimation(Role.SHERIFF);
-                                        break;
-                                    case DOCTOR:
+                        case "lobby":
+                            player.setTime(Time.LOBBY);
+                            break;
+                        case "night_love":
+                            player.setTime(Time.NIGHT_LOVE);
+                            break;
+                        case "night_other":
+                            player.setTime(Time.NIGHT_OTHER);
+                            break;
+                        case "day":
+                            player.setTime(Time.DAY);
+                            break;
+                        case "voting":
+                            player.setTime(Time.VOTING);
+                            break;
+                    }
+                    day_time.setText(time);
+                    Log.d("kkk", "Socket_принять - day_time " + time);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "enum1" + String.valueOf(player.getTime() == Time.DAY));
+                Log.d("kkk", "enum2" + Time.DAY);
+                Log.d("kkk", "enum3" + player.getTime());
+                Log.d("kkk", "enum4" + player.getTime().equals(Time.DAY));
+                if (player.getStatus().equals("alive"))
+                {
+                    player.setCan_write(false);
+                    StopAnimation();
+                    switch (player.getTime())
+                    {
+                        case NIGHT_LOVE:
+                            IV_influence_lover.setVisibility(View.GONE);
+                            switch (player.getRole())
+                            {
+                                case LOVER:
+                                    StartAnimation(Role.LOVER);
+                                    break;
+                                case DOCTOR_OF_EASY_VIRTUE:
+                                    StartAnimation(Role.LOVER);
+                                    break;
+                                case MAFIA:
+                                    player.setCan_write(true);
+                                    break;
+                                case MAFIA_DON:
+                                    player.setCan_write(true);
+                                    break;
+                                default:
+                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                                    break;
+                            }
+                            break;
+                        case NIGHT_OTHER:
+                            switch (player.getRole())
+                            {
+                                case DOCTOR_OF_EASY_VIRTUE:
+                                    if (!player.getVoted_at_night()) {
                                         StartAnimation(Role.DOCTOR);
-                                        break;
-                                    case MAFIA:
-                                        StartAnimation(Role.MAFIA);
-                                        break;
-                                    case MAFIA_DON:
-                                        StartAnimation(Role.MAFIA);
-                                        break;
-                                    default:
-                                        Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
-                                        break;
-                                }
-                                break;
-                            case DAY:
-                                IV_influence_doctor.setVisibility(View.GONE);
-                                player.setVoted_at_night(false);
-                                player.setCan_write(true);
-                                break;
-                            case VOTING:
-                                StartAnimation(Role.VOTING);
-                                break;
-                        }
+                                    }
+                                    break;
+                                case SHERIFF:
+                                    StartAnimation(Role.SHERIFF);
+                                    break;
+                                case DOCTOR:
+                                    StartAnimation(Role.DOCTOR);
+                                    break;
+                                case MAFIA:
+                                    StartAnimation(Role.MAFIA);
+                                    break;
+                                case MAFIA_DON:
+                                    StartAnimation(Role.MAFIA);
+                                    break;
+                                default:
+                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                                    break;
+                            }
+                            break;
+                        case DAY:
+                            IV_influence_doctor.setVisibility(View.GONE);
+                            player.setVoted_at_night(false);
+                            player.setCan_write(true);
+                            break;
+                        case VOTING:
+                            StartAnimation(Role.VOTING);
+                            break;
                     }
-                    else
-                    {
-                        Log.d("kkk", "Вы мертвы :)");
-                    }
+                }
+                else
+                {
+                    Log.d("kkk", "Вы мертвы :)");
                 }
             });
         }
@@ -930,6 +937,10 @@ public class GameFragment extends Fragment {
                                 voter = data2.getString("voter");
                                 user_nick = data2.getString("user_nick");
                                 messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time.substring(11,16), voter, "VotingMes");
+                                break;
+                            case "time_info":
+                                Log.d("kkk", message);
+                                messageModel = new MessageModel(test_num,message, time.substring(11,16), "Server", "SystemMes");
                                 break;
                         }
 
