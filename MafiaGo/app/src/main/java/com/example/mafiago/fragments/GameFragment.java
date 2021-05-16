@@ -957,6 +957,7 @@ public class GameFragment extends Fragment {
                                 if (test_num > list_chat.get(i).num)
                                 {
                                     list_chat.add(i, messageModel);
+                                    break;
                                 }
                             }
                         }
