@@ -181,23 +181,20 @@ public class GameFragment extends Fragment {
             }
         });
 
-        btnExit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (player.getTime().equals("lobby")) {
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", MainActivity.NickName);
-                        json2.put("session_id", MainActivity.Session_id);
-                        json2.put("room", player.getRoom_num());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
-                    socket.emit("leave_room", json2);
+        btnExit.setOnClickListener(v -> {
+            if (player.getTime() == Time.LOBBY) {
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", MainActivity.NickName);
+                    json2.put("session_id", MainActivity.Session_id);
+                    json2.put("room", player.getRoom_num());
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                socket.emit("leave_room", json2);
             }
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
         });
 
         gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
