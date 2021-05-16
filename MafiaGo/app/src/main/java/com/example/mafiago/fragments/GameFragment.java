@@ -653,10 +653,6 @@ public class GameFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("kkk", "enum1" + String.valueOf(player.getTime() == Time.DAY));
-                Log.d("kkk", "enum2" + Time.DAY);
-                Log.d("kkk", "enum3" + player.getTime());
-                Log.d("kkk", "enum4" + player.getTime().equals(Time.DAY));
                 if (player.getStatus().equals("alive"))
                 {
                     player.setCan_write(false);
@@ -957,6 +953,7 @@ public class GameFragment extends Fragment {
                                 if (test_num > list_chat.get(i).num)
                                 {
                                     list_chat.add(i, messageModel);
+                                    break;
                                 }
                             }
                         }
