@@ -1114,14 +1114,19 @@ public class GameFragment extends Fragment {
                         {
                             case "lobby":
                                 player.setTime(Time.LOBBY);
+                                break;
                             case "night_love":
                                 player.setTime(Time.NIGHT_LOVE);
+                                break;
                             case "night_other":
                                 player.setTime(Time.NIGHT_OTHER);
+                                break;
                             case "day":
                                 player.setTime(Time.DAY);
+                                break;
                             case "voting":
                                 player.setTime(Time.VOTING);
+                                break;
                         }
                         if (player.getRole() == Role.NONE)
                         {
