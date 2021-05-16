@@ -73,10 +73,8 @@ public class PlayersAdapter extends BaseAdapter
         Animation animation = null;
             switch (list_users.get(position).getAnimation_type()) {
                 case NONE:
-                    Log.d("kkk", "None");
                     break;
                 case VOTING:
-                    Log.d("kkk", "Voting");
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
