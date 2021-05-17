@@ -15,16 +15,18 @@
         android:layout_margin="10dp"
         android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/colorPrimaryDark">
+
         <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_width="405dp"
+            android:layout_height="match_parent">
+
             <TextView
                 android:id="@+id/fragmentGame_TV_room_name"
-                android:text="London Bridge"
-                android:textSize="25sp"
-                android:layout_centerHorizontal="true"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="London Bridge"
+                android:textSize="25sp" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
@@ -100,8 +102,8 @@
     <GridView
         android:id="@+id/ListUsers"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_above="@id/answerCard"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragmentGame_FAB_skip_day"
         android:layout_alignTop="@id/btnExitChat"
         android:layout_marginStart="5dp"
 
@@ -126,6 +128,19 @@
         android:src="@drawable/ic_send"
         app:backgroundTint="#2888C8"
         app:fabSize="mini" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragmentGame_FAB_skip_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_skip"
+        app:backgroundTint="#F44336"
+        app:fabSize="mini"
+        android:padding="5dp"
+        android:layout_alignRight="@id/ListUsers"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/answerCard"/>
 
     <EditText
         android:id="@+id/InputMes"

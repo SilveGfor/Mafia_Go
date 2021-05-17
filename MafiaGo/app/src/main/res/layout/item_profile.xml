@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimaryDark">
+        <RelativeLayout
+            android:padding="15sp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/Item_profile_TV_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Профиль"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:id="@+id/Item_profile_IV_avatar"
+                android:layout_width="70dp"
+                android:layout_height="100dp"
+                android:background="@drawable/sheriff_alive"
+                android:layout_below="@+id/Item_profile_TV_profile"/>
+
+            <TextView
+                android:id="@+id/Item_profile_TV_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text="SilveGfor"
+                android:textSize="25dp"
+                android:layout_toRightOf="@id/Item_profile_IV_avatar"
+                android:layout_alignTop="@id/Item_profile_IV_avatar" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/Item_profile_add_friend"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_add_friend"
+                app:backgroundTint="#673AB7"
+                android:layout_alignTop="@id/Item_profile_IV_avatar"
+                android:layout_alignParentRight="true"
+                app:fabSize="mini" />
+
+            <ImageView
+                android:id="@+id/Item_profile_IV_rang"
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rang3"
+                android:layout_below="@id/Item_profile_TV_nick"
+                android:layout_alignLeft="@id/Item_profile_TV_nick"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
