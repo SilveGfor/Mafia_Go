@@ -65,6 +65,7 @@ public class GameFragment extends Fragment {
     public EditText sendText;
 
     public FloatingActionButton btnSend;
+    public FloatingActionButton FAB_skip_day;
 
     public Button btnExit;
     public Button btnDeleteAnswer;
@@ -94,6 +95,8 @@ public class GameFragment extends Fragment {
         btnSend = view.findViewById(R.id.btnSendMes);
         btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
         btnExit = view.findViewById(R.id.btnExitChat);
+
+        FAB_skip_day = view.findViewById(R.id.fragmentGame_FAB_skip_day);
 
         timer = view.findViewById(R.id.timer);
         day_time = view.findViewById(R.id.day_time);
@@ -207,7 +210,7 @@ public class GameFragment extends Fragment {
                     switch (player.getTime())
                     {
                         case LOBBY:
-                            sendText.setText(sendText.getText() + nick);
+                            ShowProfile(inflater, nick);
                             break;
                         case NIGHT_LOVE:
                             switch (player.getRole())
@@ -243,7 +246,7 @@ public class GameFragment extends Fragment {
                             }
                             break;
                         case DAY:
-                            sendText.setText(sendText.getText() + nick);
+                            ShowProfile(inflater, nick);
                             break;
                         case VOTING:
                             Voting(nick);
@@ -255,7 +258,7 @@ public class GameFragment extends Fragment {
                 }
                 else
                 {
-                    sendText.setText(sendText.getText() + nick);
+                    ShowProfile(inflater, nick);
                 }
 
             }
@@ -283,6 +286,22 @@ public class GameFragment extends Fragment {
             public void onClick(View v) {
                 answer_id = -1;
                 cardAnswer.setVisibility(View.GONE);
+            }
+        });
+
+        FAB_skip_day.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", MainActivity.NickName);
+                    json2.put("session_id", MainActivity.Session_id);
+                    json2.put("room", player.getRoom_num());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "Socket_отправка_skip_day - " + json2.toString());
+                socket.emit("skip_day", json2);
             }
         });
 
@@ -1300,5 +1319,20 @@ public class GameFragment extends Fragment {
             default:
                 return Role.NONE;
         }
+    }
+    //Вывод профиля
+    public void ShowProfile(LayoutInflater inflater, String nick) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View view_profile = inflater.inflate(R.layout.item_profile, null);
+        builder.setView(view_profile);
+        FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+        TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+
+        TV_nick.setText(nick);
+        FAB_add_friend.setOnClickListener(v1 -> {
+            //добавление в друзья
+        });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 }

@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\tim\AppData\Local\Temp\baseline_api_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\tim\AppData\Local\Temp\baseline_skip_next_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
@@ -37,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/api/baseline_api_24.xml" />
+                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/skip_next/baseline_skip_next_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -86,9 +86,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_mafia" />
+                                      <entry key="outputName" value="ic_skip" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ff0100" />
+                                      <entry key="themeColor" value="000000" />
                                     </map>
                                   </option>
                                 </PersistentState>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 
 public class MenuFragment extends Fragment {
@@ -46,6 +48,8 @@ public class MenuFragment extends Fragment {
         txtNick.setText(MainActivity.NickName);
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
+
+
 
         //настройки от Шлыкова
         //Nastroiki nastroiki = new Nastroiki();
@@ -87,17 +91,16 @@ public class MenuFragment extends Fragment {
         btnProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Профиль")
-                        .setMessage("(/!!!/)Вова не сделал профиль(/!!!/)")
-                        .setIcon(R.drawable.ic_info)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view_profile = inflater.inflate(R.layout.item_profile, null);
+                builder.setView(view_profile);
+                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+
+                TV_nick.setText(MainActivity.NickName);
+                FAB_add_friend.setOnClickListener(v1 -> {
+                    //добавление в друзья
+                });
                 AlertDialog alert = builder.create();
                 alert.show();
             }
