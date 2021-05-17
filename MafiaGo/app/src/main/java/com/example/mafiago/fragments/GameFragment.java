@@ -961,7 +961,6 @@ public class GameFragment extends Fragment {
                                 messageModel = new MessageModel(test_num,message, time.substring(11,16), "Server", "SystemMes");
                                 break;
                         }
-
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
                         //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
                         if (test_num >= num) {
