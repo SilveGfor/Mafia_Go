@@ -110,6 +110,8 @@ public class GameFragment extends Fragment {
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id);
 
         cardAnswer.setVisibility(View.GONE);
+
+        //TODO: ПОЧИНИТЬ room_name
         room_name.setText(MainActivity.RoomName);
 
         SocketTask socketTask = new SocketTask();
@@ -142,6 +144,7 @@ public class GameFragment extends Fragment {
             }
             else {
 
+                //TODO: мёртвые могут писать сообщения всегда
                 final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
 
                 // amplitude 0.2 and frequency 20
