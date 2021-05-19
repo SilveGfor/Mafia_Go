@@ -28,7 +28,6 @@ import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 import okhttp3.OkHttpClient;
 
-
 public class MainActivity extends AppCompatActivity {
 
     public static OkHttpClient client;

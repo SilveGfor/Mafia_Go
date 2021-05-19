@@ -114,12 +114,10 @@ public class GameFragment extends Fragment {
 
         cardAnswer.setVisibility(View.GONE);
 
-        //TODO: ПОЧИНИТЬ room_name
         room_name.setText(MainActivity.RoomName);
 
         SocketTask socketTask = new SocketTask();
         socketTask.execute();
-
 
         final JSONObject json3 = new JSONObject();
         try {
@@ -133,58 +131,79 @@ public class GameFragment extends Fragment {
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
         btnSend.setOnClickListener(v -> {
-            if (sendText.getText().toString().equals(""))
+            if (player.getStatus().equals("alive"))
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("БАН!")
-                        .setMessage("Вы попали в бан! Нельзя писать пустые сообщения! Ещё раз такое увижу - ЗАБАНЮ НАФИГ!")
-                        .setIcon(R.drawable.ic_error)
-                        .setCancelable(false)
-                        .setNegativeButton("ок",
-                                (dialog, id) -> dialog.cancel());
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
-            else {
-
-                //TODO: мёртвые могут писать сообщения всегда
-                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
-
-                // amplitude 0.2 and frequency 20
-                BounceInterpolator interpolator = new BounceInterpolator();
-                animation.setInterpolator(interpolator);
-
-                btnSend.startAnimation(animation);
-
-                if (player.Can_write()) {
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", player.getNick());
-                        json2.put("session_id", player.getSession_id());
-                        json2.put("room", player.getRoom_num());
-                        json2.put("message", sendText.getText().toString());
-                        json2.put("link", answer_id);
-                        answer_id = -1;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
-                    socket.emit("user_message", json2);
-                    answer_id = -1;
-                    cardAnswer.setVisibility(View.GONE);
-                    sendText.setText("");
-                } else {
+                if (sendText.getText().toString().equals(""))
+                {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Вы не можете сейчас отправлять сообщения!")
-                            .setMessage("")
+                    builder.setTitle("Ошибка!")
+                            .setMessage("Нельзя отправлять пустые сообщения!")
                             .setIcon(R.drawable.ic_error)
                             .setCancelable(false)
-                            .setNegativeButton("Ок",
+                            .setNegativeButton("ок",
                                     (dialog, id) -> dialog.cancel());
                     AlertDialog alert = builder.create();
                     alert.show();
                 }
+                else {
+                    final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+
+                    // amplitude 0.2 and frequency 20
+                    BounceInterpolator interpolator = new BounceInterpolator();
+                    animation.setInterpolator(interpolator);
+
+                    btnSend.startAnimation(animation);
+
+                    if (player.Can_write()) {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", player.getNick());
+                            json2.put("session_id", player.getSession_id());
+                            json2.put("room", player.getRoom_num());
+                            json2.put("message", sendText.getText().toString());
+                            json2.put("link", answer_id);
+                            answer_id = -1;
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
+                        socket.emit("user_message", json2);
+                        answer_id = -1;
+                        cardAnswer.setVisibility(View.GONE);
+                        sendText.setText("");
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Вы не можете сейчас отправлять сообщения!")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("Ок",
+                                        (dialog, id) -> dialog.cancel());
+                        AlertDialog alert = builder.create();
+                        alert.show();
+                    }
+                }
             }
+            else
+            {
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", player.getNick());
+                    json2.put("session_id", player.getSession_id());
+                    json2.put("room", player.getRoom_num());
+                    json2.put("message", sendText.getText().toString());
+                    json2.put("link", answer_id);
+                    answer_id = -1;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
+                socket.emit("user_message", json2);
+                answer_id = -1;
+                cardAnswer.setVisibility(View.GONE);
+                sendText.setText("");
+            }
+
         });
 
         btnExit.setOnClickListener(v -> {

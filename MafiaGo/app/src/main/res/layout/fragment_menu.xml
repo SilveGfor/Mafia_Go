@@ -29,6 +29,17 @@
             android:gravity="center" />
     </androidx.cardview.widget.CardView>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragmentMenu_FAB_exit_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_exit"
+        app:backgroundTint="#F44336"
+        app:fabSize="mini"
+        android:padding="5dp"
+        android:layout_margin="15dp"/>
+
     <Button
         android:id="@+id/btnGame"
         android:layout_width="100dp"

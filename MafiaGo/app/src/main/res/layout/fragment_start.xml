@@ -8,9 +8,7 @@
     android:id="@+id/FragmentStart"
     android:orientation="vertical">
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+
 
     <ImageView
         android:id="@+id/mainText"

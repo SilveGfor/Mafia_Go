@@ -40,7 +40,6 @@ public class StartFragment extends Fragment {
 
     private static final String url= MainActivity.url + "/login";
 
-
     //кнопки
     Button btnSignIn;
     Button btnReg;

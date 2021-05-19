@@ -183,6 +183,7 @@ public class CreateRoomFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     try {
                         MainActivity.Game_id = data.getInt("room_num");
+                        MainActivity.RoomName = String.valueOf(ET_RoomName.getText());
                         Log.d("kkk", "Принял - create_room: " + MainActivity.Game_id);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                     } catch (JSONException e) {

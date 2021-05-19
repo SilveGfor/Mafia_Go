@@ -1,8 +1,10 @@
 package com.example.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -29,9 +31,18 @@ public class MenuFragment extends Fragment {
     Button btnTools;
     TextView txtNick;
 
+    FloatingActionButton FAB_exit_menu;
+
     CardView CV_info;
 
     int pressedTimes = 0;
+
+    public static final String APP_PREFERENCES = "user";
+    public static final String APP_PREFERENCES_EMAIL = "email";
+    public static final String APP_PREFERENCES_PASSWORD = "password";
+    public static final String APP_PREFERENCES_NICKNAME = "nickname";
+
+    private SharedPreferences mSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,12 +58,24 @@ public class MenuFragment extends Fragment {
         txtNick = view.findViewById(R.id.txtNick);
         txtNick.setText(MainActivity.NickName);
 
+        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        FAB_exit_menu = view.findViewById(R.id.fragmentMenu_FAB_exit_menu);
+
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
 
 
         //настройки от Шлыкова
         //Nastroiki nastroiki = new Nastroiki();
+
+        FAB_exit_menu.setOnClickListener(v -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_EMAIL, null);
+            editor.putString(APP_PREFERENCES_PASSWORD, null);
+            editor.apply();
+        });
 
         CV_info.setOnClickListener(new View.OnClickListener() {
             @Override
