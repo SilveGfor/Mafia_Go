@@ -17,11 +17,15 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Objects;
 
 
 public class MenuFragment extends Fragment {
@@ -36,6 +40,12 @@ public class MenuFragment extends Fragment {
     CardView CV_info;
 
     int pressedTimes = 0;
+
+    // Идентификатор уведомления
+    private static final int NOTIFY_ID = 101;
+
+    // Идентификатор канала
+    private static String CHANNEL_ID = "Notifications channel";
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
@@ -87,6 +97,19 @@ public class MenuFragment extends Fragment {
                 animation.setInterpolator(interpolator);
 
                 CV_info.startAnimation(animation);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view_profile = inflater.inflate(R.layout.item_profile, null);
+                builder.setView(view_profile);
+                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+
+                TV_nick.setText(MainActivity.NickName);
+                FAB_add_friend.setOnClickListener(v1 -> {
+                    //добавление в друзья
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
 

@@ -62,7 +62,7 @@
         android:layout_marginTop="50dp"
         android:padding="10dp"
         android:background="@drawable/round_button"
-        android:text="Профиль"
+        android:text="Друзья"
         android:textColor="@color/colorWhite" />
 
     <Button

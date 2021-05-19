@@ -640,13 +640,14 @@ public class GameFragment extends Fragment {
                         time = data.getString("timer");
                         if (!time.equals("stop"))
                         {
-                            //TODO: починить таймер
                             if (StopTimer == 1)
                             {
                                 timer.setText("--");
                                 StopTimer = 0;
                             }
-                            timer.setText(time);
+                            else {
+                                timer.setText(time);
+                            }
                         }
                         else {
                             StopTimer = 1;

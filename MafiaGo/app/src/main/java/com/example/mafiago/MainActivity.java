@@ -1,6 +1,8 @@
   package com.example.mafiago;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Activity;
 import android.os.AsyncTask;
@@ -41,6 +43,12 @@ public class MainActivity extends AppCompatActivity {
     public static String password = "";
     public static String nick = "";
 
+    // Идентификатор уведомления
+    private static final int NOTIFY_ID = 101;
+
+    // Идентификатор канала
+    private static String CHANNEL_ID = "Notifications channel";
+
 public static Socket socket;
     {
         IO.Options options = IO.Options.builder()
@@ -66,6 +74,21 @@ public static Socket socket;
 
         MainActivity.SocketTask socketTask = new SocketTask();
         socketTask.execute();
+
+
+        //TODO: Сделать уведомления
+        /*
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
+                        .setSmallIcon(R.drawable.doctor_alive)
+                        .setContentTitle("Напоминание")
+                        .setContentText("Пора покормить кота")
+                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        NotificationManagerCompat notificationManager =
+                NotificationManagerCompat.from(MainActivity.this);
+        notificationManager.notify(NOTIFY_ID, builder.build());
+        */
 
         getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
     }
