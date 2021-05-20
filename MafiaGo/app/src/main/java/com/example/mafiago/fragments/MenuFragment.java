@@ -31,7 +31,7 @@ import java.util.Objects;
 public class MenuFragment extends Fragment {
     Button btnRules;
     Button btnGames;
-    Button btnProfile;
+    Button btnFriends;
     Button btnTools;
     TextView txtNick;
 
@@ -63,7 +63,7 @@ public class MenuFragment extends Fragment {
 
         btnRules = view.findViewById(R.id.btnRules);
         btnGames = view.findViewById(R.id.btnGame);
-        btnProfile = view.findViewById(R.id.btnProfile);
+        btnFriends = view.findViewById(R.id.btnFriends);
         btnTools = view.findViewById(R.id.btnTools);
         txtNick = view.findViewById(R.id.txtNick);
         txtNick.setText(MainActivity.NickName);
@@ -134,21 +134,10 @@ public class MenuFragment extends Fragment {
             }
         });
 
-        btnProfile.setOnClickListener(new View.OnClickListener() {
+        btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view_profile = inflater.inflate(R.layout.item_profile, null);
-                builder.setView(view_profile);
-                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
-                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
-
-                TV_nick.setText(MainActivity.NickName);
-                FAB_add_friend.setOnClickListener(v1 -> {
-                    //добавление в друзья
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
         });
         return view;
