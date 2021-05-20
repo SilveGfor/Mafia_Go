@@ -74,8 +74,6 @@ public class MenuFragment extends Fragment {
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
-
-
         //настройки от Шлыкова
         //Nastroiki nastroiki = new Nastroiki();
 
@@ -87,30 +85,27 @@ public class MenuFragment extends Fragment {
             editor.apply();
         });
 
-        CV_info.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
+        CV_info.setOnClickListener(v -> {
+            final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
 
-                // amplitude 0.2 and frequency 20
-                BounceInterpolator interpolator = new BounceInterpolator();
-                animation.setInterpolator(interpolator);
+            // amplitude 0.2 and frequency 20
+            BounceInterpolator interpolator = new BounceInterpolator();
+            animation.setInterpolator(interpolator);
 
-                CV_info.startAnimation(animation);
+            CV_info.startAnimation(animation);
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view_profile = inflater.inflate(R.layout.item_profile, null);
-                builder.setView(view_profile);
-                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
-                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            View view_profile = inflater.inflate(R.layout.item_profile, null);
+            builder.setView(view_profile);
+            FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+            TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
 
-                TV_nick.setText(MainActivity.NickName);
-                FAB_add_friend.setOnClickListener(v1 -> {
-                    //добавление в друзья
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            }
+            TV_nick.setText(MainActivity.NickName);
+            FAB_add_friend.setOnClickListener(v1 -> {
+                //добавление в друзья
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
         });
 
         btnTools.setOnClickListener(v -> {
