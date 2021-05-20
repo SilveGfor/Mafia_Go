@@ -30,16 +30,7 @@
         android:layout_margin="5dp"/>
 
     <TextView
-        android:id="@+id/MaxMinPeople"
-        android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:text="18/21" />
-    <TextView
-        android:id="@+id/NumPeople"
+        android:id="@+id/Item_friend_messages"
         android:gravity="right"
         android:text="1 сообщение"
         android:textColor="@color/colorWhite"
@@ -47,9 +38,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_marginRight="5dp"
-        android:layout_below="@+id/NameRoom"
+        android:layout_alignParentBottom="true"
         android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-
-
 </RelativeLayout>
