@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="160dp"
     android:layout_height="50dp">
 
     <ImageView
@@ -12,7 +12,9 @@
     <TextView
         android:id="@+id/Item_friend_nick"
         android:layout_toRightOf="@+id/Item_friend_avatar"
-        android:text="SilveGfor"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="SilveGfor123456789"
         android:textSize="20sp"
         android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
@@ -23,21 +25,22 @@
 
     <ImageView
         android:id="@+id/Item_friend_IV_on_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:background="@drawable/ic_online"
-        android:layout_toRightOf="@id/Item_friend_nick"
+        android:layout_below="@id/Item_friend_nick"
+        android:layout_toRightOf="@id/Item_friend_avatar"
         android:layout_margin="5dp"/>
 
     <TextView
         android:id="@+id/Item_friend_messages"
         android:gravity="right"
-        android:text="1 сообщение"
+        android:text="15 новых"
         android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="5dp"
+        android:layout_below="@id/Item_friend_nick"
+        android:layout_toRightOf="@id/Item_friend_IV_on_off"
         android:layout_alignParentBottom="true"
         android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />

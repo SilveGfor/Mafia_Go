@@ -1,7 +1,9 @@
 package com.example.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.security.identity.DocTypeNotSupportedException;
@@ -78,11 +80,18 @@ public class GameFragment extends Fragment {
 
     int num = -1;
 
+    public static final String APP_PREFERENCES = "user";
+    public static final String APP_PREFERENCES_LAST_ROLE = "role";
+
+    private SharedPreferences mSettings;
+
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game, container, false);
+
+        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         listView_chat = view.findViewById(R.id.ListMes);
         gridView_users = view.findViewById(R.id.ListUsers);
@@ -778,6 +787,9 @@ public class GameFragment extends Fragment {
                     String role;
                     try {
                         role = data.getString("role");
+                        SharedPreferences.Editor editor = mSettings.edit();
+                        editor.putString(APP_PREFERENCES_LAST_ROLE, role);
+                        editor.apply();
                         player.setRole(ConvertToRole(role));
                         switch (player.getRole())
                         {

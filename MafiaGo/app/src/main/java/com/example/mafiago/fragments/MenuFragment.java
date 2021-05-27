@@ -2,8 +2,6 @@ package com.example.mafiago.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,18 +12,18 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import java.util.Objects;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 
 public class MenuFragment extends Fragment {
@@ -33,11 +31,13 @@ public class MenuFragment extends Fragment {
     Button btnGames;
     Button btnFriends;
     Button btnTools;
-    TextView txtNick;
+    ShimmerTextView txtNick;
 
     FloatingActionButton FAB_exit_menu;
 
     CardView CV_info;
+
+    ImageView IV_background;
 
     int pressedTimes = 0;
 
@@ -50,7 +50,7 @@ public class MenuFragment extends Fragment {
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
-    public static final String APP_PREFERENCES_NICKNAME = "nickname";
+    public static final String APP_PREFERENCES_LAST_ROLE = "role";
 
     private SharedPreferences mSettings;
 
@@ -68,7 +68,10 @@ public class MenuFragment extends Fragment {
         txtNick = view.findViewById(R.id.txtNick);
         txtNick.setText(MainActivity.NickName);
 
+        IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
+
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
 
         FAB_exit_menu = view.findViewById(R.id.fragmentMenu_FAB_exit_menu);
 
@@ -106,6 +109,11 @@ public class MenuFragment extends Fragment {
             });
             AlertDialog alert = builder.create();
             alert.show();
+
+            Shimmer shimmer = new Shimmer();
+            shimmer.start(txtNick);
+
+
         });
 
         btnTools.setOnClickListener(v -> {
@@ -133,5 +141,23 @@ public class MenuFragment extends Fragment {
             }
         });
         return view;
+    }
+    public void SetBackgroundRole(String role)
+    {
+        switch (role)
+        {
+            case "citizen":
+                IV_background.setImageResource(R.drawable.citizen_alive);
+            case "mafia":
+                IV_background.setImageResource(R.drawable.mafia_alive);
+            case "sheriff":
+                IV_background.setImageResource(R.drawable.sheriff_alive);
+            case "doctor":
+                IV_background.setImageResource(R.drawable.doctor_alive);
+            case "lover":
+                IV_background.setImageResource(R.drawable.lover_alive);
+            default:
+                IV_background.setImageResource(R.drawable.mafia_alive);
+        }
     }
 }

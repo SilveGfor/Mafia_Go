@@ -10,6 +10,14 @@
     android:background="@drawable/fon_menu"
     android:orientation="vertical">
 
+    <ImageView
+        android:id="@+id/fragmentMenu_IV_background"
+        android:alpha="0.3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/sheriff_alive"
+        android:scaleType="centerCrop"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/fragmentMenuMenu_CV_info"
         android:layout_marginTop="15dp"
@@ -19,14 +27,15 @@
         app:contentPadding="15dp"
         app:cardBackgroundColor="@color/colorPrimary"
         android:layout_centerHorizontal="true">
-        <TextView
+        <com.romainpiel.shimmer.ShimmerTextView
             android:id="@+id/txtNick"
+            android:text="SilveGfor"
             android:layout_width="match_parent"
             android:layout_height="100dp"
-            android:text="SilveGfor"
             android:textColor="@color/colorWhite"
             android:textSize="25sp"
-            android:gravity="center" />
+            android:gravity="center"
+            app:reflectionColor="#f00"/>
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton

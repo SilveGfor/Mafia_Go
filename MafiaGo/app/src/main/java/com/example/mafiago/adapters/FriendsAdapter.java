@@ -42,7 +42,7 @@ public class FriendsAdapter extends BaseAdapter {
         ImageView online = view.findViewById(R.id.Item_friend_IV_on_off);
 
         txt_nick.setText(list_friends.get(position).getNick());
-        txt_messages.setText("5 новый сообщений!");
+        txt_messages.setText("15 новых");
 
         if (list_friends.get(position).getOnline()) {
             online.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_online));
