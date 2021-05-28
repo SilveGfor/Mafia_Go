@@ -140,6 +140,8 @@ public class GameFragment extends Fragment {
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
         btnSend.setOnClickListener(v -> {
+            Log.d("kkk", player.getStatus());
+            Log.d("kkk", String.valueOf(player.getStatus().equals("alive")));
             if (player.getStatus().equals("alive"))
             {
                 if (sendText.getText().toString().equals(""))
@@ -958,13 +960,14 @@ public class GameFragment extends Fragment {
                                         list_users.get(i).setAlive(false);
                                         if (nick.equals(player.getNick()))
                                         {
+                                            player.setStatus("dead");
                                             player.setCan_write(true);
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle("Oh No! Oh No!")
+                                            builder.setTitle("Вас убили!")
                                                     .setMessage("")
                                                     .setIcon(R.drawable.ic_mafia)
                                                     .setCancelable(false)
-                                                    .setNegativeButton("Oh no-no-no-no\nК сожалению вас убили... Но вы всё-равно ещё можете отправить последнее сообщение!",
+                                                    .setNegativeButton("Но вы всё-равно ещё можете отправить последнее сообщение!",
                                                             (dialog, id) -> dialog.cancel());
                                             AlertDialog alert = builder.create();
                                             alert.show();

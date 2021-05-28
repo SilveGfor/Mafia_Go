@@ -124,7 +124,7 @@ public class CreateRoomFragment extends Fragment {
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
                 editor.apply();
-                //socket.emit("create_room", json);
+                socket.emit("create_room", json);
                 Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
             }
         });
