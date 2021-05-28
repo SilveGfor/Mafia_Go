@@ -148,16 +148,22 @@ public class MenuFragment extends Fragment {
         {
             case "citizen":
                 IV_background.setImageResource(R.drawable.citizen_alive);
+                break;
             case "mafia":
                 IV_background.setImageResource(R.drawable.mafia_alive);
+                break;
             case "sheriff":
                 IV_background.setImageResource(R.drawable.sheriff_alive);
+                break;
             case "doctor":
                 IV_background.setImageResource(R.drawable.doctor_alive);
+                break;
             case "lover":
                 IV_background.setImageResource(R.drawable.lover_alive);
+                break;
             default:
                 IV_background.setImageResource(R.drawable.mafia_alive);
+                break;
         }
     }
 }
