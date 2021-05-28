@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -75,16 +76,16 @@ public class StartFragment extends Fragment {
 /*
         final JSONObject json = new JSONObject();
         final JSONObject json_roles = new JSONObject();
+        JSONArray peaceful = new JSONArray();
+        JSONArray mafia = new JSONArray();
         try {
-            //Map<String,String> dict = new HashMap<String,String>();
-            //dict = {'mafia': ['mafia_don'], 'peaceful': ['doctor',  'lover']}
-            ArrayList<String> peaceful = new ArrayList<String>();
-            peaceful.add("doctor");
-            peaceful.add("lover");
-            JSONArray JSarray = new JSONArray();
-            JSarray.put(0, "doctor");
-            ArrayList<String> mafia = new ArrayList<String>();
-            json_roles.put("peaceful", JSarray);
+            peaceful.put("doctor");
+            peaceful.put("sheriff");
+            peaceful.put("lover");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                peaceful.remove(1);
+            }
+            json_roles.put("peaceful", peaceful);
             json_roles.put("mafia", mafia);
             json.put("nick", MainActivity.NickName);
             json.put("session_id", MainActivity.Session_id);
@@ -96,8 +97,9 @@ public class StartFragment extends Fragment {
             e.printStackTrace();
         }
         Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
-
  */
+
+
 
         //MainActivity.mPlayer= MediaPlayer.create(getContext(), R.raw.fon_music);
 
