@@ -2,13 +2,18 @@ package com.example.mafiago.fragments;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -16,6 +21,11 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
+import com.example.mafiago.adapters.GamesAdapter;
+import com.example.mafiago.adapters.RoleAdapter;
+import com.example.mafiago.enums.Role;
+import com.example.mafiago.models.RoleModel;
+import com.example.mafiago.models.RoomModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,10 +53,17 @@ public class CreateRoomFragment extends Fragment {
     Button btnCreateRoom;
     Button btnExitCreateRoom;
 
+    public GridView GridView;
+
+    ArrayList<RoleModel> list_roles = new ArrayList<>();
+
+    static public JSONArray peaceful = new JSONArray();
+    static public JSONArray mafia = new JSONArray();
 
     public static final String APP_PREFERENCES = "create_room";
     public static final String APP_PREFERENCES_ROOM_NAME = "room_name";
     public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
+    public static final String APP_PREFERENCES_MIN_PEOPLE = "min_people";
     public static final String APP_PREFERENCES_ROLES = "roles";
 
     private SharedPreferences mSettings;
@@ -65,21 +82,26 @@ public class CreateRoomFragment extends Fragment {
 
         SB_max_people = view.findViewById(R.id.fragmentCreateRoom_SB_max_players);
 
-        btnCreateRoom = view.findViewById(R.id.btnCreate);
-        btnExitCreateRoom = view.findViewById(R.id.btnExitCreateRoom);
+        btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_create_room);
+        btnExitCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_exit);
 
-        //socket.connect();
+        GridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
 
-        socket.on("create_room", onCreateRoom);
-        socket.on("connect", onConnect);
-        socket.on("disconnect", onDisconnect);
+        CreateRoomFragment.CreateRoomTask socketTask = new CreateRoomTask();
+        socketTask.execute();
 
-        TV_max_people.setText("");
+
 
         SB_max_people.setOnSeekBarChangeListener(seekBarChangeListener);
 
-        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, null));
-        SB_max_people.setProgress(mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 5));
+
+        int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
+        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "GoodGame"));
+        TV_max_people.setText(String.valueOf(max_people));
+        SB_max_people.setProgress(max_people);
+        SetRoles(max_people);
+
+
 
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,11 +110,6 @@ public class CreateRoomFragment extends Fragment {
                 final JSONObject json = new JSONObject();
                 final JSONObject json_roles = new JSONObject();
                 try {
-                    JSONArray peaceful = new JSONArray();
-                    JSONArray mafia = new JSONArray();
-                    peaceful.put("doctor");
-                    peaceful.put("sheriff");
-                    peaceful.put("lover");
                     json_roles.put("peaceful", peaceful);
                     json_roles.put("mafia", mafia);
                     json.put("nick", MainActivity.NickName);
@@ -104,7 +121,10 @@ public class CreateRoomFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                socket.emit("create_room", json);
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+                editor.apply();
+                //socket.emit("create_room", json);
                 Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
             }
         });
@@ -112,7 +132,9 @@ public class CreateRoomFragment extends Fragment {
         btnExitCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.RoomName = ET_RoomName.getText().toString();
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+                editor.apply();
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
         });
@@ -120,10 +142,39 @@ public class CreateRoomFragment extends Fragment {
         return view;
     }
 
+    public class CreateRoomTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d("kkk", "onPreExecute");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            socket.on("create_room", onCreateRoom);
+            socket.on("connect", onConnect);
+            socket.on("disconnect", onDisconnect);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d("kkk", "onPostExecute");
+        }
+    }
+
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            TV_max_people.setText(String.valueOf(SB_max_people.getProgress()));
+            TV_max_people.setText(String.valueOf(progress));
+            SetRoles(progress);
+//TODO: доделать сохранение ролей при выходе из фрагмента
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putInt(APP_PREFERENCES_MAX_PEOPLE, progress);
+            editor.apply();
         }
 
         @Override
@@ -193,5 +244,42 @@ public class CreateRoomFragment extends Fragment {
             });
         }
     };
+
+    public void SetRoles(int people) {
+        RoleAdapter roleAdapter;
+        list_roles = new ArrayList<>();
+        peaceful = new JSONArray();
+        mafia = new JSONArray();
+        switch (people)
+        {
+            case 5:
+                list_roles.add(new RoleModel(Role.SHERIFF, true));
+                list_roles.add(new RoleModel(Role.DOCTOR, true));
+                roleAdapter = new RoleAdapter(list_roles, getContext());
+                break;
+            case 6:
+            case 7:
+                list_roles.add(new RoleModel(Role.SHERIFF, true));
+                list_roles.add(new RoleModel(Role.DOCTOR, true));
+                list_roles.add(new RoleModel(Role.LOVER, true));
+                roleAdapter = new RoleAdapter(list_roles, getContext());
+                break;
+            case 8:
+                list_roles.add(new RoleModel(Role.SHERIFF, true));
+                list_roles.add(new RoleModel(Role.DOCTOR, true));
+                list_roles.add(new RoleModel(Role.LOVER, true));
+                list_roles.add(new RoleModel(Role.MAFIA_DON, false));
+                roleAdapter = new RoleAdapter(list_roles, getContext());
+                break;
+            default:
+                list_roles.add(new RoleModel(Role.SHERIFF, true));
+                list_roles.add(new RoleModel(Role.DOCTOR, true));
+                list_roles.add(new RoleModel(Role.LOVER, true));
+                list_roles.add(new RoleModel(Role.MAFIA_DON, false));
+                roleAdapter = new RoleAdapter(list_roles, getContext());
+                break;
+        }
+        GridView.setAdapter(roleAdapter);
+    }
 
 }
