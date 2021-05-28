@@ -1354,6 +1354,7 @@ public class GameFragment extends Fragment {
                 return Role.NONE;
         }
     }
+
     //Вывод профиля
     public void ShowProfile(LayoutInflater inflater, String nick) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
