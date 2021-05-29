@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static String Session_id = "";
     public static String RoomName = "";
     public static int Game_id;
-
+ 
     public static String url = "http://82.148.17.116:5000";
 
     public static String password = "";
