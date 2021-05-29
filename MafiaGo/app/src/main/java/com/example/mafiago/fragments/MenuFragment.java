@@ -3,6 +3,7 @@ package com.example.mafiago.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +22,18 @@ import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
+import com.example.mafiago.adapters.GamesAdapter;
+import com.example.mafiago.models.RoomModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import io.socket.emitter.Emitter;
+
+import static  com.example.mafiago.MainActivity.socket;
 
 
 public class MenuFragment extends Fragment {
@@ -70,10 +80,15 @@ public class MenuFragment extends Fragment {
 
         IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
 
+        MenuFragment.ProfileTask socketTask = new ProfileTask();
+        socketTask.execute();
+
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
 
         FAB_exit_menu = view.findViewById(R.id.fragmentMenu_FAB_exit_menu);
+
+
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
@@ -89,29 +104,19 @@ public class MenuFragment extends Fragment {
         });
 
         CV_info.setOnClickListener(v -> {
-            final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
 
-            // amplitude 0.2 and frequency 20
-            BounceInterpolator interpolator = new BounceInterpolator();
-            animation.setInterpolator(interpolator);
+            final JSONObject json = new JSONObject();
+            try {
+                json.put("nick", MainActivity.NickName);
+                json.put("session_id", MainActivity.Session_id);
+                json.put("info_nick", MainActivity.NickName);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("get_profile", json);
+            Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
 
-            CV_info.startAnimation(animation);
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            View view_profile = inflater.inflate(R.layout.item_profile, null);
-            builder.setView(view_profile);
-            FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
-            TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
-
-            TV_nick.setText(MainActivity.NickName);
-            FAB_add_friend.setOnClickListener(v1 -> {
-                //добавление в друзья
-            });
-            AlertDialog alert = builder.create();
-            alert.show();
-
-            Shimmer shimmer = new Shimmer();
-            shimmer.start(txtNick);
 
 
         });
@@ -142,6 +147,83 @@ public class MenuFragment extends Fragment {
         });
         return view;
     }
+
+    public class ProfileTask extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            Log.d("kkk", "onPreExecute");
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            socket.on("get_profile", OnGetProfile);
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            Log.d("kkk", "onPostExecute");
+        }
+    }
+
+    private final Emitter.Listener OnGetProfile = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                String nick = "";
+                boolean online = false;
+
+                try {
+                    online = data.getBoolean("is_online");
+                    nick = data.getString("nick");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
+
+                // amplitude 0.2 and frequency 20
+                BounceInterpolator interpolator = new BounceInterpolator();
+                animation.setInterpolator(interpolator);
+
+                CV_info.startAnimation(animation);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
+                builder.setView(view_profile);
+
+                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+                FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
+                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+                ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
+
+                if (online) IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_online));
+                else IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_offline));
+
+                FAB_kick.setVisibility(View.GONE);
+                TV_nick.setText(nick);
+                FAB_add_friend.setOnClickListener(v1 -> {
+                    //TODO: добавление в друзья
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+
+                Shimmer shimmer = new Shimmer();
+                shimmer.start(txtNick);
+                Log.d("kkk", "принял - get_profile - " + data);
+
+            }
+        });
+    };
+
+
     public void SetBackgroundRole(String role)
     {
         switch (role)
@@ -166,4 +248,5 @@ public class MenuFragment extends Fragment {
                 break;
         }
     }
+
 }

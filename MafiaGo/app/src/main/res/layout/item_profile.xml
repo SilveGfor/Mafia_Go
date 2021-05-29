@@ -48,6 +48,18 @@
                 android:layout_alignParentRight="true"
                 app:fabSize="mini" />
 
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/Item_profile_kick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:layout_marginTop="15dp"
+                android:src="@drawable/ic_ban"
+                app:backgroundTint="#673AB7"
+                android:layout_below="@id/Item_profile_add_friend"
+                android:layout_alignParentRight="true"
+                app:fabSize="mini" />
+
             <ImageView
                 android:id="@+id/Item_profile_IV_rang"
                 android:layout_width="35dp"
@@ -55,6 +67,17 @@
                 android:background="@drawable/rang3"
                 android:layout_below="@id/Item_profile_TV_nick"
                 android:layout_alignLeft="@id/Item_profile_TV_nick"/>
+
+            <ImageView
+                android:id="@+id/Item_profile_IV_on_off"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:background="@drawable/ic_online"
+
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="50dp"
+                android:layout_toRightOf="@id/Item_profile_TV_nick"
+                android:layout_alignTop="@id/Item_profile_TV_nick" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

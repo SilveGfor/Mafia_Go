@@ -6,12 +6,12 @@ import com.example.mafiago.enums.Role;
 import com.example.mafiago.enums.Time;
 
 public class Player {
-    private String nick, status, session_id;
+    private String nick, status, session_id, host_nick;
 
     private Time time;
     private Role role;
     private  boolean can_click, can_write, voted_at_night;
-    private int room_num;
+    private int room_num, ban_limit;
 
     public Player(String nick, String session_id, int room_num)
     {
@@ -24,6 +24,22 @@ public class Player {
         voted_at_night = false;
         can_click = false;
         can_write = true;
+    }
+
+    public void setBan_limit(int ban_limit) {
+        this.ban_limit = ban_limit;
+    }
+
+    public int getBan_limit() {
+        return ban_limit;
+    }
+
+    public String getHost_nick() {
+        return host_nick;
+    }
+
+    public void setHost_nick(String host_nick) {
+        this.host_nick = host_nick;
     }
 
     public boolean getVoted_at_night() {

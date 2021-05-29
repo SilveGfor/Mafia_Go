@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.MainActivity;
@@ -35,6 +36,7 @@ import com.example.mafiago.models.MessageModel;
 import com.example.mafiago.models.Player;
 import com.example.mafiago.models.UserModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.romainpiel.shimmer.Shimmer;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -367,6 +369,9 @@ public class GameFragment extends Fragment {
             socket.on("mafias", onMafias);
             socket.on("get_my_game_info", onGetMyGameInfo);
             socket.on("success_get_in_room", onSuccessGetInRoom);
+            socket.on("get_profile", OnGetProfile);
+            socket.on("host_info", OnHostInfo);
+            socket.on("ban_user_in_room", OnBanUserInRoom);
             return null;
         }
 
@@ -764,6 +769,7 @@ public class GameFragment extends Fragment {
                             player.setCan_write(true);
                             break;
                         case VOTING:
+                            //TODO: тот, у кого любовница не может голосовать днём
                             StartAnimation(Role.VOTING);
                             break;
                     }
@@ -1280,6 +1286,99 @@ public class GameFragment extends Fragment {
         }
     };
 
+    private final Emitter.Listener OnGetProfile = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                String nick = "";
+                boolean online = false;
+
+                try {
+                    online = data.getBoolean("is_online");
+                    nick = data.getString("nick");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
+                builder.setView(view_profile);
+
+                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+                FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
+                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+                ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
+
+                if (online) IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_online));
+                else IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_offline));
+
+                TV_nick.setText(nick);
+                if (player.getNick().equals(player.getHost_nick()) && player.getBan_limit() > 0)
+                {
+                    String finalNick = nick;
+                    FAB_kick.setOnClickListener(v -> {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", player.getNick());
+                            json.put("session_id", player.getSession_id());
+                            json.put("room", player.getRoom_num());
+                            json.put("ban_nick", finalNick);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("ban_user_in_room", json);
+                        Log.d("kkk", "Socket_отправка - ban_user_in_room - "+ json.toString());
+                        player.setBan_limit(player.getBan_limit() - 1);
+                    });
+                }
+                else FAB_kick.setVisibility(View.GONE);
+                FAB_add_friend.setOnClickListener(v1 -> {
+                    //TODO: добавление в друзья
+                });
+                AlertDialog alert = builder.create();
+                alert.show();
+                Log.d("kkk", "принял - get_profile - " + data);
+            }
+        });
+    };
+
+    private final Emitter.Listener OnHostInfo = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - host_info - " + data);
+                String host_nick = "";
+                int ban_limit = 5;
+
+                try {
+                    host_nick = data.getString("host_nick");
+                    ban_limit = data.getInt("ban_limit");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                player.setHost_nick(host_nick);
+                player.setBan_limit(ban_limit);
+            }
+        });
+    };
+
+    private final Emitter.Listener OnBanUserInRoom = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - ban_user_in_room - " + data);
+            }
+        });
+    };
+
     /*******************************
      *                             *
      *       SOCKETS end           *
@@ -1357,20 +1456,17 @@ public class GameFragment extends Fragment {
                 return Role.NONE;
         }
     }
-
     //Вывод профиля
     public void ShowProfile(LayoutInflater inflater, String nick) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View view_profile = inflater.inflate(R.layout.item_profile, null);
-        builder.setView(view_profile);
-        FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
-        TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
-
-        TV_nick.setText(nick);
-        FAB_add_friend.setOnClickListener(v1 -> {
-            //добавление в друзья
-        });
-        AlertDialog alert = builder.create();
-        alert.show();
+        final JSONObject json = new JSONObject();
+        try {
+            json.put("nick", player.getNick());
+            json.put("session_id", player.getSession_id());
+            json.put("info_nick", nick);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_profile", json);
+        Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
     }
 }

@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 
 import androidx.fragment.app.Fragment;
 
@@ -21,14 +20,11 @@ import com.example.mafiago.models.RoomModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Objects;
 
-import io.socket.client.IO;
-import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
-import static  com.example.mafiago.MainActivity.socket;
+
+import static com.example.mafiago.MainActivity.socket;
 
 public class GamesListFragment extends Fragment {
 
