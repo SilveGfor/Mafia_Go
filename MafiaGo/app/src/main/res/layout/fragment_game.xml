@@ -17,7 +17,7 @@
         app:cardBackgroundColor="@color/colorPrimaryDark">
 
         <RelativeLayout
-            android:layout_width="405dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <TextView
