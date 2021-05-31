@@ -5,7 +5,10 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.app.Activity;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.util.Log;
@@ -37,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public static String Session_id = "";
     public static String RoomName = "";
     public static int Game_id;
- 
+
     public static String url = "http://82.148.17.116:5000";
 
     public static String password = "";
@@ -49,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     // Идентификатор канала
     private static String CHANNEL_ID = "Notifications channel";
 
+    NotificationCompat.Builder builder;
+    NotificationManager manager;
+
 public static Socket socket;
     {
         IO.Options options = IO.Options.builder()
@@ -59,7 +65,7 @@ public static Socket socket;
                 .setRandomizationFactor(0.5)
                 .setTimeout(20_000)
                 .build();
-        socket = IO.socket(URI.create(url), options); // the main namespace
+        socket = IO.socket(URI.create(url), options); //главный namespace
     }
 
 
@@ -72,49 +78,19 @@ public static Socket socket;
 
         client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).callTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).build();
 
-        MainActivity.SocketTask socketTask = new SocketTask();
-        socketTask.execute();
 
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
+        socket.on("ping", onPing);
 
-        //TODO: Сделать уведомления
-        /*
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(MainActivity.this, CHANNEL_ID)
-                        .setSmallIcon(R.drawable.doctor_alive)
-                        .setContentTitle("Напоминание")
-                        .setContentText("Пора покормить кота")
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        //TODO: Фоновый режим
 
-        NotificationManagerCompat notificationManager =
-                NotificationManagerCompat.from(MainActivity.this);
-        notificationManager.notify(NOTIFY_ID, builder.build());
-        */
+        manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        createNotificatioChannel();
+        createNotification();
+        showNotification();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-    }
-
-    class SocketTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            socket.on("connect", onConnect);
-            socket.on("disconnect", onDisconnect);
-            socket.on("ping", onPing);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("kkk", "onPostExecute");
-        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -146,6 +122,34 @@ public static Socket socket;
         }
     };
 
+    private void createNotificatioChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_NAME = "MYCHANNEL" ;
+            String CHANNEL_DESCRIPTION = "NOOBTOPROCHANNEL";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel =
+                    new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
+            channel.setDescription(CHANNEL_DESCRIPTION);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    private void createNotification() {
+        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.doctor_alive)
+                .setContentTitle("Напоминание")
+                .setContentText("Пора покормить кота")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+    }
+
+    private  void showNotification() {
+        manager.notify(NOTIFY_ID, builder.build());
+    }
+
+    private void hideNotification() {
+        manager.cancel(NOTIFY_ID);
+    }
 }
 
 

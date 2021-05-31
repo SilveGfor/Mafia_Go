@@ -27,6 +27,8 @@
         app:contentPadding="15dp"
         app:cardBackgroundColor="@color/colorPrimary"
         android:layout_centerHorizontal="true">
+
+        <!--TODO: сделать "сияющие" ники-->
         <com.romainpiel.shimmer.ShimmerTextView
             android:id="@+id/txtNick"
             android:text="SilveGfor"

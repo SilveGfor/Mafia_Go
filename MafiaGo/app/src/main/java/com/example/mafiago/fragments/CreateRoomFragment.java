@@ -87,21 +87,17 @@ public class CreateRoomFragment extends Fragment {
 
         GridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
 
-        CreateRoomFragment.CreateRoomTask socketTask = new CreateRoomTask();
-        socketTask.execute();
-
-
+        socket.on("create_room", onCreateRoom);
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
 
         SB_max_people.setOnSeekBarChangeListener(seekBarChangeListener);
-
 
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "GoodGame"));
         TV_max_people.setText(String.valueOf(max_people));
         SB_max_people.setProgress(max_people);
         SetRoles(max_people);
-
-
 
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -140,30 +136,6 @@ public class CreateRoomFragment extends Fragment {
         });
 
         return view;
-    }
-
-    public class CreateRoomTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            socket.on("create_room", onCreateRoom);
-            socket.on("connect", onConnect);
-            socket.on("disconnect", onDisconnect);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("kkk", "onPostExecute");
-        }
     }
 
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {

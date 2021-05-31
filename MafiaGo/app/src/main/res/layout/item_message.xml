@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <TextView
+    <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/mesNick"
         android:text="SilveGfor"
         android:textColor="@color/colorWhite"
@@ -13,7 +14,8 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentLeft="true"
-        android:textStyle="normal"/>
+        android:textStyle="normal"
+        app:reflectionColor="#f00"/>
 
     <TextView
         android:id="@+id/mesTime"

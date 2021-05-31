@@ -127,8 +127,25 @@ public class GameFragment extends Fragment {
 
         room_name.setText(MainActivity.RoomName);
 
-        SocketTask socketTask = new SocketTask();
-        socketTask.execute();
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
+        socket.on("get_in_room", onGetInRoom);
+        socket.on("user_message", onNewMessage);
+        socket.on("leave_room", onLeaveUser);
+        socket.on("timer", onTimer);
+        socket.on("time", onTime);
+        socket.on("role", onRole);
+        socket.on("restart", onRestart);
+        socket.on("role_action", onRoleAction);
+        socket.on("know_role", onKnowRole);
+        socket.on("system_message", onSystemMessage);
+        socket.on("user_error", onUserError);
+        socket.on("mafias", onMafias);
+        socket.on("get_my_game_info", onGetMyGameInfo);
+        socket.on("success_get_in_room", onSuccessGetInRoom);
+        socket.on("get_profile", OnGetProfile);
+        socket.on("host_info", OnHostInfo);
+        socket.on("ban_user_in_room", OnBanUserInRoom);
 
         final JSONObject json3 = new JSONObject();
         try {
@@ -235,151 +252,100 @@ public class GameFragment extends Fragment {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
         });
 
-        gridView_users.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String nick = list_users.get(position).getNick();
-                Log.d("kkk", "Нажатие на ник: " + list_users.get(position).getNick());
-                if (player.Can_click() && player.getStatus().equals("alive"))
+        gridView_users.setOnItemClickListener((parent, view1, position, id) -> {
+            String nick = list_users.get(position).getNick();
+            Log.d("kkk", "Нажатие на ник: " + list_users.get(position).getNick());
+            if (player.Can_click() && player.getStatus().equals("alive"))
+            {
+                switch (player.getTime())
                 {
-                    switch (player.getTime())
-                    {
-                        case LOBBY:
-                            ShowProfile(inflater, nick);
-                            break;
-                        case NIGHT_LOVE:
-                            switch (player.getRole())
-                            {
-                                case LOVER:
-                                    RoleAction(nick);
-                                    break;
-                                case DOCTOR_OF_EASY_VIRTUE:
-                                    player.setVoted_at_night(true);
-                                    RoleAction(nick);
-                                    break;
-                                default:
-                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
-                            }
-                            break;
-                        case NIGHT_OTHER:
-                            switch (player.getRole())
-                            {
-                                case SHERIFF:
-                                    RoleAction(nick);
-                                    break;
-                                case DOCTOR:
-                                    RoleAction(nick);
-                                    break;
-                                case DOCTOR_OF_EASY_VIRTUE:
-                                    RoleAction(nick);
-                                    break;
-                                case MAFIA:
-                                    RoleAction(nick);
-                                    break;
-                                default:
-                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
-                            }
-                            break;
-                        case DAY:
-                            ShowProfile(inflater, nick);
-                            break;
-                        case VOTING:
-                            Voting(nick);
-                            break;
-                        default:
-                            Log.d("kkk", "Что-то пошло не так. Такого времени дня не может быть!");
-                    }
-                    StopAnimation();
+                    case LOBBY:
+                        ShowProfile(nick);
+                        break;
+                    case NIGHT_LOVE:
+                        switch (player.getRole())
+                        {
+                            case LOVER:
+                                RoleAction(nick);
+                                break;
+                            case DOCTOR_OF_EASY_VIRTUE:
+                                player.setVoted_at_night(true);
+                                RoleAction(nick);
+                                break;
+                            default:
+                                Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                        }
+                        break;
+                    case NIGHT_OTHER:
+                        switch (player.getRole())
+                        {
+                            case SHERIFF:
+                                RoleAction(nick);
+                                break;
+                            case DOCTOR:
+                                RoleAction(nick);
+                                break;
+                            case DOCTOR_OF_EASY_VIRTUE:
+                                RoleAction(nick);
+                                break;
+                            case MAFIA:
+                                RoleAction(nick);
+                                break;
+                            default:
+                                Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
+                        }
+                        break;
+                    case DAY:
+                        ShowProfile(nick);
+                        break;
+                    case VOTING:
+                        Voting(nick);
+                        break;
+                    default:
+                        Log.d("kkk", "Что-то пошло не так. Такого времени дня не может быть!");
                 }
-                else
-                {
-                    ShowProfile(inflater, nick);
-                }
-
+                StopAnimation();
             }
+            else
+            {
+                ShowProfile(nick);
+            }
+
         });
 
-        listView_chat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("kkk", "----");
-                Log.d("kkk", "position - " + String.valueOf(position));
-                Log.d("kkk", "----");
-                if(list_chat.get(position).MesType.equals("OtherMes") || list_chat.get(position).MesType.equals("AnswerMes"))
-                {
-                    answer_id = position;
-                }
+        listView_chat.setOnItemClickListener((parent, view12, position, id) -> {
+            Log.d("kkk", "----");
+            Log.d("kkk", "position - " + String.valueOf(position));
+            Log.d("kkk", "----");
+            if(list_chat.get(position).MesType.equals("OtherMes") || list_chat.get(position).MesType.equals("AnswerMes"))
+            {
                 answer_id = position;
-                answer_nick.setText(list_chat.get(position).nickName);
-                answer_mes.setText(list_chat.get(position).message);
-                cardAnswer.setVisibility(View.VISIBLE);
             }
+            answer_id = position;
+            answer_nick.setText(list_chat.get(position).nickName);
+            answer_mes.setText(list_chat.get(position).message);
+            cardAnswer.setVisibility(View.VISIBLE);
         });
 
-        btnDeleteAnswer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                answer_id = -1;
-                cardAnswer.setVisibility(View.GONE);
-            }
+        btnDeleteAnswer.setOnClickListener(v -> {
+            answer_id = -1;
+            cardAnswer.setVisibility(View.GONE);
         });
 
-        FAB_skip_day.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final JSONObject json2 = new JSONObject();
-                try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id", MainActivity.Session_id);
-                    json2.put("room", player.getRoom_num());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("kkk", "Socket_отправка_skip_day - " + json2.toString());
-                socket.emit("skip_day", json2);
+        FAB_skip_day.setOnClickListener(v -> {
+            final JSONObject json2 = new JSONObject();
+            try {
+                json2.put("nick", MainActivity.NickName);
+                json2.put("session_id", MainActivity.Session_id);
+                json2.put("room", player.getRoom_num());
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            Log.d("kkk", "Socket_отправка_skip_day - " + json2.toString());
+            socket.emit("skip_day", json2);
         });
 
         return view;
-    }
-
-    class SocketTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            socket.on("connect", onConnect);
-            socket.on("disconnect", onDisconnect);
-            socket.on("get_in_room", onGetInRoom);
-            socket.on("user_message", onNewMessage);
-            socket.on("leave_room", onLeaveUser);
-            socket.on("timer", onTimer);
-            socket.on("time", onTime);
-            socket.on("role", onRole);
-            socket.on("restart", onRestart);
-            socket.on("role_action", onRoleAction);
-            socket.on("know_role", onKnowRole);
-            socket.on("system_message", onSystemMessage);
-            socket.on("user_error", onUserError);
-            socket.on("mafias", onMafias);
-            socket.on("get_my_game_info", onGetMyGameInfo);
-            socket.on("success_get_in_room", onSuccessGetInRoom);
-            socket.on("get_profile", OnGetProfile);
-            socket.on("host_info", OnHostInfo);
-            socket.on("ban_user_in_room", OnBanUserInRoom);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("kkk", "onPostExecute");
-        }
     }
 
     /*******************************
@@ -769,8 +735,10 @@ public class GameFragment extends Fragment {
                             player.setCan_write(true);
                             break;
                         case VOTING:
-                            //TODO: тот, у кого любовница не может голосовать днём
-                            StartAnimation(Role.VOTING);
+                            if (IV_influence_lover.getVisibility() != View.VISIBLE)
+                            {
+                                StartAnimation(Role.VOTING);
+                            }
                             break;
                     }
                 }
@@ -1457,7 +1425,7 @@ public class GameFragment extends Fragment {
         }
     }
     //Вывод профиля
-    public void ShowProfile(LayoutInflater inflater, String nick) {
+    public void ShowProfile(String nick) {
         final JSONObject json = new JSONObject();
         try {
             json.put("nick", player.getNick());

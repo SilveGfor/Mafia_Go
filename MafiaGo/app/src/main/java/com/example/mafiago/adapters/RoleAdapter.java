@@ -63,7 +63,6 @@ public class RoleAdapter extends BaseAdapter {
         String role = String.valueOf(list_roles.get(position).role).toLowerCase();
         CB.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if(isChecked) {
-                Log.d("kkk", "Выбран! + " + role);
                 if (list_roles.get(position).peaceful) {
                     CreateRoomFragment.peaceful.put(role);
                 }
@@ -73,7 +72,6 @@ public class RoleAdapter extends BaseAdapter {
                 }
             }
             else {
-                Log.d("kkk", "Выбран! + " + role);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                     if (list_roles.get(position).peaceful) {
                         for (int i = 0; i < CreateRoomFragment.peaceful.length(); i++) {

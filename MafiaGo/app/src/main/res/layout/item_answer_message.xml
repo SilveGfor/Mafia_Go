@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <TextView
+    <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/mesNick"
         android:text="SilveGfor"
         android:textColor="@color/colorWhite"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
+            <com.romainpiel.shimmer.ShimmerTextView
                 android:id="@+id/answerNick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

@@ -76,19 +76,17 @@ public class MenuFragment extends Fragment {
         btnFriends = view.findViewById(R.id.btnFriends);
         btnTools = view.findViewById(R.id.btnTools);
         txtNick = view.findViewById(R.id.txtNick);
+
         txtNick.setText(MainActivity.NickName);
 
         IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
-
-        MenuFragment.ProfileTask socketTask = new ProfileTask();
-        socketTask.execute();
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
 
         FAB_exit_menu = view.findViewById(R.id.fragmentMenu_FAB_exit_menu);
 
-
+        socket.on("get_profile", OnGetProfile);
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
 
@@ -148,29 +146,6 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
-    public class ProfileTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            socket.on("get_profile", OnGetProfile);
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("kkk", "onPostExecute");
-        }
-    }
-
     private final Emitter.Listener OnGetProfile = args -> {
         if(getActivity() == null)
             return;
@@ -217,6 +192,7 @@ public class MenuFragment extends Fragment {
 
                 Shimmer shimmer = new Shimmer();
                 shimmer.start(txtNick);
+
                 Log.d("kkk", "принял - get_profile - " + data);
 
             }

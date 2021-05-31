@@ -50,11 +50,11 @@ public class GamesListFragment extends Fragment {
         btnCreateRoom = view.findViewById(R.id.btnCreateRoom);
         btnExit = view.findViewById(R.id.btnExitGamesList);
 
-
-
-
-        SocketTask socketTask = new SocketTask();
-        socketTask.execute();
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
+        socket.on("add_room_to_list_of_rooms", onNewRoom);
+        socket.on("delete_room_from_list_of_rooms", onDeleteRoom);
+        socket.on("update_list_of_rooms", onUpdateRoom);
 
         final JSONObject json = new JSONObject();
         try {
@@ -106,32 +106,6 @@ public class GamesListFragment extends Fragment {
 
 
         return view;
-    }
-
-    public class SocketTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            socket.on("connect", onConnect);
-            socket.on("disconnect", onDisconnect);
-            socket.on("add_room_to_list_of_rooms", onNewRoom);
-            socket.on("delete_room_from_list_of_rooms", onDeleteRoom);
-            socket.on("update_list_of_rooms", onUpdateRoom);
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            Log.d("kkk", "onPostExecute");
-        }
     }
 
     private final Emitter.Listener onConnect = new Emitter.Listener() {

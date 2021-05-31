@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.example.mafiago.models.MessageModel;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import java.util.ArrayList;
 
@@ -56,7 +58,7 @@ public class MessageAdapter extends BaseAdapter {
             case "UsersMes":
                 view = layout.inflate(R.layout.item_message, null);
 
-                TextView txt_nick = view.findViewById(R.id.mesNick);
+                ShimmerTextView txt_nick = view.findViewById(R.id.mesNick);
                 TextView txt_time = view.findViewById(R.id.mesTime);
                 TextView txt_mess = view.findViewById(R.id.mesText);
 
@@ -70,7 +72,14 @@ public class MessageAdapter extends BaseAdapter {
                         color = "#999999";
                         break;
                     case "last_message":
-                        color = "#FF0000";
+                        color = "#008800";
+                }
+
+                //TODO: сделать сияние только админам
+                if (list_mess.get(position).nickName.equals("SilveGfor"))
+                {
+                    Shimmer shimmer = new Shimmer();
+                    shimmer.start(txt_nick);
                 }
 
                 txt_nick.setTextColor(Color.parseColor(color));
@@ -113,11 +122,19 @@ public class MessageAdapter extends BaseAdapter {
                 txt_time = view.findViewById(R.id.mesTime);
                 txt_mess = view.findViewById(R.id.mesText);
 
+                if (list_mess.get(position).nickName.equals("SilveGfor"))
+                {
+                    Shimmer shimmer = new Shimmer();
+                    shimmer.start(txt_nick);
+                }
+
                 txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
 
                 txt_mess.setTextColor(Color.parseColor("#FFFF00"));
+                txt_time.setTextColor(Color.parseColor("#FFFF00"));
+                txt_nick.setTextColor(Color.parseColor("#FFFF00"));
                 break;
 
             case "AnswerMes":
@@ -125,7 +142,7 @@ public class MessageAdapter extends BaseAdapter {
                 txt_nick = view.findViewById(R.id.mesNick);
                 txt_time = view.findViewById(R.id.mesTime);
                 txt_mess = view.findViewById(R.id.mesText);
-                TextView txt_answer_nick = view.findViewById(R.id.answerNick);
+                ShimmerTextView txt_answer_nick = view.findViewById(R.id.answerNick);
                 TextView txt_answer_mes = view.findViewById(R.id.answerText);
                 TextView txt_answer_time = view.findViewById(R.id.answerTime);
 
@@ -133,7 +150,19 @@ public class MessageAdapter extends BaseAdapter {
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
 
+                if (list_mess.get(position).nickName.equals("SilveGfor"))
+                {
+                    Shimmer shimmer = new Shimmer();
+                    shimmer.start(txt_nick);
+                }
+
                 int id = list_mess.get(position).answerId;
+
+                if (list_mess.get(id).nickName.equals("SilveGfor"))
+                {
+                    Shimmer shimmer = new Shimmer();
+                    shimmer.start(txt_answer_nick);
+                }
 
                 txt_answer_nick.setText(list_mess.get(id).nickName);
                 txt_answer_mes.setText(list_mess.get(id).message);
