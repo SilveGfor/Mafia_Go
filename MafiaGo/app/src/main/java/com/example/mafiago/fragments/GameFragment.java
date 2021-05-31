@@ -313,19 +313,21 @@ public class GameFragment extends Fragment {
 
         });
 
-        listView_chat.setOnItemClickListener((parent, view12, position, id) -> {
-            Log.d("kkk", "----");
-            Log.d("kkk", "position - " + String.valueOf(position));
-            Log.d("kkk", "----");
-            if(list_chat.get(position).MesType.equals("OtherMes") || list_chat.get(position).MesType.equals("AnswerMes"))
-            {
-                answer_id = position;
-            }
-            answer_id = position;
-            answer_nick.setText(list_chat.get(position).nickName);
-            answer_mes.setText(list_chat.get(position).message);
-            cardAnswer.setVisibility(View.VISIBLE);
-        });
+       listView_chat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+           @Override
+           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+               Log.d("kkk", "----");
+               Log.d("kkk", "position - " + String.valueOf(position));
+               Log.d("kkk", "----");
+               if(list_chat.get(position).MesType.equals("OtherMes") || list_chat.get(position).MesType.equals("AnswerMes"))
+               {
+                   answer_id = position;
+                   answer_nick.setText(list_chat.get(position).nickName);
+                   answer_mes.setText(list_chat.get(position).message);
+                   cardAnswer.setVisibility(View.VISIBLE);
+               }
+           }
+       });
 
         btnDeleteAnswer.setOnClickListener(v -> {
             answer_id = -1;

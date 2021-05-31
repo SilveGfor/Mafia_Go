@@ -90,7 +90,7 @@ public static Socket socket;
         createNotification();
         showNotification();
 
-        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
