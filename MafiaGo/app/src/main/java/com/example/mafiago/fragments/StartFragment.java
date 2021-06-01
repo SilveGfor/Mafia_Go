@@ -239,6 +239,8 @@ public class StartFragment extends Fragment {
                             NickName = obj.get("nick").toString();
                             Email = obj.get("email").toString();
                             Session_id = obj.get("session_id").toString();
+                            MainActivity.User_id = obj.get("user_id").toString();
+                            MainActivity.Sid = obj.get("sid").toString();
 
                             MainActivity.NickName = NickName;
                             MainActivity.Session_id = Session_id;

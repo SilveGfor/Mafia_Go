@@ -1,6 +1,8 @@
 package com.example.mafiago.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -90,6 +92,7 @@ public class CreateRoomFragment extends Fragment {
         socket.on("create_room", onCreateRoom);
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
+        socket.on("user_error", onUserError);
 
         SB_max_people.setOnSeekBarChangeListener(seekBarChangeListener);
 
@@ -217,6 +220,57 @@ public class CreateRoomFragment extends Fragment {
         }
     };
 
+    private final Emitter.Listener onUserError = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if (getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String error;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    try {
+                        error = data.getString("error");
+                        AlertDialog alert;
+                        switch (error) {
+                            case "you_are_playing_in_another_room":
+                                builder.setTitle("Извините, но вы играете в другой игре")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                break;
+                            default:
+                                builder.setTitle("Что-то пошло не так")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                break;
+                        }
+                        alert = builder.create();
+                        alert.show();
+                        Log.d("kkk", "Socket_принять - user_error " + args[0]);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
     public void SetRoles(int people) {
         RoleAdapter roleAdapter;
         list_roles = new ArrayList<>();
@@ -225,26 +279,22 @@ public class CreateRoomFragment extends Fragment {
         switch (people)
         {
             case 5:
-                list_roles.add(new RoleModel(Role.SHERIFF, true));
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 6:
             case 7:
-                list_roles.add(new RoleModel(Role.SHERIFF, true));
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 8:
-                list_roles.add(new RoleModel(Role.SHERIFF, true));
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             default:
-                list_roles.add(new RoleModel(Role.SHERIFF, true));
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));

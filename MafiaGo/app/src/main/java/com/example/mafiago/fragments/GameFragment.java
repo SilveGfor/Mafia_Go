@@ -940,10 +940,10 @@ public class GameFragment extends Fragment {
                                             player.setCan_write(true);
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                             builder.setTitle("Вас убили!")
-                                                    .setMessage("")
+                                                    .setMessage("Но вы всё равно ещё можете отправить последнее сообщение!")
                                                     .setIcon(R.drawable.ic_mafia)
                                                     .setCancelable(false)
-                                                    .setNegativeButton("Но вы всё-равно ещё можете отправить последнее сообщение!",
+                                                    .setNegativeButton("Ок",
                                                             (dialog, id) -> dialog.cancel());
                                             AlertDialog alert = builder.create();
                                             alert.show();
@@ -1045,7 +1045,7 @@ public class GameFragment extends Fragment {
                                                 });
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
-                            case "you_are_playing_in_other_room":
+                            case "you_are_playing_in_another_room":
                                 builder.setTitle("Извините, но вы играете в другой игре")
                                         .setMessage("")
                                         .setIcon(R.drawable.ic_error)
@@ -1069,6 +1069,32 @@ public class GameFragment extends Fragment {
                                                         dialog.cancel();
                                                     }
                                                 });
+                                break;
+                            case "you_are_banned_in_this_room":
+                                builder.setTitle("Извините, но вы забанены в этой комнате")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
+                            default:
+                                builder.setTitle("Извините, но что-то пошло не так")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                         }
                         alert = builder.create();
