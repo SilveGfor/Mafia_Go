@@ -73,34 +73,6 @@ public class StartFragment extends Fragment {
         ETemail = view.findViewById(R.id.ETemail);
         ETpassword = view.findViewById(R.id.ETpassword);
 
-/*
-        final JSONObject json = new JSONObject();
-        final JSONObject json_roles = new JSONObject();
-        JSONArray peaceful = new JSONArray();
-        JSONArray mafia = new JSONArray();
-        try {
-            peaceful.put("doctor");
-            peaceful.put("sheriff");
-            peaceful.put("lover");
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                peaceful.remove(1);
-            }
-            json_roles.put("peaceful", peaceful);
-            json_roles.put("mafia", mafia);
-            json.put("nick", MainActivity.NickName);
-            json.put("session_id", MainActivity.Session_id);
-            json.put("name", "game1");
-            json.put("min_people_num", 5);
-            json.put("max_people_num", 5);
-            json.put("roles", json_roles);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
- */
-
-
-
         //MainActivity.mPlayer= MediaPlayer.create(getContext(), R.raw.fon_music);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);

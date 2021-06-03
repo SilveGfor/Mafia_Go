@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_do_not_disturb_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_published_with_changes_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
@@ -37,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/do_not_disturb/baseline_do_not_disturb_24.xml" />
+                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/published_with_changes/baseline_published_with_changes_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -86,9 +86,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_ban" />
+                                      <entry key="outputName" value="ic_change" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ff0015" />
+                                      <entry key="themeColor" value="11ff00" />
                                     </map>
                                   </option>
                                 </PersistentState>

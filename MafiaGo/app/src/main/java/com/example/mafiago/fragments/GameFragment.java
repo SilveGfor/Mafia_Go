@@ -313,21 +313,18 @@ public class GameFragment extends Fragment {
 
         });
 
-       listView_chat.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-           @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-               Log.d("kkk", "----");
-               Log.d("kkk", "position - " + String.valueOf(position));
-               Log.d("kkk", "----");
-               if(list_chat.get(position).MesType.equals("OtherMes") || list_chat.get(position).MesType.equals("AnswerMes"))
-               {
-                   answer_id = position;
-                   answer_nick.setText(list_chat.get(position).nickName);
-                   answer_mes.setText(list_chat.get(position).message);
-                   cardAnswer.setVisibility(View.VISIBLE);
-               }
-           }
-       });
+        listView_chat.setOnItemClickListener((parent, view12, position, id) -> {
+            Log.d("kkk", "----");
+            Log.d("kkk", "position - " + position + " ' " + list_chat.get(position).MesType);
+            Log.d("kkk", "----");
+            if(list_chat.get(position).MesType.equals("UsersMes") || list_chat.get(position).MesType.equals("AnswerMes"))
+            {
+                answer_id = position;
+                answer_nick.setText(list_chat.get(position).nickName);
+                answer_mes.setText(list_chat.get(position).message);
+                cardAnswer.setVisibility(View.VISIBLE);
+            }
+        });
 
         btnDeleteAnswer.setOnClickListener(v -> {
             answer_id = -1;
@@ -440,6 +437,7 @@ public class GameFragment extends Fragment {
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
                         if (test_num >= num)
                         {
+                            //TODO: test_num == num - БАН
                             num = test_num;
                             time = data.getString("time");
                             message = data.getString("message");
@@ -1289,12 +1287,13 @@ public class GameFragment extends Fragment {
             @Override
             public void run() {
                 JSONObject data = (JSONObject) args[0];
-                String nick = "";
+                Log.d("kkk", "принял - get_profile - " + data);
+                String nick = "", user_id_2 = "";
                 boolean online = false;
-
                 try {
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
+                    user_id_2 = data.getString("user_id");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1304,6 +1303,9 @@ public class GameFragment extends Fragment {
 
                 FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
                 FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
+                FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
+
+
                 TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
                 ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
 
@@ -1330,10 +1332,22 @@ public class GameFragment extends Fragment {
                     });
                 }
                 else FAB_kick.setVisibility(View.GONE);
+
+                AlertDialog alert = builder.create();
+
+                String finalUser_id_ = user_id_2;
+                FAB_send_message.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alert.cancel();
+                        MainActivity.User_id_2 = finalUser_id_;
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).commit();
+                    }
+                });
+
                 FAB_add_friend.setOnClickListener(v1 -> {
                     //TODO: добавление в друзья
                 });
-                AlertDialog alert = builder.create();
                 alert.show();
                 Log.d("kkk", "принял - get_profile - " + data);
             }

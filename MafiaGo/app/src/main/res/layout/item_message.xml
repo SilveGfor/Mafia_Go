@@ -5,6 +5,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/item_message_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/ic_snow"/>
+
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/mesNick"
         android:text="SilveGfor"
@@ -12,8 +18,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_toRightOf="@id/item_message_avatar"
         android:textStyle="normal"
         app:reflectionColor="#f00"/>
 
@@ -27,16 +32,13 @@
         android:layout_alignParentRight="true"
         android:text="21:00" />
 
-    <!--TODO: isSelectable сделать для всех TextView -->
     <TextView
         android:id="@+id/mesText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mesNick"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
+        android:layout_toRightOf="@id/item_message_avatar"
         android:layout_marginTop="5dp"
-        android:textIsSelectable="true"
         android:text="Однако здравствуйте"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="#999999"

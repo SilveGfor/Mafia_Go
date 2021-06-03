@@ -247,6 +247,18 @@ public class CreateRoomFragment extends Fragment {
                                                     }
                                                 });
                                 break;
+                            case "mat_name":
+                                builder.setTitle("Извините, но это неприличное название комнаты!")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                break;
                             default:
                                 builder.setTitle("Что-то пошло не так")
                                         .setMessage("")

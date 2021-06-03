@@ -28,6 +28,7 @@ import com.example.mafiago.models.RoomModel;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.romainpiel.shimmer.Shimmer;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +54,7 @@ public class FriendsFragment extends Fragment {
         friendsView = view.findViewById(R.id.fragmentFriends_list_friends);
         btnExit = view.findViewById(R.id.fragmentFriends_btn_exit);
 
-        final JSONObject json = new JSONObject();
+        JSONObject json = new JSONObject();
         try {
             json.put("nick", MainActivity.NickName);
             json.put("session_id", MainActivity.Session_id);
@@ -65,17 +66,11 @@ public class FriendsFragment extends Fragment {
         socket.emit("get_list_of_chats", json);
         Log.d("kkk", "Socket_отправка - get_list_of_chats - "+ json.toString());
 
-        socket.on("get_list_of_chats", OnGetListOfChats);
-
-        //FriendModel model = new FriendModel("SilveGfor", true);
-        list_friends.add(new FriendModel("SilveGfor", true));
-        list_friends.add(new FriendModel("Van_Vour", false));
-        list_friends.add(new FriendModel("Сис.Админ РОТ", false));
-        FriendsAdapter customList = new FriendsAdapter(list_friends, getContext());
-        friendsView.setAdapter(customList);
+        socket.on("add_chat_to_list_of_chats", OnAddChatToListOfChats);
 
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
-            //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+            MainActivity.User_id_2 = list_friends.get(position).getUser_id_2();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).commit();
         });
 
         btnExit.setOnClickListener(v -> {
@@ -86,23 +81,42 @@ public class FriendsFragment extends Fragment {
         return view;
     }
 
-    private final Emitter.Listener OnGetListOfChats = args -> {
+    private final Emitter.Listener OnAddChatToListOfChats = args -> {
         if(getActivity() == null)
             return;
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 JSONObject data = (JSONObject) args[0];
-                String nick = "";
+                Log.d("kkk", "принял - get_list_of_chats - " + data);
+                String nick = "", user_id_1 = "", user_id_2 = "", message = "";
                 boolean online = false;
-
                 try {
-                    online = data.getBoolean("is_online");
-                    nick = data.getString("nick");
+                    JSONArray user_ids = data.getJSONArray("user_ids");
+                    user_id_1 = user_ids.getString(0);
+                    user_id_2 = user_ids.getString(1);
+
+                    JSONObject user_nicks = data.getJSONObject("user_nicks");
+                    if (!user_id_1.equals(MainActivity.User_id))
+                    {
+                        String test_id = user_id_1;
+                        user_id_1 = user_id_2;
+                        user_id_2 = test_id;
+                    }
+                    nick = user_nicks.getString(user_id_2);
+
+                    JSONObject last_message = data.getJSONObject("last_message");
+                    message = last_message.getString("message");
+
+                    JSONObject blocked = data.getJSONObject("is_blocked");
+
+                    list_friends.add(new FriendModel(nick, message, user_id_2, true));
+                    FriendsAdapter customList = new FriendsAdapter(list_friends, getContext());
+                    friendsView.setAdapter(customList);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("kkk", "принял - get_profile - " + data);
+
 
             }
         });

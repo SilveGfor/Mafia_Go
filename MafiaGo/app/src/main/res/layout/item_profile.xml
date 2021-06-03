@@ -38,14 +38,26 @@
                 android:layout_alignTop="@id/Item_profile_IV_avatar" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/Item_profile_send_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_message"
+                app:backgroundTint="#673AB7"
+                android:layout_alignTop="@id/Item_profile_IV_avatar"
+                android:layout_alignParentRight="true"
+                app:fabSize="mini" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/Item_profile_add_friend"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:clickable="true"
                 android:src="@drawable/ic_add_friend"
                 app:backgroundTint="#673AB7"
-                android:layout_alignTop="@id/Item_profile_IV_avatar"
+                android:layout_marginTop="15dp"
                 android:layout_alignParentRight="true"
+                android:layout_below="@id/Item_profile_send_message"
                 app:fabSize="mini" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
