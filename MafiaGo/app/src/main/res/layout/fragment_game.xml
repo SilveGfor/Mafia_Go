@@ -88,6 +88,15 @@
         android:layout_marginLeft="15dp"
         android:background="@drawable/ic_shield"/>
 
+    <ImageView
+        android:id="@+id/IV_influence_poisoner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_bodyguard"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_poisoner"/>
+
     <TextView
         android:id="@+id/day_time"
         android:layout_width="wrap_content"
