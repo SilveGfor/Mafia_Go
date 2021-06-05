@@ -105,23 +105,42 @@ public class RoleAdapter extends BaseAdapter {
             }
         });
 
+        if (list_roles.get(position).peaceful)
+        {
+            CV.setCardBackgroundColor(Color.parseColor("#009900"));
+        }
+        else
+        {
+            CV.setCardBackgroundColor(Color.parseColor("#880000"));
+        }
         switch (list_roles.get(position).role)
         {
             case DOCTOR:
-                CV.setCardBackgroundColor(Color.parseColor("#009900"));
                 IV_role.setImageResource(R.drawable.doctor_alive);
                 break;
             case LOVER:
-                CV.setCardBackgroundColor(Color.parseColor("#009900"));
                 IV_role.setImageResource(R.drawable.lover_alive);
                 break;
-            case SHERIFF:
-                CV.setCardBackgroundColor(Color.parseColor("#009900"));
-                IV_role.setImageResource(R.drawable.sheriff_alive);
-                break;
             case MAFIA_DON:
-                CV.setCardBackgroundColor(Color.parseColor("#880000"));
-                IV_role.setImageResource(R.drawable.mafia_alive);
+                IV_role.setImageResource(R.drawable.mafia_don_alive);
+                break;
+            case JOURNALIST:
+                IV_role.setImageResource(R.drawable.journalist_alive);
+                break;
+            case MANIAC:
+                IV_role.setImageResource(R.drawable.maniac_alive);
+                break;
+            case TERRORIST:
+                IV_role.setImageResource(R.drawable.terrorist_alive);
+                break;
+            case BODYGUARD:
+                IV_role.setImageResource(R.drawable.bodyguard_alive);
+                break;
+            case POISONER:
+                IV_role.setImageResource(R.drawable.poisoner_alive);
+                break;
+            case DOCTOR_OF_EASY_VIRTUE:
+                IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_alive);
                 break;
         }
         return view;

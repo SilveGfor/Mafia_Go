@@ -15,6 +15,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -45,8 +46,8 @@ public class PrivateChatFragment extends Fragment {
 
     public Button btnExit, btnDeleteAnswer;
 
-    public FloatingActionButton btnSend;
-    public FloatingActionButton btnEditMessage;
+    public ImageView btnSend;
+    public ImageView btnEditMessage;
 
     public EditText ET_input;
 
@@ -124,8 +125,8 @@ public class PrivateChatFragment extends Fragment {
                 btnEdit.setOnClickListener(v -> {
                     alert.cancel();
 
-                    btnSend.setVisibility(View.GONE);
-                    btnEdit.setVisibility(View.VISIBLE);
+                    btnSend.setVisibility(View.INVISIBLE);
+                    btnEditMessage.setVisibility(View.VISIBLE);
 
                     ET_input.setText(list_messages.get(position).message);
 
@@ -142,7 +143,7 @@ public class PrivateChatFragment extends Fragment {
                             e.printStackTrace();
                         }
                         btnSend.setVisibility(View.VISIBLE);
-                        btnEdit.setVisibility(View.GONE);
+                        btnEditMessage.setVisibility(View.GONE);
                         ET_input.setText("");
                         socket.emit("edit_message", json2);
                         Log.d("kkk", "Socket_отправка - edit_message - "+ json2.toString());
@@ -224,6 +225,7 @@ public class PrivateChatFragment extends Fragment {
         });
 
         btnExit.setOnClickListener(v -> {
+            MainActivity.User_id_2 = "";
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
         });
 

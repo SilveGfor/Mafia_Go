@@ -146,7 +146,6 @@ import static com.example.mafiago.MainActivity.socket;
                 txt_connect_mes.setText(list_mess.get(position).nickName + " вошёл(-а) в чат");
                 txt_connect_time.setText(list_mess.get(position).time);
                 break;
-
             case "VotingMes":
                 view = layout.inflate(R.layout.item_message, null);
 
@@ -168,7 +167,6 @@ import static com.example.mafiago.MainActivity.socket;
                 txt_time.setTextColor(Color.parseColor("#FFFF00"));
                 txt_nick.setTextColor(Color.parseColor("#FFFF00"));
                 break;
-
             case "AnswerMes":
                 view = layout.inflate(R.layout.item_answer_message, null);
                 txt_nick = view.findViewById(R.id.mesNick);
@@ -200,7 +198,6 @@ import static com.example.mafiago.MainActivity.socket;
                 txt_answer_mes.setText(list_mess.get(id).message);
                 txt_answer_time.setText(list_mess.get(id).time);
                 break;
-
             case "SystemMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);
 
@@ -211,6 +208,17 @@ import static com.example.mafiago.MainActivity.socket;
 
                 txt_system_mes.setText(list_mess.get(position).message);
                 txt_system_time.setText(list_mess.get(position).time);
+                break;
+            case "KickMes":
+                view = layout.inflate(R.layout.item_connect_disconnect, null);
+
+                txt_connect_mes = view.findViewById(R.id.mesConnect);
+                txt_connect_time = view.findViewById(R.id.mesTimeConnect);
+
+                txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
+
+                txt_connect_mes.setText(list_mess.get(position).message + " кикнул(-а) " + list_mess.get(position).nickName);
+                txt_connect_time.setText(list_mess.get(position).time);
                 break;
         }
 

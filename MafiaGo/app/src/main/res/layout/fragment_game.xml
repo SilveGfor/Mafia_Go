@@ -79,6 +79,15 @@
         android:layout_marginLeft="15dp"
         android:background="@drawable/ic_sheriff"/>
 
+    <ImageView
+        android:id="@+id/IV_influence_bodyguard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_sheriff"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_shield"/>
+
     <TextView
         android:id="@+id/day_time"
         android:layout_width="wrap_content"
@@ -133,7 +142,7 @@
         android:layout_alignParentStart="true" />
 
     <androidx.cardview.widget.CardView
-        android:layout_above="@id/InputMes"
+        android:layout_above="@id/fragmentGame_LL_input"
         android:id="@+id/answerCard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -185,28 +194,32 @@
         android:layout_alignParentRight="true"
         android:layout_above="@id/answerCard"/>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btnSendMes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
-        android:clickable="true"
-        android:src="@drawable/ic_send"
-        app:backgroundTint="#2888C8"
-        app:fabSize="mini" />
-
-    <EditText
-        android:id="@+id/InputMes"
+    <LinearLayout
+        android:id="@+id/fragmentGame_LL_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_toLeftOf="@id/btnSendMes"
-        android:hint="Введите сообщение"
-        android:textColorHint="@color/colorWhite"
-        android:textColor="@color/colorWhite"
-        android:layout_alignParentLeft="true" />
+        android:background="@color/colorPrimaryDark"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/InputMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="#CFD8DC"
+            android:textColor="#CFD8DC"
+            android:hint="Напишите сообщение" />
+
+        <ImageView
+            android:id="@+id/btnSendMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_send" />
+    </LinearLayout>
+
 
 </RelativeLayout>

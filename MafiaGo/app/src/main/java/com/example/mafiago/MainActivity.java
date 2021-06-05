@@ -21,7 +21,9 @@ import com.example.mafiago.fragments.CreateRoomFragment;
 import com.example.mafiago.fragments.GameFragment;
 import com.example.mafiago.fragments.GamesListFragment;
 import com.example.mafiago.fragments.MenuFragment;
+import com.example.mafiago.fragments.PrivateChatFragment;
 import com.example.mafiago.fragments.StartFragment;
+import com.example.mafiago.models.NotificationModel;
 import com.example.mafiago.models.PrivateMessageModel;
 
 import org.json.JSONException;
@@ -29,6 +31,7 @@ import org.json.JSONObject;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.socket.client.IO;
@@ -52,8 +55,10 @@ public class MainActivity extends AppCompatActivity {
     public static String password = "";
     public static String nick = "";
 
+    ArrayList<NotificationModel> notifications = new ArrayList<>();
+
     // Идентификатор уведомления
-    private static final int NOTIFY_ID = 101;
+    //private static final int NOTIFY_ID = 101;
 
     // Идентификатор канала
     private static String CHANNEL_ID = "Notifications channel";
@@ -74,7 +79,6 @@ public static Socket socket;
         socket = IO.socket(URI.create(url), options); //главный namespace
     }
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +88,6 @@ public static Socket socket;
 
         client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).callTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).build();
 
-
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
         socket.on("ping", onPing);
@@ -93,6 +96,8 @@ public static Socket socket;
         //TODO: Фоновый режим
 
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        createNotificationChannel();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
     }
@@ -124,18 +129,61 @@ public static Socket socket;
         public void call(final Object... args) {
             JSONObject data = (JSONObject) args[0];
             Log.d("kkk", "принял - chat_message в MainActivity - " + data);
-            String nick = "", message = "", status = "", edited_time = "", time = "";
+            String nick = "", message = "", status = "", edited_time = "", time = "", user_id_2 = "";
             int link = -1;
+            int id = 101;
 
             try {
                 nick = data.getString("nick");
                 message = data.getString("message");
+                user_id_2 = data.getString("user_id");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            createNotificationChannel();
-            createNotification("Новое сообщение!", nick + " написал вам новое сообщение!");
-            showNotification();
+            if (!nick.equals(NickName) && !user_id_2.equals(User_id_2)) {
+                createNotificationChannel();
+                createNotification(nick, message);
+
+                ArrayList<String> messages = null;
+
+                for (int i = 0; i < notifications.size(); i++) {
+                    if (notifications.get(i).nick.equals(nick)) {
+                        messages = notifications.get(i).messages;
+                        id = i;
+                        notifications.get(i).messages.add(message);
+                        if (messages.size() == 1)
+                            builder.setStyle(new NotificationCompat.InboxStyle()
+                                    .addLine(messages.get(0)));
+                        else if (messages.size() == 2)
+                            builder.setStyle(new NotificationCompat.InboxStyle()
+                                    .addLine(messages.get(0)).addLine(messages.get(1)));
+                        else if (messages.size() == 3)
+                            builder.setStyle(new NotificationCompat.InboxStyle()
+                                    .addLine(messages.get(0)).addLine(messages.get(1))
+                                    .addLine(messages.get(2)));
+                        else if (messages.size() == 4)
+                            builder.setStyle(new NotificationCompat.InboxStyle()
+                                    .addLine(messages.get(0)).addLine(messages.get(1))
+                                    .addLine(messages.get(2)).addLine(messages.get(3)));
+                        else if (messages.size() > 4)
+                            builder.setStyle(new NotificationCompat.InboxStyle()
+                                    .addLine(messages.get(0)).addLine(messages.get(1))
+                                    .addLine(messages.get(2)).addLine(messages.get(3))
+                                    .setSummaryText("+" + (messages.size() - 4) + " more"));
+                        break;
+                    }
+                }
+                if (messages == null) {
+                    messages = new ArrayList<>();
+                    messages.add(message);
+                    id = notifications.size();
+                    notifications.add(new NotificationModel(nick, messages));
+                    builder.setStyle(new NotificationCompat.InboxStyle()
+                            .addLine(messages.get(0)));
+                }
+
+                showNotification(id);
+            }
         }
     };
 
@@ -169,11 +217,11 @@ public static Socket socket;
                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
     }
 
-    private  void showNotification() {
+    private  void showNotification(int NOTIFY_ID) {
         manager.notify(NOTIFY_ID, builder.build());
     }
 
-    private void hideNotification() {
+    private void hideNotification(int NOTIFY_ID) {
         manager.cancel(NOTIFY_ID);
     }
 }
