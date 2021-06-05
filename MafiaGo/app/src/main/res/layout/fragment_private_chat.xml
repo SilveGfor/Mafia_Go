@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/fon_menu"
+    tools:context=".fragments.FriendsFragment">
+
+    <Button
+        android:id="@+id/fragmentPrivateChat_btn_exit"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
+    <!-- android:divider="@color/btn_register" -->
+    <ListView
+        android:id="@+id/fragmentPrivateChat_list_messages"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragmentPrivateChat_RL_answer"
+        android:layout_below="@+id/fragmentPrivateChat_btn_exit"
+        android:dividerHeight="10dp"
+        android:layout_margin="15dp"/>
+
+        <RelativeLayout
+            android:id="@+id/fragmentPrivateChat_RL_answer"
+            android:layout_width="match_parent"
+            android:layout_above="@id/fragmentPrivateChat_LL_bottom"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:background="@drawable/rounded_corner"
+            android:layout_marginTop="5sp"
+            android:layout_marginRight="5sp"
+            android:layout_marginBottom="5sp">
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/fragmentPrivateChat_answer_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#000000"
+                android:text="Vova_Vor" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/fragmentPrivateChat_answer_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/fragmentPrivateChat_answer_nick"
+                android:textColor="#000000"
+                android:text="Кто ты?" />
+            <Button
+                android:id="@+id/fragmentPrivateChat_btn_delete_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="закрыть"
+                android:textSize="12sp"
+                android:background="@drawable/rounded_corner1"
+                android:layout_alignParentRight="true"
+                android:textColor="#000000"/>
+        </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/fragmentPrivateChat_LL_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark">
+
+        <EditText
+            android:id="@+id/fragmentPrivateChat_ET_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/fragmentPrivateChat_btn_send_mes"
+            android:textColorHint="#CFD8DC"
+            android:textColor="#CFD8DC"
+            android:hint="Напишите сообщение" />
+
+        <ImageView
+            android:id="@+id/fragmentPrivateChat_btn_send_mes"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_send" />
+
+        <ImageView
+            android:id="@+id/fragmentPrivateChat_btn_edit"
+            android:layout_alignParentRight="true"
+            android:layout_width="50dp"
+            android:layout_height="45dp"
+            android:visibility="invisible"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_edit" />
+    </RelativeLayout>
+</RelativeLayout>

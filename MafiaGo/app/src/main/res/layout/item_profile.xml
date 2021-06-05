@@ -31,11 +31,23 @@
                 android:id="@+id/Item_profile_TV_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
+                android:layout_marginLeft="5dp"
                 android:text="SilveGfor"
+                android:layout_toLeftOf="@id/Item_profile_send_message"
                 android:textSize="25dp"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
+                android:layout_toRightOf="@id/Item_profile_IV_on_off"
                 android:layout_alignTop="@id/Item_profile_IV_avatar" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/Item_profile_send_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:clickable="true"
+                android:src="@drawable/ic_message"
+                app:backgroundTint="#673AB7"
+                android:layout_alignTop="@id/Item_profile_IV_avatar"
+                android:layout_alignParentRight="true"
+                app:fabSize="mini" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/Item_profile_add_friend"
@@ -44,8 +56,9 @@
                 android:clickable="true"
                 android:src="@drawable/ic_add_friend"
                 app:backgroundTint="#673AB7"
-                android:layout_alignTop="@id/Item_profile_IV_avatar"
+                android:layout_marginTop="15dp"
                 android:layout_alignParentRight="true"
+                android:layout_below="@id/Item_profile_send_message"
                 app:fabSize="mini" />
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -72,12 +85,10 @@
                 android:id="@+id/Item_profile_IV_on_off"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
+                android:layout_margin="5dp"
                 android:background="@drawable/ic_online"
-
-                android:layout_marginTop="2dp"
-                android:layout_marginLeft="50dp"
-                android:layout_toRightOf="@id/Item_profile_TV_nick"
-                android:layout_alignTop="@id/Item_profile_TV_nick" />
+                android:layout_alignTop="@id/Item_profile_IV_avatar"
+                android:layout_toRightOf="@id/Item_profile_IV_avatar" />
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

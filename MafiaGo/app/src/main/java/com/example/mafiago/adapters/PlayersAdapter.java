@@ -69,6 +69,34 @@ public class PlayersAdapter extends BaseAdapter
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.lover_alive); }
                 else { IV_role.setImageResource(R.drawable.lover_dead); }
                 break;
+            case MAFIA_DON:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.mafia_don_alive); }
+                else { IV_role.setImageResource(R.drawable.mafia_don_dead); }
+                break;
+            case MANIAC:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.maniac_alive); }
+                else { IV_role.setImageResource(R.drawable.maniac_dead); }
+                break;
+            case TERRORIST:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.terrorist_alive); }
+                else { IV_role.setImageResource(R.drawable.terrorist_dead); }
+                break;
+            case BODYGUARD:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.bodyguard_alive); }
+                else { IV_role.setImageResource(R.drawable.bodyguard_dead); }
+                break;
+            case DOCTOR_OF_EASY_VIRTUE:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_alive); }
+                else { IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_dead); }
+                break;
+            case POISONER:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.poisoner_alive); }
+                else { IV_role.setImageResource(R.drawable.poisoner_dead); }
+                break;
+            case JOURNALIST:
+                if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.journalist_alive); }
+                else { IV_role.setImageResource(R.drawable.journalist_dead); }
+                break;
         }
         Animation animation = null;
             switch (list_users.get(position).getAnimation_type()) {
@@ -76,10 +104,6 @@ public class PlayersAdapter extends BaseAdapter
                     break;
                 case VOTING:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_voting));
-                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
-                    break;
-                case LOVER:
-                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case MAFIA:
@@ -92,6 +116,30 @@ public class PlayersAdapter extends BaseAdapter
                     break;
                 case SHERIFF:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    break;
+                case LOVER:
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    break;
+                case MAFIA_DON:
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia_don));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    break;
+                case MANIAC:
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_maniac));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    break;
+                case TERRORIST:
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_terrorist));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    break;
+                case BODYGUARD:
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_shield));
+                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    break;
+                case POISONER:
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_poisoner));
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
             }

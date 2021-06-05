@@ -88,7 +88,9 @@ public class RegisterFragment extends Fragment {
         ETpassword2 = view.findViewById(R.id.ETpasswordReg2);
         text_reg = view.findViewById(R.id.TVcode);
 
-        // TODO: Починить разметку
+        text_reg.setVisibility(View.GONE);
+        btnSendCode.setVisibility(View.GONE);
+        ETcode.setVisibility(View.GONE);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 

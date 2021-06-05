@@ -247,6 +247,18 @@ public class CreateRoomFragment extends Fragment {
                                                     }
                                                 });
                                 break;
+                            case "mat_name":
+                                builder.setTitle("Извините, но это неприличное название комнаты!")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                break;
                             default:
                                 builder.setTitle("Что-то пошло не так")
                                         .setMessage("")
@@ -286,18 +298,52 @@ public class CreateRoomFragment extends Fragment {
             case 7:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
+                list_roles.add(new RoleModel(Role.MAFIA_DON, false));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 8:
+            case 9:
+            case 10:
+            case 11:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
+                list_roles.add(new RoleModel(Role.JOURNALIST, true));
+                roleAdapter = new RoleAdapter(list_roles, getContext());
+                break;
+            case 12:
+            case 13:
+                list_roles.add(new RoleModel(Role.DOCTOR, true));
+                list_roles.add(new RoleModel(Role.LOVER, true));
+                list_roles.add(new RoleModel(Role.MAFIA_DON, false));
+                list_roles.add(new RoleModel(Role.JOURNALIST, true));
+                list_roles.add(new RoleModel(Role.TERRORIST, false));
+                list_roles.add(new RoleModel(Role.BODYGUARD, true));
+                list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
+                roleAdapter = new RoleAdapter(list_roles, getContext());
+                break;
+            case 14:
+                list_roles.add(new RoleModel(Role.DOCTOR, true));
+                list_roles.add(new RoleModel(Role.LOVER, true));
+                list_roles.add(new RoleModel(Role.MAFIA_DON, false));
+                list_roles.add(new RoleModel(Role.JOURNALIST, true));
+                list_roles.add(new RoleModel(Role.TERRORIST, false));
+                list_roles.add(new RoleModel(Role.BODYGUARD, true));
+                list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
+                list_roles.add(new RoleModel(Role.MANIAC, true));
+                list_roles.add(new RoleModel(Role.POISONER, false));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             default:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
+                list_roles.add(new RoleModel(Role.JOURNALIST, true));
+                list_roles.add(new RoleModel(Role.TERRORIST, false));
+                list_roles.add(new RoleModel(Role.BODYGUARD, true));
+                list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
+                list_roles.add(new RoleModel(Role.MANIAC, true));
+                list_roles.add(new RoleModel(Role.POISONER, false));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
         }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_corner"
+    android:padding="16dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/item_chat_menu_TV_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:textColor="#000000"
+        android:text="Что вы хотите сделать?"
+        android:textSize="16dp"/>
+
+    <LinearLayout
+        android:layout_below="@id/item_chat_menu_TV_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/item_chat_menu_btn_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:text="ответить"
+                android:textColor="#000000"
+                android:background="@drawable/round_edit_text"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:id="@+id/item_chat_menu_btn_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:text="изменить"
+                android:textColor="#000000"
+                android:background="@drawable/round_edit_text"
+                android:layout_centerHorizontal="true"/>
+
+            <Button
+                android:id="@+id/item_chat_menu_btn_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_margin="5dp"
+                android:text="удалить"
+                android:textColor="#000000"
+                android:background="@drawable/round_edit_text"
+                android:layout_centerHorizontal="true"/>
+    </LinearLayout>
+
+</RelativeLayout>
