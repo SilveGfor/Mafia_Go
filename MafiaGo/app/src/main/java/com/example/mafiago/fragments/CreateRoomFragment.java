@@ -317,8 +317,8 @@ public class CreateRoomFragment extends Fragment {
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
                 list_roles.add(new RoleModel(Role.JOURNALIST, true));
-                list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.BODYGUARD, true));
+                list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
                 roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
@@ -327,8 +327,8 @@ public class CreateRoomFragment extends Fragment {
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
                 list_roles.add(new RoleModel(Role.JOURNALIST, true));
-                list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.BODYGUARD, true));
+                list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
                 list_roles.add(new RoleModel(Role.MANIAC, true));
                 list_roles.add(new RoleModel(Role.POISONER, false));
@@ -339,8 +339,8 @@ public class CreateRoomFragment extends Fragment {
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
                 list_roles.add(new RoleModel(Role.JOURNALIST, true));
-                list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.BODYGUARD, true));
+                list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
                 list_roles.add(new RoleModel(Role.MANIAC, true));
                 list_roles.add(new RoleModel(Role.POISONER, false));

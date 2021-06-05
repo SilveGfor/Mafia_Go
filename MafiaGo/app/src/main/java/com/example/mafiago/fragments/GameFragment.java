@@ -63,6 +63,7 @@ public class GameFragment extends Fragment {
     public ImageView IV_influence_lover;
     public ImageView IV_influence_sheriff;
     public ImageView IV_influence_bodyguard;
+    public ImageView IV_influence_poisoner;
     public ImageView IV_role;
 
     public Player player;
@@ -118,12 +119,16 @@ public class GameFragment extends Fragment {
         IV_influence_lover = view.findViewById(R.id.IV_influence_lover);
         IV_influence_sheriff = view.findViewById(R.id.IV_influence_sheriff);
         IV_influence_bodyguard = view.findViewById(R.id.IV_influence_bodyguard);
+        IV_influence_poisoner = view.findViewById(R.id.IV_influence_poisoner);
         IV_role = view.findViewById(R.id.IV_role);
 
         IV_influence_doctor.setVisibility(View.GONE);
         IV_influence_lover.setVisibility(View.GONE);
         IV_influence_sheriff.setVisibility(View.GONE);
         IV_influence_bodyguard.setVisibility(View.GONE);
+        IV_influence_poisoner.setVisibility(View.GONE);
+
+        FAB_skip_day.setVisibility(View.GONE);
 
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id);
 
@@ -431,6 +436,7 @@ public class GameFragment extends Fragment {
         });
 
         FAB_skip_day.setOnClickListener(v -> {
+            FAB_skip_day.setVisibility(View.GONE);
             final JSONObject json2 = new JSONObject();
             try {
                 json2.put("nick", MainActivity.NickName);
@@ -765,9 +771,11 @@ public class GameFragment extends Fragment {
                             player.setTime(Time.NIGHT_OTHER);
                             break;
                         case "day":
+                            FAB_skip_day.setVisibility(View.VISIBLE);
                             player.setTime(Time.DAY);
                             break;
                         case "voting":
+                            FAB_skip_day.setVisibility(View.GONE);
                             player.setTime(Time.VOTING);
                             break;
                     }
@@ -783,6 +791,7 @@ public class GameFragment extends Fragment {
                     switch (player.getTime())
                     {
                         case NIGHT_LOVE:
+                            IV_influence_poisoner.setVisibility(View.GONE);
                             IV_influence_lover.setVisibility(View.GONE);
                             switch (player.getRole())
                             {
@@ -996,8 +1005,11 @@ public class GameFragment extends Fragment {
                             case "bodyguard":
                                 IV_influence_bodyguard.setVisibility(View.VISIBLE);
                                 break;
+                            case "poisoner":
+                                IV_influence_poisoner.setVisibility(View.VISIBLE);
+                                break;
                             default:
-                                Log.d("kkk", "1000 STROKA!!! INFLUENCE");
+                                Log.d("kkk", "ERROR!!! INFLUENCE");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1349,6 +1361,7 @@ public class GameFragment extends Fragment {
                                 player.setTime(Time.NIGHT_OTHER);
                                 break;
                             case "day":
+                                FAB_skip_day.setVisibility(View.VISIBLE);
                                 player.setTime(Time.DAY);
                                 break;
                             case "voting":
