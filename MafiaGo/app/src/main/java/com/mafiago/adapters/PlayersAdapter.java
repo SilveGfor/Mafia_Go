@@ -47,7 +47,7 @@ public class PlayersAdapter extends BaseAdapter
 
         if (list_users.get(position).getVoting_number() != 0)
         {
-            TV_voting_number.setText(list_users.get(position).getVoting_number());
+            TV_voting_number.setText(String.valueOf(list_users.get(position).getVoting_number()));
         }
 
         switch (list_users.get(position).getRole())
