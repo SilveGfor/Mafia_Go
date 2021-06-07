@@ -434,7 +434,7 @@ public class GameFragment extends Fragment {
                     default:
                         Log.d("kkk", "Что-то пошло не так. Такого времени дня не может быть!");
                 }
-                if (journalist_check != null)
+                if (journalist_check == null)
                 {
                     StopAnimation();
                 }
@@ -1086,6 +1086,7 @@ public class GameFragment extends Fragment {
                     String message, time, status, mafia_nick, user_nick, voter, nick;
                     int test_num;
                     JSONObject data2;
+                    Log.d("kkk", "system message - " + data);
 
                     try {
                         status = data.getString("status");
@@ -1185,7 +1186,12 @@ public class GameFragment extends Fragment {
                                 break;
                             case "time_info":
                                 Log.d("kkk", message);
-                                messageModel = new MessageModel(test_num,message, time.substring(11,16), "Server", "SystemMes");
+                                messageModel = new MessageModel(test_num, message, time.substring(11,16), "Server", "SystemMes");
+                                break;
+                            case "journalist":
+                                data2 = data.getJSONObject("message");
+                                message = data2.getString("message");
+                                messageModel = new MessageModel(test_num, message, time.substring(11,16), "Server", "SystemMes");
                                 break;
                         }
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
@@ -1213,7 +1219,7 @@ public class GameFragment extends Fragment {
                     }
 
 
-                    Log.d("kkk", "system message - " + data);
+
                 }
             });
         }
@@ -1372,6 +1378,7 @@ public class GameFragment extends Fragment {
                     String role = "", status = "", time = "";
                     boolean can_act = false, can_vote = false, last_message = false;
                     boolean sheriff = false, doctor = false, lover = false, bodyguard = false, poisoner = false;
+                    Log.d("kkk", "Socket_принять - get_my_game_info - " + args[0]);
                     JSONObject influences;
                     try {
                         messages_can_write = data.getInt("messages_counter");
@@ -1530,7 +1537,7 @@ public class GameFragment extends Fragment {
                                     break;
                             }
                         }
-                    Log.d("kkk", "Socket_принять - get_my_game_info - " + args[0]);
+
                 }
             });
         }
