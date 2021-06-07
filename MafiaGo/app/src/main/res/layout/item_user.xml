@@ -25,7 +25,7 @@
                 android:id="@+id/ItemUser_voting_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="3"
                 android:layout_margin="5dp"
                 android:layout_alignParentLeft="true"
                 android:textColor="@color/colorPrimaryDark"
