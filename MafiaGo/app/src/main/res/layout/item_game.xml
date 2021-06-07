@@ -43,6 +43,14 @@
         android:textSize="16sp"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
+    <Button
+        android:id="@+id/ItemGame_btn_info"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/Item_game_progressBar"
+        android:background="@drawable/ic_info"/>
+
     <ProgressBar
         android:id="@+id/Item_game_progressBar"
         android:layout_toLeftOf="@id/NumPeople"

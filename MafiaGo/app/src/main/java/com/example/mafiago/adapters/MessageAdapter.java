@@ -1,33 +1,27 @@
  package com.example.mafiago.adapters;
 
+ import android.content.Context;
+ import android.graphics.Color;
+ import android.util.Log;
+ import android.view.LayoutInflater;
+ import android.view.View;
+ import android.view.ViewGroup;
+ import android.widget.BaseAdapter;
+ import android.widget.ImageView;
+ import android.widget.TextView;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.graphics.Color;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+ import com.example.mafiago.MainActivity;
+ import com.example.mafiago.R;
+ import com.example.mafiago.models.MessageModel;
+ import com.romainpiel.shimmer.Shimmer;
+ import com.romainpiel.shimmer.ShimmerTextView;
 
-import androidx.core.content.ContextCompat;
+ import org.json.JSONException;
+ import org.json.JSONObject;
 
-import com.example.mafiago.MainActivity;
-import com.example.mafiago.R;
-import com.example.mafiago.fragments.GameFragment;
-import com.example.mafiago.models.MessageModel;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.romainpiel.shimmer.Shimmer;
-import com.romainpiel.shimmer.ShimmerTextView;
+ import java.util.ArrayList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-
-import static com.example.mafiago.MainActivity.socket;
+ import static com.example.mafiago.MainActivity.socket;
 
  public class MessageAdapter extends BaseAdapter {
     public ArrayList<MessageModel> list_mess;

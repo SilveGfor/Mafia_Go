@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,6 +52,8 @@ public class GamesAdapter extends BaseAdapter {
 
         ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
 
+        Button btn_info = view.findViewById(R.id.ItemGame_btn_info);
+
         PB_users.setMax(list_room.get(position).max_people);
         PB_users.setProgress(list_room.get(position).num_people);
 
@@ -59,6 +62,10 @@ public class GamesAdapter extends BaseAdapter {
         TextView txt_num_people = view.findViewById(R.id.NumPeople);
 
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
+
+        btn_info.setOnClickListener(v -> {
+
+        });
 
         txt_room_name.setText(list_room.get(position).name);
         txt_min_max_people.setText(list_room.get(position).min_people + "/" + list_room.get(position).max_people);

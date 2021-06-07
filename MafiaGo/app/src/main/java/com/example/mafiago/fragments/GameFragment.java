@@ -81,7 +81,7 @@ public class GameFragment extends Fragment {
 
     int answer_id = -1;
     public int StopTimer = 0;
-    int messages_spent;
+    int messages_can_write = 5;
 
     int num = -1;
 
@@ -175,8 +175,8 @@ public class GameFragment extends Fragment {
                 if (player.Can_write()) {
                     if (!sendText.getText().toString().equals("")) {
                         if (player.getTime() == Time.DAY) {
-                            if (messages_spent > 0) {
-                                messages_spent--;
+                            if (messages_can_write > 0) {
+                                messages_can_write--;
                                 final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
 
                                 // amplitude 0.2 and frequency 20
@@ -540,73 +540,65 @@ public class GameFragment extends Fragment {
                         nick = data.getString("nick");
                         test_num = data.getInt("num");
                         Log.d("kkk", "Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num);
-                        if (test_num >= num)
-                        {
-                            //TODO: test_num == num - БАН
-                            num = test_num;
-                            time = data.getString("time");
-                            message = data.getString("message");
-                            status = data.getString("status");
-                            link = data.getInt("link");
-                            if(link == -1)
-                            {
-                                Log.d("kkk", "UsersMes + " + nick + " - " + message);
-                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes", status);
-                                list_chat.add(messageModel);
-                                MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                                listView_chat.setAdapter(messageAdapter);
-                                listView_chat.setSelection(messageAdapter.getCount() - 1);
-                            }
-                            else
-                            {
-                                Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
-                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
-                                list_chat.add(messageModel);
-                                MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                                listView_chat.setAdapter(messageAdapter);
-                                listView_chat.setSelection(messageAdapter.getCount() - 1);
+                        if (test_num == num) {
+                            if (test_num > num) {
+                                num = test_num;
+                                time = data.getString("time");
+                                message = data.getString("message");
+                                status = data.getString("status");
+                                link = data.getInt("link");
+                                if (link == -1) {
+                                    Log.d("kkk", "UsersMes + " + nick + " - " + message);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status);
+                                    list_chat.add(messageModel);
+                                    MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                                    listView_chat.setAdapter(messageAdapter);
+                                    listView_chat.setSelection(messageAdapter.getCount() - 1);
+                                } else {
+                                    Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                    list_chat.add(messageModel);
+                                    MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                                    listView_chat.setAdapter(messageAdapter);
+                                    listView_chat.setSelection(messageAdapter.getCount() - 1);
+                                }
+                            } else {
+                                time = data.getString("time");
+                                message = data.getString("message");
+                                status = data.getString("status");
+                                link = data.getInt("link");
+                                if (link == -1) {
+                                    Log.d("kkk", "UsersMes + " + nick + " - " + message);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status);
+                                    for (int i = 0; i < list_chat.size(); i++) {
+                                        Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num + " ; длина списка " + list_chat.size());
+                                        if (test_num < list_chat.get(i).num) {
+                                            Log.d("kkk", "GOOD " + i);
+                                            list_chat.add(i, messageModel);
+                                            break;
+                                        }
+                                    }
+                                    MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                                    listView_chat.setAdapter(messageAdapter);
+                                    listView_chat.setSelection(messageAdapter.getCount() - 1);
+                                } else {
+                                    Log.d("kkk", "AnswerMes");
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                    for (int i = 0; i < list_chat.size(); i++) {
+                                        if (test_num > list_chat.get(i).num) {
+                                            list_chat.add(i, messageModel);
+                                            break;
+                                        }
+                                    }
+                                    MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
+                                    listView_chat.setAdapter(messageAdapter);
+                                    listView_chat.setSelection(messageAdapter.getCount() - 1);
+                                }
                             }
                         }
                         else
                         {
-                            time = data.getString("time");
-                            message = data.getString("message");
-                            status = data.getString("status");
-                            link = data.getInt("link");
-                            if(link == -1)
-                            {
-                                Log.d("kkk", "UsersMes + " + nick + " - " + message);
-                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "UsersMes", status);
-                                for (int i = 0; i < list_chat.size(); i++)
-                                {
-                                    Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num + " ; длина списка " + list_chat.size());
-                                    if (test_num < list_chat.get(i).num)
-                                    {
-                                        Log.d("kkk", "GOOD " + i);
-                                        list_chat.add(i, messageModel);
-                                        break;
-                                    }
-                                }
-                                MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                                listView_chat.setAdapter(messageAdapter);
-                                listView_chat.setSelection(messageAdapter.getCount() - 1);
-                            }
-                            else
-                            {
-                                Log.d("kkk", "AnswerMes");
-                                MessageModel messageModel = new MessageModel(test_num, message, time.substring(11,16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
-                                for (int i = 0; i < list_chat.size(); i++)
-                                {
-                                    if (test_num > list_chat.get(i).num)
-                                    {
-                                        list_chat.add(i, messageModel);
-                                        break;
-                                    }
-                                }
-                                MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
-                                listView_chat.setAdapter(messageAdapter);
-                                listView_chat.setSelection(messageAdapter.getCount() - 1);
-                            }
+                            Log.d("kkk", "Сообщение забанено!");
                         }
                     } catch (JSONException e) {
                         Log.d("kkk", "JSONException");
@@ -765,6 +757,7 @@ public class GameFragment extends Fragment {
                             player.setTime(Time.LOBBY);
                             break;
                         case "night_love":
+                            DeleteNumbersFromVoting();
                             player.setTime(Time.NIGHT_LOVE);
                             break;
                         case "night_other":
@@ -856,7 +849,7 @@ public class GameFragment extends Fragment {
                             }
                             break;
                         case VOTING:
-                            messages_spent = 5;
+                            messages_can_write = 5;
                             if (IV_influence_lover.getVisibility() != View.VISIBLE)
                             {
                                 if (player.getRole() == Role.TERRORIST) {
@@ -1148,6 +1141,15 @@ public class GameFragment extends Fragment {
                                 data2 = data.getJSONObject("message");
                                 voter = data2.getString("voter");
                                 user_nick = data2.getString("user_nick");
+                                for (int i = 0; i < list_users.size(); i++)
+                                {
+                                    if (list_users.get(i).getNick().equals(user_nick))
+                                    {
+                                        list_users.get(i).setVoting_number(list_users.get(i).getVoting_number() + 1);
+                                    }
+                                }
+                                PlayersAdapter playersAdapter3 = new PlayersAdapter(list_users, getContext());
+                                gridView_users.setAdapter(playersAdapter3);
                                 messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time.substring(11,16), voter, "VotingMes");
                                 break;
                             case "time_info":
@@ -1336,18 +1338,33 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String role = "", status = "", influences = "", time = "";
+                    String role = "", status = "", time = "";
                     boolean can_act = false, can_vote = false, last_message = false;
+                    boolean sheriff = false, doctor = false, lover = false, bodyguard = false, poisoner = false;
+                    JSONObject influences;
                     try {
-                        messages_spent = data.getInt("messages_counter");
+                        messages_can_write = data.getInt("messages_counter");
                         role = data.getString("role");
                         status = data.getString("status");
                         time = data.getString("time");
                         can_vote = data.getBoolean("can_vote");
                         can_act = data.getBoolean("can_act");
+                        influences = data.getJSONObject("influences");
+                        sheriff = influences.getBoolean("influence_sheriff");
+                        doctor = influences.getBoolean("influence_doctor");
+                        lover = influences.getBoolean("influence_lover");
+                        bodyguard = influences.getBoolean("influence_bodyguard");
+                        poisoner = influences.getBoolean("influence_poisoner");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+
+                    if (sheriff) IV_influence_sheriff.setVisibility(View.VISIBLE);
+                    if (doctor) IV_influence_doctor.setVisibility(View.VISIBLE);
+                    if (lover) IV_influence_lover.setVisibility(View.VISIBLE);
+                    if (bodyguard) IV_influence_bodyguard.setVisibility(View.VISIBLE);
+                    if (poisoner) IV_influence_poisoner.setVisibility(View.VISIBLE);
+
                     day_time.setText(time);
                         switch (time)
                         {
@@ -1523,11 +1540,13 @@ public class GameFragment extends Fragment {
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - get_profile - " + data);
                 String nick = "", user_id_2 = "";
+                int playing_room_num;
                 boolean online = false;
                 try {
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
                     user_id_2 = data.getString("user_id");
+                    if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1771,5 +1790,17 @@ public class GameFragment extends Fragment {
         }
         socket.emit("get_profile", json);
         Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+    }
+    //убрать цифры из голосования
+    public void DeleteNumbersFromVoting() {
+        for (int i = 0; i < list_users.size(); i++)
+        {
+            if (list_users.get(i).getVoting_number() != 0)
+            {
+                list_users.get(i).setVoting_number(0);
+            }
+            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+            gridView_users.setAdapter(playersAdapter);
+        }
     }
 }

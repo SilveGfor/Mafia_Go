@@ -15,12 +15,17 @@ import androidx.fragment.app.Fragment;
 import com.example.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.example.mafiago.adapters.GamesAdapter;
+import com.example.mafiago.adapters.PlayersAdapter;
+import com.example.mafiago.enums.Role;
 import com.example.mafiago.models.RoomModel;
+import com.example.mafiago.models.UserModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import io.socket.emitter.Emitter;
 
@@ -35,6 +40,8 @@ public class GamesListFragment extends Fragment {
 
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
+
+    ArrayList<UserModel> list_users = new ArrayList<>();
 
     public boolean First = true;
 
@@ -164,8 +171,6 @@ public class GamesListFragment extends Fragment {
         }
     };
 
-
-
     private final Emitter.Listener onDeleteRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -208,11 +213,13 @@ public class GamesListFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String name;
-                    int num;
-                    int min_people;
-                    int max_people;
-                    int num_people;
+                    String name = "", nick = "";
+                    Boolean alive = true;
+                    int num = 0;
+                    int min_people = 0;
+                    int max_people = 0;
+                    int num_people = 0;
+                    JSONObject users = new JSONObject();
                     Log.d("kkk", "принял - add_room_to_list_of_rooms - " + data);
                     try {
                         name = data.getString("name");
@@ -220,14 +227,21 @@ public class GamesListFragment extends Fragment {
                         min_people = data.getInt("min_people_num");
                         max_people = data.getInt("max_people_num");
                         num_people = data.getInt("people_num");
-
-                        RoomModel model = new RoomModel(name, min_people, max_people, num_people, num);
-                        list_room.add(model);
-                        GamesAdapter customList = new GamesAdapter(list_room, getContext());
-                        listView.setAdapter(customList);
+                        users = data.getJSONObject("users");
+                        for (Iterator iterator = users.keys(); iterator.hasNext();)
+                        {
+                            nick = (String) iterator.next();
+                            alive = users.getBoolean("nick");
+                            list_users.add(new UserModel(nick, alive));
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    RoomModel model = new RoomModel(name, min_people, max_people, num_people, num, list_users);
+                    list_users.clear();
+                    list_room.add(model);
+                    GamesAdapter customList = new GamesAdapter(list_room, getContext());
+                    listView.setAdapter(customList);
                 }
             });
         }
@@ -243,6 +257,9 @@ public class GamesListFragment extends Fragment {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String name;
+                    String nick = "";
+                    Boolean alive = true;
+                    JSONObject users = new JSONObject();
                     int num;
                     int min_people;
                     int max_people;
@@ -256,11 +273,19 @@ public class GamesListFragment extends Fragment {
                         max_people = data.getInt("max_people_num");
                         num_people = data.getInt("people_num");
                         id = data.getInt("num");
+                        users = data.getJSONObject("users");
+                        for (Iterator iterator = users.keys(); iterator.hasNext();)
+                        {
+                            nick = (String) iterator.next();
+                            alive = users.getBoolean("nick");
+                            list_users.add(new UserModel(nick, alive));
+                        }
 
                         for(int i = 0; i< list_room.size(); i++) {
                             if (list_room.get(i).id == id)
                             {
-                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id);
+                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users);
+                                list_users.clear();
                                 list_room.set(i, model);
                                 GamesAdapter customList = new GamesAdapter(list_room, getContext());
                                 listView.setAdapter(customList);

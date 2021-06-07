@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/colorPrimaryDark">
+
+    <TextView
+        android:id="@+id/dialog_list_of_users_in_room_TV"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Пользователи в комнате"
+        android:gravity="center"
+        android:textSize="20dp"/>
+
+    <ListView
+        android:id="@+id/dialog_list_of_users_in_room_LV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>
