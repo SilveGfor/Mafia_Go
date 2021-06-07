@@ -42,8 +42,15 @@ public class PlayersAdapter extends BaseAdapter
 
         view = layout.inflate(R.layout.item_user, null);
         TextView TV_nick = view.findViewById(R.id.Item_user_TV_nick);
+        TextView TV_voting_number = view.findViewById(R.id.ItemUser_voting_number);
         ImageView IV_action = view.findViewById(R.id.Item_user_IV_Animation);
         ImageView IV_role = view.findViewById(R.id.Item_user_IV_role);
+
+        if (list_users.get(position).getVoting_number() != 0)
+        {
+            TV_voting_number.setText(list_users.get(position).getVoting_number());
+        }
+
         switch (list_users.get(position).getRole())
         {
             case NONE:
