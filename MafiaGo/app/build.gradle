@@ -3,11 +3,19 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        config {
+            keyPassword '413463'
+            storeFile file('F:\\AndroidStudioProjects\\Mafia_Go\\keys.jks')
+            storePassword '413463'
+            keyAlias 'Mafia Go'
+        }
+    }
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "com.example.mafiago"
+        applicationId 'com.mafiago'
         minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
@@ -20,6 +28,7 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
     compileOptions {

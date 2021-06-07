@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_animation_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_photo_camera_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
@@ -37,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/animation/baseline_animation_24.xml" />
+                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/photo_camera/baseline_photo_camera_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -86,9 +86,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_poisoner" />
+                                      <entry key="outputName" value="ic_journalist" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="046e0c" />
+                                      <entry key="themeColor" value="840072" />
                                     </map>
                                   </option>
                                 </PersistentState>

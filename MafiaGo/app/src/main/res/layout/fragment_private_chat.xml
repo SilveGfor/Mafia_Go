@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/fon_menu"
-    tools:context=".fragments.FriendsFragment">
+    tools:context="com.mafiago.fragments.FriendsFragment">
 
     <Button
         android:id="@+id/fragmentPrivateChat_btn_exit"

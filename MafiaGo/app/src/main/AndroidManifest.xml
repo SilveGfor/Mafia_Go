@@ -12,7 +12,7 @@
         android:roundIcon="@drawable/mafiago"
         android:supportsRtl="true"
         android:theme="@style/Theme.MafiaGo">
-        <activity android:name=".MainActivity">
+        <activity android:name="com.mafiago.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
