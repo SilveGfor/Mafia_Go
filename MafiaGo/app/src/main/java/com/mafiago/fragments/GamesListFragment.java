@@ -274,7 +274,8 @@ public class GamesListFragment extends Fragment {
                         for (Iterator iterator = users.keys(); iterator.hasNext();)
                         {
                             nick = (String) iterator.next();
-                            alive = users.getBoolean("nick");
+                            String alive_string = users.getString(nick);
+                            alive = alive_string.equals("alive");
                             list_users.add(new UserModel(nick, alive));
                         }
 
