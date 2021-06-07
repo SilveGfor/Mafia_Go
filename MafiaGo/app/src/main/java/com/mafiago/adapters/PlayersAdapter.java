@@ -49,6 +49,10 @@ public class PlayersAdapter extends BaseAdapter
         {
             TV_voting_number.setText(String.valueOf(list_users.get(position).getVoting_number()));
         }
+        else
+        {
+            TV_voting_number.setVisibility(View.GONE);
+        }
 
         switch (list_users.get(position).getRole())
         {
