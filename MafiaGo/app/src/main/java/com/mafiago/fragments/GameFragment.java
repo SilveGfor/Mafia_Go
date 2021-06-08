@@ -54,6 +54,7 @@ public class GameFragment extends Fragment {
     public TextView answer_nick;
     public TextView answer_mes;
     public TextView room_name;
+    public TextView voting_number;
 
     public ImageView IV_influence_doctor;
     public ImageView IV_influence_lover;
@@ -77,7 +78,7 @@ public class GameFragment extends Fragment {
 
     int answer_id = -1;
     public int StopTimer = 0;
-    int messages_can_write = 5;
+    int messages_can_write = 10;
     public String journalist_check = null;
 
     int num = -1;
@@ -102,6 +103,7 @@ public class GameFragment extends Fragment {
         answer_mes = view.findViewById(R.id.answerTextChat);
         sendText = view.findViewById(R.id.InputMes);
         room_name = view.findViewById(R.id.fragmentGame_TV_room_name);
+        voting_number = view.findViewById(R.id.fragmentGame_voting_number);
 
         btnSend = view.findViewById(R.id.btnSendMes);
         btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
@@ -124,6 +126,8 @@ public class GameFragment extends Fragment {
         IV_influence_sheriff.setVisibility(View.GONE);
         IV_influence_bodyguard.setVisibility(View.GONE);
         IV_influence_poisoner.setVisibility(View.GONE);
+
+        voting_number.setVisibility(View.GONE);
 
         FAB_skip_day.setVisibility(View.GONE);
 
@@ -200,7 +204,7 @@ public class GameFragment extends Fragment {
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Вы не имеете права!")
-                                        .setMessage("Нельзя отправлять больше 5 сообщений в день!")
+                                        .setMessage("Нельзя отправлять больше 10 сообщений в день!")
                                         .setIcon(R.drawable.ic_error)
                                         .setCancelable(false)
                                         .setNegativeButton("ок",
@@ -451,7 +455,7 @@ public class GameFragment extends Fragment {
             Log.d("kkk", "----");
             if(list_chat.get(position).MesType.equals("UsersMes") || list_chat.get(position).MesType.equals("AnswerMes"))
             {
-                answer_id = position;
+                answer_id = list_chat.get(position).num;
                 answer_nick.setText(list_chat.get(position).nickName);
                 answer_mes.setText(list_chat.get(position).message);
                 cardAnswer.setVisibility(View.VISIBLE);
@@ -584,7 +588,7 @@ public class GameFragment extends Fragment {
                                     listView_chat.setSelection(messageAdapter.getCount() - 1);
                                 } else {
                                     Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", link);
                                     list_chat.add(messageModel);
                                     MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                     listView_chat.setAdapter(messageAdapter);
@@ -611,9 +615,9 @@ public class GameFragment extends Fragment {
                                     listView_chat.setSelection(messageAdapter.getCount() - 1);
                                 } else {
                                     Log.d("kkk", "AnswerMes");
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", list_chat.get(link).answerNick, list_chat.get(link).message, list_chat.get(link).answerTime, link);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", link);
                                     for (int i = 0; i < list_chat.size(); i++) {
-                                        if (test_num > list_chat.get(i).num) {
+                                        if (test_num < list_chat.get(i).num) {
                                             list_chat.add(i, messageModel);
                                             break;
                                         }
@@ -787,6 +791,8 @@ public class GameFragment extends Fragment {
                             player.setTime(Time.LOBBY);
                             break;
                         case "night_love":
+                            voting_number.setVisibility(View.GONE);
+                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
                             player.setTime(Time.NIGHT_LOVE);
                             break;
@@ -879,7 +885,7 @@ public class GameFragment extends Fragment {
                             }
                             break;
                         case VOTING:
-                            messages_can_write = 5;
+                            messages_can_write = 10;
                             if (IV_influence_lover.getVisibility() != View.VISIBLE)
                             {
                                 if (player.getRole() == Role.TERRORIST) {
@@ -890,10 +896,6 @@ public class GameFragment extends Fragment {
                             }
                             break;
                     }
-                }
-                else
-                {
-                    //Log.d("kkk", "Вы мертвы :)");
                 }
             });
         }
@@ -1062,6 +1064,10 @@ public class GameFragment extends Fragment {
                             if (list_users.get(i).getNick().equals(nick))
                             {
                                 list_users.get(i).setRole(role);
+                                if (player.getRole() == Role.SHERIFF)
+                                {
+                                    list_users.get(i).setChecked(true);
+                                }
                             }
                         }
                         PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
@@ -1211,12 +1217,21 @@ public class GameFragment extends Fragment {
                                 data2 = data.getJSONObject("message");
                                 voter = data2.getString("voter");
                                 user_nick = data2.getString("user_nick");
-                                for (int i = 0; i < list_users.size(); i++)
-                                {
-                                    if (list_users.get(i).getNick().equals(user_nick))
-                                    {
-                                        list_users.get(i).setVoting_number(list_users.get(i).getVoting_number() + 1);
+                                if (!user_nick.equals(player.getNick())) {
+                                    for (int i = 0; i < list_users.size(); i++) {
+                                        if (list_users.get(i).getNick().equals(user_nick)) {
+                                            list_users.get(i).setVoting_number(list_users.get(i).getVoting_number() + 1);
+                                        }
                                     }
+                                }
+                                else
+                                {
+                                    if (player.getVoting_number() == 0)
+                                    {
+                                        voting_number.setVisibility(View.VISIBLE);
+                                    }
+                                    player.setVoting_number(player.getVoting_number() + 1);
+                                    voting_number.setText(String.valueOf(player.getVoting_number()));
                                 }
                                 PlayersAdapter playersAdapter3 = new PlayersAdapter(list_users, getContext());
                                 gridView_users.setAdapter(playersAdapter3);
@@ -1241,7 +1256,7 @@ public class GameFragment extends Fragment {
                         {
                             for (int i = 0; i < list_chat.size(); i++)
                             {
-                                if (test_num > list_chat.get(i).num)
+                                if (test_num < list_chat.get(i).num)
                                 {
                                     list_chat.add(i, messageModel);
                                     break;
@@ -1447,12 +1462,21 @@ public class GameFragment extends Fragment {
                                 player.setTime(Time.LOBBY);
                                 break;
                             case "night_love":
+                                voting_number.setVisibility(View.GONE);
+                                player.setVoting_number(0);
+                                DeleteNumbersFromVoting();
                                 player.setTime(Time.NIGHT_LOVE);
                                 break;
                             case "night_other":
+                                voting_number.setVisibility(View.GONE);
+                                player.setVoting_number(0);
+                                DeleteNumbersFromVoting();
                                 player.setTime(Time.NIGHT_OTHER);
                                 break;
                             case "day":
+                                voting_number.setVisibility(View.GONE);
+                                player.setVoting_number(0);
+                                DeleteNumbersFromVoting();
                                 FAB_skip_day.setVisibility(View.VISIBLE);
                                 player.setTime(Time.DAY);
                                 break;
@@ -1574,7 +1598,10 @@ public class GameFragment extends Fragment {
                                     break;
                             }
                         }
-
+                        else
+                        {
+                            player.setCan_write(true);
+                        }
                 }
             });
         }
@@ -1775,7 +1802,17 @@ public class GameFragment extends Fragment {
         {
             if (list_users.get(i).getAlive())
             {
-                list_users.get(i).setAnimation_type(type);
+                if (type != Role.VOTING)
+                {
+                    if (!list_users.get(i).getChecked())
+                    {
+                        list_users.get(i).setAnimation_type(type);
+                    }
+                }
+                else
+                {
+                    list_users.get(i).setAnimation_type(type);
+                }
             }
             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
             gridView_users.setAdapter(playersAdapter);

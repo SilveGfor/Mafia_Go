@@ -7,7 +7,7 @@
     android:background="@color/colorPrimaryDark">
 
     <TextView
-        android:id="@+id/dialog_list_of_users_in_room_TV"
+        android:id="@+id/dialogListOfUsersInRoom_TV"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Пользователи в комнате"
@@ -15,7 +15,7 @@
         android:textSize="20dp"/>
 
     <ListView
-        android:id="@+id/dialog_list_of_users_in_room_LV"
+        android:id="@+id/dialogListOfUsersInRoom_LV"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 

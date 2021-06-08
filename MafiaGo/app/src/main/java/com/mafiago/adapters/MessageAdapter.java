@@ -158,7 +158,7 @@
                 txt_mess.setText(list_mess.get(position).message);
 
                 txt_mess.setTextColor(Color.parseColor("#FFFF00"));
-                txt_time.setTextColor(Color.parseColor("#FFFF00"));
+                //txt_time.setTextColor(Color.parseColor("#FFFF00"));
                 txt_nick.setTextColor(Color.parseColor("#FFFF00"));
                 break;
             case "AnswerMes":
@@ -174,6 +174,20 @@
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
 
+                color= "#FFFFFF";
+                switch (list_mess.get(position).type)
+                {
+                    case "alive":
+                        color = "#FFFFFF";
+                        break;
+                    case "dead":
+                        color = "#999999";
+                        break;
+                    case "last_message":
+                        color = "#008800";
+                        break;
+                }
+
                 if (list_mess.get(position).nickName.equals("SilveGfor"))
                 {
                     Shimmer shimmer = new Shimmer();
@@ -182,15 +196,22 @@
 
                 int id = list_mess.get(position).answerId;
 
-                if (list_mess.get(id).nickName.equals("SilveGfor"))
+                for (int i = 0; i < list_mess.size(); i++)
                 {
-                    Shimmer shimmer = new Shimmer();
-                    //shimmer.start(txt_answer_nick);
+                    if (id == list_mess.get(i).num)
+                    {
+                        txt_answer_nick.setText(list_mess.get(i).nickName);
+                        txt_answer_mes.setText(list_mess.get(i).message);
+                        txt_answer_time.setText(list_mess.get(i).time);
+                    }
                 }
 
-                txt_answer_nick.setText(list_mess.get(id).nickName);
-                txt_answer_mes.setText(list_mess.get(id).message);
-                txt_answer_time.setText(list_mess.get(id).time);
+                txt_mess.setTextColor(Color.parseColor(color));
+                txt_time.setTextColor(Color.parseColor(color));
+                txt_nick.setTextColor(Color.parseColor(color));;
+                txt_answer_nick.setTextColor(Color.parseColor(color));
+                txt_answer_mes.setTextColor(Color.parseColor(color));
+                txt_answer_time.setTextColor(Color.parseColor(color));
                 break;
             case "SystemMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);

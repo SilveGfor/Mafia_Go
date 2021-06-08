@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public static String Sid = "";
     public static int Game_id;
 
-    public static String url = "http://82.148.17.116:5000";
+    public static String url = "https://mafiagoserver.online:5000";
 
     public static String password = "";
     public static String nick = "";

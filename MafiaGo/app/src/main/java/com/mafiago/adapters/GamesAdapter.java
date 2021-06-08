@@ -1,12 +1,16 @@
 package com.mafiago.adapters;
 
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -52,7 +56,7 @@ public class GamesAdapter extends BaseAdapter {
 
         ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
 
-        //Button btn_info = view.findViewById(R.id.ItemGame_btn_info);
+        ImageView btn_info = view.findViewById(R.id.ItemGame_btn_info);
 
         PB_users.setMax(list_room.get(position).max_people);
         PB_users.setProgress(list_room.get(position).num_people);
@@ -63,10 +67,24 @@ public class GamesAdapter extends BaseAdapter {
 
         //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
+        btn_info.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            View view_listOfUsers = layout.inflate(R.layout.dialog_list_of_users_in_room, null);
+            builder.setView(view_listOfUsers);
 
+            ListView LV_users = view_listOfUsers.findViewById(R.id.dialogListOfUsersInRoom_LV);
+
+
+            GamesAdapter customList = new GamesAdapter(list_room, context);
+            LV_users.setAdapter(customList);
+
+
+            AlertDialog alert = builder.create();
+            alert.show();
+        });
 
         txt_room_name.setText(list_room.get(position).name);
-        txt_min_max_people.setText(list_room.get(position).min_people + "/" + list_room.get(position).max_people);
+        txt_min_max_people.setText("от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people);
         txt_num_people.setText("Игроки: " + list_room.get(position).num_people);
         return view;
     }
