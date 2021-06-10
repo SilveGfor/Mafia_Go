@@ -134,7 +134,7 @@ public class StartFragment extends Fragment {
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RegisterFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RegisterFragment()).addToBackStack("Fragments").commit();
             }
         });
         return view;
@@ -213,12 +213,9 @@ public class StartFragment extends Fragment {
                             MainActivity.NickName = NickName;
                             MainActivity.Session_id = Session_id;
 
-
-
                             Log.d("kkk", "НИК: " + NickName);
                             Log.d("kkk", "Переход в MenuFragment");
-                              getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-                            //ETpassword.setText("");
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).addToBackStack("Fragments").commit();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();

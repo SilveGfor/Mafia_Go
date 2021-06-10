@@ -2,6 +2,7 @@
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.fragment.app.FragmentManager;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -9,9 +10,11 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.mafiago.R;
 
+import com.mafiago.fragments.GameFragment;
 import com.mafiago.fragments.StartFragment;
 import com.mafiago.models.NotificationModel;
 
@@ -88,6 +91,22 @@ public static Socket socket;
         createNotificationChannel();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+    }
+
+    @Override protected void onDestroy() {
+        Log.d("kkk", "Вызван onDestroy()");
+        Toast.makeText(this, "Вызван onDestroy()", Toast.LENGTH_SHORT).show();
+        socket.emit("leave_app", "");
+        Log.d("kkk", "Socket_отправка - leave_app");
+        super.onDestroy();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        GameFragment gameFragment = new GameFragment();
+
+        gameFragment.backButtonWasPressed();
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {

@@ -28,12 +28,13 @@ public class MessageModel {
         this.nickName = nickName;
         this.MesType = MesType;
     }
-    public MessageModel(int num, String message, String time, String nickName, String MesType, int answerId) {
+    public MessageModel(int num, String message, String time, String nickName, String MesType, String type, int answerId) {
         this.num = num;
         this.message = message;
         this.time = time;
         this.nickName = nickName;
         this.MesType = MesType;
+        this.type = type;
         this.answerId = answerId;
     }
 }

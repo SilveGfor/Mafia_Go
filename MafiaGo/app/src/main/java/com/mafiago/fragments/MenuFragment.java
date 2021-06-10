@@ -91,7 +91,7 @@ public class MenuFragment extends Fragment {
         //Nastroiki nastroiki = new Nastroiki();
 
         FAB_exit_menu.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).addToBackStack("Fragments").commit();
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putString(APP_PREFERENCES_EMAIL, null);
             editor.putString(APP_PREFERENCES_PASSWORD, null);
@@ -117,27 +117,27 @@ public class MenuFragment extends Fragment {
         });
 
         btnTools.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).addToBackStack("Fragments").commit();
         });
 
         btnRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RulesFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RulesFragment()).addToBackStack("Fragments").commit();
             }
         });
 
         btnGames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).addToBackStack("Fragments").commit();
             }
         });
 
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).addToBackStack("Fragments").commit();
             }
         });
         return view;
@@ -152,10 +152,13 @@ public class MenuFragment extends Fragment {
                 JSONObject data = (JSONObject) args[0];
                 String nick = "";
                 boolean online = false;
+                int money = 0, exp = 0;
 
                 try {
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
+                    money = data.getInt("money");
+                    exp = data.getInt("exp");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -175,6 +178,11 @@ public class MenuFragment extends Fragment {
                 FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
                 TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
                 ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
+                TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
+                TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+
+                TV_money.setText(String.valueOf(money));
+                TV_exp.setText(String.valueOf(exp));
 
                 if (online) IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_online));
                 else IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_offline));

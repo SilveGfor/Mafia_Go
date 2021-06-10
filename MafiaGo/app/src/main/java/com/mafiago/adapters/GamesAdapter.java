@@ -4,6 +4,7 @@ package com.mafiago.adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,16 +42,13 @@ public class GamesAdapter extends BaseAdapter {
         return list_room.get(position);
     }
     @Override
-    public long getItemId(int position)
-    {
+    public long getItemId(int position) {
         return position;
-
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = convertView;
-
 
         view = layout.inflate(R.layout.item_game, null);
 
@@ -74,9 +72,8 @@ public class GamesAdapter extends BaseAdapter {
 
             ListView LV_users = view_listOfUsers.findViewById(R.id.dialogListOfUsersInRoom_LV);
 
-
-            GamesAdapter customList = new GamesAdapter(list_room, context);
-            LV_users.setAdapter(customList);
+            UsersInRoomAdapter usersInRoomAdapter = new UsersInRoomAdapter(list_room.get(position).list_users, context);
+            LV_users.setAdapter(usersInRoomAdapter);
 
 
             AlertDialog alert = builder.create();

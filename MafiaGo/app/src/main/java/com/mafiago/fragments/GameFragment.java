@@ -18,10 +18,12 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
@@ -333,6 +335,16 @@ public class GameFragment extends Fragment {
             }
             else
             {
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", MainActivity.NickName);
+                    json2.put("session_id", MainActivity.Session_id);
+                    json2.put("room", player.getRoom_num());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                socket.emit("leave_room", json2);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
         });
@@ -344,7 +356,7 @@ public class GameFragment extends Fragment {
                 switch (player.getTime())
                 {
                     case LOBBY:
-                        ShowProfile(nick);
+                        sendText.setText(sendText.getText() + nick);
                         break;
                     case NIGHT_LOVE:
                         switch (player.getRole())
@@ -424,7 +436,7 @@ public class GameFragment extends Fragment {
                         if (player.getRole() == Role.BODYGUARD) {
                             RoleAction(nick);
                         } else {
-                            ShowProfile(nick);
+                            sendText.setText(sendText.getText() + nick);
                         }
                         break;
                     case VOTING:
@@ -444,9 +456,8 @@ public class GameFragment extends Fragment {
             }
             else
             {
-                ShowProfile(nick);
+                sendText.setText(sendText.getText() + nick);
             }
-
         });
 
         listView_chat.setOnItemClickListener((parent, view12, position, id) -> {
@@ -484,11 +495,16 @@ public class GameFragment extends Fragment {
         return view;
     }
 
+    public void backButtonWasPressed() {
+        Log.d("kkk", "HELLO");
+    }
+
     /*******************************
      *                             *
      *       SOCKETS start         *
      *                             *
      *******************************/
+
 
     private Emitter.Listener onLeaveUser = new Emitter.Listener() {
         @Override
@@ -520,7 +536,7 @@ public class GameFragment extends Fragment {
                     {
                         for (int i = 0; i < list_chat.size(); i++)
                         {
-                            if (test_num > list_chat.get(i).num)
+                            if (test_num < list_chat.get(i).num)
                             {
                                 list_chat.add(i, messageModel);
                                 break;
@@ -580,15 +596,13 @@ public class GameFragment extends Fragment {
                                 status = data.getString("status");
                                 link = data.getInt("link");
                                 if (link == -1) {
-                                    Log.d("kkk", "UsersMes + " + nick + " - " + message);
                                     MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status);
                                     list_chat.add(messageModel);
                                     MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                     listView_chat.setAdapter(messageAdapter);
                                     listView_chat.setSelection(messageAdapter.getCount() - 1);
                                 } else {
-                                    Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", link);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link);
                                     list_chat.add(messageModel);
                                     MessageAdapter messageAdapter = new MessageAdapter(list_chat, getContext());
                                     listView_chat.setAdapter(messageAdapter);
@@ -600,12 +614,9 @@ public class GameFragment extends Fragment {
                                 status = data.getString("status");
                                 link = data.getInt("link");
                                 if (link == -1) {
-                                    Log.d("kkk", "UsersMes + " + nick + " - " + message);
                                     MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status);
                                     for (int i = 0; i < list_chat.size(); i++) {
-                                        Log.d("kkk", "i = " + i + " ; test_num = " + test_num + " ; list_chat.get(i).num = " + list_chat.get(i).num + " ; длина списка " + list_chat.size());
                                         if (test_num < list_chat.get(i).num) {
-                                            Log.d("kkk", "GOOD " + i);
                                             list_chat.add(i, messageModel);
                                             break;
                                         }
@@ -614,8 +625,7 @@ public class GameFragment extends Fragment {
                                     listView_chat.setAdapter(messageAdapter);
                                     listView_chat.setSelection(messageAdapter.getCount() - 1);
                                 } else {
-                                    Log.d("kkk", "AnswerMes");
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", link);
+                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link);
                                     for (int i = 0; i < list_chat.size(); i++) {
                                         if (test_num < list_chat.get(i).num) {
                                             list_chat.add(i, messageModel);
@@ -714,7 +724,7 @@ public class GameFragment extends Fragment {
                             MessageModel messageModel = new MessageModel(test_num, "", time.substring(11,16), nick, "ConnectMes");
                             for (int i = 0; i < list_chat.size(); i++)
                             {
-                                if (test_num > list_chat.get(i).num)
+                                if (test_num < list_chat.get(i).num)
                                 {
                                     list_chat.add(i, messageModel);
                                     break;
@@ -968,7 +978,8 @@ public class GameFragment extends Fragment {
                                 dialog.cancel();
                             }
                         });
-                        builder.create().show();
+                        AlertDialog alert = builder.create();
+                        alert.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1090,9 +1101,8 @@ public class GameFragment extends Fragment {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String message, time, status, mafia_nick, user_nick, voter, nick;
-                    int test_num;
+                    int test_num, money, exp;
                     JSONObject data2;
-
                     try {
                         status = data.getString("status");
                         test_num = data.getInt("num");
@@ -1104,6 +1114,24 @@ public class GameFragment extends Fragment {
                         switch (status)
                         {
                             case "game_over":
+                                money = data.getInt("money");
+                                exp = data.getInt("exp");
+
+                                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                                View view_end_game = getLayoutInflater().inflate(R.layout.dialog_end_game, null);
+                                builder2.setView(view_end_game);
+
+                                TextView TV_message = view_end_game.findViewById(R.id.dialogEndGame_TV_message);
+                                TextView TV_money = view_end_game.findViewById(R.id.dialogEndGame_TV_money);
+                                TextView TV_exp = view_end_game.findViewById(R.id.dialogEndGame_TV_exp);
+
+                                TV_message.setText(message);
+                                TV_money.setText(String.valueOf(money));
+                                TV_exp.setText(String.valueOf(exp));
+
+                                AlertDialog alert2 = builder2.create();
+                                alert2.show();
+
                                 messageModel = new MessageModel(test_num, message, time.substring(11, 16), "Server", "SystemMes");
                                 PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                                 gridView_users.setAdapter(playersAdapter);
@@ -1427,12 +1455,32 @@ public class GameFragment extends Fragment {
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-                    String role = "", status = "", time = "";
+                    String role = "", status = "", time = "", nick;
                     boolean can_act = false, can_vote = false, last_message = false;
                     boolean sheriff = false, doctor = false, lover = false, bodyguard = false, poisoner = false;
                     Log.d("kkk", "Socket_принять - get_my_game_info - " + args[0]);
+                    JSONObject data2;
                     JSONObject influences;
                     try {
+                        if (data.has("sheriff_checks"))
+                        {
+                            data2 = data.getJSONObject("sheriff_checks");
+                            for (Iterator iterator = data2.keys(); iterator.hasNext();)
+                            {
+                                nick = (String) iterator.next();
+                                Role role2 = ConvertToRole(data2.getString(nick));
+                                for (int i = 0; i < list_users.size(); i++)
+                                {
+                                    if (list_users.get(i).getNick().equals(nick))
+                                    {
+                                        list_users.get(i).setRole(role2);
+                                        break;
+                                    }
+                                }
+                            }
+                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                            gridView_users.setAdapter(playersAdapter);
+                        }
                         messages_can_write = data.getInt("messages_counter");
                         role = data.getString("role");
                         status = data.getString("status");
@@ -1642,12 +1690,14 @@ public class GameFragment extends Fragment {
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - get_profile - " + data);
                 String nick = "", user_id_2 = "";
-                int playing_room_num;
+                int playing_room_num = 0, money = 0, exp = 0;
                 boolean online = false;
                 try {
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
                     user_id_2 = data.getString("user_id");
+                    money = data.getInt("money");
+                    exp = data.getInt("exp");
                     if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -1659,6 +1709,11 @@ public class GameFragment extends Fragment {
                 FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
                 FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
                 FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
+                TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
+                TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+
+                TV_money.setText(String.valueOf(money));
+                TV_exp.setText(String.valueOf(exp));
 
 
                 TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);

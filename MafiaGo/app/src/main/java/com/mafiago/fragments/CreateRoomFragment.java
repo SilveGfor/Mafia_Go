@@ -136,7 +136,7 @@ public class CreateRoomFragment extends Fragment {
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             TV_max_people.setText(String.valueOf(progress));
             SetRoles(progress);
-//TODO: доделать сохранение ролей при выходе из фрагмента
+            //TODO: доделать сохранение ролей при выходе из фрагмента
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putInt(APP_PREFERENCES_MAX_PEOPLE, progress);
             editor.apply();

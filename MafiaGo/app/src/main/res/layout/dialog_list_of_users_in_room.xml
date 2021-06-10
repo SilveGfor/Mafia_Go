@@ -8,15 +8,20 @@
 
     <TextView
         android:id="@+id/dialogListOfUsersInRoom_TV"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
         android:layout_height="wrap_content"
-        android:text="Пользователи в комнате"
+        android:text="Игроки:"
         android:gravity="center"
         android:textSize="20dp"/>
 
     <ListView
         android:id="@+id/dialogListOfUsersInRoom_LV"
+        android:layout_margin="16dp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:divider="@color/colorWhite"
+        android:dividerHeight="2dp"
+        android:background="@drawable/rounded_corner"/>
 
 </LinearLayout>

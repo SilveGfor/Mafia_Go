@@ -170,6 +170,21 @@
                 TextView txt_answer_mes = view.findViewById(R.id.answerText);
                 TextView txt_answer_time = view.findViewById(R.id.answerTime);
 
+                IV_avatar = view.findViewById(R.id.item_answer_message_avatar);
+
+                IV_avatar.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
+
                 txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);

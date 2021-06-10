@@ -7,19 +7,20 @@
 
     <ImageView
         android:id="@+id/item_message_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:background="@drawable/ic_snow"/>
 
     <com.romainpiel.shimmer.ShimmerTextView
         android:id="@+id/mesNick"
         android:text="SilveGfor"
+        android:textSize="16sp"
         android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_toRightOf="@id/item_message_avatar"
-        android:textStyle="normal"
+        android:textStyle="bold"
         app:reflectionColor="#f00"/>
 
     <TextView
@@ -38,10 +39,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/mesNick"
         android:layout_toRightOf="@id/item_message_avatar"
-        android:layout_marginTop="5dp"
         android:text="Однако здравствуйте"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="#999999"
-        android:textSize="16sp" />
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp" />
 
 </RelativeLayout>

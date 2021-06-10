@@ -89,6 +89,54 @@
                 android:background="@drawable/ic_online"
                 android:layout_alignTop="@id/Item_profile_IV_avatar"
                 android:layout_toRightOf="@id/Item_profile_IV_avatar" />
+
+            <LinearLayout
+                android:id="@+id/ItemProfile_LL_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_toRightOf="@id/Item_profile_IV_rang"
+                android:layout_alignTop="@id/Item_profile_IV_rang"
+                android:layout_margin="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_money" />
+
+                <TextView
+                    android:id="@+id/ItemProfile_TV_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="150"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ItemProfile_LL_exp"
+                android:layout_toRightOf="@id/Item_profile_IV_rang"
+                android:layout_below="@id/ItemProfile_LL_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_exp" />
+
+                <TextView
+                    android:id="@+id/ItemProfile_TV_exp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="75"
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
 

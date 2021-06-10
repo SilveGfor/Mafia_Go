@@ -4,21 +4,24 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:gravity="center"
     android:padding="16dp"
-    android:background="@color/colorPrimaryDark">
+    >
 
     <TextView
         android:id="@+id/itemUserInRoom_TV_nick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="SilveGfor"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="16sp"/>
 
-    <ImageView
+    <TextView
+        android:id="@+id/itemUserInRoom_TV_alive"
         android:layout_marginLeft="15dp"
-        android:id="@+id/itemUserInRoom_IV_online_offline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_online" />
-
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Жив"
+        android:textSize="16dp" />
 </LinearLayout>

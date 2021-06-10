@@ -58,7 +58,7 @@ public class FriendsFragment extends Fragment {
 
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
             MainActivity.User_id_2 = list_friends.get(position).getUser_id_2();
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).addToBackStack("Fragments").commit();
         });
 
         btnExit.setOnClickListener(v -> {
