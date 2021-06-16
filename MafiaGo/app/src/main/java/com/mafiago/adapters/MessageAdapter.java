@@ -127,8 +127,21 @@
 
                 txt_disconnect_mes.setText(list_mess.get(position).nickName + " вышел(-а) из чата");
                 txt_disconnect_time.setText(list_mess.get(position).time);
-                break;
 
+                view.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
+
+                break;
             case "ConnectMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);
 
@@ -139,6 +152,20 @@
 
                 txt_connect_mes.setText(list_mess.get(position).nickName + " вошёл(-а) в чат");
                 txt_connect_time.setText(list_mess.get(position).time);
+
+                view.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
+
                 break;
             case "VotingMes":
                 view = layout.inflate(R.layout.item_message, null);

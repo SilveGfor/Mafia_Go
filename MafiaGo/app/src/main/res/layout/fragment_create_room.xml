@@ -48,15 +48,19 @@
                 android:text="Колличество пользователей"
                 android:textSize="15dp" />
 
-            <SeekBar
-                android:id="@+id/fragmentCreateRoom_SB_max_players"
-                android:layout_marginTop="15dp"
-                android:layout_below="@id/fragmentCreateRoom_TV_num_users"
-                android:layout_centerHorizontal="true"
-                android:layout_width="150dp"
+            <org.florescu.android.rangeseekbar.RangeSeekBar
+                android:id="@+id/fragmentCreateRoom_RSB_num_users"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="18"
-                android:min="5"/>
+                app:absoluteMaxValue="5"
+                app:thumbDisabled="@drawable/ic_change"
+                app:thumbNormal="@drawable/ic_exp"
+                app:thumbPressed="@drawable/ic_money"
+                app:alwaysActive="true"
+
+
+                app:absoluteMinValue="20"
+                android:layout_below="@id/fragmentCreateRoom_TV_num_users" />
 
             <GridView
                 android:id="@+id/fragmentCreateRoom_GV_roles"
@@ -67,7 +71,7 @@
                 android:horizontalSpacing="5dp"
 
                 android:layout_margin="15dp"
-                android:layout_below="@id/fragmentCreateRoom_SB_max_players"
+                android:layout_below="@id/fragmentCreateRoom_RSB_num_users"
                 android:layout_above="@id/fragmentCreateRoom_BTN_create_room"/>
 
             <TextView
@@ -77,8 +81,8 @@
                 android:text="10"
                 android:textSize="15sp"
                 android:layout_marginRight="15dp"
-                android:layout_alignBottom="@id/fragmentCreateRoom_SB_max_players"
-                android:layout_toLeftOf="@id/fragmentCreateRoom_SB_max_players"/>
+                android:layout_alignBottom="@id/fragmentCreateRoom_RSB_num_users"
+                android:layout_toLeftOf="@id/fragmentCreateRoom_RSB_num_users"/>
 
             <Button
                 android:id="@+id/fragmentCreateRoom_BTN_create_room"

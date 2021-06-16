@@ -10,8 +10,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.example.mafiago.R;
+import com.mafiago.classes.OnBackPressedListener;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements OnBackPressedListener {
 
     Button btnExitSettings;
 
@@ -28,5 +29,10 @@ public class SettingsFragment extends Fragment {
 
 
         return  view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 }

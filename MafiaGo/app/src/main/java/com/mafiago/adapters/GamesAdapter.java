@@ -4,6 +4,7 @@ package com.mafiago.adapters;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,6 +61,7 @@ public class GamesAdapter extends BaseAdapter {
         PB_users.setProgress(list_room.get(position).num_people);
 
         TextView txt_room_name = view.findViewById(R.id.NameRoom);
+        TextView txt_is_on = view.findViewById(R.id.ItemGame_is_on);
         TextView txt_min_max_people = view.findViewById(R.id.MaxMinPeople);
         TextView txt_num_people = view.findViewById(R.id.NumPeople);
 
@@ -79,6 +81,17 @@ public class GamesAdapter extends BaseAdapter {
             AlertDialog alert = builder.create();
             alert.show();
         });
+
+        if (list_room.get(position).is_on)
+        {
+            txt_is_on.setText("Игра идёт");
+            txt_is_on.setTextColor(Color.parseColor("#F44336"));
+        }
+        else
+        {
+            txt_is_on.setText("Набор в комнату");
+            txt_is_on.setTextColor(Color.parseColor("#4CAF50"));
+        }
 
         txt_room_name.setText(list_room.get(position).name);
         txt_min_max_people.setText("от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people);

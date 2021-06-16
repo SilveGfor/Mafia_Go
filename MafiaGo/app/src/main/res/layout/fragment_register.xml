@@ -129,10 +129,6 @@
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
 
-
-
-
-
     <ImageView
         android:layout_marginTop="20sp"
         android:layout_gravity="center"

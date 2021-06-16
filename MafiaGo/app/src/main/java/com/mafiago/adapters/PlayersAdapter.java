@@ -13,6 +13,7 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 
 import com.example.mafiago.R;
+import com.mafiago.enums.Role;
 import com.mafiago.models.UserModel;
 
 import java.util.ArrayList;
@@ -54,8 +55,7 @@ public class PlayersAdapter extends BaseAdapter
             TV_voting_number.setVisibility(View.GONE);
         }
 
-        switch (list_users.get(position).getRole())
-        {
+        switch (list_users.get(position).getRole()) {
             case NONE:
                 IV_role.setImageResource(R.drawable.anonim);
                 break;
@@ -117,24 +117,30 @@ public class PlayersAdapter extends BaseAdapter
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case MAFIA:
-                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia));
-                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    if (list_users.get(position).getRole() == Role.NONE) {
+                        IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia));
+                        animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    }
                     break;
                 case DOCTOR:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_doctor));
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case SHERIFF:
-                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
-                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    if (list_users.get(position).getRole() == Role.NONE) {
+                        IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_sheriff));
+                        animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    }
                     break;
                 case LOVER:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_lover));
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case MAFIA_DON:
-                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia_don));
-                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    if (list_users.get(position).getRole() == Role.NONE) {
+                        IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_mafia_don));
+                        animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    }
                     break;
                 case MANIAC:
                     IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_maniac));
@@ -153,8 +159,10 @@ public class PlayersAdapter extends BaseAdapter
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case JOURNALIST:
-                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_journalist));
-                    animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    if (!list_users.get(position).getChecked()) {
+                        IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_journalist));
+                        animation = AnimationUtils.loadAnimation(context, R.anim.voting);
+                    }
                     break;
             }
             if (animation != null) {

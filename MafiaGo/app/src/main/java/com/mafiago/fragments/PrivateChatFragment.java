@@ -23,6 +23,7 @@ import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 
 import com.mafiago.adapters.PrivateMessagesAdapter;
+import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.PrivateMessageModel;
 
 import org.json.JSONException;
@@ -34,7 +35,7 @@ import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
 
-public class PrivateChatFragment extends Fragment {
+public class PrivateChatFragment extends Fragment implements OnBackPressedListener {
 
     public ListView MessageView;
 
@@ -84,6 +85,12 @@ public class PrivateChatFragment extends Fragment {
         }
         socket.emit("get_chat", json);
         Log.d("kkk", "Socket_отправка - get_chat - "+ json.toString());
+
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.off("get_chat_info");
+        socket.off("delete_message");
+        socket.off("edit_message");
 
         socket.on("connect", OnConnect);
         socket.on("disconnect", OnDisconnect);
@@ -142,8 +149,6 @@ public class PrivateChatFragment extends Fragment {
                         socket.emit("edit_message", json2);
                         Log.d("kkk", "Socket_отправка - edit_message - "+ json2.toString());
                     });
-
-
                 });
 
                 btnDelete.setOnClickListener(v -> {
@@ -220,14 +225,22 @@ public class PrivateChatFragment extends Fragment {
 
         btnExit.setOnClickListener(v -> {
             MainActivity.User_id_2 = "";
+            socket.off("chat_message", OnChatMessage);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
         });
 
         btnDeleteAnswer.setOnClickListener(v -> {
+            answer_id = -1;
             RL_answer.setVisibility(View.GONE);
         });
-
         return view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        socket.off("chat_message", OnChatMessage);
+        MainActivity.User_id_2 = "";
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
     }
 
     private Emitter.Listener OnConnect = new Emitter.Listener() {
@@ -296,12 +309,12 @@ public class PrivateChatFragment extends Fragment {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - chat_message - " + data);
-                    String nick = "", message = "", status = "", edited_time = "", time = "";
+                    String nick = "", message = "", status = "", edited_time = "", time = "", user_id_2 = "";
                     int link = -1;
-
                     try {
                         nick = data.getString("nick");
                         num = data.getInt("num");
+                        user_id_2 = data.getString("user_id");
                         time = data.getString("time");
                         message = data.getString("message");
                         status = data.getString("status");
@@ -309,28 +322,26 @@ public class PrivateChatFragment extends Fragment {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    if(link == -1)
-                    {
-                        Log.d("kkk", "UserMes + " + nick + " - " + message);
-                        list_messages.add(new PrivateMessageModel(num, message, time.substring(11,16), nick, "UserMes", status));
-                        PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
-                        MessageView.setAdapter(messageAdapter);
-                        MessageView.setSelection(messageAdapter.getCount() - 1);
+                    if (MainActivity.User_id_2.equals(user_id_2) || MainActivity.NickName.equals(nick)) {
+                        if (link == -1) {
+                            Log.d("kkk", "UserMes + " + nick + " - " + message);
+                            list_messages.add(new PrivateMessageModel(num, message, time.substring(11, 16), nick, "UserMes", status));
+                            PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
+                            MessageView.setAdapter(messageAdapter);
+                            MessageView.setSelection(messageAdapter.getCount() - 1);
+                        } else {
+                            Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
+                            PrivateMessageModel messageModel = new PrivateMessageModel(num, message, time.substring(11, 16), nick, "AnswerMes", status, list_messages.get(link).answerNick, list_messages.get(link).message, list_messages.get(link).answerTime, link);
+                            list_messages.add(messageModel);
+                            PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
+                            MessageView.setAdapter(messageAdapter);
+                            MessageView.setSelection(messageAdapter.getCount() - 1);
+                        }
                     }
                     else
                     {
-                        Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
-                        PrivateMessageModel messageModel = new PrivateMessageModel(num, message, time.substring(11,16), nick, "AnswerMes", status, list_messages.get(link).answerNick, list_messages.get(link).message, list_messages.get(link).answerTime, link);
-                        list_messages.add(messageModel);
-                        PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
-                        MessageView.setAdapter(messageAdapter);
-                        MessageView.setSelection(messageAdapter.getCount() - 1);
+                        Log.d("kkk", "GG");
                     }
-
-
-
-
                 }
             });
         }
@@ -346,26 +357,33 @@ public class PrivateChatFragment extends Fragment {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - delete_message - " + data);
-                    String nick = "", message = "", status = "", edited_time = "", time = "";
+                    String nick = "", message = "", status = "", edited_time = "", time = "", user_id_1 = "", user_id_2 = "";
                     int test_num = -1;
 
                     //TODO: edited_time довыводить
                     try {
+                        user_id_1 = data.getString("user_id");
+                        user_id_2 = data.getString("user_id_2");
                         test_num = data.getInt("mes_num");
                         time = data.getString("time");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    for (int i = 0; i < list_messages.size(); i++)
-                    {
-                        if (list_messages.get(i).num == test_num)
-                        {
-                            list_messages.remove(i);
-                            break;
+                    if ((user_id_1.equals(MainActivity.User_id) && user_id_2.equals(MainActivity.User_id_2))
+                            || (user_id_2.equals(MainActivity.User_id) && user_id_1.equals(MainActivity.User_id_2))) {
+                        for (int i = 0; i < list_messages.size(); i++) {
+                            if (list_messages.get(i).num == test_num) {
+                                list_messages.remove(i);
+                                break;
+                            }
                         }
+                        PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
+                        MessageView.setAdapter(messageAdapter);
                     }
-                    PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
-                    MessageView.setAdapter(messageAdapter);
+                    else
+                    {
+                        Log.d("kkk", "GG");
+                    }
                 }
             });
         }
@@ -381,21 +399,23 @@ public class PrivateChatFragment extends Fragment {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - edit_message - " + data);
-                    String nick = "", message = "", status = "", edited_time = "", time = "";
+                    String nick = "", message = "", status = "", edited_time = "", time = "", user_id_1 = "", user_id_2 = "";
                     int test_num = -1;
-
                     try {
+                        user_id_1 = data.getString("user_id");
+                        user_id_2 = data.getString("user_id_2");
                         test_num = data.getInt("mes_num");
                         message = data.getString("message");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    for (int i = 0; i < list_messages.size(); i++)
-                    {
-                        if (list_messages.get(i).num == test_num)
-                        {
-                            list_messages.get(i).message = message;
-                            break;
+                    if ((user_id_1.equals(MainActivity.User_id) && user_id_2.equals(MainActivity.User_id_2))
+                            || (user_id_2.equals(MainActivity.User_id) && user_id_1.equals(MainActivity.User_id_2))) {
+                        for (int i = 0; i < list_messages.size(); i++) {
+                            if (list_messages.get(i).num == test_num) {
+                                list_messages.get(i).message = message;
+                                break;
+                            }
                         }
                     }
                     PrivateMessagesAdapter messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());

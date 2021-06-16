@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,9 +23,11 @@ import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 
 import com.mafiago.adapters.RoleAdapter;
+import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.enums.Role;
 import com.mafiago.models.RoleModel;
 
+import org.florescu.android.rangeseekbar.RangeSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -33,14 +37,13 @@ import java.util.ArrayList;
 import io.socket.emitter.Emitter;
 import static  com.mafiago.MainActivity.socket;
 
-
-public class CreateRoomFragment extends Fragment {
+public class CreateRoomFragment extends Fragment implements OnBackPressedListener {
 
     EditText ET_RoomName;
 
     TextView TV_max_people;
 
-    SeekBar SB_max_people;
+    RangeSeekBar RSB_num_users;
 
     Button btnCreateRoom;
     Button btnExitCreateRoom;
@@ -72,49 +75,83 @@ public class CreateRoomFragment extends Fragment {
 
         TV_max_people = view.findViewById(R.id.fragmentCreateRoom_TV_max_people);
 
-        SB_max_people = view.findViewById(R.id.fragmentCreateRoom_SB_max_players);
+        RSB_num_users = view.findViewById(R.id.fragmentCreateRoom_RSB_num_users);
 
         btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_create_room);
         btnExitCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_exit);
 
         GridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
 
+        socket.off("create_room");
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.off("user_error");
+
         socket.on("create_room", onCreateRoom);
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
         socket.on("user_error", onUserError);
 
-        SB_max_people.setOnSeekBarChangeListener(seekBarChangeListener);
 
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
-        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "GoodGame"));
+        int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
+        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "London Bridge"));
         TV_max_people.setText(String.valueOf(max_people));
-        SB_max_people.setProgress(max_people);
+        RSB_num_users.setSelectedMaxValue(max_people);
+        RSB_num_users.setSelectedMinValue(min_people);
         SetRoles(max_people);
+
+        RSB_num_users.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                SetRoles((int) maxValue);
+                //TODO: доделать сохранение ролей при выходе из фрагмента
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putInt(APP_PREFERENCES_MAX_PEOPLE, (int) maxValue);
+                editor.putInt(APP_PREFERENCES_MIN_PEOPLE, (int) minValue);
+                editor.apply();
+            }
+        });
 
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                final JSONObject json = new JSONObject();
-                final JSONObject json_roles = new JSONObject();
-                try {
-                    json_roles.put("peaceful", peaceful);
-                    json_roles.put("mafia", mafia);
-                    json.put("nick", MainActivity.NickName);
-                    json.put("session_id", MainActivity.Session_id);
-                    json.put("name", ET_RoomName.getText());
-                    json.put("min_people_num", 5);
-                    json.put("max_people_num", SB_max_people.getProgress());
-                    json.put("roles", json_roles);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (isNetworkOnline(getContext())) {
+                    final JSONObject json = new JSONObject();
+                    final JSONObject json_roles = new JSONObject();
+                    try {
+                        json_roles.put("peaceful", peaceful);
+                        json_roles.put("mafia", mafia);
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("name", ET_RoomName.getText());
+                        json.put("min_people_num", RSB_num_users.getSelectedMinValue());
+                        json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
+                        json.put("roles", json_roles);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+                    editor.apply();
+                    socket.emit("create_room", json);
+                    Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
                 }
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
-                editor.apply();
-                socket.emit("create_room", json);
-                Log.d("kkk", "Socket_отправка - create_room - "+ json.toString());
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("У вас нет подключения к интернету!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ban)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
 
@@ -131,15 +168,15 @@ public class CreateRoomFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+    }
+
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-            TV_max_people.setText(String.valueOf(progress));
-            SetRoles(progress);
-            //TODO: доделать сохранение ролей при выходе из фрагмента
-            SharedPreferences.Editor editor = mSettings.edit();
-            editor.putInt(APP_PREFERENCES_MAX_PEOPLE, progress);
-            editor.apply();
+
         }
 
         @Override
@@ -338,6 +375,25 @@ public class CreateRoomFragment extends Fragment {
                 break;
         }
         GridView.setAdapter(roleAdapter);
+    }
+
+    public boolean isNetworkOnline(Context context) {
+        boolean status = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
+                netInfo = cm.getNetworkInfo(1);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return status;
     }
 
 }

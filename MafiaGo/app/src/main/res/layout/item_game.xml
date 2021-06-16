@@ -2,24 +2,31 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/icFire"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:background="@drawable/ic_snow"/>
     <TextView
         android:id="@+id/NameRoom"
-        android:layout_toRightOf="@+id/icFire"
         android:text="Синий чаёк"
         android:textSize="20sp"
         android:textColor="@color/colorWhite"
+        android:layout_toLeftOf="@id/ItemGame_btn_info"
+        android:layout_alignParentLeft="true"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:textStyle="bold"
-        android:layout_toEndOf="@+id/icFire" />
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/ItemGame_is_on"
+        android:text="Набор в комнату"
+        android:textSize="16sp"
+        android:textColor="#4CAF50"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/NameRoom"
+        android:textStyle="italic" />
 
     <TextView
         android:id="@+id/MaxMinPeople"

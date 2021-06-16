@@ -12,12 +12,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.mafiago.R;
 import com.mafiago.adapters.RulesAdapter;
+import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.RuleModel;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RulesFragment extends Fragment {
+public class RulesFragment extends Fragment implements OnBackPressedListener {
 
     ViewPager viewPager;
     RulesAdapter rules_adapter;
@@ -126,5 +127,9 @@ public class RulesFragment extends Fragment {
         });
 
         return view;
+    }
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 }
