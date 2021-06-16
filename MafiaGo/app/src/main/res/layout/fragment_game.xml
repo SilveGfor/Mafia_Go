@@ -24,6 +24,8 @@
                 android:id="@+id/fragmentGame_TV_room_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:layout_centerHorizontal="true"
                 android:text="London Bridge"
                 android:textSize="25sp" />
@@ -41,16 +43,33 @@
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
 
-    <ImageView
-        android:id="@+id/IV_role"
-        android:layout_below="@id/fragmentGame_CV_room_name"
-        android:layout_marginTop="15dp"
-        android:src="@drawable/anonim"
+    <RelativeLayout
         android:layout_width="70dp"
         android:layout_height="100dp"
-        android:scaleType="centerCrop"
-        android:layout_marginRight="30dp"
-        android:layout_toLeftOf="@id/ListUsers" />
+        android:layout_below="@id/fragmentGame_CV_room_name"
+        android:layout_toLeftOf="@id/ListUsers"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="30dp">
+        <ImageView
+            android:id="@+id/IV_role"
+            android:src="@drawable/anonim"
+            android:layout_width="70dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"/>
+        <TextView
+            android:id="@+id/fragmentGame_voting_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:padding="3dp"
+            android:layout_margin="5dp"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_corner_dark_green"/>
+
+    </RelativeLayout>
+
 
     <ImageView
         android:id="@+id/IV_influence_doctor"
@@ -135,18 +154,15 @@
         android:verticalSpacing="10dp"
         android:horizontalSpacing="5dp"/>
 
-
-
     <ListView
         android:id="@+id/ListMes"
         android:layout_marginTop="10dp"
-        android:layout_width="200dp"
+        android:layout_width="215dp"
         android:layout_height="match_parent"
         android:layout_above="@id/answerCard"
         android:layout_below="@+id/timer"
         android:layout_alignParentLeft="true"
-        android:divider="@color/colorWhite"
-        android:dividerHeight="2dp"
+
         android:layout_margin="15dp"
         android:layout_alignParentStart="true" />
 

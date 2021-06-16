@@ -2,7 +2,10 @@ package com.mafiago.fragments;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,37 +19,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
-import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.romainpiel.shimmer.Shimmer;
-import com.romainpiel.shimmer.ShimmerTextView;
+import com.mafiago.MainActivity;
+import com.mafiago.classes.OnBackPressedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import io.socket.emitter.Emitter;
 
-import static  com.mafiago.MainActivity.socket;
+import static com.mafiago.MainActivity.socket;
 
 
-public class MenuFragment extends Fragment {
+public class MenuFragment extends Fragment implements OnBackPressedListener {
+
     Button btnRules;
     Button btnGames;
     Button btnFriends;
     Button btnTools;
-    ShimmerTextView txtNick;
 
     FloatingActionButton FAB_exit_menu;
+
+    TextView TV_money;
+    TextView TV_exp;
+    TextView TV_nick;
 
     CardView CV_info;
 
     ImageView IV_background;
-
-    int pressedTimes = 0;
 
     // Идентификатор уведомления
     private static final int NOTIFY_ID = 101;
@@ -72,9 +75,9 @@ public class MenuFragment extends Fragment {
         btnGames = view.findViewById(R.id.btnGame);
         btnFriends = view.findViewById(R.id.btnFriends);
         btnTools = view.findViewById(R.id.btnTools);
-        txtNick = view.findViewById(R.id.txtNick);
-
-        txtNick.setText(MainActivity.NickName);
+        TV_money = view.findViewById(R.id.fragmentMenu_TV_money);
+        TV_exp = view.findViewById(R.id.fragmentMenu_TV_exp);
+        TV_nick = view.findViewById(R.id.fragmentMenu_TV_nick);
 
         IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
 
@@ -83,6 +86,8 @@ public class MenuFragment extends Fragment {
 
         FAB_exit_menu = view.findViewById(R.id.fragmentMenu_FAB_exit_menu);
 
+        socket.off("get_profile");
+
         socket.on("get_profile", OnGetProfile);
 
         CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
@@ -90,30 +95,32 @@ public class MenuFragment extends Fragment {
         //настройки от Шлыкова
         //Nastroiki nastroiki = new Nastroiki();
 
+        final JSONObject json = new JSONObject();
+        try {
+            json.put("nick", MainActivity.NickName);
+            json.put("session_id", MainActivity.Session_id);
+            json.put("info_nick", MainActivity.NickName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_profile", json);
+        Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+        final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
+
+        // amplitude 0.2 and frequency 20
+        BounceInterpolator interpolator = new BounceInterpolator();
+        animation.setInterpolator(interpolator);
+
+        CV_info.startAnimation(animation);
+
         FAB_exit_menu.setOnClickListener(v -> {
+            //socket.emit("leave_app", "");
+            Log.d("kkk", "Socket_отправка - leave_app");
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putString(APP_PREFERENCES_EMAIL, null);
             editor.putString(APP_PREFERENCES_PASSWORD, null);
             editor.apply();
-        });
-
-        CV_info.setOnClickListener(v -> {
-
-            final JSONObject json = new JSONObject();
-            try {
-                json.put("nick", MainActivity.NickName);
-                json.put("session_id", MainActivity.Session_id);
-                json.put("info_nick", MainActivity.NickName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            socket.emit("get_profile", json);
-            Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
-
-
-
-
         });
 
         btnTools.setOnClickListener(v -> {
@@ -130,17 +137,63 @@ public class MenuFragment extends Fragment {
         btnGames.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isNetworkOnline(getContext()))
+                {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("У вас нет подключения к интернету!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ban)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
 
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                if (isNetworkOnline(getContext())) {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("У вас нет подключения к интернету!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ban)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
         return view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(APP_PREFERENCES_EMAIL, null);
+        editor.putString(APP_PREFERENCES_PASSWORD, null);
+        editor.apply();
     }
 
     private final Emitter.Listener OnGetProfile = args -> {
@@ -152,53 +205,28 @@ public class MenuFragment extends Fragment {
                 JSONObject data = (JSONObject) args[0];
                 String nick = "";
                 boolean online = false;
+                int money = 0, exp = 0;
 
                 try {
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
+                    money = data.getInt("money");
+                    exp = data.getInt("exp");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
 
-                // amplitude 0.2 and frequency 20
-                BounceInterpolator interpolator = new BounceInterpolator();
-                animation.setInterpolator(interpolator);
 
-                CV_info.startAnimation(animation);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
-                builder.setView(view_profile);
-
-                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
-                FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
-                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
-                ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
-
-                if (online) IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_online));
-                else IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_offline));
-
-                FAB_kick.setVisibility(View.GONE);
+                TV_money.setText(String.valueOf(money));
+                TV_exp.setText(String.valueOf(exp));
                 TV_nick.setText(nick);
-                FAB_add_friend.setOnClickListener(v1 -> {
-                    //TODO: добавление в друзья
-                });
-                AlertDialog alert = builder.create();
-                alert.show();
-
-                Shimmer shimmer = new Shimmer();
-                shimmer.start(txtNick);
 
                 Log.d("kkk", "принял - get_profile - " + data);
-
             }
         });
     };
 
-
-    public void SetBackgroundRole(String role)
-    {
+    public void SetBackgroundRole(String role) {
         switch (role)
         {
             case "citizen":
@@ -222,4 +250,22 @@ public class MenuFragment extends Fragment {
         }
     }
 
+    public boolean isNetworkOnline(Context context) {
+        boolean status = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
+            } else {
+                netInfo = cm.getNetworkInfo(1);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+    }
 }

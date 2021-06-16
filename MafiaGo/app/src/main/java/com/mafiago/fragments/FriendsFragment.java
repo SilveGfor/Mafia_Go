@@ -14,6 +14,7 @@ import android.widget.ListView;
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.mafiago.adapters.FriendsAdapter;
+import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.FriendModel;
 
 import org.json.JSONArray;
@@ -26,7 +27,7 @@ import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
 
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
     public ListView friendsView;
 
@@ -54,6 +55,8 @@ public class FriendsFragment extends Fragment {
         socket.emit("get_list_of_chats", json);
         Log.d("kkk", "Socket_отправка - get_list_of_chats - "+ json.toString());
 
+        socket.off("add_chat_to_list_of_chats");
+
         socket.on("add_chat_to_list_of_chats", OnAddChatToListOfChats);
 
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -67,6 +70,11 @@ public class FriendsFragment extends Fragment {
 
 
         return view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 
     private final Emitter.Listener OnAddChatToListOfChats = args -> {

@@ -27,17 +27,91 @@
         app:contentPadding="15dp"
         app:cardBackgroundColor="@color/colorPrimary"
         android:layout_centerHorizontal="true">
-
-        <!--TODO: сделать "сияющие" ники-->
-        <com.romainpiel.shimmer.ShimmerTextView
-            android:id="@+id/txtNick"
-            android:text="SilveGfor"
+        <RelativeLayout
+            android:padding="15sp"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:textColor="@color/colorWhite"
-            android:textSize="25sp"
-            android:gravity="center"
-            app:reflectionColor="#f00"/>
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/fragmentMenu_TV_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:text="Профиль"
+                android:textSize="15sp"/>
+
+            <ImageView
+                android:id="@+id/fragmentMenu_IV_avatar"
+                android:layout_width="70dp"
+                android:layout_height="100dp"
+                android:background="@drawable/sheriff_alive"
+                android:layout_below="@+id/fragmentMenu_TV_profile"/>
+
+            <TextView
+                android:id="@+id/fragmentMenu_TV_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:text=""
+                android:textSize="25dp"
+                android:layout_toRightOf="@id/fragmentMenu_IV_avatar"
+                android:layout_alignTop="@id/fragmentMenu_IV_avatar" />
+
+            <ImageView
+                android:id="@+id/fragmentMenu_IV_rang"
+                android:layout_width="35dp"
+                android:layout_height="50dp"
+                android:background="@drawable/rang3"
+                android:layout_below="@id/fragmentMenu_TV_nick"
+                android:layout_alignLeft="@id/fragmentMenu_TV_nick"/>
+
+            <LinearLayout
+                android:id="@+id/fragmentMenu_LL_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_toRightOf="@id/fragmentMenu_IV_rang"
+                android:layout_alignTop="@id/fragmentMenu_IV_rang"
+                android:layout_margin="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_money" />
+
+                <TextView
+                    android:id="@+id/fragmentMenu_TV_money"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fragmentMenu_LL_exp"
+                android:layout_toRightOf="@id/fragmentMenu_IV_rang"
+                android:layout_below="@id/fragmentMenu_LL_money"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="10dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_exp" />
+
+                <TextView
+                    android:id="@+id/fragmentMenu_TV_exp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=""
+                    android:textStyle="bold"
+                    android:textSize="20dp"
+                    android:layout_marginLeft="5dp"/>
+            </LinearLayout>
+        </RelativeLayout>
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -73,7 +147,7 @@
         android:layout_marginTop="50dp"
         android:padding="10dp"
         android:background="@drawable/round_button"
-        android:text="Друзья"
+        android:text="Сообщения"
         android:textColor="@color/colorWhite" />
 
     <Button

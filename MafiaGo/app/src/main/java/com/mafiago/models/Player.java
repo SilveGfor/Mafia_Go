@@ -11,7 +11,7 @@ public class Player {
     private Time time;
     private Role role;
     private  boolean can_click, can_write, voted_at_night;
-    private int room_num, ban_limit;
+    private int room_num, ban_limit, voting_number;
 
     public Player(String nick, String session_id, int room_num)
     {
@@ -24,6 +24,15 @@ public class Player {
         voted_at_night = false;
         can_click = false;
         can_write = true;
+        voting_number = 0;
+    }
+
+    public void setVoting_number(int voting_number) {
+        this.voting_number = voting_number;
+    }
+
+    public int getVoting_number() {
+        return voting_number;
     }
 
     public void setBan_limit(int ban_limit) {

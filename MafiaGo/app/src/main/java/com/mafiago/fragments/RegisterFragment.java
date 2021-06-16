@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,10 +17,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
+import com.mafiago.classes.OnBackPressedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,8 +38,7 @@ import okhttp3.Response;
 
 import static com.mafiago.MainActivity.client;
 
-
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements OnBackPressedListener {
 
     private static final String url1 = MainActivity.url + "/reg-code";
     private static final String url2 = MainActivity.url + "/registration";
@@ -137,20 +140,214 @@ public class RegisterFragment extends Fragment {
         btnReg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (isNetworkOnline(getContext())) {
+                    if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) && !ETpassword1.getText().toString().trim().equals("") && !ETnick.getText().toString().trim().equals("")) {
 
-                if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
+                        Log.d("kkk", "Запуск Asycs");
 
-                    Log.d("kkk", "Запуск Asycs");
-                    RegisterFragment.CodeTask loginTask = new RegisterFragment.CodeTask();
-                    loginTask.execute();
-                } else {
-                    Log.d("kkk", "Неправильный пароль");
+                        String email = ETemail.getText().toString().toLowerCase().trim();
+
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("email", email);
+                            json.put("nick", ETnick.getText());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("kkk", "Отправил: " + json);
+
+                        RequestBody body = RequestBody.create(
+                                MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
+                        Request request = new Request.Builder().url(url1).post(body).build();
+                        Call call = client.newCall(request);
+
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Call call, IOException e) {
+                                Log.d("kkk", "Всё плохо");
+                                Log.d("kkk", e.toString());
+                            }
+
+                            @Override
+                            public void onResponse(Call call, Response response) throws IOException {
+                                resp = response.body().string().toString();
+                                Log.d("kkk", "Принял - " + resp);
+                                switch (resp) {
+                                    case "incorrect_email":
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Пользователь с такой почтой уже есть")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.ic_error)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Ок",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        });
+                                        break;
+                                    case "send_code":
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Код успешно отправлен на почту!")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.mafiago)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Ок",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                            ETemail.setVisibility(View.GONE);
+                                            ETnick.setVisibility(View.GONE);
+                                            ETpassword1.setVisibility(View.GONE);
+                                            ETpassword2.setVisibility(View.GONE);
+                                            btnReg.setVisibility(View.GONE);
+                                            text_reg.setVisibility(View.VISIBLE);
+                                            btnSendCode.setVisibility(View.VISIBLE);
+                                            ETcode.setVisibility(View.VISIBLE);
+                                        });
+
+                                        SharedPreferences.Editor editor = mSettings.edit();
+                                        editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
+                                        editor.putString(APP_PREFERENCES_EMAIL, email);
+                                        editor.putString(APP_PREFERENCES_NICKNAME, String.valueOf(ETnick.getText()));
+                                        editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
+                                        editor.apply();
+
+
+                                        break;
+                                    case "bad_email":
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Вы ввели некорректную почту!")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.ic_error)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Ок",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        });
+                                        break;
+                                    case "incorrect_nick":
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Пользователь с таким ником уже есть!")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.ic_error)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Ок",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        });
+                                        break;
+                                    case "mat_nick":
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Ваш ник не проходит цензуру!")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.ic_error)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Ок",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        });
+                                        break;
+                                    default:
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                            builder.setTitle("Что-то пошло не так!")
+                                                    .setMessage("")
+                                                    .setIcon(R.drawable.ic_error)
+                                                    .setCancelable(false)
+                                                    .setNegativeButton("Ок",
+                                                            new DialogInterface.OnClickListener() {
+                                                                public void onClick(DialogInterface dialog, int id) {
+                                                                    dialog.cancel();
+                                                                }
+                                                            });
+                                            AlertDialog alert = builder.create();
+                                            alert.show();
+                                        });
+                                        break;
+                                }
+                            }
+                        });
+                    } else {
+                        if (!ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Ваши пароли не совпадают!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ок",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        } else if (ETpassword1.getText().toString().trim().equals("")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Ваш пароль не может быть пустым!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ок",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        } else if (ETnick.getText().toString().trim().equals("")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Ваш ник не может быть пустым!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ок",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
+                    }
+                }
+                else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Ошибка!")
+                    builder.setTitle("У вас нет подключения к интернету!")
                             .setMessage("")
-                            .setIcon(R.drawable.ic_error)
+                            .setIcon(R.drawable.ic_ban)
                             .setCancelable(false)
-                            .setNegativeButton("Пароли не совпадают!",
+                            .setNegativeButton("Ок",
                                     new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
                                             dialog.cancel();
@@ -165,11 +362,146 @@ public class RegisterFragment extends Fragment {
         btnSendCode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                RegisterFragment.RegisterTask regTask = new RegisterFragment.RegisterTask();
-                regTask.execute();
+                if (isNetworkOnline(getContext())) {
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putBoolean(APP_PREFERENCES_WAIT_CODE, false);
+                    editor.apply();
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("code", ETcode.getText());
+                        json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
+                        json.put("password", mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("kkk", "Отправил: " + json);
 
+                    RequestBody body = RequestBody.create(
+                            MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
+                    Request request = new Request.Builder().url(url2).post(body).build();
+                    Call call = client.newCall(request);
+
+                    call.enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.d("kkk", "Всё плохо");
+                            Log.d("kkk", e.toString());
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            resp = response.body().string().toString();
+                            Log.d("kkk", "Принял - " + resp);
+                            switch (resp) {
+                                case "incorrect_email":
+                                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Пользователь с такой почтой уже есть!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_error)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
+                                case "incorrect_code":
+                                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Неверный код!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_error)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
+                                case "code_time_out":
+                                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Время действия кода истекло!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_error)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
+                                case "reg_in":
+                                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Регистрация прошла успешно!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_ok)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
+                                default:
+                                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Что-то пошло не так!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_error)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
+                            }
+                        }
+                    });
+                }
+                else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("У вас нет подключения к интернету!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ban)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
+
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -179,319 +511,27 @@ public class RegisterFragment extends Fragment {
         return view;
     }
 
-    class CodeTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... urs) {
-
-            final JSONObject json = new JSONObject();
-            try {
-                json.put("email", ETemail.getText());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.d("kkk", "Отправил: " + json);
-
-            RequestBody body = RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
-            Request request = new Request.Builder().url(url1).post(body).build();
-            Call call = client.newCall(request);
-
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.d("kkk", "Всё плохо");
-                    Log.d("kkk", e.toString());
-                }
-
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    resp = response.body().string().toString();
-                    Log.d("kkk", "Принял - " + resp);
-                    switch (resp)
-                    {
-                        case "incorrect_email":
-                            incorrectEmail = true;
-                            break;
-                        case "send_code":
-                            sendCode = true;
-                            SharedPreferences.Editor editor = mSettings.edit();
-                            editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
-                            editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ETemail.getText()));
-                            editor.putString(APP_PREFERENCES_NICKNAME, String.valueOf(ETnick.getText()));
-                            editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
-                            editor.apply();
-                            break;
-                        default:
-                            error = true;
-                            break;
-                    }
-                }
-            });
-            return null;
-        }
-        @Override
-        protected void onPostExecute (Void aVoid){
-            super.onPostExecute(aVoid);
-            try {
-                Thread.sleep(2000); //Приостанавливает поток на 1 секунду
-
-                Log.d("kkk", String.valueOf(sendCode));
-
-                if (incorrectEmail) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Пользователь с такой почтой уже есть")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    incorrectEmail = false;
-                } else if (sendCode) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Код успешно отправлен на почту!")
-                            .setMessage("")
-                            .setIcon(R.drawable.mafiago)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    sendCode = false;
-                    ETemail.setVisibility(View.GONE);
-                    ETnick.setVisibility(View.GONE);
-                    ETpassword1.setVisibility(View.GONE);
-                    ETpassword2.setVisibility(View.GONE);
-                    btnReg.setVisibility(View.GONE);
-                    text_reg.setVisibility(View.VISIBLE);
-                    btnSendCode.setVisibility(View.VISIBLE);
-                    ETcode.setVisibility(View.VISIBLE);
-                } else if (error) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Вы ввели некорректную почту!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    error = false;
-                }
-                Log.d("kkk", "onPostExecute" + incorrectEmail + sendCode + error);
-            } catch (Exception e) {
-
-            }
-        }
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
     }
 
-    class RegisterTask extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            Log.d("kkk", "onPreExecute");
-        }
-
-        @Override
-        protected Void doInBackground(Void... urs) {
-
-            SharedPreferences.Editor editor = mSettings.edit();
-            editor.putBoolean(APP_PREFERENCES_WAIT_CODE, false);
-            editor.apply();
-            if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
-                final JSONObject json = new JSONObject();
-                try {
-                    json.put("code", ETcode.getText());
-                    json.put("nick", mSettings.getString(APP_PREFERENCES_NICKNAME, ""));
-                    json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
-                    json.put("password", mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("kkk", "Отправил: " + json);
-
-                RequestBody body = RequestBody.create(
-                        MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
-                Request request = new Request.Builder().url(url2).post(body).build();
-                Call call = client.newCall(request);
-
-                call.enqueue(new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.d("kkk", "Всё плохо");
-                        Log.d("kkk", e.toString());
-                    }
-
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        resp = response.body().string().toString();
-                        Log.d("kkk", "Принял - " + resp);
-                        switch (resp)
-                        {
-                            //incorrect_email incorrect_nick incorrect_code mat_nick code_time_out reg_in
-                            case "incorrect_email":
-                                incorrect_email = true;
-                                break;
-                            case "incorrect_nick":
-                                incorrect_nick = true;
-                                break;
-                            case "incorrect_code":
-                                incorrect_code = true;
-                                break;
-                            case "mat_nick":
-                                mat_nick = true;
-                                break;
-                            case "code_time_out":
-                                code_time_out = true;
-                                break;
-                            case "reg_in":
-                                reg_in = true;
-                                break;
-                            default:
-                                error = true;
-                                break;
-                        }
-                    }
-                });
-
-
+    public boolean isNetworkOnline(Context context) {
+        boolean status = false;
+        try {
+            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+                status = true;
             } else {
-                Log.d("kkk", "пароли не сопадают");
+                netInfo = cm.getNetworkInfo(1);
+                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED)
+                    status = true;
             }
-            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
         }
-        @Override
-        protected void onPostExecute (Void aVoid){
-            super.onPostExecute(aVoid);
-            try {
-                Thread.sleep(2000); //Приостанавливает поток на 1 секунду
-
-                Log.d("kkk", String.valueOf(sendCode));
-                //incorrect_email incorrect_nick incorrect_code mat_nick code_time_out reg_in
-                if (incorrect_email) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Пользователь с такой почтой уже есть!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    incorrect_email = false;
-                }
-                else if (incorrect_nick) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Пользователь с таким ником уже есть!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    incorrect_nick = false;
-                }
-                else if (incorrect_code) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Неверный код!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    incorrect_code = false;
-                }
-                else if (mat_nick) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Ваш ник не проходит цензуру!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    mat_nick = false;
-                }
-                else if (code_time_out) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Время действия кода истекло!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    code_time_out = false;
-                }
-                else if (reg_in) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Регистрация прошла успешно!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_ok)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-                                        }
-                                    });
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                    reg_in = false;
-                }
-                Log.d("kkk", "onPostExecute" + incorrectEmail + sendCode + error);
-            } catch (Exception e) {
-
-            }
-        }
+        return status;
     }
-
-
 }

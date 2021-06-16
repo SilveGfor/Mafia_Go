@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:textStyle="normal"
+        android:textStyle="italic"
         android:layout_toLeftOf="@id/mesTimeConnect"/>
 
     <TextView
@@ -22,6 +22,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:textStyle="italic"
         android:text="21:00" />
 
 </RelativeLayout>

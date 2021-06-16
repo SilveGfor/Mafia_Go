@@ -26,11 +26,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3"
+                android:padding="3dp"
                 android:layout_margin="5dp"
                 android:layout_alignParentLeft="true"
-                android:textColor="@color/colorPrimaryDark"
+                android:textColor="@color/colorWhite"
                 android:textSize="20sp"
-                android:background="@drawable/rounded_corner1"/>
+                android:background="@drawable/rounded_corner_dark_green"/>
 
             <ImageView
                 android:id="@+id/Item_user_IV_Animation"

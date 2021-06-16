@@ -127,8 +127,21 @@
 
                 txt_disconnect_mes.setText(list_mess.get(position).nickName + " вышел(-а) из чата");
                 txt_disconnect_time.setText(list_mess.get(position).time);
-                break;
 
+                view.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
+
+                break;
             case "ConnectMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);
 
@@ -139,6 +152,20 @@
 
                 txt_connect_mes.setText(list_mess.get(position).nickName + " вошёл(-а) в чат");
                 txt_connect_time.setText(list_mess.get(position).time);
+
+                view.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
+
                 break;
             case "VotingMes":
                 view = layout.inflate(R.layout.item_message, null);
@@ -158,7 +185,7 @@
                 txt_mess.setText(list_mess.get(position).message);
 
                 txt_mess.setTextColor(Color.parseColor("#FFFF00"));
-                txt_time.setTextColor(Color.parseColor("#FFFF00"));
+                //txt_time.setTextColor(Color.parseColor("#FFFF00"));
                 txt_nick.setTextColor(Color.parseColor("#FFFF00"));
                 break;
             case "AnswerMes":
@@ -170,9 +197,38 @@
                 TextView txt_answer_mes = view.findViewById(R.id.answerText);
                 TextView txt_answer_time = view.findViewById(R.id.answerTime);
 
+                IV_avatar = view.findViewById(R.id.item_answer_message_avatar);
+
+                IV_avatar.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
+
                 txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
+
+                color= "#FFFFFF";
+                switch (list_mess.get(position).type)
+                {
+                    case "alive":
+                        color = "#FFFFFF";
+                        break;
+                    case "dead":
+                        color = "#999999";
+                        break;
+                    case "last_message":
+                        color = "#008800";
+                        break;
+                }
 
                 if (list_mess.get(position).nickName.equals("SilveGfor"))
                 {
@@ -182,15 +238,22 @@
 
                 int id = list_mess.get(position).answerId;
 
-                if (list_mess.get(id).nickName.equals("SilveGfor"))
+                for (int i = 0; i < list_mess.size(); i++)
                 {
-                    Shimmer shimmer = new Shimmer();
-                    //shimmer.start(txt_answer_nick);
+                    if (id == list_mess.get(i).num)
+                    {
+                        txt_answer_nick.setText(list_mess.get(i).nickName);
+                        txt_answer_mes.setText(list_mess.get(i).message);
+                        txt_answer_time.setText(list_mess.get(i).time);
+                    }
                 }
 
-                txt_answer_nick.setText(list_mess.get(id).nickName);
-                txt_answer_mes.setText(list_mess.get(id).message);
-                txt_answer_time.setText(list_mess.get(id).time);
+                txt_mess.setTextColor(Color.parseColor(color));
+                txt_time.setTextColor(Color.parseColor(color));
+                txt_nick.setTextColor(Color.parseColor(color));;
+                txt_answer_nick.setTextColor(Color.parseColor(color));
+                txt_answer_mes.setTextColor(Color.parseColor(color));
+                txt_answer_time.setTextColor(Color.parseColor(color));
                 break;
             case "SystemMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);

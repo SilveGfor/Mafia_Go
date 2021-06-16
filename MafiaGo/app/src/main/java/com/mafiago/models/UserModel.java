@@ -5,7 +5,7 @@ import com.mafiago.enums.Role;
 public class UserModel {
     private String nick;
     Role animation_type;
-    private boolean alive;
+    private boolean alive, checked;
     private Role role;
     private int voting_number;
 
@@ -15,11 +15,20 @@ public class UserModel {
         animation_type = Role.NONE;
         this.role = role;
         voting_number = 0;
+        checked = false;
     }
 
     public UserModel(String nick, Boolean alive) {
         this.nick = nick;
         this.alive = alive;
+    }
+
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        this.checked = checked;
     }
 
     public void setVoting_number(int voting_number) {

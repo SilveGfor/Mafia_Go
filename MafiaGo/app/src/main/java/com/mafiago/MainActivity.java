@@ -2,22 +2,41 @@
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.graphics.BitmapFactory;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mafiago.R;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.fragments.GameFragment;
+import com.mafiago.fragments.PrivateChatFragment;
 import com.mafiago.fragments.StartFragment;
 import com.mafiago.models.NotificationModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
@@ -38,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public static String Sid = "";
     public static int Game_id;
 
-    public static String url = "http://82.148.17.116:5000";
+    public static String url = "https://mafiagoserver.online:5000";
 
     public static String password = "";
     public static String nick = "";
@@ -83,11 +102,45 @@ public static Socket socket;
 
         //TODO: Фоновый режим
 
+        Log.d("kkk", String.valueOf(isOnline()));
+
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         createNotificationChannel();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        //socket.emit("leave_app", "");
+        Log.d("kkk", "Socket_отправка - leave_app");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onPause() {
+        //socket.emit("leave_app", "");
+        Log.d("kkk", "Socket_отправка - leave_app");
+        super.onPause();
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        OnBackPressedListener backPressedListener = null;
+        for (Fragment fragment: fm.getFragments()) {
+            if (fragment instanceof  OnBackPressedListener) {
+                backPressedListener = (OnBackPressedListener) fragment;
+                break;
+            }
+        }
+
+        if (backPressedListener != null) {
+            backPressedListener.onBackPressed();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private Emitter.Listener onConnect = new Emitter.Listener() {
@@ -178,7 +231,8 @@ public static Socket socket;
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-                    //Log.d("kkk", "PING - " + args[0]);
+            Log.d("kkk", "PING - " + args[0]);
+            Log.d("kkk", String.valueOf(isOnline()));
         }
     };
 
@@ -211,6 +265,16 @@ public static Socket socket;
 
     private void hideNotification(int NOTIFY_ID) {
         manager.cancel(NOTIFY_ID);
+    }
+
+    public boolean isOnline() {
+        String cs = Context.CONNECTIVITY_SERVICE;
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(cs);
+        if (cm.getActiveNetworkInfo() == null) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 

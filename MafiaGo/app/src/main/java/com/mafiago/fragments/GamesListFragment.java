@@ -1,5 +1,7 @@
 package com.mafiago.fragments;
 
+import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -7,13 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.mafiago.adapters.GamesAdapter;
+import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.RoomModel;
 import com.mafiago.models.UserModel;
 
@@ -27,21 +35,18 @@ import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
 
-public class GamesListFragment extends Fragment {
+public class GamesListFragment extends Fragment implements OnBackPressedListener {
 
     public ListView listView;
+
+    public TextView TV_no_games;
 
     public Button btnExit;
     public Button btnCreateRoom;
 
+    public ProgressBar PB_loading;
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
-
-    ArrayList<UserModel> list_users = new ArrayList<>();
-
-    public boolean First = true;
-
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -52,12 +57,25 @@ public class GamesListFragment extends Fragment {
         listView = view.findViewById(R.id.GamesList);
         btnCreateRoom = view.findViewById(R.id.btnCreateRoom);
         btnExit = view.findViewById(R.id.btnExitGamesList);
+        TV_no_games = view.findViewById(R.id.fragmentGamesList_TV_no_games);
+        PB_loading = view.findViewById(R.id.fragmentGamesList_PB_loading);
+
+        PB_loading.setVisibility(View.VISIBLE);
+        TV_no_games.setVisibility(View.GONE);
+
+        socket.off("connect");
+        socket.off("disconnect");
+        socket.off("add_room_to_list_of_rooms");
+        socket.off("delete_room_from_list_of_rooms");
+        socket.off("update_list_of_rooms");
+        socket.off("get_profile");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
         socket.on("add_room_to_list_of_rooms", onNewRoom);
         socket.on("delete_room_from_list_of_rooms", onDeleteRoom);
         socket.on("update_list_of_rooms", onUpdateRoom);
+        socket.on("get_profile", OnGetProfile);
 
         final JSONObject json = new JSONObject();
         try {
@@ -68,7 +86,6 @@ public class GamesListFragment extends Fragment {
         }
         socket.emit("get_list_of_rooms", json);
         Log.d("kkk", "Socket_отправка - get_list_of_rooms - "+ json.toString());
-        First = false;
 
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,17 +98,6 @@ public class GamesListFragment extends Fragment {
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                final JSONObject json2 = new JSONObject();
-                try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id",  MainActivity.Session_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("kkk", "Socket_отправка - "+ json2.toString());
-                socket.emit("disconnect_from_list_of_rooms", json2);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
             }
         });
@@ -106,9 +112,12 @@ public class GamesListFragment extends Fragment {
             }
         });
 
-
-
         return view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 
     private final Emitter.Listener onConnect = new Emitter.Listener() {
@@ -120,8 +129,6 @@ public class GamesListFragment extends Fragment {
                 @Override
                 public void run() {
                     Log.d("kkk", "Connect");
-                    if (First)
-                    {
                         final JSONObject json = new JSONObject();
                         try {
                             json.put("nick", MainActivity.NickName);
@@ -131,20 +138,6 @@ public class GamesListFragment extends Fragment {
                         }
                         socket.emit("get_list_of_rooms", json);
                         Log.d("kkk", "Socket_отправка - get_list_of_rooms - "+ json.toString());
-                        First = false;
-                    }
-                    else {
-                        final JSONObject json2 = new JSONObject();
-                        try {
-                            json2.put("nick", MainActivity.NickName);
-                            json2.put("session_id", MainActivity.Session_id);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("kkk", "Socket_отправка - connect_to_list_of_rooms - " + json2.toString());
-                        socket.emit("connect_to_list_of_rooms", json2);
-                    }
-
                 }
             });
         }
@@ -161,9 +154,6 @@ public class GamesListFragment extends Fragment {
                     Log.d("kkk", "Disconnect");
                 }
             });
-
-
-            Log.d("kkk", "Disconnect");
         }
     };
 
@@ -189,6 +179,11 @@ public class GamesListFragment extends Fragment {
                                 list_room.remove(i);
                                 GamesAdapter customList = new GamesAdapter(list_room, getContext());
                                 listView.setAdapter(customList);
+                                if (list_room.size() == 0)
+                                {
+                                    TV_no_games.setVisibility(View.VISIBLE);
+                                }
+                                break;
                             }
                         }
                     } catch (JSONException e) {
@@ -208,37 +203,47 @@ public class GamesListFragment extends Fragment {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String name = "", nick = "";
-                    Boolean alive = true;
-                    int num = 0;
-                    int min_people = 0;
-                    int max_people = 0;
-                    int num_people = 0;
-                    JSONObject users = new JSONObject();
-                    Log.d("kkk", "принял - add_room_to_list_of_rooms - " + data);
-                    try {
-                        name = data.getString("name");
-                        num = data.getInt("num");
-                        min_people = data.getInt("min_people_num");
-                        max_people = data.getInt("max_people_num");
-                        num_people = data.getInt("people_num");
-                        users = data.getJSONObject("users");
-                        for (Iterator iterator = users.keys(); iterator.hasNext();)
-                        {
-                            nick = (String) iterator.next();
-                            String alive_string = users.getString(nick);
-                            alive = alive_string.equals("alive");
-                            list_users.add(new UserModel(nick, alive));
+                    PB_loading.setVisibility(View.GONE);
+                    if (args.length != 0)
+                    {
+                        JSONObject data = (JSONObject) args[0];
+                        String name = "", nick = "";
+                        ArrayList<UserModel> list_users = new ArrayList<>();
+                        Boolean alive = true, is_on = false;
+                        int num = 0;
+                        int min_people = 0;
+                        int max_people = 0;
+                        int num_people = 0;
+                        JSONObject users = new JSONObject();
+                        Log.d("kkk", "принял - add_room_to_list_of_rooms - " + data);
+                        TV_no_games.setVisibility(View.GONE);
+                        try {
+                            name = data.getString("name");
+                            num = data.getInt("num");
+                            is_on = data.getBoolean("is_on");
+                            min_people = data.getInt("min_people_num");
+                            max_people = data.getInt("max_people_num");
+                            num_people = data.getInt("people_num");
+                            users = data.getJSONObject("users");
+                            for (Iterator iterator = users.keys(); iterator.hasNext();)
+                            {
+                                nick = (String) iterator.next();
+                                String alive_string = users.getString(nick);
+                                alive = alive_string.equals("alive");
+                                list_users.add(new UserModel(nick, alive));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                        RoomModel model = new RoomModel(name, min_people, max_people, num_people, num, list_users, is_on);
+                        list_room.add(model);
+                        GamesAdapter customList = new GamesAdapter(list_room, getContext());
+                        listView.setAdapter(customList);
                     }
-                    RoomModel model = new RoomModel(name, min_people, max_people, num_people, num, list_users);
-                    list_users.clear();
-                    list_room.add(model);
-                    GamesAdapter customList = new GamesAdapter(list_room, getContext());
-                    listView.setAdapter(customList);
+                    else
+                    {
+                        TV_no_games.setVisibility(View.VISIBLE);
+                    }
                 }
             });
         }
@@ -255,17 +260,19 @@ public class GamesListFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     String name;
                     String nick = "";
-                    Boolean alive = true;
+                    ArrayList<UserModel> list_users = new ArrayList<>();
+                    Boolean alive = true, is_on = false;
                     JSONObject users = new JSONObject();
                     int num;
                     int min_people;
                     int max_people;
                     int num_people;
                     int id;
-                    Log.d("kkk", "принял - UodateRoom - " + data);
+                    Log.d("kkk", "принял - update_room - " + data);
                     try {
                         name = data.getString("name");
                         num = data.getInt("num");
+                        is_on = data.getBoolean("is_on");
                         min_people = data.getInt("min_people_num");
                         max_people = data.getInt("max_people_num");
                         num_people = data.getInt("people_num");
@@ -278,28 +285,92 @@ public class GamesListFragment extends Fragment {
                             alive = alive_string.equals("alive");
                             list_users.add(new UserModel(nick, alive));
                         }
-
                         for(int i = 0; i< list_room.size(); i++) {
                             if (list_room.get(i).id == id)
                             {
-                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users);
+                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on);
                                 list_users.clear();
                                 list_room.set(i, model);
                                 GamesAdapter customList = new GamesAdapter(list_room, getContext());
                                 listView.setAdapter(customList);
                             }
-                            else
-                            {
-                                Log.d("kkk", "принял - UpdateRoom - " + "такой комнаты с таким айди нет!!!");
-                            }
                         }
-
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             });
         }
+    };
+
+    private final Emitter.Listener OnGetProfile = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - get_profile - " + data);
+                String nick = "", user_id_2 = "";
+                int playing_room_num, money = 0, exp = 0;
+                boolean online = false;
+                try {
+                    online = data.getBoolean("is_online");
+                    nick = data.getString("nick");
+                    user_id_2 = data.getString("user_id");
+                    money = data.getInt("money");
+                    exp = data.getInt("exp");
+                    if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
+                builder.setView(view_profile);
+
+                FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+                FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
+                FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
+                TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
+                TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+
+                TV_money.setText(String.valueOf(money));
+                TV_exp.setText(String.valueOf(exp));
+
+
+                TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+                ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
+
+                if (online) IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_online));
+                else IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_offline));
+
+                TV_nick.setText(nick);
+                FAB_kick.setVisibility(View.GONE);
+
+                AlertDialog alert = builder.create();
+
+                String finalUser_id_ = user_id_2;
+                if (!nick.equals(MainActivity.NickName)) {
+                    FAB_send_message.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alert.cancel();
+                            MainActivity.User_id_2 = finalUser_id_;
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).commit();
+                        }
+                    });
+
+                    FAB_add_friend.setOnClickListener(v1 -> {
+                        //TODO: добавление в друзья
+                    });
+                }
+                else
+                {
+                    FAB_send_message.setVisibility(View.GONE);
+                    FAB_add_friend.setVisibility(View.GONE);
+                }
+                alert.show();
+            }
+        });
     };
 }
