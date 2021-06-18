@@ -20,7 +20,6 @@ import java.util.ArrayList;
 
 public class PlayersAdapter extends BaseAdapter
 {
-
     public ArrayList<UserModel> list_users;
     public Context context;
     public LayoutInflater layout;
