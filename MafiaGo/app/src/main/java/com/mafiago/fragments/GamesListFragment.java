@@ -210,7 +210,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         String name = "", nick = "";
                         ArrayList<UserModel> list_users = new ArrayList<>();
                         Boolean alive = true, is_on = false;
-                        int num = 0;
+                        int id = 0;
                         int min_people = 0;
                         int max_people = 0;
                         int num_people = 0;
@@ -219,7 +219,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         TV_no_games.setVisibility(View.GONE);
                         try {
                             name = data.getString("name");
-                            num = data.getInt("num");
+                            id = data.getInt("num");
                             is_on = data.getBoolean("is_on");
                             min_people = data.getInt("min_people_num");
                             max_people = data.getInt("max_people_num");
@@ -235,10 +235,21 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        RoomModel model = new RoomModel(name, min_people, max_people, num_people, num, list_users, is_on);
-                        list_room.add(model);
-                        GamesAdapter customList = new GamesAdapter(list_room, getContext());
-                        listView.setAdapter(customList);
+                        Boolean not_doable = true;
+                        for (int i = 0; i < list_room.size(); i++)
+                        {
+                            if (list_room.get(i).id == id)
+                            {
+                                not_doable = false;
+                                break;
+                            }
+                        }
+                        if (not_doable) {
+                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on);
+                            list_room.add(model);
+                            GamesAdapter customList = new GamesAdapter(list_room, getContext());
+                            listView.setAdapter(customList);
+                        }
                     }
                     else
                     {
@@ -271,7 +282,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     Log.d("kkk", "принял - update_room - " + data);
                     try {
                         name = data.getString("name");
-                        num = data.getInt("num");
                         is_on = data.getBoolean("is_on");
                         min_people = data.getInt("min_people_num");
                         max_people = data.getInt("max_people_num");
@@ -289,7 +299,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             if (list_room.get(i).id == id)
                             {
                                 RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on);
-                                list_users.clear();
                                 list_room.set(i, model);
                                 GamesAdapter customList = new GamesAdapter(list_room, getContext());
                                 listView.setAdapter(customList);
@@ -350,6 +359,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 AlertDialog alert = builder.create();
 
                 String finalUser_id_ = user_id_2;
+
+                FAB_add_friend.setVisibility(View.GONE);
                 if (!nick.equals(MainActivity.NickName)) {
                     FAB_send_message.setOnClickListener(new View.OnClickListener() {
                         @Override

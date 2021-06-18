@@ -48,7 +48,7 @@ public class PrivateChatFragment extends Fragment implements OnBackPressedListen
 
     public RelativeLayout RL_answer;
 
-    public TextView TV_answer_nick, TV_answer_mes;
+    public TextView TV_answer_nick, TV_answer_mes, TV_nick;
 
     public int num = -1;
 
@@ -70,6 +70,9 @@ public class PrivateChatFragment extends Fragment implements OnBackPressedListen
         RL_answer = view.findViewById(R.id.fragmentPrivateChat_RL_answer);
         TV_answer_nick = view.findViewById(R.id.fragmentPrivateChat_answer_nick);
         TV_answer_mes = view.findViewById(R.id.fragmentPrivateChat_answer_text);
+        TV_nick = view.findViewById(R.id.fragmentPrivateChat_TV_nick);
+
+        TV_nick.setText(MainActivity.NickName_2);
 
         RL_answer.setVisibility(View.GONE);
 

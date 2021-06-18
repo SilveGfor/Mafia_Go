@@ -114,7 +114,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         CV_info.startAnimation(animation);
 
         FAB_exit_menu.setOnClickListener(v -> {
-            //socket.emit("leave_app", "");
+            socket.emit("leave_app", "");
             Log.d("kkk", "Socket_отправка - leave_app");
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
             SharedPreferences.Editor editor = mSettings.edit();
@@ -189,6 +189,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onBackPressed() {
+        socket.emit("leave_app", "");
+        Log.d("kkk", "Socket_отправка - leave_app");
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
         SharedPreferences.Editor editor = mSettings.edit();
         editor.putString(APP_PREFERENCES_EMAIL, null);

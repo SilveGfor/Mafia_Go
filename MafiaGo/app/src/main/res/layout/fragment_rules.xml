@@ -14,7 +14,8 @@
         android:clipToPadding="false"
 
         android:foregroundGravity="center"
-        android:overScrollMode="never" />
+        android:overScrollMode="never"
+        android:layout_above="@id/btnBack1"/>
 
     <Button
         android:id="@+id/btnBack1"

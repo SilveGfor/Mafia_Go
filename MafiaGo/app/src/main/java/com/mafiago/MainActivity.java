@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static OkHttpClient client;
     public static String NickName = "";
+    public static String NickName_2 = "";
     public static String Session_id = "";
     public static String RoomName = "";
     public static String User_id = "";
@@ -102,8 +103,6 @@ public static Socket socket;
 
         //TODO: Фоновый режим
 
-        Log.d("kkk", String.valueOf(isOnline()));
-
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         createNotificationChannel();
@@ -113,7 +112,7 @@ public static Socket socket;
 
     @Override
     protected void onDestroy() {
-        //socket.emit("leave_app", "");
+        socket.emit("leave_app", "");
         Log.d("kkk", "Socket_отправка - leave_app");
         super.onDestroy();
     }
@@ -121,7 +120,7 @@ public static Socket socket;
     @Override
     protected void onPause() {
         //socket.emit("leave_app", "");
-        Log.d("kkk", "Socket_отправка - leave_app");
+        //Log.d("kkk", "Socket_отправка - leave_app");
         super.onPause();
     }
 
@@ -231,8 +230,7 @@ public static Socket socket;
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            Log.d("kkk", "PING - " + args[0]);
-            Log.d("kkk", String.valueOf(isOnline()));
+            //Log.d("kkk", "PING - " + args[0]);
         }
     };
 
