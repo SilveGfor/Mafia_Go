@@ -61,6 +61,7 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
             MainActivity.User_id_2 = list_friends.get(position).getUser_id_2();
+            MainActivity.NickName_2 = list_friends.get(position).getNick();
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).commit();
         });
 

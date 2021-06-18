@@ -7,6 +7,31 @@
     android:background="@drawable/fon_menu"
     tools:context="com.mafiago.fragments.FriendsFragment">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragmentPrivateChat_CV_nick"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="10dp"
+        android:layout_toRightOf="@id/fragmentPrivateChat_btn_exit"
+        app:cardBackgroundColor="@color/colorPrimaryDark">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/fragmentPrivateChat_TV_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_centerHorizontal="true"
+                android:text="SilveGfor"
+                android:textSize="25sp" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
     <Button
         android:id="@+id/fragmentPrivateChat_btn_exit"
         android:layout_width="70dp"
@@ -17,7 +42,6 @@
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
 
-    <!-- android:divider="@color/btn_register" -->
     <ListView
         android:id="@+id/fragmentPrivateChat_list_messages"
         android:layout_marginTop="10dp"
