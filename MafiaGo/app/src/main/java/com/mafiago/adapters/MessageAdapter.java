@@ -125,7 +125,7 @@
 
                 txt_disconnect_mes.setTextColor(Color.parseColor("#FF0000"));
 
-                txt_disconnect_mes.setText(list_mess.get(position).nickName + " вышел(-а) из чата");
+                txt_disconnect_mes.setText(list_mess.get(position).message);
                 txt_disconnect_time.setText(list_mess.get(position).time);
 
                 view.setOnClickListener(v -> {
@@ -150,7 +150,7 @@
 
                 txt_connect_mes.setTextColor(Color.parseColor("#08FB00"));
 
-                txt_connect_mes.setText(list_mess.get(position).nickName + " вошёл(-а) в чат");
+                txt_connect_mes.setText(list_mess.get(position).message);
                 txt_connect_time.setText(list_mess.get(position).time);
 
                 view.setOnClickListener(v -> {
