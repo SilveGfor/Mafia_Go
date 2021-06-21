@@ -4,9 +4,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +33,8 @@ import com.mafiago.classes.OnBackPressedListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+
 import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
@@ -41,8 +47,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     Button btnFriends;
     Button btnTools;
 
-    FloatingActionButton FAB_exit_menu;
-
     TextView TV_money;
     TextView TV_exp;
     TextView TV_nick;
@@ -50,6 +54,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     CardView CV_info;
 
     ImageView IV_background;
+    ImageView IV_avatar;
 
     // Идентификатор уведомления
     private static final int NOTIFY_ID = 101;
@@ -80,11 +85,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         TV_nick = view.findViewById(R.id.fragmentMenu_TV_nick);
 
         IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
+        IV_avatar = view.findViewById(R.id.fragmentMenu_IV_avatar);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
-
-        FAB_exit_menu = view.findViewById(R.id.fragmentMenu_FAB_exit_menu);
 
         socket.off("get_profile");
 
@@ -112,16 +116,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         animation.setInterpolator(interpolator);
 
         CV_info.startAnimation(animation);
-
-        FAB_exit_menu.setOnClickListener(v -> {
-            socket.emit("leave_app", "");
-            Log.d("kkk", "Socket_отправка - leave_app");
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-            SharedPreferences.Editor editor = mSettings.edit();
-            editor.putString(APP_PREFERENCES_EMAIL, null);
-            editor.putString(APP_PREFERENCES_PASSWORD, null);
-            editor.apply();
-        });
 
         btnTools.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
@@ -184,6 +178,9 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
             }
         });
+
+        fromBase64(toBase64());
+
         return view;
     }
 
@@ -198,6 +195,35 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         editor.apply();
     }
 
+    //TODO: реализовать функцию
+    public String toBase64() {
+        // Получаем изображение из ImageView
+        BitmapDrawable drawable = (BitmapDrawable) IV_background.getDrawable();
+        Bitmap bitmap = drawable.getBitmap();
+
+        // Записываем изображение в поток байтов.
+        // При этом изображение можно сжать и / или перекодировать в другой формат.
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+
+        // Получаем изображение из потока в виде байтов
+        byte[] bytes = byteArrayOutputStream.toByteArray();
+
+        // Кодируем байты в строку Base64 и возвращаем
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    public Bitmap fromBase64(String image) {
+        // Декодируем строку Base64 в массив байтов
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+        // Декодируем массив байтов в изображение
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        // Помещаем изображение в ImageView
+        return decodedByte;
+    }
+
     private final Emitter.Listener OnGetProfile = args -> {
         if(getActivity() == null)
             return;
@@ -205,11 +231,12 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             @Override
             public void run() {
                 JSONObject data = (JSONObject) args[0];
-                String nick = "";
+                String nick = "", avatar = "";
                 boolean online = false;
                 int money = 0, exp = 0;
 
                 try {
+                    avatar = data.getString("avatar");
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
                     money = data.getInt("money");
@@ -218,6 +245,9 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     e.printStackTrace();
                 }
 
+                if (avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(avatar));
+                }
 
                 TV_money.setText(String.valueOf(money));
                 TV_exp.setText(String.valueOf(exp));

@@ -6,18 +6,19 @@ import com.mafiago.enums.Role;
 import com.mafiago.enums.Time;
 
 public class Player {
-    private String nick, status, session_id, host_nick;
+    private String nick, status, session_id, host_nick, main_role;
 
     private Time time;
     private Role role;
     private  boolean can_click, can_write, voted_at_night;
     private int room_num, ban_limit, voting_number;
 
-    public Player(String nick, String session_id, int room_num)
+    public Player(String nick, String session_id, int room_num, String main_role)
     {
         this.nick = nick;
         this.session_id = session_id;
         this.room_num = room_num;
+        this.main_role = main_role;
         role = Role.NONE;
         time = Time.LOBBY;
         status = "alive";

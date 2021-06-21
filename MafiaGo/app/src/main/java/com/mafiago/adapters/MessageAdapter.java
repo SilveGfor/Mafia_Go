@@ -86,6 +86,7 @@
                 ShimmerTextView txt_nick = view.findViewById(R.id.mesNick);
                 TextView txt_time = view.findViewById(R.id.mesTime);
                 TextView txt_mess = view.findViewById(R.id.mesText);
+                TextView TV_main_role = view.findViewById(R.id.itemMessage_main_role);
 
                 String color= "#FFFFFF";
                 switch (list_mess.get(position).type)
@@ -106,6 +107,32 @@
                 {
                     Shimmer shimmer = new Shimmer();
                     //shimmer.start(txt_nick);
+                }
+
+                switch (list_mess.get(position).main_role)
+                {
+                    case "user":
+                        break;
+                    case "moderator":
+                        TV_main_role.setText("модератор");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "admin":
+                        TV_main_role.setText("админ");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "head_admin":
+                        TV_main_role.setText("глав. админ");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "designer":
+                        TV_main_role.setText("дизайнер");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "developer":
+                        TV_main_role.setText("разработчик");
+                        TV_main_role.setTextColor(Color.parseColor("#FF0000"));
+                        break;
                 }
 
                 txt_nick.setTextColor(Color.parseColor(color));
@@ -193,9 +220,14 @@
                 txt_nick = view.findViewById(R.id.mesNick);
                 txt_time = view.findViewById(R.id.mesTime);
                 txt_mess = view.findViewById(R.id.mesText);
+                TV_main_role = view.findViewById(R.id.itemAnswerMessage_main_role);
+
                 ShimmerTextView txt_answer_nick = view.findViewById(R.id.answerNick);
                 TextView txt_answer_mes = view.findViewById(R.id.answerText);
                 TextView txt_answer_time = view.findViewById(R.id.answerTime);
+                TextView TV_answer_main_role = view.findViewById(R.id.itemAnswerMessage_answer_main_role);
+
+                int id = list_mess.get(position).answerId;
 
                 IV_avatar = view.findViewById(R.id.item_answer_message_avatar);
 
@@ -211,6 +243,56 @@
                     socket.emit("get_profile", json);
                     Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
                 });
+
+                switch (list_mess.get(position).main_role) {
+                    case "user":
+                        break;
+                    case "moderator":
+                        TV_main_role.setText("модератор");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "admin":
+                        TV_main_role.setText("админ");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "head_admin":
+                        TV_main_role.setText("глав. админ");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "designer":
+                        TV_main_role.setText("дизайнер");
+                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "developer":
+                        TV_main_role.setText("разработчик");
+                        TV_main_role.setTextColor(Color.parseColor("#FF0000"));
+                        break;
+                }
+
+                switch (list_mess.get(id).main_role) {
+                    case "user":
+                        break;
+                    case "moderator":
+                        TV_answer_main_role.setText("модератор");
+                        TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "admin":
+                        TV_answer_main_role.setText("админ");
+                        TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "head_admin":
+                        TV_answer_main_role.setText("глав. админ");
+                        TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "designer":
+                        TV_answer_main_role.setText("дизайнер");
+                        TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        break;
+                    case "developer":
+                        TV_answer_main_role.setText("разработчик");
+                        TV_answer_main_role.setTextColor(Color.parseColor("#FF0000"));
+                        break;
+                }
 
                 txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
@@ -235,8 +317,6 @@
                     Shimmer shimmer = new Shimmer();
                     //shimmer.start(txt_nick);
                 }
-
-                int id = list_mess.get(position).answerId;
 
                 for (int i = 0; i < list_mess.size(); i++)
                 {

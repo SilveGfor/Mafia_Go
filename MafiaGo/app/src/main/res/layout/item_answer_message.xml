@@ -6,6 +6,18 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/itemAnswerMessage_main_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="разработчик"
+        android:textSize="12sp"
+        android:textColor="#FF0000"
+        android:layout_alignTop="@id/mesNick"
+        android:layout_toRightOf="@id/mesNick"
+        android:layout_marginLeft="5dp"
+        android:padding="3dp"/>
+
     <ImageView
         android:id="@+id/item_answer_message_avatar"
         android:layout_width="40dp"
@@ -38,6 +50,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/itemAnswerMessage_answer_main_role"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="модератор"
+                android:textSize="12sp"
+                android:textColor="#9C27B0"
+                android:layout_alignTop="@id/answerNick"
+                android:layout_toRightOf="@id/answerNick"
+                android:layout_marginLeft="5dp"
+                android:padding="3dp"/>
 
             <com.romainpiel.shimmer.ShimmerTextView
                 android:id="@+id/answerNick"

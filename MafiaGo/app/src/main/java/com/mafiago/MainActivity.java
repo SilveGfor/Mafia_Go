@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public static String User_id = "";
     public static String User_id_2 = "";
     public static String Sid = "";
+    public static String Role = "";
     public static int Game_id;
 
     public static String url = "https://mafiagoserver.online:5000";

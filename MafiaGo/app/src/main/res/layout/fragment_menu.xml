@@ -43,7 +43,6 @@
                 android:id="@+id/fragmentMenu_IV_avatar"
                 android:layout_width="70dp"
                 android:layout_height="100dp"
-                android:background="@drawable/sheriff_alive"
                 android:layout_below="@+id/fragmentMenu_TV_profile"/>
 
             <TextView
@@ -113,17 +112,6 @@
             </LinearLayout>
         </RelativeLayout>
     </androidx.cardview.widget.CardView>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fragmentMenu_FAB_exit_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:clickable="true"
-        android:src="@drawable/ic_exit"
-        app:backgroundTint="#F44336"
-        app:fabSize="mini"
-        android:padding="5dp"
-        android:layout_margin="15dp"/>
 
     <Button
         android:id="@+id/btnGame"

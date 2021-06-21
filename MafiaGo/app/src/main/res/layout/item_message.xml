@@ -5,6 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/itemMessage_main_role"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="разработчик"
+        android:textSize="12sp"
+        android:textColor="#FF0000"
+        android:layout_alignTop="@id/mesNick"
+        android:layout_toRightOf="@id/mesNick"
+        android:layout_marginLeft="5dp"
+        android:padding="3dp"/>
+
     <ImageView
         android:id="@+id/item_message_avatar"
         android:layout_width="40dp"
@@ -18,7 +30,7 @@
         android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_alignTop="@id/item_message_avatar"
         android:layout_toRightOf="@id/item_message_avatar"
         android:textStyle="bold"
         app:reflectionColor="#f00"/>

@@ -4,7 +4,10 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,7 +142,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         FAB_skip_day.setVisibility(View.GONE);
 
-        player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id);
+        player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 
         cardAnswer.setVisibility(View.GONE);
 
@@ -427,6 +430,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 {
                     case LOBBY:
                         sendText.setText(sendText.getText() + nick);
+                        sendText.setSelection(sendText.length());
                         break;
                     case NIGHT_LOVE:
                         switch (player.getRole())
@@ -515,6 +519,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             RoleAction(nick);
                         } else {
                             sendText.setText(sendText.getText() + nick);
+                            sendText.setSelection(sendText.length());
                         }
                         break;
                     case VOTING:
@@ -535,6 +540,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             else
             {
                 sendText.setText(sendText.getText() + nick);
+                sendText.setSelection(sendText.length());
             }
         });
 
@@ -584,6 +590,17 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         });
 
         return view;
+    }
+
+    public Bitmap fromBase64(String image) {
+        // Декодируем строку Base64 в массив байтов
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+        // Декодируем массив байтов в изображение
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        // Помещаем изображение в ImageView
+        return decodedByte;
     }
 
     @Override
@@ -733,9 +750,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     String message;
                     String time;
                     String status;
+                    String main_role;
                     int test_num;
                     int link;
                     try {
+                        main_role = data.getString("role");
                         nick = data.getString("nick");
                         test_num = data.getInt("num");
                         Log.d("kkk", "new_message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
@@ -746,39 +765,32 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 message = data.getString("message");
                                 status = data.getString("status");
                                 link = data.getInt("link");
+                                MessageModel messageModel;
                                 if (link == -1) {
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status);
-                                    list_chat.add(messageModel);
-                                    messageAdapter.notifyDataSetChanged();
+                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status, main_role);
                                 } else {
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link);
-                                    list_chat.add(messageModel);
-                                    messageAdapter.notifyDataSetChanged();
+                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link, main_role);
                                 }
+                                list_chat.add(messageModel);
+                                messageAdapter.notifyDataSetChanged();
                             } else {
                                 time = data.getString("time");
                                 message = data.getString("message");
                                 status = data.getString("status");
                                 link = data.getInt("link");
+                                MessageModel messageModel;
                                 if (link == -1) {
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status);
-                                    for (int i = 0; i < list_chat.size(); i++) {
-                                        if (test_num < list_chat.get(i).num) {
-                                            list_chat.add(i, messageModel);
-                                            break;
-                                        }
-                                    }
-                                    messageAdapter.notifyDataSetChanged();
+                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status, main_role);
                                 } else {
-                                    MessageModel messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link);
-                                    for (int i = 0; i < list_chat.size(); i++) {
-                                        if (test_num < list_chat.get(i).num) {
-                                            list_chat.add(i, messageModel);
-                                            break;
-                                        }
-                                    }
-                                    messageAdapter.notifyDataSetChanged();
+                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link, main_role);
                                 }
+                                for (int i = 0; i < list_chat.size(); i++) {
+                                    if (test_num < list_chat.get(i).num) {
+                                        list_chat.add(i, messageModel);
+                                        break;
+                                    }
+                                }
+                                messageAdapter.notifyDataSetChanged();
                             }
                             if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
                                 listView_chat.setSelection(messageAdapter.getCount() - 1);
@@ -1933,16 +1945,19 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             public void run() {
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - get_profile - " + data);
-                String nick = "", user_id_2 = "";
+                String nick = "", user_id_2 = "", avatar = "";
                 int playing_room_num = 0, money = 0, exp = 0;
                 boolean online = false;
                 try {
+                    avatar = data.getString("avatar");
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
                     user_id_2 = data.getString("user_id");
                     money = data.getInt("money");
                     exp = data.getInt("exp");
-                    if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
+                    if (data.has("playing_room_num")) {
+                        playing_room_num = data.getInt("playing_room_num");
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1955,6 +1970,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
                 TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
                 TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+                ImageView IV_avatar = view_profile.findViewById(R.id.Item_profile_IV_avatar);
+
+                if (avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(avatar));
+                }
 
                 FAB_kick.setVisibility(View.GONE);
 
