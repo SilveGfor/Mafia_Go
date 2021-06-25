@@ -17,6 +17,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Android charting application xml ui design."
+                android:layout_toLeftOf="@id/itemMyPrivateMessageUsual_IV_readed"
+                android:layout_alignParentLeft="true"
                 android:textColor="#000000"
                 android:padding="16dp"/>
 
@@ -28,6 +30,15 @@
                 android:textColor="#787878"
                 android:layout_marginLeft="15dp"
                 android:layout_alignParentLeft="true" />
+
+            <ImageView
+                android:id="@+id/itemMyPrivateMessageUsual_IV_readed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_readed"
+                android:layout_margin="5dp"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"/>
         </RelativeLayout>
 
         <ImageView

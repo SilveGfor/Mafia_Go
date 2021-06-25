@@ -69,6 +69,15 @@
             </RelativeLayout>
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/itemMyPrivateMessageAnswer_IV_readed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_readed"
+            android:layout_margin="5dp"
+            android:layout_below="@+id/item_my_private_message_answer_CV"
+            android:layout_alignParentRight="true"/>
+
         <TextView
             android:id="@+id/item_my_private_message_answer_time"
             android:layout_width="wrap_content"

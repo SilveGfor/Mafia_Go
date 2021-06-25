@@ -1,7 +1,6 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -321,14 +320,26 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - get_profile - " + data);
                 String nick = "", user_id_2 = "";
-                int playing_room_num, money = 0, exp = 0;
+                int playing_room_num, money = 0, exp = 0, gold = 0;
                 boolean online = false;
+                JSONObject statistic = new JSONObject();
+                int game_counter = 0, max_money_score = 0, max_exp_score = 0;
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "";
+
                 try {
+                    statistic = data.getJSONObject("statistics");
+                    game_counter = statistic.getInt("game_counter");
+                    max_money_score = statistic.getInt("max_money_score");
+                    max_exp_score = statistic.getInt("max_exp_score");
+                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
                     user_id_2 = data.getString("user_id");
                     money = data.getInt("money");
                     exp = data.getInt("exp");
+                    gold = data.getInt("gold");
                     if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -340,9 +351,26 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
                 FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
                 FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
+                FloatingActionButton FAB_complain = view_profile.findViewById(R.id.Item_profile_complain);
                 TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
                 TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+                TextView TV_gold = view_profile.findViewById(R.id.ItemProfile_TV_gold);
 
+                TextView TV_game_counter = view_profile.findViewById(R.id.ItemProfile_TV_game_counter);
+                TextView TV_max_money_score = view_profile.findViewById(R.id.ItemProfile_TV_max_money_score);
+                TextView TV_max_exp_score = view_profile.findViewById(R.id.ItemProfile_TV_max_exp_score);
+                TextView TV_general_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_general_pers_of_wins);
+                TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_mafia_pers_of_wins);
+                TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_peaceful_pers_of_wins);
+
+                TV_game_counter.setText(game_counter);
+                TV_max_money_score.setText(max_money_score);
+                TV_max_exp_score.setText(max_exp_score);
+                TV_general_pers_of_wins.setText(general_pers_of_wins);
+                TV_mafia_pers_of_wins.setText(mafia_pers_of_wins);
+                TV_peaceful_pers_of_wins.setText(peaceful_pers_of_wins);
+
+                TV_gold.setText(String.valueOf(gold));
                 TV_money.setText(String.valueOf(money));
                 TV_exp.setText(String.valueOf(exp));
 
@@ -360,15 +388,18 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
                 String finalUser_id_ = user_id_2;
 
-                FAB_add_friend.setVisibility(View.GONE);
                 if (!nick.equals(MainActivity.NickName)) {
                     FAB_send_message.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             alert.cancel();
                             MainActivity.User_id_2 = finalUser_id_;
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatFragment()).commit();
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
                         }
+                    });
+
+                    FAB_complain.setOnClickListener(v -> {
+
                     });
 
                     FAB_add_friend.setOnClickListener(v1 -> {
@@ -378,6 +409,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 else
                 {
                     FAB_send_message.setVisibility(View.GONE);
+                    FAB_complain.setVisibility(View.GONE);
                     FAB_add_friend.setVisibility(View.GONE);
                 }
                 alert.show();

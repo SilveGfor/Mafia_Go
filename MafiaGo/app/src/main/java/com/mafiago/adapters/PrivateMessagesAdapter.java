@@ -1,17 +1,26 @@
 package com.mafiago.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.core.content.ContextCompat;
 
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.mafiago.models.PrivateMessageModel;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+
+import static com.mafiago.MainActivity.socket;
 
 public class PrivateMessagesAdapter extends BaseAdapter {
     public ArrayList<PrivateMessageModel> list_mess;
@@ -56,6 +65,14 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_time = view.findViewById(R.id.item_my_private_message_usual_time);
                     TextView txt_mess = view.findViewById(R.id.item_my_private_message_usual_message);
+                    ImageView IV_readed = view.findViewById(R.id.itemMyPrivateMessageUsual_IV_readed);
+
+                    if (list_mess.get(position).is_read) {
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_readed));
+                    }
+                    else {
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_not_readed));
+                    }
 
                     txt_time.setText(list_mess.get(position).time);
                     txt_mess.setText(list_mess.get(position).message);
@@ -67,28 +84,24 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                     TextView txt_time = view.findViewById(R.id.item_other_private_message_usual_time);
                     TextView txt_mess = view.findViewById(R.id.item_other_private_message_usual_message);
 
+                    if (!list_mess.get(position).is_read) {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("user_id", MainActivity.User_id);
+                            json.put("user_id_2", MainActivity.User_id_2);
+                            json.put("num", list_mess.get(position).num);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("read_message", json);
+                        Log.d("kkk", "Socket_отправка - read_message - "+ json.toString());
+                    }
+
                     txt_time.setText(list_mess.get(position).time);
                     txt_mess.setText(list_mess.get(position).message);
                 }
-                /*
-                String color= "#FFFFFF";
-                switch (list_mess.get(position).type)
-                {
-                    case "alive":
-                        color = "#FFFFFF";
-                        break;
-                    case "dead":
-                        color = "#999999";
-                        break;
-                    case "last_message":
-                        color = "#008800";
-                        break;
-                }
-
-                txt_nick.setTextColor(Color.parseColor(color));
-                txt_time.setTextColor(Color.parseColor(color));
-                txt_mess.setTextColor(Color.parseColor(color));
-                 */
                 break;
             case "AnswerMes":
                 if (list_mess.get(position).nickName.equals(MainActivity.NickName)) {
@@ -96,6 +109,14 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_time = view.findViewById(R.id.item_my_private_message_answer_time);
                     TextView txt_mess = view.findViewById(R.id.item_my_private_message_answer_message);
+                    ImageView IV_readed = view.findViewById(R.id.itemMyPrivateMessageAnswer_IV_readed);
+
+                    if (list_mess.get(position).is_read) {
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_readed));
+                    }
+                    else {
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_not_readed));
+                    }
 
                     txt_time.setText(list_mess.get(position).time);
                     txt_mess.setText(list_mess.get(position).message);
@@ -119,6 +140,21 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_time = view.findViewById(R.id.item_other_private_message_answer_time);
                     TextView txt_mess = view.findViewById(R.id.item_other_private_message_answer_message);
+
+                    if (!list_mess.get(position).is_read) {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("user_id", MainActivity.User_id);
+                            json.put("user_id_2", MainActivity.User_id_2);
+                            json.put("num", list_mess.get(position).num);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("read_message", json);
+                        Log.d("kkk", "Socket_отправка - read_message - "+ json.toString());
+                    }
 
                     txt_time.setText(list_mess.get(position).time);
                     txt_mess.setText(list_mess.get(position).message);

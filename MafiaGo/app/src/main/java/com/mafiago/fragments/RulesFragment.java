@@ -73,9 +73,6 @@ public class RulesFragment extends Fragment implements OnBackPressedListener {
 
         DisplayMetrics displaymetrics = getResources().getDisplayMetrics();
 
-        Log.d("kkk", String.valueOf(displaymetrics.widthPixels));
-        Log.d("kkk", String.valueOf(displaymetrics.heightPixels));
-
         viewPager.setAdapter(rules_adapter);
         viewPager.setPadding(displaymetrics.widthPixels / 10,0,displaymetrics.widthPixels / 10,30);
 

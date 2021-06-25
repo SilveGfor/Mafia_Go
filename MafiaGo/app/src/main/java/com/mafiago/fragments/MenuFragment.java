@@ -3,13 +3,16 @@ package com.mafiago.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.R;
@@ -34,9 +38,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import io.socket.emitter.Emitter;
 
+import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
 
 
@@ -52,6 +58,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     TextView TV_nick;
 
     CardView CV_info;
+
+    static final int GALLERY_REQUEST = 1;
 
     ImageView IV_background;
     ImageView IV_avatar;
@@ -158,7 +166,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
                 }
                 else
                 {
@@ -178,8 +186,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
             }
         });
-
-        fromBase64(toBase64());
 
         return view;
     }
@@ -233,11 +239,22 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 JSONObject data = (JSONObject) args[0];
                 String nick = "", avatar = "";
                 boolean online = false;
-                int money = 0, exp = 0;
+                int money = 0, exp = 0, gold = 0;
+                JSONObject statistic = new JSONObject();
+                int game_counter = 0, max_money_score = 0, max_exp_score = 0;
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "";
 
                 try {
+                    statistic = data.getJSONObject("statistics");
+                    game_counter = statistic.getInt("game_counter");
+                    max_money_score = statistic.getInt("max_money_score");
+                    max_exp_score = statistic.getInt("max_exp_score");
+                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     avatar = data.getString("avatar");
                     online = data.getBoolean("is_online");
+                    gold = data.getInt("gold");
                     nick = data.getString("nick");
                     money = data.getInt("money");
                     exp = data.getInt("exp");
@@ -246,14 +263,83 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
 
                 if (avatar != null) {
-                    IV_avatar.setImageBitmap(fromBase64(avatar));
+                    //IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
 
                 TV_money.setText(String.valueOf(money));
                 TV_exp.setText(String.valueOf(exp));
                 TV_nick.setText(nick);
 
-                Log.d("kkk", "принял - get_profile - " + data);
+                int finalMoney = money;
+                int finalExp = exp;
+                boolean finalOnline = online;
+                String finalNick = nick;
+                int finalGold = gold;
+                int finalGame_counter = game_counter;
+                int finalMax_money_score = max_money_score;
+                int finalMax_exp_score = max_exp_score;
+                String finalGeneral_pers_of_wins = general_pers_of_wins;
+                String finalMafia_pers_of_wins = mafia_pers_of_wins;
+                String finalPeaceful_pers_of_wins = peaceful_pers_of_wins;
+                CV_info.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
+                    builder.setView(view_profile);
+
+                    FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
+                    FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
+                    FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
+                    FloatingActionButton FAB_complain = view_profile.findViewById(R.id.Item_profile_complain);
+                    TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
+                    TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+                    TextView TV_gold = view_profile.findViewById(R.id.ItemProfile_TV_gold);
+
+                    TextView TV_game_counter = view_profile.findViewById(R.id.ItemProfile_TV_game_counter);
+                    TextView TV_max_money_score = view_profile.findViewById(R.id.ItemProfile_TV_max_money_score);
+                    TextView TV_max_exp_score = view_profile.findViewById(R.id.ItemProfile_TV_max_exp_score);
+                    TextView TV_general_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_general_pers_of_wins);
+                    TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_mafia_pers_of_wins);
+                    TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_peaceful_pers_of_wins);
+
+                    TV_game_counter.setText(String.valueOf(finalGame_counter));
+                    TV_max_money_score.setText(String.valueOf(finalMax_money_score));
+                    TV_max_exp_score.setText(String.valueOf(finalMax_exp_score));
+                    TV_general_pers_of_wins.setText(String.valueOf(finalGeneral_pers_of_wins));
+                    TV_mafia_pers_of_wins.setText(String.valueOf(finalMafia_pers_of_wins));
+                    TV_peaceful_pers_of_wins.setText(String.valueOf(finalPeaceful_pers_of_wins));
+
+                    TV_gold.setText(String.valueOf(finalGold));
+                    TV_money.setText(String.valueOf(finalMoney));
+                    TV_exp.setText(String.valueOf(finalExp));
+
+                    TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
+                    ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
+
+                    if (finalOnline) IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_online));
+                    else IV_on_off.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_offline));
+
+                    TV_nick.setText(finalNick);
+
+                    FAB_complain.setOnClickListener(v1 -> {
+                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                        photoPickerIntent.setType("image/*");
+                        startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                    });
+
+                    AlertDialog alert = builder.create();
+
+                    FAB_add_friend.setVisibility(View.GONE);
+                    FAB_send_message.setVisibility(View.GONE);
+                    FAB_kick.setVisibility(View.GONE);
+                    //FAB_complain.setVisibility(View.GONE);
+                    alert.show();
+                });
+
+                try {
+                    Log.d("kkk", "принял - get_profile - " + data.put("avatar", ""));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
         });
     };
@@ -299,5 +385,20 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             return false;
         }
         return status;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        Bitmap bitmap = null;
+
+        switch(requestCode) {
+            case GALLERY_REQUEST:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    IV_avatar.setImageURI(selectedImage);
+                }
+        }
     }
 }

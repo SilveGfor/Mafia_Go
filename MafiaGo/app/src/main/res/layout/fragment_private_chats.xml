@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/fon_menu"
+    tools:context="com.mafiago.fragments.PrivateChatsFragment">
+
+    <Button
+        android:id="@+id/fragmentFriends_btn_exit"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/fragmentPrivateChats_SC_blocked_chats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/fragmentFriends_btn_exit"
+        android:checked="false"
+        android:layout_margin="15dp"
+        android:text="Показывать заблокированные чаты"
+        android:textOff="Нет"
+        android:textOn="Да"/>
+
+    <ListView
+        android:id="@+id/fragmentFriends_list_friends"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragmentFriends_btn_exit"
+        android:divider="@color/colorWhite"
+        android:dividerHeight="2dp"
+        android:layout_margin="15dp"/>
+</RelativeLayout>

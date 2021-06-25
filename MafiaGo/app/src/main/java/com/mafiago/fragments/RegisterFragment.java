@@ -410,6 +410,23 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                         alert.show();
                                     });
                                     break;
+                                case "bad_email":
+                                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Некорректная почта!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_error)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
                                 case "incorrect_code":
                                     ContextCompat.getMainExecutor(getContext()).execute(()  -> {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
