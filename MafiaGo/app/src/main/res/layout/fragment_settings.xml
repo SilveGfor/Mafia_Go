@@ -24,7 +24,7 @@
         android:textSize="25sp"/>
 
     <Button
-        android:id="@+id/fragmentSetings_btn_exit_account"
+        android:id="@+id/fragmentSettings_btn_exit_account"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Выйти из аккаунта"
@@ -32,5 +32,18 @@
         android:padding="10dp"
         android:background="@drawable/round_button"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="30dp"/>
+
+    <Button
+        android:id="@+id/fragmentSettings_btn_edit_avatar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сменить аватар"
+        android:layout_marginBottom="15dp"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:background="@drawable/round_button"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/fragmentSettings_btn_exit_account"/>
 </RelativeLayout>

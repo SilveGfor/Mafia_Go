@@ -106,9 +106,23 @@ public static Socket socket;
 
     @Override
     protected void onPause() {
-        //socket.emit("leave_app", "");
-        //Log.d("kkk", "Socket_отправка - leave_app");
+        socket.emit("leave_app", "");
+        Log.d("kkk", "Socket_отправка - leave_app");
         super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        final JSONObject json2 = new JSONObject();
+        try {
+            json2.put("nick", NickName);
+            json2.put("session_id", Session_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("connection", json2);
+        Log.d("kkk", "CONNECTION");
+        super.onResume();
     }
 
     @Override
@@ -132,15 +146,15 @@ public static Socket socket;
     private Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-                        final JSONObject json2 = new JSONObject();
-                        try {
-                            json2.put("nick", NickName);
-                            json2.put("session_id", Session_id);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        socket.emit("connection", json2);
-                        Log.d("kkk", "CONNECTION");
+            final JSONObject json2 = new JSONObject();
+            try {
+                json2.put("nick", NickName);
+                json2.put("session_id", Session_id);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("connection", json2);
+            Log.d("kkk", "CONNECTION");
         }
     };
 

@@ -194,7 +194,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         });
 
         btnSend.setOnClickListener(v -> {
-            if (ET_input.length() > 700) {
+            if (ET_input.length() < 700) {
                 if (!ET_input.getText().toString().equals("")) {
                     final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
 
@@ -440,7 +440,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - edit_message - " + data);
                     String nick = "", message = "", status = "", edited_time = "", time = "", user_id_1 = "", user_id_2 = "";
-                    Boolean is_read = false;
+                    Boolean is_read = false, modifications_for_message = false;
                     int test_num = -1;
                     try {
                         if (data.has("is_read")) {
@@ -453,7 +453,12 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                         user_id_1 = data.getString("user_id");
                         user_id_2 = data.getString("user_id_2");
                         test_num = data.getInt("mes_num");
-                        message = data.getString("message");
+                        if (data.has("message"))
+                        {
+                            message = data.getString("message");
+                            modifications_for_message = true;
+                        }
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -461,7 +466,10 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             || (user_id_2.equals(MainActivity.User_id) && user_id_1.equals(MainActivity.User_id_2))) {
                         for (int i = 0; i < list_messages.size(); i++) {
                             if (list_messages.get(i).num == test_num) {
-                                list_messages.get(i).message = message;
+                                if (modifications_for_message)
+                                {
+                                    list_messages.get(i).message = message;
+                                }
                                 list_messages.get(i).is_read = is_read;
                                 break;
                             }

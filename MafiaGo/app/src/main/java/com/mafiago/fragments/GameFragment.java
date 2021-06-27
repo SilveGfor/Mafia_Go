@@ -206,7 +206,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         btnSend.setOnClickListener(v -> {
             Log.d("kkk", player.getStatus());
             Log.d("kkk", String.valueOf(player.getStatus().equals("alive")));
-            if (sendText.length() > 300) {
+            if (sendText.length() < 300) {
                 if (player.getStatus().equals("alive")) {
                     if (player.Can_write()) {
                         if (!sendText.getText().toString().equals("")) {
@@ -1918,27 +1918,25 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 }
                                 break;
                             case DAY:
-                                if (can_skip_day) FAB_skip_day.setVisibility(View.VISIBLE);
-                                IV_influence_bodyguard.setVisibility(View.GONE);
+                                FAB_skip_day.setVisibility(View.VISIBLE);
                                 IV_influence_doctor.setVisibility(View.GONE);
                                 player.setVoted_at_night(false);
                                 player.setCan_write(true);
-                                switch (player.getRole()) {
-                                    case TERRORIST:
-                                        if (can_act) StartAnimation(Role.TERRORIST);
-                                        break;
-                                    case BODYGUARD:
-                                        if (can_act) StartAnimation(Role.BODYGUARD);
-                                        break;
+                                IV_influence_bodyguard.setVisibility(View.GONE);
+                                if (player.getRole() == Role.BODYGUARD && IV_influence_lover.getVisibility() != View.VISIBLE) {
+                                    StartAnimation(Role.BODYGUARD);
                                 }
                                 break;
                             case VOTING:
-                                if (player.getRole() == Role.TERRORIST) {
-                                    if (can_act) StartAnimation(Role.TERRORIST);
-                                } else {
-                                    if (can_vote) StartAnimation(Role.VOTING);
+                                messages_can_write = 10;
+                                if (IV_influence_lover.getVisibility() != View.VISIBLE)
+                                {
+                                    if (player.getRole() == Role.TERRORIST) {
+                                        StartAnimation(Role.TERRORIST);
+                                    } else {
+                                        StartAnimation(Role.VOTING);
+                                    }
                                 }
-                                break;
                         }
                     }
                     else {

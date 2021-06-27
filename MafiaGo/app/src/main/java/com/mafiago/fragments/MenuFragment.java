@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -63,6 +64,11 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     ImageView IV_background;
     ImageView IV_avatar;
+    ImageView IV_screenshot;
+
+    String base64_screenshot = "";
+
+    View view_report;
 
     // Идентификатор уведомления
     private static final int NOTIFY_ID = 101;
@@ -94,6 +100,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
         IV_avatar = view.findViewById(R.id.fragmentMenu_IV_avatar);
+
+        view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+
+        IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
@@ -201,6 +211,30 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         editor.apply();
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+            case GALLERY_REQUEST:
+                if(resultCode == RESULT_OK){
+                    Uri uri = imageReturnedIntent.getData();
+                    IV_screenshot.setImageURI(uri);
+
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
+    }
+
     //TODO: реализовать функцию
     public String toBase64() {
         // Получаем изображение из ImageView
@@ -242,7 +276,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 int money = 0, exp = 0, gold = 0;
                 JSONObject statistic = new JSONObject();
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
-                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "";
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "";
+                Log.d("kkk", "принял - get_profile - " + data);
 
                 try {
                     statistic = data.getJSONObject("statistics");
@@ -253,6 +288,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
                     peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     avatar = data.getString("avatar");
+                    user_id_2 = data.getString("user_id");
                     online = data.getBoolean("is_online");
                     gold = data.getInt("gold");
                     nick = data.getString("nick");
@@ -263,7 +299,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
 
                 if (avatar != null) {
-                    //IV_avatar.setImageBitmap(fromBase64(avatar));
+                    IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
 
                 TV_money.setText(String.valueOf(money));
@@ -281,6 +317,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 String finalGeneral_pers_of_wins = general_pers_of_wins;
                 String finalMafia_pers_of_wins = mafia_pers_of_wins;
                 String finalPeaceful_pers_of_wins = peaceful_pers_of_wins;
+                String finalAvatar = avatar;
+                String finalUser_id_ = user_id_2;
                 CV_info.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
@@ -289,10 +327,11 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
                     FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
                     FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
-                    FloatingActionButton FAB_complain = view_profile.findViewById(R.id.Item_profile_complain);
+                    FloatingActionButton FAB_report = view_profile.findViewById(R.id.Item_profile_complain);
                     TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
                     TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
                     TextView TV_gold = view_profile.findViewById(R.id.ItemProfile_TV_gold);
+                    ImageView IV_avatar = view_profile.findViewById(R.id.Item_profile_IV_avatar);
 
                     TextView TV_game_counter = view_profile.findViewById(R.id.ItemProfile_TV_game_counter);
                     TextView TV_max_money_score = view_profile.findViewById(R.id.ItemProfile_TV_max_money_score);
@@ -300,6 +339,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TextView TV_general_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_general_pers_of_wins);
                     TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_mafia_pers_of_wins);
                     TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_peaceful_pers_of_wins);
+
+                    if (finalAvatar != null) {
+                        IV_avatar.setImageBitmap(fromBase64(finalAvatar));
+                    }
 
                     TV_game_counter.setText(String.valueOf(finalGame_counter));
                     TV_max_money_score.setText(String.valueOf(finalMax_money_score));
@@ -320,10 +363,41 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
                     TV_nick.setText(finalNick);
 
-                    FAB_complain.setOnClickListener(v1 -> {
-                        Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                        photoPickerIntent.setType("image/*");
-                        startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                    FAB_report.setOnClickListener(v1 -> {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        //View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                        builder2.setView(view_report);
+                        AlertDialog alert2 = builder2.create();
+
+                        Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
+                        Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
+                        ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+                        EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                        btn_add_screenshot.setOnClickListener(v2 -> {
+                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                            photoPickerIntent.setType("image/*");
+                            startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                        });
+
+                        btn_report.setOnClickListener(v22 -> {
+                            final JSONObject json2 = new JSONObject();
+                            try {
+                                json2.put("nick", MainActivity.NickName);
+                                json2.put("session_id", MainActivity.Session_id);
+                                json2.put("against_id", finalUser_id_);
+                                json2.put("against_nick", finalNick);
+                                json2.put("reason", ET_report_message.getText());
+                                json2.put("image", base64_screenshot);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("send_complaint", json2);
+                            Log.d("kkk", "Socket_отправка - send_complaint" + json2);
+                            alert2.cancel();
+                        });
+
+                        alert2.show();
                     });
 
                     AlertDialog alert = builder.create();
@@ -331,15 +405,9 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     FAB_add_friend.setVisibility(View.GONE);
                     FAB_send_message.setVisibility(View.GONE);
                     FAB_kick.setVisibility(View.GONE);
-                    //FAB_complain.setVisibility(View.GONE);
+                    //FAB_report.setVisibility(View.GONE);
                     alert.show();
                 });
-
-                try {
-                    Log.d("kkk", "принял - get_profile - " + data.put("avatar", ""));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
             }
         });
     };
@@ -385,20 +453,5 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             return false;
         }
         return status;
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
-        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-
-        Bitmap bitmap = null;
-
-        switch(requestCode) {
-            case GALLERY_REQUEST:
-                if(resultCode == RESULT_OK){
-                    Uri selectedImage = imageReturnedIntent.getData();
-                    IV_avatar.setImageURI(selectedImage);
-                }
-        }
     }
 }
