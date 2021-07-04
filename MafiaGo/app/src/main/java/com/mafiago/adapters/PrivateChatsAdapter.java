@@ -39,9 +39,7 @@ public class PrivateChatsAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        View view = convertView;
-
-        view = layout.inflate(R.layout.item_private_chat, null);
+        View view = layout.inflate(R.layout.item_private_chat, null);
 
         TextView txt_nick = view.findViewById(R.id.Item_friend_nick);
         TextView txt_messages = view.findViewById(R.id.Item_friend_messages);

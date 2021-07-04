@@ -194,51 +194,41 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         });
 
         btnSend.setOnClickListener(v -> {
-            if (ET_input.length() < 700) {
-                if (!ET_input.getText().toString().equals("")) {
-                    final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
-
-                    // amplitude 0.2 and frequency 20
-                    BounceInterpolator interpolator = new BounceInterpolator();
-                    animation.setInterpolator(interpolator);
-
-                    btnSend.startAnimation(animation);
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", MainActivity.NickName);
-                        json2.put("session_id", MainActivity.Session_id);
-                        json2.put("user_id", MainActivity.User_id);
-                        json2.put("user_id_2", MainActivity.User_id_2);
-                        json2.put("message", ET_input.getText());
-                        json2.put("link", answer_id);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Socket_отправка chat_message - " + json2.toString());
-                    socket.emit("chat_message", json2);
-                    answer_id = -1;
-                    RL_answer.setVisibility(View.GONE);
-                    ET_input.setText("");
-                } else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Ошибка!")
-                            .setMessage("Нельзя отправлять пустые сообщения!")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("ок",
-                                    (dialog, id) -> dialog.cancel());
-                    AlertDialog alert = builder.create();
-                    alert.show();
-                }
+            String input = String.valueOf(ET_input.getText());
+            if (input.length() > 700) {
+                input = input.substring(0, 701);
             }
-            else
-            {
+            if (!input.equals("") && !input.equals("/n")) {
+                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+
+                // amplitude 0.2 and frequency 20
+                BounceInterpolator interpolator = new BounceInterpolator();
+                animation.setInterpolator(interpolator);
+
+                btnSend.startAnimation(animation);
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", MainActivity.NickName);
+                    json2.put("session_id", MainActivity.Session_id);
+                    json2.put("user_id", MainActivity.User_id);
+                    json2.put("user_id_2", MainActivity.User_id_2);
+                    json2.put("message", input);
+                    json2.put("link", answer_id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "Socket_отправка chat_message - " + json2.toString());
+                socket.emit("chat_message", json2);
+                answer_id = -1;
+                RL_answer.setVisibility(View.GONE);
+                ET_input.setText("");
+            } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Ошибка!")
-                        .setMessage("Вы не можете отправлять более 700 символов в одном сообщении!")
+                        .setMessage("Нельзя отправлять пустые сообщения!")
                         .setIcon(R.drawable.ic_error)
                         .setCancelable(false)
-                        .setNegativeButton("Ок",
+                        .setNegativeButton("ок",
                                 (dialog, id) -> dialog.cancel());
                 AlertDialog alert = builder.create();
                 alert.show();

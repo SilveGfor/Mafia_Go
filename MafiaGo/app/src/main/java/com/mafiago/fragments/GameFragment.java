@@ -3,10 +3,13 @@ package com.mafiago.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +23,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -43,11 +48,21 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
+import java.util.TimeZone;
 
 import io.socket.emitter.Emitter;
+
+import static android.app.Activity.RESULT_OK;
 import static  com.mafiago.MainActivity.socket;
+import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class GameFragment extends Fragment implements OnBackPressedListener {
     public ListView listView_chat;
@@ -68,6 +83,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public ImageView IV_influence_bodyguard;
     public ImageView IV_influence_poisoner;
     public ImageView IV_role;
+    public ImageView IV_my_role_animation;
 
     public Player player;
 
@@ -76,8 +92,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public ImageView btnSend;
     public FloatingActionButton FAB_skip_day;
 
+    public RelativeLayout RL_my_role;
+
     public Button btnExit;
     public Button btnDeleteAnswer;
+
+    public Animation animation;
 
     ArrayList<MessageModel> list_chat = new ArrayList<>();
     ArrayList<UserModel> list_users = new ArrayList<>();
@@ -88,6 +108,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public String journalist_check = null;
 
     int num = -1;
+
+    ImageView IV_screenshot;
+
+    View view_report;
+
+    String base64_screenshot = "";
 
     MessageAdapter messageAdapter;
 
@@ -103,6 +129,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_game, container, false);
+        view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -121,6 +148,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         FAB_skip_day = view.findViewById(R.id.fragmentGame_FAB_skip_day);
 
+        RL_my_role = view.findViewById(R.id.fragmentGame_RL_my_role);
+
         timer = view.findViewById(R.id.timer);
         day_time = view.findViewById(R.id.day_time);
 
@@ -130,12 +159,16 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         IV_influence_bodyguard = view.findViewById(R.id.IV_influence_bodyguard);
         IV_influence_poisoner = view.findViewById(R.id.IV_influence_poisoner);
         IV_role = view.findViewById(R.id.IV_role);
+        IV_my_role_animation = view.findViewById(R.id.fragmentGame_IV_my_role_animation);
+
+        IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
         IV_influence_doctor.setVisibility(View.GONE);
         IV_influence_lover.setVisibility(View.GONE);
         IV_influence_sheriff.setVisibility(View.GONE);
         IV_influence_bodyguard.setVisibility(View.GONE);
         IV_influence_poisoner.setVisibility(View.GONE);
+        IV_my_role_animation.setVisibility(View.GONE);
 
         voting_number.setVisibility(View.GONE);
 
@@ -150,8 +183,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         messageAdapter = new MessageAdapter(list_chat, getContext());
         listView_chat.setAdapter(messageAdapter);
 
-        socket.off("connect");
-        socket.off("disconnect");
+        //socket.off("connect");
+        //socket.off("disconnect");
         socket.off("get_in_room");
         socket.off("user_message");
         socket.off("leave_room");
@@ -169,6 +202,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.off("get_profile");
         socket.off("host_info");
         socket.off("ban_user_in_room");
+        socket.off("ban_user_in_room_error");
         socket.off("user_message_delay");
 
         socket.on("connect", onConnect);
@@ -190,6 +224,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.on("get_profile", OnGetProfile);
         socket.on("host_info", OnHostInfo);
         socket.on("ban_user_in_room", OnBanUserInRoom);
+        socket.on("ban_user_in_room_error", OnBanUserInRoomError);
         socket.on("user_message_delay", OnUserMessageDelay);
 
         final JSONObject json3 = new JSONObject();
@@ -203,167 +238,244 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.emit("get_in_room", json3);
         Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
 
-        btnSend.setOnClickListener(v -> {
-            Log.d("kkk", player.getStatus());
-            Log.d("kkk", String.valueOf(player.getStatus().equals("alive")));
-            if (sendText.length() < 300) {
-                if (player.getStatus().equals("alive")) {
-                    if (player.Can_write()) {
-                        if (!sendText.getText().toString().equals("")) {
-                            if (player.getTime() == Time.DAY) {
-                                if (IV_influence_poisoner.getVisibility() != View.VISIBLE) {
-                                    if (messages_can_write > 0) {
-                                        messages_can_write--;
-                                        final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
-
-                                        // amplitude 0.2 and frequency 20
-                                        BounceInterpolator interpolator = new BounceInterpolator();
-                                        animation.setInterpolator(interpolator);
-
-                                        btnSend.startAnimation(animation);
-                                        final JSONObject json2 = new JSONObject();
-                                        try {
-                                            json2.put("nick", player.getNick());
-                                            json2.put("session_id", player.getSession_id());
-                                            json2.put("room", player.getRoom_num());
-                                            json2.put("message", sendText.getText().toString());
-                                            json2.put("link", answer_id);
-                                            answer_id = -1;
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
-                                        socket.emit("user_message", json2);
-                                        answer_id = -1;
-                                        cardAnswer.setVisibility(View.GONE);
-                                        sendText.setText("");
-                                    } else {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Вы не имеете права!")
-                                                .setMessage("Нельзя отправлять больше 10 сообщений в день!")
-                                                .setIcon(R.drawable.ic_error)
-                                                .setCancelable(false)
-                                                .setNegativeButton("ок",
-                                                        (dialog, id) -> dialog.cancel());
-                                        AlertDialog alert = builder.create();
-                                        alert.show();
-                                    }
-                                } else {
-                                    if (messages_can_write == 10) {
-                                        messages_can_write--;
-                                        final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
-
-                                        // amplitude 0.2 and frequency 20
-                                        BounceInterpolator interpolator = new BounceInterpolator();
-                                        animation.setInterpolator(interpolator);
-
-                                        btnSend.startAnimation(animation);
-                                        final JSONObject json2 = new JSONObject();
-                                        try {
-                                            json2.put("nick", player.getNick());
-                                            json2.put("session_id", player.getSession_id());
-                                            json2.put("room", player.getRoom_num());
-                                            json2.put("message", sendText.getText().toString());
-                                            json2.put("link", answer_id);
-                                            answer_id = -1;
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
-                                        socket.emit("user_message", json2);
-                                        answer_id = -1;
-                                        cardAnswer.setVisibility(View.GONE);
-                                        sendText.setText("");
-                                    } else {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Вас отравили!")
-                                                .setMessage("Вы не можете писать больше 1 сообщения в день!")
-                                                .setIcon(R.drawable.ic_error)
-                                                .setCancelable(false)
-                                                .setNegativeButton("ок",
-                                                        (dialog, id) -> dialog.cancel());
-                                        AlertDialog alert = builder.create();
-                                        alert.show();
-                                    }
+        RL_my_role.setOnClickListener(v -> {
+            Log.d("kkk", String.valueOf(player.Can_click()));
+            if (player.Can_click() && player.getStatus().equals("alive") && IV_my_role_animation.getVisibility() == View.VISIBLE)
+            {
+                switch (player.getTime())
+                {
+                    case LOBBY:
+                        sendText.setText(sendText.getText() + player.getNick());
+                        sendText.setSelection(sendText.length());
+                        break;
+                    case NIGHT_LOVE:
+                        break;
+                    case NIGHT_OTHER:
+                        switch (player.getRole())
+                        {
+                            case DOCTOR:
+                                RoleAction(player.getNick());
+                                break;
+                            case JOURNALIST:
+                                if (journalist_check == null)
+                                {
+                                    journalist_check = player.getNick();
+                                    IV_my_role_animation.setVisibility(View.GONE);
                                 }
-                            } else {
-                                final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+                                else
+                                {
+                                    final JSONObject json = new JSONObject();
+                                    try {
+                                        json.put("nick", player.getNick());
+                                        json.put("session_id", player.getSession_id());
+                                        json.put("room", player.getRoom_num());
+                                        json.put("influence_on_nick", journalist_check);
+                                        json.put("influence_on_nick_2", player.getNick());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    socket.emit("role_action", json);
+                                    Log.d("kkk", "Socket_отправка - role_action"+ json.toString());
 
-                                // amplitude 0.2 and frequency 20
-                                BounceInterpolator interpolator = new BounceInterpolator();
-                                animation.setInterpolator(interpolator);
-
-                                btnSend.startAnimation(animation);
-                                final JSONObject json2 = new JSONObject();
-                                try {
-                                    json2.put("nick", player.getNick());
-                                    json2.put("session_id", player.getSession_id());
-                                    json2.put("room", player.getRoom_num());
-                                    json2.put("message", sendText.getText().toString());
-                                    json2.put("link", answer_id);
-                                    answer_id = -1;
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
+                                    int journalist_checks_count = 0;
+                                    player.setJournalist_checked(true);
+                                    for (int i = 0; i < list_users.size(); i++)
+                                    {
+                                        if (list_users.get(i).getNick().equals(journalist_check))
+                                        {
+                                            list_users.get(i).setChecked(true);
+                                        }
+                                        if (!list_users.get(i).getChecked())
+                                        {
+                                            journalist_checks_count++;
+                                        }
+                                    }
+                                    if (journalist_checks_count < 2)
+                                    {
+                                        for (int i = 0; i < list_users.size(); i++)
+                                        {
+                                            list_users.get(i).setChecked(true);
+                                        }
+                                    }
+                                    PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                                    gridView_users.setAdapter(playersAdapter);
+                                    journalist_check = null;
                                 }
-                                Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
-                                socket.emit("user_message", json2);
-                                answer_id = -1;
-                                cardAnswer.setVisibility(View.GONE);
-                                sendText.setText("");
-                            }
-                        } else {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ошибка!")
-                                    .setMessage("Нельзя отправлять пустые сообщения!")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("ок",
-                                            (dialog, id) -> dialog.cancel());
-                            AlertDialog alert = builder.create();
-                            alert.show();
-
+                                IV_my_role_animation.setVisibility(View.GONE);
+                                break;
+                            default:
+                                Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
                         }
-                    } else {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Вы не можете сейчас отправлять сообщения!")
-                                .setMessage("")
-                                .setIcon(R.drawable.ic_error)
-                                .setCancelable(false)
-                                .setNegativeButton("Ок",
-                                        (dialog, id) -> dialog.cancel());
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                } else {
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", player.getNick());
-                        json2.put("session_id", player.getSession_id());
-                        json2.put("room", player.getRoom_num());
-                        json2.put("message", sendText.getText().toString());
-                        json2.put("link", answer_id);
-                        answer_id = -1;
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
-                    socket.emit("user_message", json2);
-                    answer_id = -1;
-                    cardAnswer.setVisibility(View.GONE);
-                    sendText.setText("");
+                        break;
+                    case DAY:
+                        break;
+                    case VOTING:
+                        break;
+                    default:
+                        Log.d("kkk", "Что-то пошло не так. Такого времени дня не может быть!");
+                }
+                if (journalist_check == null)
+                {
+                    IV_my_role_animation.setVisibility(View.GONE);
+                    StopAnimation();
                 }
             }
             else
             {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Ошибка!")
-                        .setMessage("Вы не можете отправлять более 300 символов в одном сообщении!")
-                        .setIcon(R.drawable.ic_error)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                (dialog, id) -> dialog.cancel());
-                AlertDialog alert = builder.create();
-                alert.show();
+                sendText.setText(sendText.getText() + player.getNick());
+                sendText.setSelection(sendText.length());
+            }
+        });
+
+        btnSend.setOnClickListener(v -> {
+            String input = String.valueOf(sendText.getText());
+            if (input.length() > 300) {
+                input = input.substring(0, 301);
+            }
+            if (player.getStatus().equals("alive")) {
+                if (player.Can_write()) {
+                    if (!input.equals("") && !input.equals("/n")) {
+                        if (player.getTime() == Time.DAY) {
+                            if (IV_influence_poisoner.getVisibility() != View.VISIBLE) {
+                                if (messages_can_write > 0) {
+                                    messages_can_write--;
+                                    final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+
+                                    // amplitude 0.2 and frequency 20
+                                    BounceInterpolator interpolator = new BounceInterpolator();
+                                    animation.setInterpolator(interpolator);
+
+                                    btnSend.startAnimation(animation);
+                                    final JSONObject json2 = new JSONObject();
+                                    try {
+                                        json2.put("nick", player.getNick());
+                                        json2.put("session_id", player.getSession_id());
+                                        json2.put("room", player.getRoom_num());
+                                        json2.put("message", sendText.getText().toString());
+                                        json2.put("link", answer_id);
+                                        answer_id = -1;
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
+                                    socket.emit("user_message", json2);
+                                    answer_id = -1;
+                                    cardAnswer.setVisibility(View.GONE);
+                                    sendText.setText("");
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle("Вы не имеете права!")
+                                            .setMessage("Нельзя отправлять больше 10 сообщений в день!")
+                                            .setIcon(R.drawable.ic_error)
+                                            .setCancelable(false)
+                                            .setNegativeButton("ок",
+                                                    (dialog, id) -> dialog.cancel());
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            } else {
+                                if (messages_can_write == 10) {
+                                    messages_can_write--;
+                                    final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+
+                                    // amplitude 0.2 and frequency 20
+                                    BounceInterpolator interpolator = new BounceInterpolator();
+                                    animation.setInterpolator(interpolator);
+
+                                    btnSend.startAnimation(animation);
+                                    final JSONObject json2 = new JSONObject();
+                                    try {
+                                        json2.put("nick", player.getNick());
+                                        json2.put("session_id", player.getSession_id());
+                                        json2.put("room", player.getRoom_num());
+                                        json2.put("message", sendText.getText().toString());
+                                        json2.put("link", answer_id);
+                                        answer_id = -1;
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
+                                    socket.emit("user_message", json2);
+                                    answer_id = -1;
+                                    cardAnswer.setVisibility(View.GONE);
+                                    sendText.setText("");
+                                } else {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle("Вас отравили!")
+                                            .setMessage("Вы не можете писать больше 1 сообщения в день!")
+                                            .setIcon(R.drawable.ic_error)
+                                            .setCancelable(false)
+                                            .setNegativeButton("ок",
+                                                    (dialog, id) -> dialog.cancel());
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                }
+                            }
+                        } else {
+                            final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
+
+                            // amplitude 0.2 and frequency 20
+                            BounceInterpolator interpolator = new BounceInterpolator();
+                            animation.setInterpolator(interpolator);
+
+                            btnSend.startAnimation(animation);
+                            final JSONObject json2 = new JSONObject();
+                            try {
+                                json2.put("nick", player.getNick());
+                                json2.put("session_id", player.getSession_id());
+                                json2.put("room", player.getRoom_num());
+                                json2.put("message", sendText.getText().toString());
+                                json2.put("link", answer_id);
+                                answer_id = -1;
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
+                            socket.emit("user_message", json2);
+                            answer_id = -1;
+                            cardAnswer.setVisibility(View.GONE);
+                            sendText.setText("");
+                        }
+                    } else {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        builder.setTitle("Ошибка!")
+                                .setMessage("Нельзя отправлять пустые сообщения!")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("ок",
+                                        (dialog, id) -> dialog.cancel());
+                        AlertDialog alert = builder.create();
+                        alert.show();
+
+                    }
+                } else {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Вы не можете сейчас отправлять сообщения!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            } else {
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", player.getNick());
+                    json2.put("session_id", player.getSession_id());
+                    json2.put("room", player.getRoom_num());
+                    json2.put("message", sendText.getText().toString());
+                    json2.put("link", answer_id);
+                    answer_id = -1;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
+                socket.emit("user_message", json2);
+                answer_id = -1;
+                cardAnswer.setVisibility(View.GONE);
+                sendText.setText("");
             }
         });
 
@@ -508,11 +620,19 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     Log.d("kkk", "Socket_отправка - role_action"+ json.toString());
 
                                     int journalist_checks_count = 0;
+                                    if (!player.getJournalist_checked())
+                                    {
+                                        journalist_checks_count++;
+                                    }
                                     for (int i = 0; i < list_users.size(); i++)
                                     {
                                         if (list_users.get(i).getNick().equals(nick) || list_users.get(i).getNick().equals(journalist_check))
                                         {
                                             list_users.get(i).setChecked(true);
+                                        }
+                                        if (journalist_check.equals(player.getNick()))
+                                        {
+                                            player.setJournalist_checked(true);
                                         }
                                         if (!list_users.get(i).getChecked())
                                         {
@@ -525,6 +645,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         {
                                             list_users.get(i).setChecked(true);
                                         }
+                                        player.setJournalist_checked(true);
+                                        IV_my_role_animation.setVisibility(View.GONE);
                                     }
                                     PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                                     gridView_users.setAdapter(playersAdapter);
@@ -556,6 +678,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 if (journalist_check == null)
                 {
                     StopAnimation();
+                    IV_my_role_animation.setVisibility(View.GONE);
                 }
             }
             else
@@ -622,6 +745,31 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         // Помещаем изображение в ImageView
         return decodedByte;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+            case GALLERY_REQUEST:
+                if(resultCode == RESULT_OK){
+                    Uri uri = imageReturnedIntent.getData();
+                    IV_screenshot.setImageURI(null);
+                    IV_screenshot.setImageURI(uri);
+
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
     }
 
     @Override
@@ -712,11 +860,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         test_num = data.getInt("num");
                         nick = data.getString("nick");
                         time = data.getString("time");
+                        time = getDate(time);
                         Log.d("kkk", "leave_user - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                     } catch (JSONException e) {
                         return;
                     }
-                    MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time.substring(11,16), nick, "DisconnectMes");
+                    MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes");
 
                     if (test_num != num) {
                         if (test_num > num) {
@@ -783,27 +932,29 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             if (test_num > num) {
                                 num = test_num;
                                 time = data.getString("time");
+                                time = getDate(time);
                                 message = data.getString("message");
                                 status = data.getString("status");
                                 link = data.getInt("link");
                                 MessageModel messageModel;
                                 if (link == -1) {
-                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role);
                                 } else {
-                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role);
                                 }
                                 list_chat.add(messageModel);
                                 messageAdapter.notifyDataSetChanged();
                             } else {
                                 time = data.getString("time");
+                                time = getDate(time);
                                 message = data.getString("message");
                                 status = data.getString("status");
                                 link = data.getInt("link");
                                 MessageModel messageModel;
                                 if (link == -1) {
-                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "UsersMes", status, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role);
                                 } else {
-                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), nick, "AnswerMes", status, link, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role);
                                 }
                                 for (int i = 0; i < list_chat.size(); i++) {
                                     if (test_num < list_chat.get(i).num) {
@@ -885,8 +1036,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     try {
                         test_num = data.getInt("num");
                         time = data.getString("time");
+                        time = getDate(time);
                         nick = data.getString("nick");
-                        MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time.substring(11, 16), nick, "ConnectMes");
+                        MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes");
                         Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                         if (test_num != num) {
                             if (test_num > num) {
@@ -970,6 +1122,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 String time;
                 try {
                     time = data.getString("time");
+                    time = getDate(time);
                     switch (time)
                     {
                         case "lobby":
@@ -985,7 +1138,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             player.setTime(Time.NIGHT_OTHER);
                             break;
                         case "day":
+                            Log.d("kkk", String.valueOf(IV_my_role_animation.getVisibility()));
                             voting_number.setVisibility(View.GONE);
+                            IV_my_role_animation.setVisibility(View.GONE);
+                            Log.d("kkk", String.valueOf(IV_my_role_animation.getVisibility()));
                             player.setVoting_number(0);
                             DeleteNumbersFromVoting();
 
@@ -1055,6 +1211,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         StartAnimation(Role.POISONER);
                                         break;
                                     case JOURNALIST:
+                                        if (!player.getJournalist_checked()) {
+                                            IV_my_role_animation.setImageResource(R.drawable.ic_journalist);
+                                            IV_my_role_animation.setVisibility(View.VISIBLE);
+                                            animation = AnimationUtils.loadAnimation(getContext(), R.anim.voting);
+                                            IV_my_role_animation.startAnimation(animation);
+                                        }
+
                                         StartAnimation(Role.JOURNALIST);
                                         break;
                                 }
@@ -1294,8 +1457,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         status = data.getString("status");
                         test_num = data.getInt("num");
                         time = data.getString("time");
+                        time = getDate(time);
                         message = data.getString("message");
-                        MessageModel messageModel = new MessageModel(test_num, "Ошибка вывода сообщения", time.substring(11, 16), "Server", "SystemMes");
+                        MessageModel messageModel = new MessageModel(test_num, "Ошибка вывода сообщения", time, "Server", "SystemMes");
                         Log.d("kkk", "system message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + " , status - " + status + "/" +  data);
                         if (test_num != num) {
                             switch (status)
@@ -1319,7 +1483,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     AlertDialog alert2 = builder2.create();
                                     alert2.show();
 
-                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), "Server", "SystemMes");
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
                                     PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                                     gridView_users.setAdapter(playersAdapter);
                                     break;
@@ -1464,7 +1628,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     StopAnimation();
                                     PlayersAdapter playersAdapter2 = new PlayersAdapter(list_users, getContext());
                                     gridView_users.setAdapter(playersAdapter2);
-                                    messageModel = new MessageModel(test_num, message, time.substring(11, 16), "Server", "SystemMes");
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
                                     break;
                                 case "role_action_mafia":
                                     data2 = data.getJSONObject("message");
@@ -1478,7 +1642,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     }
                                     PlayersAdapter playersAdapter3 = new PlayersAdapter(list_users, getContext());
                                     gridView_users.setAdapter(playersAdapter3);
-                                    messageModel = new MessageModel(test_num, "Голосует за " + user_nick, time.substring(11,16), mafia_nick, "VotingMes");
+                                    messageModel = new MessageModel(test_num, "Голосует за " + user_nick, time, mafia_nick, "VotingMes");
                                     break;
                                 case "voting":
                                     data2 = data.getJSONObject("message");
@@ -1493,24 +1657,21 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     }
                                     else
                                     {
-                                        if (player.getVoting_number() == 0)
-                                        {
-                                            voting_number.setVisibility(View.VISIBLE);
-                                        }
+                                        voting_number.setVisibility(View.VISIBLE);
                                         player.setVoting_number(player.getVoting_number() + 1);
                                         voting_number.setText(String.valueOf(player.getVoting_number()));
                                     }
                                     playersAdapter3 = new PlayersAdapter(list_users, getContext());
                                     gridView_users.setAdapter(playersAdapter3);
-                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time.substring(11,16), voter, "VotingMes");
+                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes");
                                     break;
                                 case "time_info":
-                                    messageModel = new MessageModel(test_num, message, time.substring(11,16), "Server", "SystemMes");
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
                                     break;
                                 case "journalist":
                                     data2 = data.getJSONObject("message");
                                     message = data2.getString("message");
-                                    messageModel = new MessageModel(test_num, message, time.substring(11,16), "Server", "SystemMes");
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
                                     break;
                             }
 
@@ -1729,6 +1890,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     {
                                         list_users.get(j).setChecked(true);
                                     }
+                                    else if (journalist_checks.getString(i).equals(player.getNick()))
+                                    {
+                                        player.setJournalist_checked(true);
+                                    }
                                 }
                             }
                             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
@@ -1749,15 +1914,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     if (list_users.get(i).getNick().equals(nick))
                                     {
                                         list_users.get(i).setVoting_number(voted_number);
-                                        break;
                                     }
-                                    else if (list_users.get(i).getNick().equals(player.getNick()))
+                                    else if (nick.equals(player.getNick()))
                                     {
-                                        if (player.getVoting_number() == 0)
-                                        {
-                                            voting_number.setVisibility(View.VISIBLE);
-                                        }
-                                        player.setVoting_number(player.getVoting_number() + 1);
+                                        voting_number.setVisibility(View.VISIBLE);
+                                        player.setVoting_number(voted_number);
                                         voting_number.setText(String.valueOf(player.getVoting_number()));
                                     }
                                 }
@@ -1775,6 +1936,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         role = data.getString("role");
                         status = data.getString("status");
                         time = data.getString("time");
+                        time = getDate(time);
                         can_vote = data.getBoolean("can_vote");
                         can_act = data.getBoolean("can_act");
                         influences = data.getJSONObject("influences");
@@ -1810,6 +1972,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             player.setTime(Time.NIGHT_OTHER);
                             break;
                         case "day":
+                            IV_my_role_animation.setVisibility(View.GONE);
                             voting_number.setVisibility(View.GONE);
                             player.setVoting_number(0);
                             DeleteNumbersFromVoting();
@@ -1873,6 +2036,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             else { IV_role.setImageResource(R.drawable.journalist_dead); }
                             break;
                     }
+                    IV_my_role_animation.setVisibility(View.GONE);
                     if (player.getStatus().equals("alive")) {
                         player.setCan_write(false);
                         switch (player.getTime()) {
@@ -1912,6 +2076,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         break;
                                     case JOURNALIST:
                                         if (can_act) StartAnimation(Role.JOURNALIST);
+                                        if (!player.getJournalist_checked())
+                                        {
+                                            IV_my_role_animation.setImageResource(R.drawable.ic_journalist);
+                                            IV_my_role_animation.setVisibility(View.VISIBLE);
+                                            animation = AnimationUtils.loadAnimation(getContext(), R.anim.voting);
+                                            IV_my_role_animation.startAnimation(animation);
+                                        }
                                         break;
                                     default:
                                         Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
@@ -1982,18 +2153,30 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - get_profile - " + data);
                 String nick = "", user_id_2 = "", avatar = "";
-                int playing_room_num = 0, money = 0, exp = 0;
+                int playing_room_num, money = 0, exp = 0, gold = 0;
                 boolean online = false;
+                JSONObject statistic = new JSONObject();
+                int game_counter = 0, max_money_score = 0, max_exp_score = 0;
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "";
                 try {
-                    avatar = data.getString("avatar");
+                    statistic = data.getJSONObject("statistics");
+                    game_counter = statistic.getInt("game_counter");
+                    if (data.has("max_money_score"))
+                    {
+                        max_money_score = statistic.getInt("max_money_score");
+                        max_exp_score = statistic.getInt("max_exp_score");
+                        money = data.getInt("money");
+                        gold = data.getInt("gold");
+                    }
+                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
+                    avatar = data.getString("avatar");
                     user_id_2 = data.getString("user_id");
-                    money = data.getInt("money");
                     exp = data.getInt("exp");
-                    if (data.has("playing_room_num")) {
-                        playing_room_num = data.getInt("playing_room_num");
-                    }
+                    if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -2004,18 +2187,47 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
                 FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
                 FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
-                FloatingActionButton FAB_complain = view_profile.findViewById(R.id.Item_profile_complain);
+                FloatingActionButton FAB_report = view_profile.findViewById(R.id.Item_profile_complain);
                 TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
                 TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
+                TextView TV_gold = view_profile.findViewById(R.id.ItemProfile_TV_gold);
                 ImageView IV_avatar = view_profile.findViewById(R.id.Item_profile_IV_avatar);
+
+                TextView TV_game_counter = view_profile.findViewById(R.id.ItemProfile_TV_game_counter);
+                TextView TV_max_money_score = view_profile.findViewById(R.id.ItemProfile_TV_max_money_score);
+                TextView TV_max_exp_score = view_profile.findViewById(R.id.ItemProfile_TV_max_exp_score);
+                TextView TV_general_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_general_pers_of_wins);
+                TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_mafia_pers_of_wins);
+                TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_peaceful_pers_of_wins);
+
+                LinearLayout LL_gold = view_profile.findViewById(R.id.ItemProfile_LL_gold);
+                LinearLayout LL_money = view_profile.findViewById(R.id.ItemProfile_LL_money);
+                LinearLayout LL_max_money_score = view_profile.findViewById(R.id.ItemProfile_LL_max_money_score);
+                LinearLayout LL_max_exp_score = view_profile.findViewById(R.id.ItemProfile_LL_max_exp_score);
 
                 if (avatar != null) {
                     IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
 
-                FAB_kick.setVisibility(View.GONE);
+                TV_game_counter.setText(String.valueOf(game_counter));
+                TV_general_pers_of_wins.setText(general_pers_of_wins);
+                TV_mafia_pers_of_wins.setText(mafia_pers_of_wins);
+                TV_peaceful_pers_of_wins.setText(peaceful_pers_of_wins);
 
-                TV_money.setText(String.valueOf(money));
+                if (nick.equals(MainActivity.NickName))
+                {
+                    TV_max_money_score.setText(String.valueOf(max_money_score));
+                    TV_max_exp_score.setText(String.valueOf(max_exp_score));
+                    TV_gold.setText(String.valueOf(gold));
+                    TV_money.setText(String.valueOf(money));
+                }
+                else
+                {
+                    LL_gold.setVisibility(View.INVISIBLE);
+                    LL_money.setVisibility(View.INVISIBLE);
+                    LL_max_money_score.setVisibility(View.GONE);
+                    LL_max_exp_score.setVisibility(View.GONE);
+                }
                 TV_exp.setText(String.valueOf(exp));
 
                 TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
@@ -2052,20 +2264,49 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     else {
                         FAB_kick.setVisibility(View.GONE);
                     }
-
                     String finalNick1 = nick;
-                    FAB_send_message.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            alert.cancel();
-                            MainActivity.User_id_2 = finalUser_id_;
-                            MainActivity.NickName_2 = finalNick1;
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
-                        }
+                    FAB_send_message.setOnClickListener(v -> {
+                        alert.cancel();
+                        MainActivity.User_id_2 = finalUser_id_;
+                        MainActivity.NickName_2 = finalNick1;
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
                     });
 
-                    FAB_complain.setOnClickListener(v -> {
+                    String finalNick = nick;
+                    FAB_report.setOnClickListener(v1 -> {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        //View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                        builder2.setView(view_report);
+                        AlertDialog alert2 = builder2.create();
 
+                        Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
+                        Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
+                        ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+                        EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                        btn_add_screenshot.setOnClickListener(v2 -> {
+                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                            photoPickerIntent.setType("image/*");
+                            startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                        });
+
+                        btn_report.setOnClickListener(v22 -> {
+                            final JSONObject json2 = new JSONObject();
+                            try {
+                                json2.put("nick", MainActivity.NickName);
+                                json2.put("session_id", MainActivity.Session_id);
+                                json2.put("against_id", finalUser_id_);
+                                json2.put("against_nick", finalNick);
+                                json2.put("reason", ET_report_message.getText());
+                                json2.put("image", base64_screenshot);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("send_complaint", json2);
+                            Log.d("kkk", "Socket_отправка - send_complaint" + json2);
+                            alert2.cancel();
+                        });
+                        alert2.show();
                     });
 
                     FAB_add_friend.setOnClickListener(v1 -> {
@@ -2076,7 +2317,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 {
                     FAB_send_message.setVisibility(View.GONE);
                     FAB_add_friend.setVisibility(View.GONE);
-                    FAB_complain.setVisibility(View.GONE);
+                    FAB_report.setVisibility(View.GONE);
+                    FAB_kick.setVisibility(View.GONE);
                 }
                 alert.show();
             }
@@ -2121,6 +2363,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     test_num = data.getInt("num");
                     nick = data.getString("nick");
                     time = data.getString("time");
+                    time = getDate(time);
                 } catch (JSONException e) {
                     return;
                 }
@@ -2141,7 +2384,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     alert.show();
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                 }
-                MessageModel messageModel = new MessageModel(test_num, player.getHost_nick(), time.substring(11,16), nick, "KickMes");
+                MessageModel messageModel = new MessageModel(test_num, player.getHost_nick(), time, nick, "KickMes");
 
                 if (test_num > num)
                 {
@@ -2173,6 +2416,30 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 }
                 PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                 gridView_users.setAdapter(playersAdapter);
+            }
+        });
+    };
+
+    private final Emitter.Listener OnBanUserInRoomError = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("kkk", "принял - ban_user_in_room_error");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Вы не можете выгонять админов из комнаты!")
+                        .setMessage("")
+                        .setIcon(R.drawable.ic_error)
+                        .setCancelable(false)
+                        .setNegativeButton("Ок",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     };
@@ -2234,6 +2501,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
             gridView_users.setAdapter(playersAdapter);
         }
+        IV_my_role_animation.setVisibility(View.GONE);
     }
     //действие роли
     public void RoleAction(String nick) {
@@ -2318,5 +2586,24 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
             gridView_users.setAdapter(playersAdapter);
         }
+    }
+
+    public String getDate(String ourDate)
+    {
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date value = formatter.parse(ourDate);
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm"); //this format changeable
+            dateFormatter.setTimeZone(TimeZone.getDefault());
+            ourDate = dateFormatter.format(value);
+        }
+        catch (Exception e)
+        {
+            ourDate = "00:00";
+        }
+        return ourDate;
     }
 }

@@ -196,7 +196,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
             }
         });
-
         return view;
     }
 
@@ -219,6 +218,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             case GALLERY_REQUEST:
                 if(resultCode == RESULT_OK){
                     Uri uri = imageReturnedIntent.getData();
+                    IV_screenshot.setImageURI(null);
                     IV_screenshot.setImageURI(uri);
 
                     try {
@@ -351,8 +351,16 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TV_mafia_pers_of_wins.setText(String.valueOf(finalMafia_pers_of_wins));
                     TV_peaceful_pers_of_wins.setText(String.valueOf(finalPeaceful_pers_of_wins));
 
-                    TV_gold.setText(String.valueOf(finalGold));
-                    TV_money.setText(String.valueOf(finalMoney));
+                    if (finalNick.equals(MainActivity.NickName))
+                    {
+                        TV_gold.setText(String.valueOf(finalGold));
+                        TV_money.setText(String.valueOf(finalMoney));
+                    }
+                    else
+                    {
+                        TV_gold.setVisibility(View.GONE);
+                        TV_money.setVisibility(View.GONE);
+                    }
                     TV_exp.setText(String.valueOf(finalExp));
 
                     TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);

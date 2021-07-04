@@ -12,6 +12,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
@@ -37,6 +39,10 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
     public SwitchCompat SC_blocked_chats;
 
+    public TextView TV_no_chats;
+
+    public ProgressBar PB_loading;
+
     public PrivateChatsAdapter privateChatsAdapter;
 
     ArrayList<PrivateChatModel> list_friends = new ArrayList<>();
@@ -49,9 +55,15 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         friendsView = view.findViewById(R.id.fragmentFriends_list_friends);
         btnExit = view.findViewById(R.id.fragmentFriends_btn_exit);
         SC_blocked_chats = view.findViewById(R.id.fragmentPrivateChats_SC_blocked_chats);
+        TV_no_chats = view.findViewById(R.id.fragmentChats_TV_no_chats);
+        PB_loading = view.findViewById(R.id.fragmentChats_PB_loading);
 
         privateChatsAdapter = new PrivateChatsAdapter(list_friends, getContext());
         friendsView.setAdapter(privateChatsAdapter);
+
+        PB_loading.setVisibility(View.VISIBLE);
+        TV_no_chats.setVisibility(View.GONE);
+
 
         JSONObject json = new JSONObject();
         try {
@@ -119,36 +131,41 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                JSONObject data = (JSONObject) args[0];
-                Log.d("kkk", "принял - get_list_of_chats - " + data);
-                String nick = "", user_id_1 = "", user_id_2 = "", message = "";
-                boolean online = false;
-                try {
-                    JSONArray user_ids = data.getJSONArray("user_ids");
-                    user_id_1 = user_ids.getString(0);
-                    user_id_2 = user_ids.getString(1);
+                PB_loading.setVisibility(View.GONE);
+                if (args.length != 0) {
+                    TV_no_chats.setVisibility(View.GONE);
+                    JSONObject data = (JSONObject) args[0];
+                    Log.d("kkk", "принял - get_list_of_chats - " + data);
+                    String nick = "", user_id_1 = "", user_id_2 = "", message = "";
+                    boolean online = false;
+                    try {
+                        JSONArray user_ids = data.getJSONArray("user_ids");
+                        user_id_1 = user_ids.getString(0);
+                        user_id_2 = user_ids.getString(1);
 
-                    JSONObject user_nicks = data.getJSONObject("user_nicks");
-                    if (!user_id_1.equals(MainActivity.User_id))
-                    {
-                        String test_id = user_id_1;
-                        user_id_1 = user_id_2;
-                        user_id_2 = test_id;
+                        JSONObject user_nicks = data.getJSONObject("user_nicks");
+                        if (!user_id_1.equals(MainActivity.User_id)) {
+                            String test_id = user_id_1;
+                            user_id_1 = user_id_2;
+                            user_id_2 = test_id;
+                        }
+                        nick = user_nicks.getString(user_id_2);
+
+                        JSONObject last_message = data.getJSONObject("last_message");
+                        message = last_message.getString("message");
+
+                        JSONObject blocked = data.getJSONObject("is_blocked");
+
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, true, false));
+                        privateChatsAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    nick = user_nicks.getString(user_id_2);
-
-                    JSONObject last_message = data.getJSONObject("last_message");
-                    message = last_message.getString("message");
-
-                    JSONObject blocked = data.getJSONObject("is_blocked");
-
-                    list_friends.add(new PrivateChatModel(nick, message, user_id_2, true, false));
-                    privateChatsAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
-
+                else
+                {
+                    TV_no_chats.setVisibility(View.VISIBLE);
+                }
             }
         });
     };
@@ -159,36 +176,41 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                JSONObject data = (JSONObject) args[0];
-                Log.d("kkk", "принял - get_list_of_chats - " + data);
-                String nick = "", user_id_1 = "", user_id_2 = "", message = "";
-                boolean online = false;
-                try {
-                    JSONArray user_ids = data.getJSONArray("user_ids");
-                    user_id_1 = user_ids.getString(0);
-                    user_id_2 = user_ids.getString(1);
+                PB_loading.setVisibility(View.GONE);
+                if (args.length != 0) {
+                    TV_no_chats.setVisibility(View.GONE);
+                    JSONObject data = (JSONObject) args[0];
+                    Log.d("kkk", "принял - get_list_of_chats - " + data);
+                    String nick = "", user_id_1 = "", user_id_2 = "", message = "";
+                    boolean online = false;
+                    try {
+                        JSONArray user_ids = data.getJSONArray("user_ids");
+                        user_id_1 = user_ids.getString(0);
+                        user_id_2 = user_ids.getString(1);
 
-                    JSONObject user_nicks = data.getJSONObject("user_nicks");
-                    if (!user_id_1.equals(MainActivity.User_id))
-                    {
-                        String test_id = user_id_1;
-                        user_id_1 = user_id_2;
-                        user_id_2 = test_id;
+                        JSONObject user_nicks = data.getJSONObject("user_nicks");
+                        if (!user_id_1.equals(MainActivity.User_id)) {
+                            String test_id = user_id_1;
+                            user_id_1 = user_id_2;
+                            user_id_2 = test_id;
+                        }
+                        nick = user_nicks.getString(user_id_2);
+
+                        JSONObject last_message = data.getJSONObject("last_message");
+                        message = last_message.getString("message");
+
+                        JSONObject blocked = data.getJSONObject("is_blocked");
+
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, true, true));
+                        privateChatsAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                    nick = user_nicks.getString(user_id_2);
-
-                    JSONObject last_message = data.getJSONObject("last_message");
-                    message = last_message.getString("message");
-
-                    JSONObject blocked = data.getJSONObject("is_blocked");
-
-                    list_friends.add(new PrivateChatModel(nick, message, user_id_2, true, true));
-                    privateChatsAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
-
-
+                else
+                {
+                    TV_no_chats.setVisibility(View.VISIBLE);
+                }
             }
         });
     };

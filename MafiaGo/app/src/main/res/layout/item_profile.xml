@@ -25,7 +25,6 @@
                 android:id="@+id/Item_profile_IV_avatar"
                 android:layout_width="70dp"
                 android:layout_height="100dp"
-                android:background="@drawable/sheriff_alive"
                 android:layout_below="@+id/Item_profile_TV_profile"/>
 
             <TextView
@@ -175,11 +174,11 @@
             <LinearLayout
                 android:id="@+id/ItemProfile_LL_games_сounter"
                 android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_below="@id/ItemProfile_LL_exp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_margin="10dp">
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="200dp">
 
                 <TextView
                     android:layout_width="wrap_content"

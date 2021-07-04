@@ -17,6 +17,16 @@
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
 
+    <TextView
+        android:id="@+id/fragmentChats_TV_no_chats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Нет чатов"
+        android:textStyle="bold"
+        android:textSize="20sp" />
+
+
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/fragmentPrivateChats_SC_blocked_chats"
         android:layout_width="wrap_content"
@@ -37,4 +47,10 @@
         android:divider="@color/colorWhite"
         android:dividerHeight="2dp"
         android:layout_margin="15dp"/>
+
+    <ProgressBar
+        android:id="@+id/fragmentChats_PB_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
 </RelativeLayout>

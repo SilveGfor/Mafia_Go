@@ -9,8 +9,7 @@
         android:layout_width="70dp"
         android:layout_margin="30dp"
         android:layout_height="100dp"
-        android:scaleType="centerCrop"
-        android:background="@drawable/sheriff_alive"/>
+        android:scaleType="centerCrop" />
 
     <Button
         android:id="@+id/dialogReport_btn_add_screenshot"

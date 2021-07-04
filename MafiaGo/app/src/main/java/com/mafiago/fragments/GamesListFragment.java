@@ -1,14 +1,22 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -27,12 +35,16 @@ import com.mafiago.models.UserModel;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 import io.socket.emitter.Emitter;
 
+import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
+import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class GamesListFragment extends Fragment implements OnBackPressedListener {
 
@@ -45,6 +57,12 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     public ProgressBar PB_loading;
 
+    ImageView IV_screenshot;
+
+    View view_report;
+
+    String base64_screenshot = "";
+
     ArrayList<RoomModel> list_room = new ArrayList<>();
 
     @Override
@@ -52,12 +70,15 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_games_list, container, false);
+        view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
 
         listView = view.findViewById(R.id.GamesList);
         btnCreateRoom = view.findViewById(R.id.btnCreateRoom);
         btnExit = view.findViewById(R.id.btnExitGamesList);
         TV_no_games = view.findViewById(R.id.fragmentGamesList_TV_no_games);
         PB_loading = view.findViewById(R.id.fragmentGamesList_PB_loading);
+
+        IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_games.setVisibility(View.GONE);
@@ -117,6 +138,42 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     @Override
     public void onBackPressed() {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+
+        switch(requestCode) {
+            case GALLERY_REQUEST:
+                if(resultCode == RESULT_OK){
+                    Uri uri = imageReturnedIntent.getData();
+                    IV_screenshot.setImageURI(null);
+                    IV_screenshot.setImageURI(uri);
+
+                    try {
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        byte[] bytes = stream.toByteArray();
+
+                        base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        }
+    }
+
+    public Bitmap fromBase64(String image) {
+        // Декодируем строку Base64 в массив байтов
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+        // Декодируем массив байтов в изображение
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        // Помещаем изображение в ImageView
+        return decodedByte;
     }
 
     private final Emitter.Listener onConnect = new Emitter.Listener() {
@@ -319,7 +376,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             public void run() {
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - get_profile - " + data);
-                String nick = "", user_id_2 = "";
+                String nick = "", user_id_2 = "", avatar = "";
                 int playing_room_num, money = 0, exp = 0, gold = 0;
                 boolean online = false;
                 JSONObject statistic = new JSONObject();
@@ -329,13 +386,17 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 try {
                     statistic = data.getJSONObject("statistics");
                     game_counter = statistic.getInt("game_counter");
-                    max_money_score = statistic.getInt("max_money_score");
-                    max_exp_score = statistic.getInt("max_exp_score");
+                    if (data.has("max_money_score"))
+                    {
+                        max_money_score = statistic.getInt("max_money_score");
+                        max_exp_score = statistic.getInt("max_exp_score");
+                    }
                     general_pers_of_wins = statistic.getString("general_pers_of_wins");
                     mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
                     peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     online = data.getBoolean("is_online");
                     nick = data.getString("nick");
+                    avatar = data.getString("avatar");
                     user_id_2 = data.getString("user_id");
                     money = data.getInt("money");
                     exp = data.getInt("exp");
@@ -351,10 +412,11 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 FloatingActionButton FAB_add_friend = view_profile.findViewById(R.id.Item_profile_add_friend);
                 FloatingActionButton FAB_kick = view_profile.findViewById(R.id.Item_profile_kick);
                 FloatingActionButton FAB_send_message = view_profile.findViewById(R.id.Item_profile_send_message);
-                FloatingActionButton FAB_complain = view_profile.findViewById(R.id.Item_profile_complain);
+                FloatingActionButton FAB_report = view_profile.findViewById(R.id.Item_profile_complain);
                 TextView TV_money = view_profile.findViewById(R.id.ItemProfile_TV_money);
                 TextView TV_exp = view_profile.findViewById(R.id.ItemProfile_TV_exp);
                 TextView TV_gold = view_profile.findViewById(R.id.ItemProfile_TV_gold);
+                ImageView IV_avatar = view_profile.findViewById(R.id.Item_profile_IV_avatar);
 
                 TextView TV_game_counter = view_profile.findViewById(R.id.ItemProfile_TV_game_counter);
                 TextView TV_max_money_score = view_profile.findViewById(R.id.ItemProfile_TV_max_money_score);
@@ -363,15 +425,45 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_mafia_pers_of_wins);
                 TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_peaceful_pers_of_wins);
 
-                TV_game_counter.setText(game_counter);
-                TV_max_money_score.setText(max_money_score);
-                TV_max_exp_score.setText(max_exp_score);
+                if (avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(avatar));
+                }
+
+                TV_game_counter.setText(String.valueOf(game_counter));
+                TV_max_money_score.setText(String.valueOf(max_money_score));
+                TV_max_exp_score.setText(String.valueOf(max_exp_score));
                 TV_general_pers_of_wins.setText(general_pers_of_wins);
                 TV_mafia_pers_of_wins.setText(mafia_pers_of_wins);
                 TV_peaceful_pers_of_wins.setText(peaceful_pers_of_wins);
 
-                TV_gold.setText(String.valueOf(gold));
-                TV_money.setText(String.valueOf(money));
+                LinearLayout LL_gold = view_profile.findViewById(R.id.ItemProfile_LL_gold);
+                LinearLayout LL_money = view_profile.findViewById(R.id.ItemProfile_LL_money);
+                LinearLayout LL_max_money_score = view_profile.findViewById(R.id.ItemProfile_LL_max_money_score);
+                LinearLayout LL_max_exp_score = view_profile.findViewById(R.id.ItemProfile_LL_max_exp_score);
+
+                if (avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(avatar));
+                }
+
+                TV_game_counter.setText(String.valueOf(game_counter));
+                TV_general_pers_of_wins.setText(general_pers_of_wins);
+                TV_mafia_pers_of_wins.setText(mafia_pers_of_wins);
+                TV_peaceful_pers_of_wins.setText(peaceful_pers_of_wins);
+
+                if (nick.equals(MainActivity.NickName))
+                {
+                    TV_max_money_score.setText(String.valueOf(max_money_score));
+                    TV_max_exp_score.setText(String.valueOf(max_exp_score));
+                    TV_gold.setText(String.valueOf(gold));
+                    TV_money.setText(String.valueOf(money));
+                }
+                else
+                {
+                    LL_gold.setVisibility(View.INVISIBLE);
+                    LL_money.setVisibility(View.INVISIBLE);
+                    LL_max_money_score.setVisibility(View.GONE);
+                    LL_max_exp_score.setVisibility(View.GONE);
+                }
                 TV_exp.setText(String.valueOf(exp));
 
 
@@ -387,6 +479,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 AlertDialog alert = builder.create();
 
                 String finalUser_id_ = user_id_2;
+                String finalNick = nick;
 
                 if (!nick.equals(MainActivity.NickName)) {
                     FAB_send_message.setOnClickListener(new View.OnClickListener() {
@@ -398,8 +491,41 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         }
                     });
 
-                    FAB_complain.setOnClickListener(v -> {
+                    FAB_report.setOnClickListener(v1 -> {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        //View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                        builder2.setView(view_report);
+                        AlertDialog alert2 = builder2.create();
 
+                        Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
+                        Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
+                        ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+                        EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                        btn_add_screenshot.setOnClickListener(v2 -> {
+                            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                            photoPickerIntent.setType("image/*");
+                            startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                        });
+
+                        btn_report.setOnClickListener(v22 -> {
+                            final JSONObject json2 = new JSONObject();
+                            try {
+                                json2.put("nick", MainActivity.NickName);
+                                json2.put("session_id", MainActivity.Session_id);
+                                json2.put("against_id", finalUser_id_);
+                                json2.put("against_nick", finalNick);
+                                json2.put("reason", ET_report_message.getText());
+                                json2.put("image", base64_screenshot);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("send_complaint", json2);
+                            Log.d("kkk", "Socket_отправка - send_complaint" + json2);
+                            alert2.cancel();
+                        });
+
+                        alert2.show();
                     });
 
                     FAB_add_friend.setOnClickListener(v1 -> {
@@ -409,7 +535,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 else
                 {
                     FAB_send_message.setVisibility(View.GONE);
-                    FAB_complain.setVisibility(View.GONE);
+                    FAB_report.setVisibility(View.GONE);
                     FAB_add_friend.setVisibility(View.GONE);
                 }
                 alert.show();
