@@ -61,6 +61,7 @@ import java.util.TimeZone;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
+import static com.mafiago.MainActivity.f;
 import static  com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
@@ -332,6 +333,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             if (input.length() > 300) {
                 input = input.substring(0, 301);
             }
+            int flag = 0;
+            for (int i = 0; i < input.length(); i ++)
+            {
+                if (Character.isLetter(input.charAt(i))) {
+                    for (int j = 0; j < f.length; j++) {
+                        if (input.charAt(i) == f[j]) {
+                            flag = 1;
+                        }
+                    }
+
+                    if (flag != 1) {
+                        input = input.replace(String.valueOf(input.charAt(i)), "");
+                    }
+                    flag = 0;
+                }
+            }
             if (player.getStatus().equals("alive")) {
                 if (player.Can_write()) {
                     if (!input.equals("") && !input.equals("/n")) {
@@ -351,7 +368,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         json2.put("nick", player.getNick());
                                         json2.put("session_id", player.getSession_id());
                                         json2.put("room", player.getRoom_num());
-                                        json2.put("message", sendText.getText().toString());
+                                        json2.put("message", input);
                                         json2.put("link", answer_id);
                                         answer_id = -1;
                                     } catch (JSONException e) {
@@ -388,7 +405,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         json2.put("nick", player.getNick());
                                         json2.put("session_id", player.getSession_id());
                                         json2.put("room", player.getRoom_num());
-                                        json2.put("message", sendText.getText().toString());
+                                        json2.put("message", input);
                                         json2.put("link", answer_id);
                                         answer_id = -1;
                                     } catch (JSONException e) {
@@ -424,7 +441,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 json2.put("nick", player.getNick());
                                 json2.put("session_id", player.getSession_id());
                                 json2.put("room", player.getRoom_num());
-                                json2.put("message", sendText.getText().toString());
+                                json2.put("message", input);
                                 json2.put("link", answer_id);
                                 answer_id = -1;
                             } catch (JSONException e) {
@@ -465,7 +482,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     json2.put("nick", player.getNick());
                     json2.put("session_id", player.getSession_id());
                     json2.put("room", player.getRoom_num());
-                    json2.put("message", sendText.getText().toString());
+                    json2.put("message", input);
                     json2.put("link", answer_id);
                     answer_id = -1;
                 } catch (JSONException e) {

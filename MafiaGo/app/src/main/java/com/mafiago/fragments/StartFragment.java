@@ -204,8 +204,8 @@ public class StartFragment extends Fragment {
                 try {
                     if (Answer.equals("incorrect_email")) {
                         if (!AutoRun) {
+                            PB_loading.setVisibility(View.INVISIBLE);
                             ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                PB_loading.setVisibility(View.INVISIBLE);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Такого аккаунта не существует!")
                                         .setMessage("")
@@ -223,8 +223,8 @@ public class StartFragment extends Fragment {
                         }
                     } else if (Answer.equals("incorrect_password")) {
                         if (!AutoRun) {
+                            PB_loading.setVisibility(View.INVISIBLE);
                             ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                PB_loading.setVisibility(View.INVISIBLE);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Неправильный пароль!")
                                         .setMessage("")

@@ -28,6 +28,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,6 +41,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.mafiago.MainActivity.client;
+import static com.mafiago.MainActivity.f;
 
 public class RegisterFragment extends Fragment implements OnBackPressedListener {
 
@@ -143,14 +148,30 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                 if (isNetworkOnline(getContext())) {
                     if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) && !ETpassword1.getText().toString().trim().equals("") && !ETnick.getText().toString().trim().equals("")) {
 
-                        Log.d("kkk", "Запуск Asycs");
+                        String nick = ETnick.getText().toString();
+                        int flag = 0;
+                        for (int i = 0; i < nick.length(); i ++)
+                        {
+                            if (Character.isLetter(nick.charAt(i))) {
+                                for (int j = 0; j < f.length; j++) {
+                                    if (nick.charAt(i) == f[j]) {
+                                        flag = 1;
+                                    }
+                                }
+
+                                if (flag != 1) {
+                                    nick = nick.replace(String.valueOf(nick.charAt(i)), "");
+                                }
+                                flag = 0;
+                            }
+                        }
 
                         String email = ETemail.getText().toString().toLowerCase().trim();
 
                         final JSONObject json = new JSONObject();
                         try {
                             json.put("email", email);
-                            json.put("nick", ETnick.getText());
+                            json.put("nick", nick);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -161,6 +182,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                         Request request = new Request.Builder().url(url1).post(body).build();
                         Call call = client.newCall(request);
 
+                        String finalNick = nick;
                         call.enqueue(new Callback() {
                             @Override
                             public void onFailure(Call call, IOException e) {
@@ -218,7 +240,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                         SharedPreferences.Editor editor = mSettings.edit();
                                         editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
                                         editor.putString(APP_PREFERENCES_EMAIL, email);
-                                        editor.putString(APP_PREFERENCES_NICKNAME, String.valueOf(ETnick.getText()));
+                                        editor.putString(APP_PREFERENCES_NICKNAME, finalNick);
                                         editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
                                         editor.apply();
 

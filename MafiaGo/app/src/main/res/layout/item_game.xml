@@ -55,7 +55,7 @@
         android:id="@+id/ItemGame_btn_info"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_centerVertical="true"
+        android:layout_alignBottom="@id/NumPeople"
         android:background="@drawable/ic_info"
         android:layout_toLeftOf="@id/Item_game_progressBar"/>
 
@@ -64,8 +64,97 @@
         android:layout_toLeftOf="@id/NumPeople"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:progressDrawable="@drawable/progressbar_states"
-        android:layout_centerVertical="true"
+        android:layout_alignBottom="@id/NumPeople"
         android:layout_width="45dp"
         android:layout_height="45dp" />
 
+    <ImageView
+        android:id="@+id/itemGame_IV_maniac"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/NumPeople"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/maniac_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_doctor"
+        android:layout_toLeftOf="@id/itemGame_IV_maniac"
+        android:layout_margin="5dp"
+        android:layout_below="@id/NumPeople"
+        android:layout_width="20dp"
+        android:visibility="gone"
+        android:layout_height="30dp"
+        android:background="@drawable/doctor_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_lover"
+        android:layout_toLeftOf="@id/itemGame_IV_doctor"
+        android:layout_margin="5dp"
+        android:layout_below="@id/NumPeople"
+        android:layout_width="20dp"
+        android:visibility="gone"
+        android:layout_height="30dp"
+        android:background="@drawable/lover_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_bodyguard"
+        android:layout_toLeftOf="@id/itemGame_IV_lover"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        android:layout_below="@id/NumPeople"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/bodyguard_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_terrorist"
+        android:layout_toLeftOf="@id/itemGame_IV_bodyguard"
+        android:layout_margin="5dp"
+        android:layout_below="@id/NumPeople"
+        android:layout_width="20dp"
+        android:visibility="gone"
+        android:layout_height="30dp"
+        android:background="@drawable/terrorist_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_mafia_don"
+        android:layout_toLeftOf="@id/itemGame_IV_terrorist"
+        android:layout_margin="5dp"
+        android:layout_below="@id/NumPeople"
+        android:visibility="gone"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/mafia_don_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_doctor_of_easy_virtue"
+        android:layout_toLeftOf="@id/itemGame_IV_mafia_don"
+        android:layout_margin="5dp"
+        android:layout_below="@id/NumPeople"
+        android:visibility="gone"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/doctor_of_easy_virtue_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_poisoner"
+        android:layout_toLeftOf="@id/itemGame_IV_doctor_of_easy_virtue"
+        android:layout_margin="5dp"
+        android:visibility="gone"
+        android:layout_below="@id/NumPeople"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/poisoner_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_journalist"
+        android:layout_toLeftOf="@id/itemGame_IV_poisoner"
+        android:visibility="gone"
+        android:layout_margin="5dp"
+        android:layout_below="@id/NumPeople"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/journalist_alive" />
 </RelativeLayout>

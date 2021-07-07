@@ -395,7 +395,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                                 json2.put("session_id", MainActivity.Session_id);
                                 json2.put("against_id", finalUser_id_);
                                 json2.put("against_nick", finalNick);
-                                json2.put("reason", ET_report_message.getText());
+                                json2.put("reason", "спам или флуд");
+                                json2.put("comment", ET_report_message.getText());
                                 json2.put("image", base64_screenshot);
                             } catch (JSONException e) {
                                 e.printStackTrace();

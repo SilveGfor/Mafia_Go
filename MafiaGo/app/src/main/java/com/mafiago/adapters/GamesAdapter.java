@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
+import com.mafiago.enums.Role;
 import com.mafiago.models.RoomModel;
 
 import java.util.ArrayList;
@@ -57,6 +58,18 @@ public class GamesAdapter extends BaseAdapter {
 
         ImageView btn_info = view.findViewById(R.id.ItemGame_btn_info);
 
+        ArrayList<String> list_roles = list_room.get(position).list_roles;
+
+        ImageView IV_maniac = view.findViewById(R.id.itemGame_IV_maniac);
+        ImageView IV_doctor = view.findViewById(R.id.itemGame_IV_doctor);
+        ImageView IV_lover = view.findViewById(R.id.itemGame_IV_lover);
+        ImageView IV_mafia_don = view.findViewById(R.id.itemGame_IV_mafia_don);
+        ImageView IV_poisoner = view.findViewById(R.id.itemGame_IV_poisoner);
+        ImageView IV_journalist = view.findViewById(R.id.itemGame_IV_journalist);
+        ImageView IV_terrorist = view.findViewById(R.id.itemGame_IV_terrorist);
+        ImageView IV_doctor_of_easy_virtue = view.findViewById(R.id.itemGame_IV_doctor_of_easy_virtue);
+        ImageView IV_bodyguard = view.findViewById(R.id.itemGame_IV_bodyguard);
+
         PB_users.setMax(list_room.get(position).max_people);
         PB_users.setProgress(list_room.get(position).num_people);
 
@@ -64,8 +77,6 @@ public class GamesAdapter extends BaseAdapter {
         TextView txt_is_on = view.findViewById(R.id.ItemGame_is_on);
         TextView txt_min_max_people = view.findViewById(R.id.MaxMinPeople);
         TextView txt_num_people = view.findViewById(R.id.NumPeople);
-
-        //txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
 
         btn_info.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -81,6 +92,31 @@ public class GamesAdapter extends BaseAdapter {
             AlertDialog alert = builder.create();
             alert.show();
         });
+
+        for (int i = 0; i < list_roles.size(); i++)
+        {
+            switch (list_roles.get(i))
+            {
+                case "doctor":
+                    IV_doctor.setVisibility(View.VISIBLE);
+                case "lover":
+                    IV_lover.setVisibility(View.VISIBLE);
+                case "mafia_don":
+                    IV_mafia_don.setVisibility(View.VISIBLE);
+                case "maniac":
+                    IV_maniac.setVisibility(View.VISIBLE);
+                case "terrorist":
+                    IV_terrorist.setVisibility(View.VISIBLE);
+                case "bodyguard":
+                    IV_bodyguard.setVisibility(View.VISIBLE);
+                case "poisoner":
+                    IV_poisoner.setVisibility(View.VISIBLE);
+                case "journalist":
+                    IV_journalist.setVisibility(View.VISIBLE);
+                case "doctor_of_easy_virtue":
+                    IV_doctor_of_easy_virtue.setVisibility(View.VISIBLE);
+            }
+        }
 
         if (list_room.get(position).is_on)
         {

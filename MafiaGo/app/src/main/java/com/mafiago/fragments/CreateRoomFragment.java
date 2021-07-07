@@ -35,6 +35,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 import io.socket.emitter.Emitter;
+
+import static com.mafiago.MainActivity.f;
 import static  com.mafiago.MainActivity.socket;
 
 public class CreateRoomFragment extends Fragment implements OnBackPressedListener {
@@ -49,6 +51,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     Button btnExitCreateRoom;
 
     public GridView GridView;
+
+    String name;
 
     ArrayList<RoleModel> list_roles = new ArrayList<>();
 
@@ -93,6 +97,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         socket.on("user_error", onUserError);
 
 
+        name = "";
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
         ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "London Bridge"));
@@ -117,6 +122,24 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
+                    name = ET_RoomName.getText().toString();
+                    int flag = 0;
+                    for (int i = 0; i < name.length(); i ++)
+                    {
+                        if (Character.isLetter(name.charAt(i))) {
+                            for (int j = 0; j < f.length; j++) {
+                                if (name.charAt(i) == f[j]) {
+                                    flag = 1;
+                                }
+                            }
+
+                            if (flag != 1) {
+                                name = name.replace(String.valueOf(name.charAt(i)), "");
+                            }
+                            flag = 0;
+                        }
+                    }
+
                     final JSONObject json = new JSONObject();
                     final JSONObject json_roles = new JSONObject();
                     try {
@@ -124,7 +147,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                         json_roles.put("mafia", mafia);
                         json.put("nick", MainActivity.NickName);
                         json.put("session_id", MainActivity.Session_id);
-                        json.put("name", ET_RoomName.getText());
+                        json.put("name", name);
                         //json.put("min_people_num", RSB_num_users.getSelectedMinValue());
                         json.put("min_people_num", 4);
                         json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
@@ -133,7 +156,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                         e.printStackTrace();
                     }
                     SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+                    editor.putString(APP_PREFERENCES_ROOM_NAME, name);
                     editor.apply();
                     socket.emit("create_room", json);
                     Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
@@ -237,7 +260,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                     JSONObject data = (JSONObject) args[0];
                     try {
                         MainActivity.Game_id = data.getInt("room_num");
-                        MainActivity.RoomName = String.valueOf(ET_RoomName.getText());
+                        MainActivity.RoomName = name;
                         Log.d("kkk", "Принял - create_room: " + MainActivity.Game_id);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                     } catch (JSONException e) {

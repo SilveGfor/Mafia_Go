@@ -5,9 +5,11 @@ import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -34,6 +36,13 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity {
 
+    static String str = "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ\n" +
+            "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM\n" +
+            "ґєіїЇІЄҐ\n" +
+            "ўЎ\n" +
+            "ćčłńśšŭźžĆČŁŃŚŠŬŹŽ\n" +
+            "äğñöşūüáǵúóýıÄĞÑÖŞŪÜÁǴÓÚÝIİ";
+    public static char[] f = str.toCharArray();
     public static OkHttpClient client;
     public static String NickName = "";
     public static String NickName_2 = "";
@@ -275,6 +284,38 @@ public static Socket socket;
             return true;
         }
     }
+/*
+    char[] nick = ETnick.getText().toString().toCharArray();
+    int flag = 0;
+                        for (int i = 0; i < nick.length; i ++)
+    {
+        if (Character.isLetter(nick[i])) {
+            for (int j = 0; j < f.length; j++) {
+                if (nick[i] == f[j]) {
+                    flag = 1;
+                }
+            }
+            if (flag != 1) {
+                Log.d("kkk", "Не тот символ!!!  " + nick[i]);
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle("Недопустимый символ - " + nick[i])
+                        .setMessage("")
+                        .setIcon(R.drawable.ic_error)
+                        .setCancelable(false)
+                        .setNegativeButton("Ок",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+            flag = 0;
+        }
+    }
+
+ */
 }
 
 

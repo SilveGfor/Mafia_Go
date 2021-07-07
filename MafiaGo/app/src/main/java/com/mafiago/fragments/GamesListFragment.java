@@ -32,6 +32,7 @@ import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.RoomModel;
 import com.mafiago.models.UserModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -265,12 +266,14 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         JSONObject data = (JSONObject) args[0];
                         String name = "", nick = "";
                         ArrayList<UserModel> list_users = new ArrayList<>();
+                        ArrayList<String> list_roles = new ArrayList<>();
                         Boolean alive = true, is_on = false;
                         int id = 0;
                         int min_people = 0;
                         int max_people = 0;
                         int num_people = 0;
                         JSONObject users = new JSONObject();
+                        JSONArray roles = new JSONArray();
                         Log.d("kkk", "принял - add_room_to_list_of_rooms - " + data);
                         TV_no_games.setVisibility(View.GONE);
                         try {
@@ -288,6 +291,11 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                                 alive = alive_string.equals("alive");
                                 list_users.add(new UserModel(nick, alive));
                             }
+                            roles = data.getJSONArray("roles");
+                            for (int i = 0; i < roles.length(); i++)
+                            {
+                                list_roles.add(roles.get(i).toString());
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -301,7 +309,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             }
                         }
                         if (not_doable) {
-                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on);
+                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles);
                             list_room.add(model);
                             GamesAdapter customList = new GamesAdapter(list_room, getContext());
                             listView.setAdapter(customList);
@@ -328,8 +336,10 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     String name;
                     String nick = "";
                     ArrayList<UserModel> list_users = new ArrayList<>();
+                    ArrayList<String> list_roles = new ArrayList<>();
                     Boolean alive = true, is_on = false;
                     JSONObject users = new JSONObject();
+                    JSONArray roles = new JSONArray();
                     int num;
                     int min_people;
                     int max_people;
@@ -351,10 +361,15 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             alive = alive_string.equals("alive");
                             list_users.add(new UserModel(nick, alive));
                         }
+                        roles = data.getJSONArray("roles");
+                        for (int i = 0; i < roles.length(); i++)
+                        {
+                            list_roles.add(roles.get(i).toString());
+                        }
                         for(int i = 0; i< list_room.size(); i++) {
                             if (list_room.get(i).id == id)
                             {
-                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on);
+                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles);
                                 list_room.set(i, model);
                                 GamesAdapter customList = new GamesAdapter(list_room, getContext());
                                 listView.setAdapter(customList);
