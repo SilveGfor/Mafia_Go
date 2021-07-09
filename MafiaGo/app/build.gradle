@@ -61,6 +61,7 @@ dependencies {
 
     implementation 'com.romainpiel.shimmer:library:1.4.0@aar'
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
 
 
     implementation ('io.socket:socket.io-client:2.0.0') {

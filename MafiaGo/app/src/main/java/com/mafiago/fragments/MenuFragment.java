@@ -366,8 +366,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         // Декодируем массив байтов в изображение
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
 
-        Log.d("kkk", String.valueOf(decodedByte.getByteCount() / 1024));
-
         // Помещаем изображение в ImageView
         return decodedByte;
     }

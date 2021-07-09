@@ -123,12 +123,10 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
                         int scaleDivider = 5;
                         int max = 0;
                         if (bitmap.getWidth() > bitmap.getHeight()) {
-                            scaleDivider = bitmap.getWidth() / 512;
                             max = bitmap.getWidth();
                         }
                         else
                         {
-                            scaleDivider = bitmap.getHeight() / 512;
                             max = bitmap.getHeight();
                         }
                         if (max <= 300)
@@ -155,29 +153,41 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
                         byte[] downsizedImageBytes =
                                 getDownsizedImageBytes(bitmap, scaleWidth, scaleHeight);
                         String base64 = Base64.encodeToString(downsizedImageBytes, Base64.DEFAULT);
-                        Log.d("kkk", String.valueOf(base64.length()));
+                        Log.d("kkk", String.valueOf("Длина = " + base64.length()));
+                        if (base64.length() <= 524288) {
+                            final JSONObject json2 = new JSONObject();
+                            try {
+                                json2.put("nick", MainActivity.NickName);
+                                json2.put("session_id", MainActivity.Session_id);
+                                json2.put("avatar", base64);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
+                            socket.emit("edit_profile", json2);
 
-
-                        final JSONObject json2 = new JSONObject();
-                        try {
-                            json2.put("nick", MainActivity.NickName);
-                            json2.put("session_id", MainActivity.Session_id);
-                            json2.put("avatar", base64);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Профиль успешно изменён!")
+                                    .setMessage("Длина base64 = " + base64.length())
+                                    .setIcon(R.drawable.ic_ok)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ок",
+                                            (dialog, id) -> dialog.cancel());
+                            AlertDialog alert = builder.create();
+                            alert.show();
                         }
-                        Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
-                        socket.emit("edit_profile", json2);
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Профиль успешно изменён!")
-                                .setMessage("Длина base64 = " + base64.length())
-                                .setIcon(R.drawable.ic_ok)
-                                .setCancelable(false)
-                                .setNegativeButton("Ок",
-                                        (dialog, id) -> dialog.cancel());
-                        AlertDialog alert = builder.create();
-                        alert.show();
+                        else
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Слишком большое изображение!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ок",
+                                            (dialog, id) -> dialog.cancel());
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -240,7 +250,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
         // 2. Instantiate the downsized image content as a byte[]
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        cropImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        cropImg.compress(Bitmap.CompressFormat.JPEG, 80, baos);
         byte[] downsizedImageBytes = baos.toByteArray();
 
         return downsizedImageBytes;

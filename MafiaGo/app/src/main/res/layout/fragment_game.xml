@@ -132,7 +132,28 @@
         android:textSize="20sp"
         android:layout_below="@id/btnExitChat"
         android:textColor="@color/colorWhite"
-        android:layout_margin="10dp"/>
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_mafia_count"
+        android:layout_below="@id/day_time"
+        android:layout_toRightOf="@id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Мафия 2/3"
+        android:textStyle="italic"
+        android:textColor="#FF0000"/>
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_peaceful_count"
+        android:layout_below="@id/fragmentGame_TV_mafia_count"
+        android:layout_toRightOf="@id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Мирных 3/5"
+        android:textStyle="italic"
+        android:textColor="#4CFF00"/>
 
     <TextView
         android:id="@+id/timer"
@@ -142,7 +163,7 @@
         android:text="--"
         android:textColor="@color/colorWhite"
         android:textSize="40sp"
-        android:layout_margin="10dp"/>
+        android:layout_margin="15dp"/>
 
     <GridView
         android:id="@+id/ListUsers"

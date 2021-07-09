@@ -24,6 +24,8 @@
 
  import java.util.ArrayList;
 
+ import de.hdodenhof.circleimageview.CircleImageView;
+
  import static com.mafiago.MainActivity.socket;
 
  public class MessageAdapter extends BaseAdapter {
@@ -68,7 +70,7 @@
             case "UsersMes":
                 view = layout.inflate(R.layout.item_message, null);
 
-                ImageView IV_avatar = view.findViewById(R.id.item_message_avatar);
+                CircleImageView IV_avatar = view.findViewById(R.id.item_message_avatar);
 
                 if (list_mess.get(position).avatar != null) {
                     IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
@@ -237,7 +239,6 @@
                 int id = list_mess.get(position).answerId;
 
                 IV_avatar = view.findViewById(R.id.item_answer_message_avatar);
-                ImageView IV_answer_avatar = view.findViewById(R.id.itemAnswerMessage_answer_avatar);
 
                 if (list_mess.get(position).avatar != null) {
                     IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
@@ -313,9 +314,6 @@
                         txt_answer_nick.setText(list_mess.get(i).nickName);
                         txt_answer_mes.setText(list_mess.get(i).message);
                         txt_answer_time.setText(list_mess.get(i).time);
-                        if (list_mess.get(i).avatar != null) {
-                            IV_answer_avatar.setImageBitmap(fromBase64(list_mess.get(i).avatar));
-                        }
 
 
                         switch (list_mess.get(i).rang) {

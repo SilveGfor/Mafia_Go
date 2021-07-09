@@ -79,6 +79,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public TextView answer_mes;
     public TextView room_name;
     public TextView voting_number;
+    public TextView TV_mafia_count;
+    public TextView TV_peaceful_count;
 
     public ImageView IV_influence_doctor;
     public ImageView IV_influence_lover;
@@ -104,6 +106,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     ArrayList<MessageModel> list_chat = new ArrayList<>();
     ArrayList<UserModel> list_users = new ArrayList<>();
+    int[] list_mafias = new int[] {0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9};
+    int[] list_peaceful = new int[] {0, 0, 0, 0, 0, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11};
 
     JSONObject users = new JSONObject();
 
@@ -112,9 +116,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     int messages_can_write = 10;
     public String journalist_check = null;
 
+    public int mafia_max = 0, mafia_now = 0, peaceful_max = 0, peaceful_now = 0;
+
     int num = -1;
 
     ImageView IV_screenshot;
+
 
     View view_report;
 
@@ -146,6 +153,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         sendText = view.findViewById(R.id.InputMes);
         room_name = view.findViewById(R.id.fragmentGame_TV_room_name);
         voting_number = view.findViewById(R.id.fragmentGame_voting_number);
+        TV_mafia_count = view.findViewById(R.id.fragmentGame_TV_mafia_count);
+        TV_peaceful_count = view.findViewById(R.id.fragmentGame_TV_peaceful_count);
 
         btnSend = view.findViewById(R.id.btnSendMes);
         btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
@@ -176,6 +185,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         IV_my_role_animation.setVisibility(View.GONE);
 
         voting_number.setVisibility(View.GONE);
+
+        TV_mafia_count.setVisibility(View.GONE);
+        TV_peaceful_count.setVisibility(View.GONE);
 
         FAB_skip_day.setVisibility(View.GONE);
 
@@ -974,6 +986,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     }
                                 }
                             }
+                            for (int i = 0; i < list_chat.size(); i++) {
+                                if (list_chat.get(i).nickName.equals(nick)) {
+                                    list_chat.get(i).avatar = avatar;
+                                }
+                            }
                             if (!nick.equals(MainActivity.NickName)) {
                                 list_users.add(new UserModel(nick, Role.NONE, avatar));
                                 PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
@@ -1044,8 +1061,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             }
                         }
                         for (int i = 0; i < list_chat.size(); i++) {
-                            Log.d("kkk", String.valueOf(list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")));
-                            Log.d("kkk", String.valueOf(list_chat.get(i).message));
                             if (list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
                                 list_chat.remove(i);
                             }
@@ -1283,6 +1298,18 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     switch (player.getTime())
                     {
                         case NIGHT_LOVE:
+                            if (TV_mafia_count.getVisibility() != View.VISIBLE)
+                            {
+                                int players = list_users.size() + 1;
+                                mafia_max = list_mafias[players];
+                                peaceful_max = list_mafias[players];
+                                mafia_now = mafia_max;
+                                peaceful_now = peaceful_max;
+                                TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
+                                TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
+                                TV_mafia_count.setVisibility(View.VISIBLE);
+                                TV_peaceful_count.setVisibility(View.VISIBLE);
+                            }
                             IV_influence_poisoner.setVisibility(View.GONE);
                             IV_influence_lover.setVisibility(View.GONE);
                             switch (player.getRole())
@@ -1612,6 +1639,26 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     message = data2.getString("message");
                                     nick = data2.getString("nick");
                                     Role role = ConvertToRole(data2.getString("role"));
+                                    switch (role) {
+                                        case CITIZEN:
+                                        case SHERIFF:
+                                        case DOCTOR:
+                                        case LOVER:
+                                        case MANIAC:
+                                        case BODYGUARD:
+                                        case DOCTOR_OF_EASY_VIRTUE:
+                                        case JOURNALIST:
+                                            peaceful_now--;
+                                            break;
+                                        case MAFIA_DON:
+                                        case POISONER:
+                                        case TERRORIST:
+                                        case MAFIA:
+                                            mafia_now--;
+                                            break;
+                                    }
+                                    TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
+                                    TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
                                     for (int i = 0; i < list_users.size(); i++)
                                     {
                                         if (nick.equals(player.getNick()))
@@ -1680,6 +1727,26 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     if (data2.has("nick_2")) {
                                         String nick2 = data2.getString("nick_2");
                                         Role role2 = ConvertToRole(data2.getString("role_2"));
+                                        switch (role2) {
+                                            case CITIZEN:
+                                            case SHERIFF:
+                                            case DOCTOR:
+                                            case LOVER:
+                                            case MANIAC:
+                                            case BODYGUARD:
+                                            case DOCTOR_OF_EASY_VIRTUE:
+                                            case JOURNALIST:
+                                                peaceful_now--;
+                                                break;
+                                            case MAFIA_DON:
+                                            case POISONER:
+                                            case TERRORIST:
+                                            case MAFIA:
+                                                mafia_now--;
+                                                break;
+                                        }
+                                        TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
+                                        TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
                                         for (int i = 0; i < list_users.size(); i++)
                                         {
                                             if (list_users.get(i).getNick().equals(nick2))
@@ -2157,10 +2224,23 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             break;
                     }
                     IV_my_role_animation.setVisibility(View.GONE);
+                    if (TV_mafia_count.getVisibility() != View.VISIBLE)
+                    {
+                        int players = list_users.size() + 1;
+                        mafia_max = list_mafias[players];
+                        peaceful_max = list_mafias[players];
+                        mafia_now = mafia_now + mafia_max;
+                        peaceful_now = peaceful_now + peaceful_max;
+                        TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
+                        TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
+                        TV_mafia_count.setVisibility(View.VISIBLE);
+                        TV_peaceful_count.setVisibility(View.VISIBLE);
+                    }
                     if (player.getStatus().equals("alive")) {
                         player.setCan_write(false);
                         switch (player.getTime()) {
                             case NIGHT_LOVE:
+                                IV_influence_poisoner.setVisibility(View.GONE);
                                 IV_influence_lover.setVisibility(View.GONE);
                                 switch (player.getRole()) {
                                     case MAFIA:
