@@ -2,6 +2,9 @@ package com.mafiago.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,8 +47,13 @@ public class PrivateChatsAdapter extends BaseAdapter {
         TextView txt_nick = view.findViewById(R.id.Item_friend_nick);
         TextView txt_messages = view.findViewById(R.id.Item_friend_messages);
         ImageView IV_ban_unban_chat = view.findViewById(R.id.itemPrivateChat_IV_ban_chat);
+        ImageView IV_avatar = view.findViewById(R.id.Item_friend_avatar);
 
         ImageView online = view.findViewById(R.id.Item_friend_IV_on_off);
+
+        if (list_friends.get(position).getAvatar() != null) {
+            IV_avatar.setImageBitmap(fromBase64(list_friends.get(position).getAvatar()));
+        }
 
         txt_nick.setText(list_friends.get(position).getNick());
         txt_messages.setText(list_friends.get(position).getLast_message());
@@ -137,5 +145,16 @@ public class PrivateChatsAdapter extends BaseAdapter {
     @Override
     public long getItemId(int position) {
         return position;
+    }
+
+    public Bitmap fromBase64(String image) {
+        // Декодируем строку Base64 в массив байтов
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+        // Декодируем массив байтов в изображение
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        // Помещаем изображение в ImageView
+        return decodedByte;
     }
 }

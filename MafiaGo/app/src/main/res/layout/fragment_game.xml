@@ -164,7 +164,6 @@
         android:textColor="@color/colorWhite"
         android:textSize="40sp"
         android:layout_margin="15dp"/>
-
     <GridView
         android:id="@+id/ListUsers"
         android:layout_width="match_parent"

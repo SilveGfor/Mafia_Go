@@ -145,6 +145,46 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
                         {
                             scaleDivider = 4;
                         }
+                        else if (max <= 1500)
+                        {
+                            scaleDivider = 5;
+                        }
+                        else if (max <= 1800)
+                        {
+                            scaleDivider = 6;
+                        }
+                        else if (max <= 2100)
+                        {
+                            scaleDivider = 7;
+                        }
+                        else if (max <= 2400)
+                        {
+                            scaleDivider = 8;
+                        }
+                        else if (max <= 2700)
+                        {
+                            scaleDivider = 9;
+                        }
+                        else if (max <= 3000)
+                        {
+                            scaleDivider = 10;
+                        }
+                        else if (max <= 3300)
+                        {
+                            scaleDivider = 11;
+                        }
+                        else if (max <= 3600)
+                        {
+                            scaleDivider = 12;
+                        }
+                        else if (max <= 3900)
+                        {
+                            scaleDivider = 13;
+                        }
+                        else if (max <= 4200)
+                        {
+                            scaleDivider = 14;
+                        }
 
                         int scaleWidth = bitmap.getWidth() / scaleDivider;
                         int scaleHeight = bitmap.getHeight() / scaleDivider;
@@ -168,7 +208,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Профиль успешно изменён!")
-                                    .setMessage("Длина base64 = " + base64.length())
+                                    .setMessage("")
                                     .setIcon(R.drawable.ic_ok)
                                     .setCancelable(false)
                                     .setNegativeButton("Ок",
@@ -236,21 +276,55 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
     public byte[] getDownsizedImageBytes(Bitmap fullBitmap, int scaleWidth, int scaleHeight) throws IOException {
 
-        Bitmap scaledBitmap = Bitmap.createScaledBitmap(fullBitmap, scaleWidth, scaleHeight, true);
+        //Bitmap scaledBitmap = Bitmap.createScaledBitmap(fullBitmap, scaleWidth, scaleHeight, true);
 
         int width  = fullBitmap.getWidth();
-        int height = fullBitmap.getHeight();
+        int height = fullBitmap.getHeight(); //высота
         int newWidth = (height > width) ? width : height;
         int newHeight = (height > width)? height - ( height - width) : height;
+        int max = newHeight;
+        int scaleDivider = 1;
+        if (max <= 600)
+        {
+            scaleDivider = 1;
+        }
+        else if (max <= 1200)
+        {
+            scaleDivider = 2;
+        }
+        else if (max <= 1800)
+        {
+            scaleDivider = 3;
+        }
+        else if (max <= 2400)
+        {
+            scaleDivider = 4;
+        }
+        else if (max <= 3000)
+        {
+            scaleDivider = 5;
+        }
+        else if (max <= 3600)
+        {
+            scaleDivider = 6;
+        }
+        else if (max <= 4200)
+        {
+            scaleDivider = 7;
+        }
+        //newWidth = newWidth / scaleDivider;
+        //newHeight = newHeight / scaleDivider;
         int cropW = (width - height) / 2;
         cropW = (cropW < 0)? 0: cropW;
         int cropH = (height - width) / 2;
         cropH = (cropH < 0)? 0: cropH;
         Bitmap cropImg = Bitmap.createBitmap(fullBitmap, cropW, cropH, newWidth, newHeight);
 
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(cropImg, newWidth / scaleDivider, newHeight / scaleDivider, true);
+
         // 2. Instantiate the downsized image content as a byte[]
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        cropImg.compress(Bitmap.CompressFormat.JPEG, 80, baos);
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 80, baos);
         byte[] downsizedImageBytes = baos.toByteArray();
 
         return downsizedImageBytes;
