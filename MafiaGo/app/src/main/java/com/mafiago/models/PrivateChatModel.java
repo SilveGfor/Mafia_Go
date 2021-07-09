@@ -6,13 +6,19 @@ public class PrivateChatModel {
     private boolean blocked;
     private String last_message;
     private String user_id_2;
+    private String avatar;
 
-    public PrivateChatModel(String nick, String last_message, String user_id_2, boolean online, boolean blocked) {
+    public PrivateChatModel(String nick, String last_message, String user_id_2, boolean online, boolean blocked, String avatar) {
         this.nick = nick;
         this.last_message = last_message;
         this.online = online;
         this.user_id_2 = user_id_2;
         this.blocked = blocked;
+        this.avatar = avatar;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public Boolean getBlocked() {

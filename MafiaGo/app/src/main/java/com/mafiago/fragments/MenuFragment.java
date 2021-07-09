@@ -341,7 +341,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         return downsizedImageBytes;
     }
 
-    //TODO: реализовать функцию
     public String toBase64() {
         // Получаем изображение из ImageView
         BitmapDrawable drawable = (BitmapDrawable) IV_background.getDrawable();
