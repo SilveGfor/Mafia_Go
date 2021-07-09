@@ -95,26 +95,36 @@ public class GamesAdapter extends BaseAdapter {
 
         for (int i = 0; i < list_roles.size(); i++)
         {
+            Log.d("kkk", list_roles.get(i));
             switch (list_roles.get(i))
             {
                 case "doctor":
                     IV_doctor.setVisibility(View.VISIBLE);
+                    break;
                 case "lover":
                     IV_lover.setVisibility(View.VISIBLE);
+                    break;
                 case "mafia_don":
                     IV_mafia_don.setVisibility(View.VISIBLE);
+                    break;
                 case "maniac":
                     IV_maniac.setVisibility(View.VISIBLE);
+                    break;
                 case "terrorist":
                     IV_terrorist.setVisibility(View.VISIBLE);
+                    break;
                 case "bodyguard":
                     IV_bodyguard.setVisibility(View.VISIBLE);
+                    break;
                 case "poisoner":
                     IV_poisoner.setVisibility(View.VISIBLE);
+                    break;
                 case "journalist":
                     IV_journalist.setVisibility(View.VISIBLE);
+                    break;
                 case "doctor_of_easy_virtue":
                     IV_doctor_of_easy_virtue.setVisibility(View.VISIBLE);
+                    break;
             }
         }
 

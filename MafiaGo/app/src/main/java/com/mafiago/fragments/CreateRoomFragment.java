@@ -148,8 +148,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                         json.put("nick", MainActivity.NickName);
                         json.put("session_id", MainActivity.Session_id);
                         json.put("name", name);
-                        //json.put("min_people_num", RSB_num_users.getSelectedMinValue());
-                        json.put("min_people_num", 4);
+                        json.put("min_people_num", RSB_num_users.getSelectedMinValue());
                         json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
                         json.put("roles", json_roles);
                     } catch (JSONException e) {

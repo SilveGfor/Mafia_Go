@@ -41,7 +41,8 @@
 
             <ImageView
                 android:id="@+id/fragmentMenu_IV_avatar"
-                android:layout_width="70dp"
+                android:scaleType="centerCrop"
+                android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_below="@+id/fragmentMenu_TV_profile"/>
 

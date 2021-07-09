@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/dialogAvatar_avatar"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:adjustViewBounds="true"
+        android:scaleType="centerCrop"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/lover_alive"
+        android:layout_centerHorizontal="true"/>
+
+    <Button
+        android:id="@+id/dialogAvatar_btn_exit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="закрыть"
+        android:layout_below="@id/dialogAvatar_avatar"/>
+</RelativeLayout>

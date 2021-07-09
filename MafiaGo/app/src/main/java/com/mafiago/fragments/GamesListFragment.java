@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
@@ -62,7 +63,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     View view_report;
 
-    String base64_screenshot = "";
+    String base64_screenshot = "", report_nick = "", report_id = "";
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
 
@@ -149,9 +150,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             case GALLERY_REQUEST:
                 if(resultCode == RESULT_OK){
                     Uri uri = imageReturnedIntent.getData();
-                    IV_screenshot.setImageURI(null);
-                    IV_screenshot.setImageURI(uri);
-
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -162,6 +160,84 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                    builder2.setView(view_report);
+                    AlertDialog alert2 = builder2.create();
+
+                    Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
+                    Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
+                    ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+                    EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                    final String[] reason = {""};
+
+                    RadioGroup radioGroup = view_report.findViewById(R.id.dialogReport_RG);
+
+                    IV_screenshot.setImageURI(null);
+                    IV_screenshot.setImageURI(uri);
+
+                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            switch (checkedId) {
+                                case -1:
+                                    break;
+                                case R.id.dialogReport_RB_1:
+                                    reason[0] = "спам или флуд";
+                                    break;
+                                case R.id.dialogReport_RB_2:
+                                    reason[0] = "размещение материалов рекламного, эротического, порнографического или оскорбительного характера или иной информации, размещение которой запрещено или противоречит нормам действующего законодательства РФ";
+                                    break;
+                                case R.id.dialogReport_RB_3:
+                                    reason[0] = "распространение информации, которая направлена на пропаганду войны, разжигание национальной, расовой или религиозной ненависти и вражды или иной информации, за распространение которой предусмотрена уголовная или административная ответственность";
+                                    break;
+                                case R.id.dialogReport_RB_4:
+                                    reason[0] = "игра против/не в интересах своей команды";
+                                    break;
+                                case R.id.dialogReport_RB_5:
+                                    reason[0] = "фарм (т.е. ведение игры организованной группой лиц, цель которой направлена на быстрое извлечение прибыли вне зависимости от того, кто из участников группы победит)";
+                                    break;
+                                case R.id.dialogReport_RB_6:
+                                    reason[0] = "создание нескольких учётных записей в Приложении, фактически принадлежащих одному и тому же лицу";
+                                    break;
+                                case R.id.dialogReport_RB_7:
+                                    reason[0] = "совершение действий, направленный на введение других Пользователей в заблуждение (не касается игрового процесса)";
+                                    break;
+                                case R.id.dialogReport_RB_8:
+                                    reason[0] = "модератор/администратор злоупотребляет своими полномочиями или положением";
+                                    break;
+                                case R.id.dialogReport_RB_9:
+                                    reason[0] = "другое";
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+
+                    btn_report.setOnClickListener(v22 -> {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("against_id", report_id);
+                            json2.put("against_nick", report_nick);
+                            json2.put("reason", reason[0]);
+                            json2.put("comment", ET_report_message.getText());
+                            json2.put("image", base64_screenshot);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("send_complaint", json2);
+                        Log.d("kkk", "Socket_отправка - send_complaint" + json2);
+                        alert2.cancel();
+                    });
+
+                    btn_add_screenshot.setVisibility(View.GONE);
+
+                    alert2.show();
                 }
         }
     }
@@ -401,10 +477,12 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 try {
                     statistic = data.getJSONObject("statistics");
                     game_counter = statistic.getInt("game_counter");
-                    if (data.has("max_money_score"))
+                    if (statistic.has("max_money_score"))
                     {
                         max_money_score = statistic.getInt("max_money_score");
                         max_exp_score = statistic.getInt("max_exp_score");
+                        gold = data.getInt("gold");
+                        money = data.getInt("money");
                     }
                     general_pers_of_wins = statistic.getString("general_pers_of_wins");
                     mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
@@ -413,9 +491,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     nick = data.getString("nick");
                     avatar = data.getString("avatar");
                     user_id_2 = data.getString("user_id");
-                    money = data.getInt("money");
                     exp = data.getInt("exp");
-                    gold = data.getInt("gold");
                     if (data.has("playing_room_num")) playing_room_num = data.getInt("playing_room_num");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -440,10 +516,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_mafia_pers_of_wins);
                 TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.ItemProfile_TV_peaceful_pers_of_wins);
 
-                if (avatar != null) {
-                    IV_avatar.setImageBitmap(fromBase64(avatar));
-                }
-
                 TV_game_counter.setText(String.valueOf(game_counter));
                 TV_max_money_score.setText(String.valueOf(max_money_score));
                 TV_max_exp_score.setText(String.valueOf(max_exp_score));
@@ -460,10 +532,25 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
 
-                TV_game_counter.setText(String.valueOf(game_counter));
-                TV_general_pers_of_wins.setText(general_pers_of_wins);
-                TV_mafia_pers_of_wins.setText(mafia_pers_of_wins);
-                TV_peaceful_pers_of_wins.setText(peaceful_pers_of_wins);
+                String finalAvatar = avatar;
+                IV_avatar.setOnClickListener(v12 -> {
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View view_avatar = getLayoutInflater().inflate(R.layout.dialog_avatar, null);
+                    builder2.setView(view_avatar);
+
+                    ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
+                    Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
+
+                    IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
+
+                    AlertDialog alert2 = builder2.create();
+
+                    btn_exit_avatar.setOnClickListener(v13 -> {
+                        alert2.cancel();
+                    });
+
+                    alert2.show();
+                });
 
                 if (nick.equals(MainActivity.NickName))
                 {
@@ -481,7 +568,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 }
                 TV_exp.setText(String.valueOf(exp));
 
-
                 TextView TV_nick = view_profile.findViewById(R.id.Item_profile_TV_nick);
                 ImageView IV_on_off = view_profile.findViewById(R.id.Item_profile_IV_on_off);
 
@@ -494,7 +580,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 AlertDialog alert = builder.create();
 
                 String finalUser_id_ = user_id_2;
-                String finalNick = nick;
+                report_nick = nick;
+                report_id = user_id_2;
 
                 if (!nick.equals(MainActivity.NickName)) {
                     FAB_send_message.setOnClickListener(new View.OnClickListener() {
@@ -508,37 +595,26 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
                     FAB_report.setOnClickListener(v1 -> {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                        //View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                        View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
                         builder2.setView(view_report);
                         AlertDialog alert2 = builder2.create();
 
                         Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
                         Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
-                        ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
                         EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                        RadioGroup radioGroup = view_report.findViewById(R.id.dialogReport_RG);
 
                         btn_add_screenshot.setOnClickListener(v2 -> {
                             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                             photoPickerIntent.setType("image/*");
                             startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
-                        });
-
-                        btn_report.setOnClickListener(v22 -> {
-                            final JSONObject json2 = new JSONObject();
-                            try {
-                                json2.put("nick", MainActivity.NickName);
-                                json2.put("session_id", MainActivity.Session_id);
-                                json2.put("against_id", finalUser_id_);
-                                json2.put("against_nick", finalNick);
-                                json2.put("reason", ET_report_message.getText());
-                                json2.put("image", base64_screenshot);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            socket.emit("send_complaint", json2);
-                            Log.d("kkk", "Socket_отправка - send_complaint" + json2);
                             alert2.cancel();
                         });
+
+                        radioGroup.setVisibility(View.GONE);
+                        btn_report.setVisibility(View.GONE);
+                        ET_report_message.setVisibility(View.GONE);
 
                         alert2.show();
                     });

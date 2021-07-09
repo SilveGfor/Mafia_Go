@@ -25,6 +25,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -54,6 +55,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -103,6 +105,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     ArrayList<MessageModel> list_chat = new ArrayList<>();
     ArrayList<UserModel> list_users = new ArrayList<>();
 
+    JSONObject users = new JSONObject();
+
     int answer_id = -1;
     public int StopTimer = 0;
     int messages_can_write = 10;
@@ -114,7 +118,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     View view_report;
 
-    String base64_screenshot = "";
+    String base64_screenshot = "", report_nick = "", report_id = "";
 
     MessageAdapter messageAdapter;
 
@@ -707,9 +711,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         listView_chat.setOnItemClickListener((parent, view12, position, id) -> {
             Log.d("kkk", "----");
-            Log.d("kkk", "position - " + position + " ' " + list_chat.get(position).MesType);
+            Log.d("kkk", "position - " + position + " ' " + list_chat.get(position).mesType);
             Log.d("kkk", "----");
-            if(list_chat.get(position).MesType.equals("UsersMes") || list_chat.get(position).MesType.equals("AnswerMes"))
+            if(list_chat.get(position).mesType.equals("UsersMes") || list_chat.get(position).mesType.equals("AnswerMes"))
             {
                 answer_id = list_chat.get(position).num;
                 answer_nick.setText(list_chat.get(position).nickName);
@@ -772,9 +776,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             case GALLERY_REQUEST:
                 if(resultCode == RESULT_OK){
                     Uri uri = imageReturnedIntent.getData();
-                    IV_screenshot.setImageURI(null);
-                    IV_screenshot.setImageURI(uri);
-
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -785,6 +786,84 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                    builder2.setView(view_report);
+                    AlertDialog alert2 = builder2.create();
+
+                    Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
+                    Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
+                    ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+                    EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                    final String[] reason = {""};
+
+                    RadioGroup radioGroup = view_report.findViewById(R.id.dialogReport_RG);
+
+                    IV_screenshot.setImageURI(null);
+                    IV_screenshot.setImageURI(uri);
+
+                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            switch (checkedId) {
+                                case -1:
+                                    break;
+                                case R.id.dialogReport_RB_1:
+                                    reason[0] = "спам или флуд";
+                                    break;
+                                case R.id.dialogReport_RB_2:
+                                    reason[0] = "размещение материалов рекламного, эротического, порнографического или оскорбительного характера или иной информации, размещение которой запрещено или противоречит нормам действующего законодательства РФ";
+                                    break;
+                                case R.id.dialogReport_RB_3:
+                                    reason[0] = "распространение информации, которая направлена на пропаганду войны, разжигание национальной, расовой или религиозной ненависти и вражды или иной информации, за распространение которой предусмотрена уголовная или административная ответственность";
+                                    break;
+                                case R.id.dialogReport_RB_4:
+                                    reason[0] = "игра против/не в интересах своей команды";
+                                    break;
+                                case R.id.dialogReport_RB_5:
+                                    reason[0] = "фарм (т.е. ведение игры организованной группой лиц, цель которой направлена на быстрое извлечение прибыли вне зависимости от того, кто из участников группы победит)";
+                                    break;
+                                case R.id.dialogReport_RB_6:
+                                    reason[0] = "создание нескольких учётных записей в Приложении, фактически принадлежащих одному и тому же лицу";
+                                    break;
+                                case R.id.dialogReport_RB_7:
+                                    reason[0] = "совершение действий, направленный на введение других Пользователей в заблуждение (не касается игрового процесса)";
+                                    break;
+                                case R.id.dialogReport_RB_8:
+                                    reason[0] = "модератор/администратор злоупотребляет своими полномочиями или положением";
+                                    break;
+                                case R.id.dialogReport_RB_9:
+                                    reason[0] = "другое";
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+
+                    btn_report.setOnClickListener(v22 -> {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("against_id", report_id);
+                            json2.put("against_nick", report_nick);
+                            json2.put("reason", reason[0]);
+                            json2.put("comment", ET_report_message.getText());
+                            json2.put("image", base64_screenshot);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("send_complaint", json2);
+                        Log.d("kkk", "Socket_отправка - send_complaint" + json2);
+                        alert2.cancel();
+                    });
+
+                    btn_add_screenshot.setVisibility(View.GONE);
+
+                    alert2.show();
                 }
         }
     }
@@ -860,6 +939,63 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
      *                             *
      *******************************/
 
+    private Emitter.Listener onGetInRoom = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("kkk", "Принял - get_in_room: " + args[0]);
+                    JSONObject data = (JSONObject) args[0];
+                    String nick;
+                    String time;
+                    String avatar;
+                    int test_num;
+                    try {
+                        test_num = data.getInt("num");
+                        time = data.getString("time");
+                        time = getDate(time);
+                        nick = data.getString("nick");
+                        avatar = data.getString("avatar");
+                        users.put(nick, avatar);
+                        MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes", avatar);
+                        Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
+                        if (test_num != num) {
+                            if (test_num > num) {
+                                num = test_num;
+                                list_chat.add(messageModel);
+                            } else {
+                                for (int i = 0; i < list_chat.size(); i++) {
+                                    if (test_num < list_chat.get(i).num) {
+                                        list_chat.add(i, messageModel);
+                                        break;
+                                    }
+                                }
+                            }
+                            if (!nick.equals(MainActivity.NickName)) {
+                                list_users.add(new UserModel(nick, Role.NONE, avatar));
+                                PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
+                                gridView_users.setAdapter(playersAdapter);
+                            }
+                            for (int i = 0; i < list_chat.size(); i++) {
+                                if (list_chat.get(i).message.equals(nick + " вышел(-а) из чата")) {
+                                    list_chat.remove(i);
+                                }
+                            }
+                            messageAdapter.notifyDataSetChanged();
+                            if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
+                                listView_chat.setSelection(messageAdapter.getCount() - 1);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        return;
+                    }
+                }
+            });
+        }
+    };
 
     private Emitter.Listener onLeaveUser = new Emitter.Listener() {
         @Override
@@ -878,11 +1014,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         nick = data.getString("nick");
                         time = data.getString("time");
                         time = getDate(time);
+                        users.remove(nick);
                         Log.d("kkk", "leave_user - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                     } catch (JSONException e) {
                         return;
                     }
-                    MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes");
+                    String avatar = "";
+                    for (int i = 0; i < list_users.size(); i++)
+                    {
+                        if (list_users.get(i).getNick().equals(nick))
+                        {
+                             avatar = list_users.get(i).getAvatar();
+                             break;
+                        }
+                    }
+
+                    MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes", avatar);
 
                     if (test_num != num) {
                         if (test_num > num) {
@@ -938,11 +1085,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     String time;
                     String status;
                     String main_role;
+                    String nick_from_iterator;
                     int test_num;
                     int link;
                     try {
                         main_role = data.getString("role");
                         nick = data.getString("nick");
+                        String avatar = "";
+                        for (Iterator iterator = users.keys(); iterator.hasNext();)
+                        {
+                            nick_from_iterator = (String) iterator.next();
+                            if (nick.equals(nick_from_iterator))
+                            {
+                                avatar = users.getString(nick);
+                                break;
+                            }
+                        }
                         test_num = data.getInt("num");
                         Log.d("kkk", "new_message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                         if (test_num != num) {
@@ -955,9 +1113,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 link = data.getInt("link");
                                 MessageModel messageModel;
                                 if (link == -1) {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
                                 } else {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
                                 }
                                 list_chat.add(messageModel);
                                 messageAdapter.notifyDataSetChanged();
@@ -969,9 +1127,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 link = data.getInt("link");
                                 MessageModel messageModel;
                                 if (link == -1) {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
                                 } else {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role);
+                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
                                 }
                                 for (int i = 0; i < list_chat.size(); i++) {
                                     if (test_num < list_chat.get(i).num) {
@@ -1033,61 +1191,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 public void run() {
                     Log.d("kkk", "DISCONNECT");
                 }
-            });
-        }
-    };
-
-    private Emitter.Listener onGetInRoom = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            if(getActivity() == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Log.d("kkk", "Принял - get_in_room: " + args[0]);
-                    JSONObject data = (JSONObject) args[0];
-                    String nick;
-                    String time;
-                    int test_num;
-                    try {
-                        test_num = data.getInt("num");
-                        time = data.getString("time");
-                        time = getDate(time);
-                        nick = data.getString("nick");
-                        MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes");
-                        Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
-                        if (test_num != num) {
-                            if (test_num > num) {
-                                num = test_num;
-                                list_chat.add(messageModel);
-                            } else {
-                                for (int i = 0; i < list_chat.size(); i++) {
-                                    if (test_num < list_chat.get(i).num) {
-                                        list_chat.add(i, messageModel);
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!nick.equals(MainActivity.NickName)) {
-                                list_users.add(new UserModel(nick, Role.NONE));
-                                PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                                gridView_users.setAdapter(playersAdapter);
-                            }
-                            for (int i = 0; i < list_chat.size(); i++) {
-                                if (list_chat.get(i).message.equals(nick + " вышел(-а) из чата")) {
-                                    list_chat.remove(i);
-                                }
-                            }
-                            messageAdapter.notifyDataSetChanged();
-                            if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
-                                listView_chat.setSelection(messageAdapter.getCount() - 1);
-                            }
-                        }
-                    } catch (JSONException e) {
-                        return;
-                    }
-               }
             });
         }
     };
@@ -2175,10 +2278,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 JSONObject statistic = new JSONObject();
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
                 String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "";
+
                 try {
                     statistic = data.getJSONObject("statistics");
                     game_counter = statistic.getInt("game_counter");
-                    if (data.has("max_money_score"))
+                    if (statistic.has("max_money_score"))
                     {
                         max_money_score = statistic.getInt("max_money_score");
                         max_exp_score = statistic.getInt("max_exp_score");
@@ -2225,6 +2329,26 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 if (avatar != null) {
                     IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
+
+                String finalAvatar = avatar;
+                IV_avatar.setOnClickListener(v12 -> {
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View view_avatar = getLayoutInflater().inflate(R.layout.dialog_avatar, null);
+                    builder2.setView(view_avatar);
+
+                    ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
+                    Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
+
+                    IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
+
+                    AlertDialog alert2 = builder2.create();
+
+                    btn_exit_avatar.setOnClickListener(v13 -> {
+                        alert2.cancel();
+                    });
+
+                    alert2.show();
+                });
 
                 TV_game_counter.setText(String.valueOf(game_counter));
                 TV_general_pers_of_wins.setText(general_pers_of_wins);
@@ -2281,18 +2405,19 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     else {
                         FAB_kick.setVisibility(View.GONE);
                     }
-                    String finalNick1 = nick;
+                    String finalNick = nick;
+                    report_nick = nick;
+                    report_id = user_id_2;
                     FAB_send_message.setOnClickListener(v -> {
                         alert.cancel();
                         MainActivity.User_id_2 = finalUser_id_;
-                        MainActivity.NickName_2 = finalNick1;
+                        MainActivity.NickName_2 = finalNick;
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
                     });
 
-                    String finalNick = nick;
                     FAB_report.setOnClickListener(v1 -> {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                        //View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                        View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
                         builder2.setView(view_report);
                         AlertDialog alert2 = builder2.create();
 
@@ -2301,28 +2426,21 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
                         EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
 
+                        final String[] reason = {""};
+
+                        RadioGroup radioGroup = view_report.findViewById(R.id.dialogReport_RG);
+
                         btn_add_screenshot.setOnClickListener(v2 -> {
                             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                             photoPickerIntent.setType("image/*");
                             startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
-                        });
-
-                        btn_report.setOnClickListener(v22 -> {
-                            final JSONObject json2 = new JSONObject();
-                            try {
-                                json2.put("nick", MainActivity.NickName);
-                                json2.put("session_id", MainActivity.Session_id);
-                                json2.put("against_id", finalUser_id_);
-                                json2.put("against_nick", finalNick);
-                                json2.put("reason", ET_report_message.getText());
-                                json2.put("image", base64_screenshot);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            socket.emit("send_complaint", json2);
-                            Log.d("kkk", "Socket_отправка - send_complaint" + json2);
                             alert2.cancel();
                         });
+
+                        radioGroup.setVisibility(View.GONE);
+                        btn_report.setVisibility(View.GONE);
+                        ET_report_message.setVisibility(View.GONE);
+
                         alert2.show();
                     });
 

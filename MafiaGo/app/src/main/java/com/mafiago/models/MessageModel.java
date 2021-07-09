@@ -1,39 +1,54 @@
 package com.mafiago.models;
 
 public class MessageModel {
+    public int num;
     public  String message;
     public  String time;
     public  String nickName;
-    public String MesType;
-    public String type;
-    public String main_role;
+    public String mesType;
+    public String textType;
+    public String rang;
     public int answerId;
-    public int num;
+    public String avatar;
 
-    public MessageModel(int num, String message, String time, String nickName, String MesType, String type, String main_role) {
+    //сообщения пользователей
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, String rang, String avatar) {
         this.num = num;
         this.message = message;
         this.time = time;
         this.nickName = nickName;
-        this.MesType = MesType;
-        this.type = type;
-        this.main_role = main_role;
+        this.mesType = mesType;
+        this.textType = textType;
+        this.rang = rang;
+        this.avatar = avatar;
     }
-    public MessageModel(int num, String message, String time, String nickName, String MesType) {
+    //connect/disconnect сообщения
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String avatar) {
         this.num = num;
         this.message = message;
         this.time = time;
         this.nickName = nickName;
-        this.MesType = MesType;
+        this.mesType = mesType;
+        this.avatar = avatar;
     }
-    public MessageModel(int num, String message, String time, String nickName, String MesType, String type, int answerId, String main_role) {
+    //системные сообщения
+    public MessageModel(int num, String message, String time, String nickName, String mesType) {
         this.num = num;
         this.message = message;
         this.time = time;
         this.nickName = nickName;
-        this.MesType = MesType;
-        this.type = type;
+        this.mesType = mesType;
+    }
+    //ответы на сообщения
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, int answerId, String rang, String avatar) {
+        this.num = num;
+        this.message = message;
+        this.time = time;
+        this.nickName = nickName;
+        this.mesType = mesType;
+        this.textType = textType;
         this.answerId = answerId;
-        this.main_role = main_role;
+        this.rang = rang;
+        this.avatar = avatar;
     }
 }

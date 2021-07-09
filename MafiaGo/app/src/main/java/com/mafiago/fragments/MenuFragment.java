@@ -24,6 +24,7 @@ import android.view.animation.BounceInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -64,11 +65,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     ImageView IV_background;
     ImageView IV_avatar;
-    ImageView IV_screenshot;
 
-    String base64_screenshot = "";
-
-    View view_report;
+    String base64_screenshot = "", report_nick = "", report_id = "";
 
     // Идентификатор уведомления
     private static final int NOTIFY_ID = 101;
@@ -100,10 +98,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
         IV_avatar = view.findViewById(R.id.fragmentMenu_IV_avatar);
-
-        view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
-
-        IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
@@ -213,26 +207,138 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        if (imageReturnedIntent == null
+                || imageReturnedIntent.getData() == null) {
+            return;
+        }
+
+        // сжимает до ~500КБ максимум. Тогда как обычная картинка весит ~2МБ
+
 
         switch(requestCode) {
             case GALLERY_REQUEST:
                 if(resultCode == RESULT_OK){
                     Uri uri = imageReturnedIntent.getData();
-                    IV_screenshot.setImageURI(null);
-                    IV_screenshot.setImageURI(uri);
-
                     try {
                         Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        //bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
                         byte[] bytes = stream.toByteArray();
 
-                        base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
+                        int scaleDivider = 5;
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            scaleDivider = bitmap.getWidth() / 256;
+                        }
+                        else
+                        {
+                            scaleDivider = bitmap.getHeight() / 256;
+                        }
+
+                        int scaleWidth = bitmap.getWidth() / scaleDivider;
+                        int scaleHeight = bitmap.getHeight() / scaleDivider;
+                        Log.d("kkk", String.valueOf(scaleWidth));
+                        Log.d("kkk", String.valueOf(scaleHeight));
+                        byte[] downsizedImageBytes =
+                                    getDownsizedImageBytes(bitmap, scaleWidth, scaleHeight);
+                        base64_screenshot = Base64.encodeToString(downsizedImageBytes, Base64.DEFAULT);
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
+
+
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                    builder2.setView(view_report);
+                    AlertDialog alert2 = builder2.create();
+
+                    Button btn_add_screenshot = view_report.findViewById(R.id.dialogReport_btn_add_screenshot);
+                    Button btn_report = view_report.findViewById(R.id.dialogReport_btn_report);
+                    ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+                    EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
+
+                    final String[] reason = {""};
+
+                    RadioGroup radioGroup = view_report.findViewById(R.id.dialogReport_RG);
+
+                    IV_screenshot.setImageURI(null);
+                    IV_screenshot.setImageURI(uri);
+
+                    radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            switch (checkedId) {
+                                case -1:
+                                    break;
+                                case R.id.dialogReport_RB_1:
+                                    reason[0] = "спам или флуд";
+                                    break;
+                                case R.id.dialogReport_RB_2:
+                                    reason[0] = "размещение материалов рекламного, эротического, порнографического или оскорбительного характера или иной информации, размещение которой запрещено или противоречит нормам действующего законодательства РФ";
+                                    break;
+                                case R.id.dialogReport_RB_3:
+                                    reason[0] = "распространение информации, которая направлена на пропаганду войны, разжигание национальной, расовой или религиозной ненависти и вражды или иной информации, за распространение которой предусмотрена уголовная или административная ответственность";
+                                    break;
+                                case R.id.dialogReport_RB_4:
+                                    reason[0] = "игра против/не в интересах своей команды";
+                                    break;
+                                case R.id.dialogReport_RB_5:
+                                    reason[0] = "фарм (т.е. ведение игры организованной группой лиц, цель которой направлена на быстрое извлечение прибыли вне зависимости от того, кто из участников группы победит)";
+                                    break;
+                                case R.id.dialogReport_RB_6:
+                                    reason[0] = "создание нескольких учётных записей в Приложении, фактически принадлежащих одному и тому же лицу";
+                                    break;
+                                case R.id.dialogReport_RB_7:
+                                    reason[0] = "совершение действий, направленный на введение других Пользователей в заблуждение (не касается игрового процесса)";
+                                    break;
+                                case R.id.dialogReport_RB_8:
+                                    reason[0] = "модератор/администратор злоупотребляет своими полномочиями или положением";
+                                    break;
+                                case R.id.dialogReport_RB_9:
+                                    reason[0] = "другое";
+                                    break;
+
+                                default:
+                                    break;
+                            }
+                        }
+                    });
+
+                    btn_report.setOnClickListener(v22 -> {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("against_id", report_id);
+                            json2.put("against_nick", report_nick);
+                            json2.put("reason", reason[0]);
+                            json2.put("comment", ET_report_message.getText());
+                            json2.put("image", base64_screenshot);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("send_complaint", json2);
+                        Log.d("kkk", "Socket_отправка - send_complaint" + json2);
+                        alert2.cancel();
+                    });
+
+                    btn_add_screenshot.setVisibility(View.GONE);
+
+                    alert2.show();
                 }
         }
+    }
+
+    public byte[] getDownsizedImageBytes(Bitmap fullBitmap, int scaleWidth, int scaleHeight) throws IOException {
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(fullBitmap, scaleWidth, scaleHeight, true);
+
+        // 2. Instantiate the downsized image content as a byte[]
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        scaledBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] downsizedImageBytes = baos.toByteArray();
+
+        return downsizedImageBytes;
     }
 
     //TODO: реализовать функцию
@@ -259,6 +365,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         // Декодируем массив байтов в изображение
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        Log.d("kkk", String.valueOf(decodedByte.getByteCount() / 1024));
 
         // Помещаем изображение в ImageView
         return decodedByte;
@@ -319,6 +427,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 String finalPeaceful_pers_of_wins = peaceful_pers_of_wins;
                 String finalAvatar = avatar;
                 String finalUser_id_ = user_id_2;
+                report_nick = nick;
+                report_id = user_id_2;
                 CV_info.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     View view_profile = getLayoutInflater().inflate(R.layout.item_profile, null);
@@ -343,6 +453,25 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     if (finalAvatar != null) {
                         IV_avatar.setImageBitmap(fromBase64(finalAvatar));
                     }
+
+                    IV_avatar.setOnClickListener(v12 -> {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        View view_avatar = getLayoutInflater().inflate(R.layout.dialog_avatar, null);
+                        builder2.setView(view_avatar);
+
+                        ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
+                        Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
+
+                        IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
+
+                        AlertDialog alert2 = builder2.create();
+
+                        btn_exit_avatar.setOnClickListener(v13 -> {
+                            alert2.cancel();
+                        });
+
+                        alert2.show();
+                    });
 
                     TV_game_counter.setText(String.valueOf(finalGame_counter));
                     TV_max_money_score.setText(String.valueOf(finalMax_money_score));
@@ -373,7 +502,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
                     FAB_report.setOnClickListener(v1 -> {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                        //View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
+                        View view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
                         builder2.setView(view_report);
                         AlertDialog alert2 = builder2.create();
 
@@ -382,10 +511,55 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                         ImageView IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
                         EditText ET_report_message = view_report.findViewById(R.id.dialogReport_ET_report);
 
+                        final String[] reason = {""};
+
+                        RadioGroup radioGroup = view_report.findViewById(R.id.dialogReport_RG);
+
                         btn_add_screenshot.setOnClickListener(v2 -> {
                             Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                             photoPickerIntent.setType("image/*");
                             startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                            alert2.cancel();
+                        });
+
+                        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                            @Override
+                            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                                switch (checkedId) {
+                                    case -1:
+                                        break;
+                                    case R.id.dialogReport_RB_1:
+                                        reason[0] = "спам или флуд";
+                                        break;
+                                    case R.id.dialogReport_RB_2:
+                                        reason[0] = "размещение материалов рекламного, эротического, порнографического или оскорбительного характера или иной информации, размещение которой запрещено или противоречит нормам действующего законодательства РФ";
+                                        break;
+                                    case R.id.dialogReport_RB_3:
+                                        reason[0] = "распространение информации, которая направлена на пропаганду войны, разжигание национальной, расовой или религиозной ненависти и вражды или иной информации, за распространение которой предусмотрена уголовная или административная ответственность";
+                                        break;
+                                    case R.id.dialogReport_RB_4:
+                                        reason[0] = "игра против/не в интересах своей команды";
+                                        break;
+                                    case R.id.dialogReport_RB_5:
+                                        reason[0] = "фарм (т.е. ведение игры организованной группой лиц, цель которой направлена на быстрое извлечение прибыли вне зависимости от того, кто из участников группы победит)";
+                                        break;
+                                    case R.id.dialogReport_RB_6:
+                                        reason[0] = "создание нескольких учётных записей в Приложении, фактически принадлежащих одному и тому же лицу";
+                                        break;
+                                    case R.id.dialogReport_RB_7:
+                                        reason[0] = "совершение действий, направленный на введение других Пользователей в заблуждение (не касается игрового процесса)";
+                                        break;
+                                    case R.id.dialogReport_RB_8:
+                                        reason[0] = "модератор/администратор злоупотребляет своими полномочиями или положением";
+                                        break;
+                                    case R.id.dialogReport_RB_9:
+                                        reason[0] = "другое";
+                                        break;
+
+                                    default:
+                                        break;
+                                }
+                            }
                         });
 
                         btn_report.setOnClickListener(v22 -> {
@@ -395,7 +569,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                                 json2.put("session_id", MainActivity.Session_id);
                                 json2.put("against_id", finalUser_id_);
                                 json2.put("against_nick", finalNick);
-                                json2.put("reason", "спам или флуд");
+                                json2.put("reason", reason[0]);
                                 json2.put("comment", ET_report_message.getText());
                                 json2.put("image", base64_screenshot);
                             } catch (JSONException e) {
@@ -405,6 +579,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                             Log.d("kkk", "Socket_отправка - send_complaint" + json2);
                             alert2.cancel();
                         });
+
+                        radioGroup.setVisibility(View.GONE);
+                        btn_report.setVisibility(View.GONE);
+                        ET_report_message.setVisibility(View.GONE);
 
                         alert2.show();
                     });

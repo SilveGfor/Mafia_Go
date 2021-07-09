@@ -1,7 +1,10 @@
  package com.mafiago.adapters;
 
  import android.content.Context;
+ import android.graphics.Bitmap;
+ import android.graphics.BitmapFactory;
  import android.graphics.Color;
+ import android.util.Base64;
  import android.util.Log;
  import android.view.LayoutInflater;
  import android.view.View;
@@ -61,11 +64,15 @@
         View view = convertView;
         //проверяем шаблон
         //if(convertView==null) {}
-        switch (list_mess.get(position).MesType) {
+        switch (list_mess.get(position).mesType) {
             case "UsersMes":
                 view = layout.inflate(R.layout.item_message, null);
 
                 ImageView IV_avatar = view.findViewById(R.id.item_message_avatar);
+
+                if (list_mess.get(position).avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
+                }
 
                 IV_avatar.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -89,7 +96,7 @@
                 TextView TV_main_role = view.findViewById(R.id.itemMessage_main_role);
 
                 String color= "#FFFFFF";
-                switch (list_mess.get(position).type)
+                switch (list_mess.get(position).textType)
                 {
                     case "alive":
                         color = "#FFFFFF";
@@ -109,7 +116,7 @@
                     //shimmer.start(txt_nick);
                 }
 
-                switch (list_mess.get(position).main_role)
+                switch (list_mess.get(position).rang)
                 {
                     case "user":
                         break;
@@ -230,6 +237,11 @@
                 int id = list_mess.get(position).answerId;
 
                 IV_avatar = view.findViewById(R.id.item_answer_message_avatar);
+                ImageView IV_answer_avatar = view.findViewById(R.id.itemAnswerMessage_answer_avatar);
+
+                if (list_mess.get(position).avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
+                }
 
                 IV_avatar.setOnClickListener(v -> {
                     final JSONObject json = new JSONObject();
@@ -244,7 +256,7 @@
                     Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
                 });
 
-                switch (list_mess.get(position).main_role) {
+                switch (list_mess.get(position).rang) {
                     case "user":
                         break;
                     case "moderator":
@@ -275,7 +287,7 @@
                 txt_mess.setText(list_mess.get(position).message);
 
                 color= "#FFFFFF";
-                switch (list_mess.get(position).type)
+                switch (list_mess.get(position).textType)
                 {
                     case "alive":
                         color = "#FFFFFF";
@@ -301,7 +313,12 @@
                         txt_answer_nick.setText(list_mess.get(i).nickName);
                         txt_answer_mes.setText(list_mess.get(i).message);
                         txt_answer_time.setText(list_mess.get(i).time);
-                        switch (list_mess.get(i).main_role) {
+                        if (list_mess.get(i).avatar != null) {
+                            IV_answer_avatar.setImageBitmap(fromBase64(list_mess.get(i).avatar));
+                        }
+
+
+                        switch (list_mess.get(i).rang) {
                             case "user":
                                 break;
                             case "moderator":
@@ -361,4 +378,14 @@
 
         return view;
     }
+     public Bitmap fromBase64(String image) {
+         // Декодируем строку Base64 в массив байтов
+         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+         // Декодируем массив байтов в изображение
+         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+         // Помещаем изображение в ImageView
+         return decodedByte;
+     }
 }

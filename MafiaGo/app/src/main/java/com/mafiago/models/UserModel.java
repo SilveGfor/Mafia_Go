@@ -4,23 +4,29 @@ import com.mafiago.enums.Role;
 
 public class UserModel {
     private String nick;
+    private String avatar;
     Role animation_type;
     private boolean alive, checked;
     private Role role;
     private int voting_number;
 
-    public UserModel(String nick, Role role) {
+    public UserModel(String nick, Role role, String avatar) {
         this.nick = nick;
         alive = true;
         animation_type = Role.NONE;
         this.role = role;
         voting_number = 0;
         checked = false;
+        this.avatar = avatar;
     }
 
     public UserModel(String nick, Boolean alive) {
         this.nick = nick;
         this.alive = alive;
+    }
+
+    public String getAvatar() {
+        return avatar;
     }
 
     public boolean getChecked() {

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -96,6 +97,11 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        if (imageReturnedIntent == null
+                || imageReturnedIntent.getData() == null) {
+            return;
+        }
+        // сжимает до ~500КБ максимум. Тогда как обычная картинка весит ~2МБ
 
         switch(requestCode) {
             case GALLERY_REQUEST:
@@ -103,12 +109,54 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
                     Uri uri = imageReturnedIntent.getData();
 
                     try {
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                        /*
+                        Bitmap bitmap2 = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
                         ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        bitmap2.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                        Log.d("kkk", String.valueOf(bitmap2.getByteCount() / 1048576));
                         byte[] bytes = stream.toByteArray();
+                        String base642 = Base64.encodeToString(bytes, Base64.DEFAULT);
+                        //Log.d("kkk", String.valueOf(base642.length()));
+                         */
 
-                        String base64 = Base64.encodeToString(bytes, Base64.DEFAULT);
+                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                        int scaleDivider = 5;
+                        int max = 0;
+                        if (bitmap.getWidth() > bitmap.getHeight()) {
+                            scaleDivider = bitmap.getWidth() / 512;
+                            max = bitmap.getWidth();
+                        }
+                        else
+                        {
+                            scaleDivider = bitmap.getHeight() / 512;
+                            max = bitmap.getHeight();
+                        }
+                        if (max <= 300)
+                        {
+                            scaleDivider = 1;
+                        }
+                        else if (max <= 600)
+                        {
+                            scaleDivider = 2;
+                        }
+                        else if (max <= 900)
+                        {
+                            scaleDivider = 3;
+                        }
+                        else if (max <= 1200)
+                        {
+                            scaleDivider = 4;
+                        }
+
+                        int scaleWidth = bitmap.getWidth() / scaleDivider;
+                        int scaleHeight = bitmap.getHeight() / scaleDivider;
+                        Log.d("kkk", String.valueOf(scaleWidth));
+                        Log.d("kkk", String.valueOf(scaleHeight));
+                        byte[] downsizedImageBytes =
+                                getDownsizedImageBytes(bitmap, scaleWidth, scaleHeight);
+                        String base64 = Base64.encodeToString(downsizedImageBytes, Base64.DEFAULT);
+                        Log.d("kkk", String.valueOf(base64.length()));
+
 
                         final JSONObject json2 = new JSONObject();
                         try {
@@ -123,7 +171,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Профиль успешно изменён!")
-                                .setMessage("")
+                                .setMessage("Длина base64 = " + base64.length())
                                 .setIcon(R.drawable.ic_ok)
                                 .setCancelable(false)
                                 .setNegativeButton("Ок",
@@ -135,6 +183,67 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
                     }
                 }
         }
+    }
+
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+
+    public static Bitmap decodeSampledBitmapFromBytes(byte[] bytes,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+    }
+
+    public byte[] getDownsizedImageBytes(Bitmap fullBitmap, int scaleWidth, int scaleHeight) throws IOException {
+
+        Bitmap scaledBitmap = Bitmap.createScaledBitmap(fullBitmap, scaleWidth, scaleHeight, true);
+
+        int width  = fullBitmap.getWidth();
+        int height = fullBitmap.getHeight();
+        int newWidth = (height > width) ? width : height;
+        int newHeight = (height > width)? height - ( height - width) : height;
+        int cropW = (width - height) / 2;
+        cropW = (cropW < 0)? 0: cropW;
+        int cropH = (height - width) / 2;
+        cropH = (cropH < 0)? 0: cropH;
+        Bitmap cropImg = Bitmap.createBitmap(fullBitmap, cropW, cropH, newWidth, newHeight);
+
+        // 2. Instantiate the downsized image content as a byte[]
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        cropImg.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] downsizedImageBytes = baos.toByteArray();
+
+        return downsizedImageBytes;
     }
 
     @Override

@@ -69,8 +69,18 @@
         android:layout_height="45dp" />
 
     <ImageView
-        android:id="@+id/itemGame_IV_maniac"
+        android:id="@+id/itemGame_IV_test"
         android:layout_alignParentRight="true"
+        android:layout_below="@id/NumPeople"
+        android:layout_margin="5dp"
+        android:visibility="invisible"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
+        android:background="@drawable/maniac_alive" />
+
+    <ImageView
+        android:id="@+id/itemGame_IV_maniac"
+        android:layout_toLeftOf="@id/itemGame_IV_test"
         android:layout_below="@id/NumPeople"
         android:layout_margin="5dp"
         android:visibility="gone"

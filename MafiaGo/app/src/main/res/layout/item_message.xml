@@ -12,15 +12,13 @@
         android:text="разработчик"
         android:textSize="12sp"
         android:textColor="#FF0000"
-        android:layout_alignTop="@id/mesNick"
-        android:layout_toRightOf="@id/mesNick"
-        android:layout_marginLeft="5dp"
-        android:padding="3dp"/>
+        android:layout_toRightOf="@id/item_message_avatar"/>
 
     <ImageView
         android:id="@+id/item_message_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
+        android:layout_below="@id/itemMessage_main_role"
         android:background="@drawable/ic_snow"/>
 
     <com.romainpiel.shimmer.ShimmerTextView
