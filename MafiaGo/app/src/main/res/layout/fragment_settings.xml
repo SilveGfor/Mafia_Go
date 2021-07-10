@@ -30,10 +30,52 @@
         android:text="Выйти из аккаунта"
         android:textSize="16sp"
         android:padding="10dp"
-        android:background="@drawable/round_button"
+        android:background="@drawable/count_bubble"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="30dp"/>
+
+    <EditText
+        android:id="@+id/fragmentSettings_ET_new_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragmentSettings_btn_edit_nick"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:hint="Введите новый ник"/>
+
+    <Button
+        android:id="@+id/fragmentSettings_btn_edit_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сменить ник"
+        android:layout_marginBottom="15dp"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:background="@drawable/round_button"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/fragmentSettings_ET_new_password"/>
+
+    <EditText
+        android:id="@+id/fragmentSettings_ET_new_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragmentSettings_btn_edit_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:hint="Введите новый пароль"/>
+
+    <Button
+        android:id="@+id/fragmentSettings_btn_edit_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Сменить пароль"
+        android:layout_marginBottom="15dp"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:background="@drawable/round_button"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@id/fragmentSettings_btn_edit_avatar"/>
 
     <Button
         android:id="@+id/fragmentSettings_btn_edit_avatar"

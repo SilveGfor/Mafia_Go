@@ -47,11 +47,11 @@ import io.socket.emitter.Emitter;
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
 
-
 public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     Button btnRules;
     Button btnGames;
+    Button btnChats;
     Button btnFriends;
     Button btnTools;
 
@@ -90,7 +90,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         btnRules = view.findViewById(R.id.btnRules);
         btnGames = view.findViewById(R.id.btnGame);
-        btnFriends = view.findViewById(R.id.btnFriends);
+        btnChats = view.findViewById(R.id.fragmentMenu_btn_chats);
+        btnFriends = view.findViewById(R.id.fragmentMenu_btn_friends);
         btnTools = view.findViewById(R.id.btnTools);
         TV_money = view.findViewById(R.id.fragmentMenu_TV_money);
         TV_exp = view.findViewById(R.id.fragmentMenu_TV_exp);
@@ -133,6 +134,13 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
         });
 
+        btnFriends.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+            }
+        });
+
         btnRules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +174,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             }
         });
 
-        btnFriends.setOnClickListener(new View.OnClickListener() {
+        btnChats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {

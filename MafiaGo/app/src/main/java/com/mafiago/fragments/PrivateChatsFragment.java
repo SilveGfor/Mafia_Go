@@ -1,10 +1,13 @@
 package com.mafiago.fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +32,7 @@ import java.util.ArrayList;
 
 import io.socket.emitter.Emitter;
 
+import static com.mafiago.MainActivity.bitmap_avatar_2;
 import static com.mafiago.MainActivity.socket;
 
 public class PrivateChatsFragment extends Fragment implements OnBackPressedListener {
@@ -110,6 +114,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
             MainActivity.User_id_2 = list_friends.get(position).getUser_id_2();
             MainActivity.NickName_2 = list_friends.get(position).getNick();
+            MainActivity.bitmap_avatar_2 = fromBase64(list_friends.get(position).getAvatar());
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
         });
 
@@ -118,6 +123,17 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         });
 
         return view;
+    }
+
+    public Bitmap fromBase64(String image) {
+        // Декодируем строку Base64 в массив байтов
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+        // Декодируем массив байтов в изображение
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        // Помещаем изображение в ImageView
+        return decodedByte;
     }
 
     @Override

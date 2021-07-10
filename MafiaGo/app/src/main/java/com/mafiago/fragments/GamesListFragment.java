@@ -1,6 +1,7 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -91,6 +92,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         socket.off("delete_room_from_list_of_rooms");
         socket.off("update_list_of_rooms");
         socket.off("get_profile");
+        socket.off("send_complaint");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
@@ -98,6 +100,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         socket.on("delete_room_from_list_of_rooms", onDeleteRoom);
         socket.on("update_list_of_rooms", onUpdateRoom);
         socket.on("get_profile", OnGetProfile);
+        socket.on("send_complaint", onSendComplain);
 
         final JSONObject json = new JSONObject();
         try {
@@ -584,11 +587,14 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 report_id = user_id_2;
 
                 if (!nick.equals(MainActivity.NickName)) {
+                    String finalNick = nick;
                     FAB_send_message.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             alert.cancel();
                             MainActivity.User_id_2 = finalUser_id_;
+                            MainActivity.NickName_2 = finalNick;
+                            MainActivity.bitmap_avatar_2 = fromBase64(finalAvatar);
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
                         }
                     });
@@ -630,6 +636,40 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     FAB_add_friend.setVisibility(View.GONE);
                 }
                 alert.show();
+            }
+        });
+    };
+
+    private final Emitter.Listener onSendComplain = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - send_complain - " + data);
+                String status = "";
+                try {
+                    status = data.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (status.equals("complaints_limit_exceeded"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Вы превысили лимит жалоб!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
     };

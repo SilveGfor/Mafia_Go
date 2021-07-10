@@ -125,6 +125,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     View view_report;
 
+    public JSONObject json;
+
     String base64_screenshot = "", report_nick = "", report_id = "";
 
     MessageAdapter messageAdapter;
@@ -221,6 +223,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.off("ban_user_in_room");
         socket.off("ban_user_in_room_error");
         socket.off("user_message_delay");
+        socket.off("send_complaint");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
@@ -243,17 +246,18 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.on("ban_user_in_room", OnBanUserInRoom);
         socket.on("ban_user_in_room_error", OnBanUserInRoomError);
         socket.on("user_message_delay", OnUserMessageDelay);
+        socket.on("send_complaint", onSendComplain);
 
-        final JSONObject json3 = new JSONObject();
+        json = new JSONObject();
         try {
-            json3.put("nick", player.getNick());
-            json3.put("session_id", player.getSession_id());
-            json3.put("room", player.getRoom_num());
+            json.put("nick", player.getNick());
+            json.put("session_id", player.getSession_id());
+            json.put("room", player.getRoom_num());
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        socket.emit("get_in_room", json3);
-        Log.d("kkk", "Socket_отправка - get_in_room"+ json3.toString());
+        socket.emit("get_in_room", json);
+        Log.d("kkk", "Socket_отправка - get_in_room"+ json.toString());
 
         RL_my_role.setOnClickListener(v -> {
             Log.d("kkk", String.valueOf(player.Can_click()));
@@ -2492,6 +2496,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         alert.cancel();
                         MainActivity.User_id_2 = finalUser_id_;
                         MainActivity.NickName_2 = finalNick;
+                        MainActivity.bitmap_avatar_2 = fromBase64(finalAvatar);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
                     });
 
@@ -2525,7 +2530,16 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     });
 
                     FAB_add_friend.setOnClickListener(v1 -> {
-                        //TODO: добавление в друзья
+                        json = new JSONObject();
+                        try {
+                            json.put("nick", player.getNick());
+                            json.put("session_id", player.getSession_id());
+                            json.put("room", player.getRoom_num());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("get_in_room", json);
+                        Log.d("kkk", "Socket_отправка - get_in_room"+ json.toString());
                     });
                 }
                 else
@@ -2669,14 +2683,48 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 Log.d("kkk", "принял - user_message_delay - " + args[0]);
                 String time_to_unmute = String.valueOf(args[0]);
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Вас слишком часто отправляете сообщения!")
-                        .setMessage("Вы сможете написать следующее сообщение через " + time_to_unmute + "сек.")
+                builder.setTitle("Вs слишком часто отправляете сообщения!")
+                        .setMessage("Вы сможете написать следующее сообщение через " + time_to_unmute + " секунд")
                         .setIcon(R.drawable.ic_error)
                         .setCancelable(false)
                         .setNegativeButton("ок",
                                 (dialog, id) -> dialog.cancel());
                 AlertDialog alert = builder.create();
                 alert.show();
+            }
+        });
+    };
+
+    private final Emitter.Listener onSendComplain = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - send_complain - " + data);
+                String status = "";
+                try {
+                    status = data.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (status.equals("complaints_limit_exceeded"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Вы превысили лимит жалоб!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
     };

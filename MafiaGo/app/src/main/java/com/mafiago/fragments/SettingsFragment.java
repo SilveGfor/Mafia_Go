@@ -47,6 +47,11 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
     Button btnExitSettings;
     Button btnExitAccount;
     Button btnEditAvatar;
+    Button btnEditPassword;
+    Button btnEditNick;
+
+    EditText ET_new_password;
+    EditText ET_new_nick;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
@@ -64,6 +69,11 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         btnExitSettings = view.findViewById(R.id.btnExitSettings);
         btnExitAccount = view.findViewById(R.id.fragmentSettings_btn_exit_account);
         btnEditAvatar = view.findViewById(R.id.fragmentSettings_btn_edit_avatar);
+        btnEditPassword = view.findViewById(R.id.fragmentSettings_btn_edit_password);
+        btnEditNick = view.findViewById(R.id.fragmentSettings_btn_edit_nick);
+
+        ET_new_nick = view.findViewById(R.id.fragmentSettings_ET_new_nick);
+        ET_new_password = view.findViewById(R.id.fragmentSettings_ET_new_password);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -73,6 +83,12 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
         btnExitSettings.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+        });
+
+        btnEditPassword.setOnClickListener(v -> {
+        });
+
+        btnEditNick.setOnClickListener(v -> {
         });
 
         btnExitAccount.setOnClickListener(v -> {

@@ -10,6 +10,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public static String Sid = "";
     public static String Role = "";
     public static int Game_id;
+    public static Bitmap bitmap_avatar_2;
 
     public static String url = "https://mafiagoserver.online:5000";
 

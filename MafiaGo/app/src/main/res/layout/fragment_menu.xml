@@ -128,7 +128,7 @@
         android:drawableStart="@drawable/ic_play" />
 
     <Button
-        android:id="@+id/btnFriends"
+        android:id="@+id/fragmentMenu_btn_chats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/btnGame"
@@ -144,8 +144,8 @@
         android:layout_width="110dp"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_toLeftOf="@id/btnFriends"
-        android:layout_alignTop="@id/btnFriends"
+        android:layout_toLeftOf="@id/fragmentMenu_btn_chats"
+        android:layout_alignTop="@id/fragmentMenu_btn_chats"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:text="Настройки"
@@ -157,13 +157,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
-        android:layout_toRightOf="@id/btnFriends"
-        android:layout_alignTop="@id/btnFriends"
+        android:layout_toRightOf="@id/fragmentMenu_btn_chats"
+        android:layout_alignTop="@id/fragmentMenu_btn_chats"
         android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
         android:text="Правила"
         android:textColor="@color/colorWhite"
         android:background="@drawable/round_button" />
+
+    <Button
+        android:id="@+id/fragmentMenu_btn_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/fragmentMenu_btn_chats"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:padding="10dp"
+        android:background="@drawable/round_button"
+        android:text="Друзья"
+        android:textColor="@color/colorWhite" />
 
 
     <ImageView

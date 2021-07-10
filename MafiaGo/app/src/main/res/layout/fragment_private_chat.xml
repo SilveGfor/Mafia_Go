@@ -7,13 +7,24 @@
     android:background="@drawable/fon_menu"
     tools:context="com.mafiago.fragments.PrivateChatsFragment">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/fragmentPrivateChat_IV_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginRight="5dp"
+        android:layout_toRightOf="@id/fragmentPrivateChat_btn_exit"
+        android:src="@drawable/lover_alive"
+        app:civ_border_width="1dp"
+        android:layout_marginTop="10dp"
+        app:civ_border_color="#FF0000"/>
+
     <androidx.cardview.widget.CardView
         android:id="@+id/fragmentPrivateChat_CV_nick"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:cardCornerRadius="15dp"
         android:layout_margin="10dp"
-        android:layout_toRightOf="@id/fragmentPrivateChat_btn_exit"
+        android:layout_toRightOf="@id/fragmentPrivateChat_IV_avatar"
         app:cardBackgroundColor="@color/colorPrimaryDark">
 
         <RelativeLayout

@@ -44,6 +44,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
     public ImageView btnSend;
     public ImageView btnEditMessage;
+    public ImageView IV_avatar;
 
     public EditText ET_input;
 
@@ -76,8 +77,10 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         TV_answer_nick = view.findViewById(R.id.fragmentPrivateChat_answer_nick);
         TV_answer_mes = view.findViewById(R.id.fragmentPrivateChat_answer_text);
         TV_nick = view.findViewById(R.id.fragmentPrivateChat_TV_nick);
+        IV_avatar = view.findViewById(R.id.fragmentPrivateChat_IV_avatar);
 
         TV_nick.setText(MainActivity.NickName_2);
+        IV_avatar.setImageBitmap(MainActivity.bitmap_avatar_2);
 
         RL_answer.setVisibility(View.GONE);
 
