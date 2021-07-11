@@ -56,18 +56,17 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_private_chats, container, false);
-        friendsView = view.findViewById(R.id.fragmentFriends_list_friends);
-        btnExit = view.findViewById(R.id.fragmentFriends_btn_exit);
+        friendsView = view.findViewById(R.id.fragmentPrivateChat_list_friends);
+        btnExit = view.findViewById(R.id.fragmentPrivateChat_btn_exit);
         SC_blocked_chats = view.findViewById(R.id.fragmentPrivateChats_SC_blocked_chats);
-        TV_no_chats = view.findViewById(R.id.fragmentChats_TV_no_chats);
-        PB_loading = view.findViewById(R.id.fragmentChats_PB_loading);
+        TV_no_chats = view.findViewById(R.id.fragmentPrivateChat_TV_no_chats);
+        PB_loading = view.findViewById(R.id.fragmentPrivateChat_PB_loading);
 
         privateChatsAdapter = new PrivateChatsAdapter(list_friends, getContext());
         friendsView.setAdapter(privateChatsAdapter);
 
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_chats.setVisibility(View.GONE);
-
 
         JSONObject json = new JSONObject();
         try {

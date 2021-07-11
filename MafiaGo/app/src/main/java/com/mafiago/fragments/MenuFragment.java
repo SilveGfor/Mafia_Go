@@ -34,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import com.example.mafiago.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
+import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
 
 import org.json.JSONException;
@@ -137,7 +138,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         btnFriends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                getActivity().startService(new Intent(getActivity(), BackgroundTask.class));
+                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
             }
         });
 

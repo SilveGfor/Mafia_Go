@@ -224,6 +224,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.off("ban_user_in_room_error");
         socket.off("user_message_delay");
         socket.off("send_complaint");
+        socket.off("my_friend_request");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
@@ -247,6 +248,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.on("ban_user_in_room_error", OnBanUserInRoomError);
         socket.on("user_message_delay", OnUserMessageDelay);
         socket.on("send_complaint", onSendComplain);
+        socket.on("my_friend_request", onMySendRequest);
 
         json = new JSONObject();
         try {
@@ -1183,18 +1185,29 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                        final JSONObject json2 = new JSONObject();
-                        try {
-                            json2.put("nick", player.getNick());
-                            json2.put("room", player.getRoom_num());
-                            json2.put("last_message_num", num);
-                            json2.put("last_dead_message_num", -1);
-                            json2.put("session_id", player.getSession_id());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        socket.emit("connect_to_room", json2);
-                        Log.d("kkk", "CONNECT");
+                    json = new JSONObject();
+                    try {
+                        json.put("nick", player.getNick());
+                        json.put("session_id", player.getSession_id());
+                        json.put("room", player.getRoom_num());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_in_room", json);
+                    Log.d("kkk", "Socket_отправка - get_in_room"+ json.toString());
+
+                    final JSONObject json2 = new JSONObject();
+                    try {
+                        json2.put("nick", player.getNick());
+                        json2.put("room", player.getRoom_num());
+                        json2.put("last_message_num", num);
+                        json2.put("last_dead_message_num", -1);
+                        json2.put("session_id", player.getSession_id());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("connect_to_room", json2);
+                    Log.d("kkk", "CONNECT");
                 }
             });
         }
@@ -1900,6 +1913,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    Log.d("kkk", "Socket_принять - user_error " + args[0]);
                     JSONObject data = (JSONObject) args[0];
                     String error;
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -1972,6 +1986,45 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                                 });
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
+                            case "you_are_already_friends":
+                                builder.setTitle("Вы уже друзья!")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
+                            case "you_are_already_sent_request":
+                                builder.setTitle("Вы уже отправили запрос этому человеку!")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
+                            case "you_are_already_got_request":
+                                builder.setTitle("Вы уже получили запрос в друзья от этого человека!")
+                                        .setMessage("")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                break;
                             default:
                                 builder.setTitle("Извините, но что-то пошло не так")
                                         .setMessage("")
@@ -1988,7 +2041,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         }
                         alert = builder.create();
                         alert.show();
-                        Log.d("kkk", "Socket_принять - user_error " + args[0]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -2529,17 +2581,18 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         alert2.show();
                     });
 
+                    String finalUser_id_2 = user_id_2;
                     FAB_add_friend.setOnClickListener(v1 -> {
                         json = new JSONObject();
                         try {
                             json.put("nick", player.getNick());
                             json.put("session_id", player.getSession_id());
-                            json.put("room", player.getRoom_num());
+                            json.put("user_id_2", finalUser_id_2);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        socket.emit("get_in_room", json);
-                        Log.d("kkk", "Socket_отправка - get_in_room"+ json.toString());
+                        socket.emit("friend_request", json);
+                        Log.d("kkk", "Socket_отправка - friend_request"+ json.toString());
                     });
                 }
                 else
@@ -2715,6 +2768,40 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     builder.setTitle("Вы превысили лимит жалоб!")
                             .setMessage("")
                             .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
+    };
+
+    private final Emitter.Listener onMySendRequest = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - my_send_request - " + data);
+                String status = "";
+                try {
+                    status = data.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (status.equals("OK"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Запрос отправлен!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ok)
                             .setCancelable(false)
                             .setNegativeButton("Ок",
                                     new DialogInterface.OnClickListener() {

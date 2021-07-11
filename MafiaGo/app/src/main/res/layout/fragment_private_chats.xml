@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +9,7 @@
     tools:context="com.mafiago.fragments.PrivateChatsFragment">
 
     <Button
-        android:id="@+id/fragmentFriends_btn_exit"
+        android:id="@+id/fragmentPrivateChat_btn_exit"
         android:layout_width="70dp"
         android:layout_height="wrap_content"
         android:text="Назад"
@@ -18,7 +19,7 @@
         android:background="@drawable/round_button" />
 
     <TextView
-        android:id="@+id/fragmentChats_TV_no_chats"
+        android:id="@+id/fragmentPrivateChat_TV_no_chats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -31,7 +32,7 @@
         android:id="@+id/fragmentPrivateChats_SC_blocked_chats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/fragmentFriends_btn_exit"
+        android:layout_toRightOf="@id/fragmentPrivateChat_btn_exit"
         android:checked="false"
         android:layout_margin="15dp"
         android:text="Показывать заблокированные чаты"
@@ -39,17 +40,17 @@
         android:textOn="Да"/>
 
     <ListView
-        android:id="@+id/fragmentFriends_list_friends"
+        android:id="@+id/fragmentPrivateChat_list_friends"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/fragmentFriends_btn_exit"
+        android:layout_below="@+id/fragmentPrivateChat_btn_exit"
         android:divider="@color/colorWhite"
         android:dividerHeight="2dp"
         android:layout_margin="15dp"/>
 
     <ProgressBar
-        android:id="@+id/fragmentChats_PB_loading"
+        android:id="@+id/fragmentPrivateChat_PB_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"/>

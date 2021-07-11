@@ -86,9 +86,9 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
         GridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
 
+        //socket.off("connect");
+        //socket.off("disconnect");
         socket.off("create_room");
-        socket.off("connect");
-        socket.off("disconnect");
         socket.off("user_error");
 
         socket.on("create_room", onCreateRoom);

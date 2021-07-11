@@ -100,8 +100,8 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
         MessageView.setAdapter(messageAdapter);
 
-        socket.off("connect");
-        socket.off("disconnect");
+        //socket.off("connect");
+        //socket.off("disconnect");
         socket.off("get_chat_info");
         socket.off("delete_message");
         socket.off("edit_message");

@@ -1,13 +1,44 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.mafiago.fragments.FriendsFragment">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/fon_menu"
+    tools:context="com.mafiago.fragments.PrivateChatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <Button
+        android:id="@+id/fragmentFriends_btn_exit"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:id="@+id/fragmentFriends_TV_no_friends"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="Нет друзей"
+        android:textStyle="bold"
+        android:textSize="20sp" />
 
-</FrameLayout>
+    <ListView
+        android:id="@+id/fragmentFriends_list_friends"
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/fragmentFriends_btn_exit"
+        android:divider="@color/colorWhite"
+        android:dividerHeight="2dp"
+        android:layout_margin="15dp"/>
+
+    <ProgressBar
+        android:id="@+id/fragmentFriends_PB_loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"/>
+</RelativeLayout>

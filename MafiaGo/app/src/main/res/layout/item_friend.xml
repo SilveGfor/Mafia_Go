@@ -40,10 +40,11 @@
         app:cardBackgroundColor="@color/color_maniac"
         app:cardCornerRadius="8dp"
         android:layout_marginLeft="15dp"
+        android:visibility="gone"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/itemFriend_IV_on_off">
 
-        <TextView
+    <TextView
             android:id="@+id/itemFriend_TV_room_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -51,5 +52,54 @@
             android:text="Комната 1"
             android:textColor="@color/colorWhite"
             android:textSize="20sp"/>
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/itemFriend_IV_delete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_ban"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="15dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/itemFriend_CV_accept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/color_doctor"
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/itemFriend_IV_on_off">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="принять"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"/>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/itemFriend_CV_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:cardBackgroundColor="@color/color_mafia_don"
+        app:cardCornerRadius="8dp"
+        android:layout_marginLeft="15dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/itemFriend_CV_accept">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="отклонить"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"/>
     </androidx.cardview.widget.CardView>
 </RelativeLayout>

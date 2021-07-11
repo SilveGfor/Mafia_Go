@@ -13,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.mafiago.R;
@@ -79,8 +80,7 @@ public class PrivateChatsAdapter extends BaseAdapter {
                             }
                             socket.emit("unlock_chat", json);
                             Log.d("kkk", "Socket_отправка - unlock_chat - " + json.toString());
-                            IV_ban_unban_chat.setImageResource(R.drawable.ic_ok);
-                            IV_ban_unban_chat.setClickable(false);
+                            list_friends.remove(position);
                         })
                         .setPositiveButton(" Нет", (dialog, id) -> {
                             dialog.cancel();
@@ -111,8 +111,8 @@ public class PrivateChatsAdapter extends BaseAdapter {
                             }
                             socket.emit("block_chat", json);
                             Log.d("kkk", "Socket_отправка - block_chat - " + json.toString());
-                            IV_ban_unban_chat.setImageResource(R.drawable.ic_ok);
-                            IV_ban_unban_chat.setClickable(false);
+                            list_friends.remove(position);
+                            this.notifyDataSetChanged();
                                 })
                         .setPositiveButton(" Нет", (dialog, id) -> {
                             dialog.cancel();

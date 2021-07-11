@@ -68,6 +68,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
 
+    public JSONObject json;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -86,8 +88,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_games.setVisibility(View.GONE);
 
-        socket.off("connect");
-        socket.off("disconnect");
+        //socket.off("connect");
+        //socket.off("disconnect");
         socket.off("add_room_to_list_of_rooms");
         socket.off("delete_room_from_list_of_rooms");
         socket.off("update_list_of_rooms");
@@ -625,8 +627,18 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         alert2.show();
                     });
 
+                    String finalUser_id_2 = user_id_2;
                     FAB_add_friend.setOnClickListener(v1 -> {
-                        //TODO: добавление в друзья
+                        json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("user_id_2", finalUser_id_2);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("friend_request", json);
+                        Log.d("kkk", "Socket_отправка - friend_request"+ json.toString());
                     });
                 }
                 else
