@@ -10,6 +10,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -19,6 +20,7 @@ import android.util.Log;
 
 import com.example.mafiago.R;
 
+import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.fragments.StartFragment;
 import com.mafiago.models.NotificationModel;
@@ -94,10 +96,12 @@ public static Socket socket;
 
         client = new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).callTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).build();
 
+        this.startService(new Intent(this, BackgroundTask.class));
+
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
         socket.on("ping", onPing);
-        socket.on("chat_message", OnChatMessage);
+        //socket.on("chat_message", OnChatMessage);
 
         //TODO: Фоновый режим
 
@@ -233,7 +237,6 @@ public static Socket socket;
                     builder.setStyle(new NotificationCompat.InboxStyle()
                             .addLine(messages.get(0)));
                 }
-
                 showNotification(id);
             }
         }

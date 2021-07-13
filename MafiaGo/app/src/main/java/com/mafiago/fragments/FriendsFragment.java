@@ -73,17 +73,6 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
         try {
             json.put("nick", MainActivity.NickName);
             json.put("session_id", MainActivity.Session_id);
-            json.put("request_type", "my");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        socket.emit("get_list_of_friend_requests", json);
-        Log.d("kkk", "Socket_отправка - get_list_of_friend_requests - "+ json.toString());
-
-        json = new JSONObject();
-        try {
-            json.put("nick", MainActivity.NickName);
-            json.put("session_id", MainActivity.Session_id);
             json.put("request_type", "other");
         } catch (JSONException e) {
             e.printStackTrace();

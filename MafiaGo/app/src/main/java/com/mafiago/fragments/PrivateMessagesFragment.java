@@ -441,7 +441,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                         }
                         else
                         {
-                            is_read = true;
+                            is_read = false;
                         }
                         user_id_1 = data.getString("user_id");
                         user_id_2 = data.getString("user_id_2");
