@@ -98,9 +98,9 @@ public static Socket socket;
 
         this.startService(new Intent(this, BackgroundTask.class));
 
-        socket.on("connect", onConnect);
-        socket.on("disconnect", onDisconnect);
-        socket.on("ping", onPing);
+        //socket.on("connect", onConnect);
+        //socket.on("disconnect", onDisconnect);
+        //socket.on("ping", onPing);
         //socket.on("chat_message", OnChatMessage);
 
         //TODO: Фоновый режим

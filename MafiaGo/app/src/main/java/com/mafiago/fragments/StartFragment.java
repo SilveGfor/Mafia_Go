@@ -1,12 +1,16 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
+import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
@@ -35,6 +40,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static android.content.Context.NOTIFICATION_SERVICE;
 import static android.content.Context.SYSTEM_HEALTH_SERVICE;
 import static com.mafiago.MainActivity.client;
 
@@ -66,6 +72,16 @@ public class StartFragment extends Fragment {
 
     private SharedPreferences mSettings;
 
+    public int друг_айди = 13;
+
+    // Идентификатор канала
+    private static String CHANNEL_ID = "Notifications channel";
+
+    NotificationCompat.Builder builder;
+    NotificationManager manager;
+
+    public int h;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -80,6 +96,10 @@ public class StartFragment extends Fragment {
         PB_loading = view.findViewById(R.id.fragmentStart_PB_loading);
 
         PB_loading.setVisibility(View.INVISIBLE);
+
+        manager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
+
+        createNotificationChannel();
 
         //MainActivity.mPlayer= MediaPlayer.create(getContext(), R.raw.fon_music);
 
@@ -165,105 +185,114 @@ public class StartFragment extends Fragment {
     }
 
     public void Login() {
-        PB_loading.setVisibility(View.VISIBLE);
-        final String[] resp = {""};
-        SharedPreferences mSettings;
-        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        final JSONObject json = new JSONObject();
         try {
+            final JSONObject json = new JSONObject();
+            PB_loading.setVisibility(View.VISIBLE);
+            final String[] resp = {""};
+            SharedPreferences mSettings;
+            mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
             json.put("email", MainActivity.nick);
             json.put("password", MainActivity.password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Log.d("kkk", "Отправил: " + json);
 
+            Log.d("kkk", "Отправил: " + json);
 
+            RequestBody body = RequestBody.create(
+                    MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
 
-        RequestBody body = RequestBody.create(
-                MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
+            Request request = new Request.Builder()
+                    .url(url).post(body)
+                    .build();
 
-        Request request = new Request.Builder()
-                .url(url).post(body)
-                .build();
+            Call call = client.newCall(request);
+            call.enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
 
-        Call call = client.newCall(request);
-        call.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-
-                Log.d("kkk", "Failure: " + e.getMessage());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                resp[0] = response.body().string();
-                String Answer = resp[0];
-                Log.d("kkk", "Принял: " + Answer);
-                try {
-                    if (Answer.equals("incorrect_email")) {
-                        if (!AutoRun) {
-                            PB_loading.setVisibility(View.INVISIBLE);
-                            ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("Такого аккаунта не существует!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_info)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-                                AlertDialog alert = builder.create();
-                                alert.show();
-                            });
-                        }
-                    } else if (Answer.equals("incorrect_password")) {
-                        if (!AutoRun) {
-                            PB_loading.setVisibility(View.INVISIBLE);
-                            ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("Неправильный пароль!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_info)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-                                AlertDialog alert = builder.create();
-                                alert.show();
-                            });
-                        }
-                    } else {
-                        JSONObject obj = new JSONObject(resp[0]);
-
-                        NickName = obj.get("nick").toString();
-                        Email = obj.get("email").toString();
-                        Session_id = obj.get("session_id").toString();
-                        MainActivity.User_id = obj.get("user_id").toString();
-                        MainActivity.Sid = obj.get("sid").toString();
-                        MainActivity.Role = obj.get("role").toString();
-
-                        MainActivity.NickName = NickName;
-                        MainActivity.Session_id = Session_id;
-
-                        Log.d("kkk", "НИК: " + NickName);
-                        Log.d("kkk", "Переход в MenuFragment");
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.d("kkk", "Ошибка!!!");
+                    Log.d("kkk", "Failure: " + e.getMessage());
                 }
-            }
-        });
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    resp[0] = response.body().string();
+                    String Answer = resp[0];
+                    Log.d("kkk", "Принял: " + Answer);
+                    try {
+                        if (Answer.equals("incorrect_email")) {
+                            if (!AutoRun) {
+                                PB_loading.setVisibility(View.INVISIBLE);
+                                ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle("Такого аккаунта не существует!")
+                                            .setMessage("")
+                                            .setIcon(R.drawable.ic_info)
+                                            .setCancelable(false)
+                                            .setNegativeButton("Ок",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                });
+                            }
+                        } else if (Answer.equals("incorrect_password")) {
+                            if (!AutoRun) {
+                                PB_loading.setVisibility(View.INVISIBLE);
+                                ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                    builder.setTitle("Неправильный пароль!")
+                                            .setMessage("")
+                                            .setIcon(R.drawable.ic_info)
+                                            .setCancelable(false)
+                                            .setNegativeButton("Ок",
+                                                    new DialogInterface.OnClickListener() {
+                                                        public void onClick(DialogInterface dialog, int id) {
+                                                            dialog.cancel();
+                                                        }
+                                                    });
+                                    AlertDialog alert = builder.create();
+                                    alert.show();
+                                });
+                            }
+                        } else {
+                            JSONObject obj = new JSONObject(resp[0]);
+
+                            NickName = obj.get("nick").toString();
+                            Email = obj.get("email").toString();
+                            Session_id = obj.get("session_id").toString();
+                            MainActivity.User_id = obj.get("user_id").toString();
+                            MainActivity.Sid = obj.get("sid").toString();
+                            MainActivity.Role = obj.get("role").toString();
+
+                            MainActivity.NickName = NickName;
+                            MainActivity.Session_id = Session_id;
+
+                            Log.d("kkk", "НИК: " + NickName);
+                            Log.d("kkk", "Переход в MenuFragment");
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                        }
+                    } catch (Exception e) {
+                        createNotificationChannel();
+                        createNotification("Ошибка", "message");
+                        builder.setStyle(new NotificationCompat.InboxStyle()
+                                .addLine(String.valueOf(e)));
+                        showNotification(друг_айди);
+                        друг_айди++;
+                    }
+                }
+            });
+        } catch (Exception e) {
+            createNotificationChannel();
+            createNotification("Ошибка", "message");
+            builder.setStyle(new NotificationCompat.InboxStyle()
+                    .addLine(String.valueOf(e)));
+            showNotification(друг_айди);
+            друг_айди++;
+        }
     }
+
 
     public boolean isNetworkOnline(Context context) {
         boolean status = false;
@@ -282,5 +311,31 @@ public class StartFragment extends Fragment {
             return false;
         }
         return status;
+    }
+    private void createNotificationChannel() {
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String CHANNEL_NAME = "MAFIAGOCHANNEL" ;
+            String CHANNEL_DESCRIPTION = "MAFIAGOGAME";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel =
+                    new NotificationChannel(CHANNEL_ID, CHANNEL_NAME, importance);
+            channel.setDescription(CHANNEL_DESCRIPTION);
+            manager.createNotificationChannel(channel);
+        }
+    }
+
+    private void createNotification(String title, String message) {
+        builder = new NotificationCompat.Builder(getActivity(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.mafiago)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(),
+                        R.drawable.mafiago)) // большая картинка
+                .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
+    }
+
+    private  void showNotification(int NOTIFY_ID) {
+        manager.notify(NOTIFY_ID, builder.build());
     }
 }

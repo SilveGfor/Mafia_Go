@@ -50,7 +50,7 @@
         android:id="@+id/btnSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/round_button"
+        android:background="@drawable/orange_button"
         android:text="Войти"
         android:textColor="@color/colorWhite"
         android:layout_marginTop="25dp"
@@ -61,11 +61,8 @@
         android:layout_width="190dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:background="@drawable/round_button"
+        android:background="@drawable/orange_button"
         android:text="Зарегистрироваться"
         android:textColor="@color/colorWhite"
         android:layout_gravity="center"/>
-
-
-
 </LinearLayout>

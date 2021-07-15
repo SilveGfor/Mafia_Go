@@ -1,17 +1,21 @@
 package com.mafiago.classes;
 
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
@@ -25,6 +29,7 @@ import java.util.ArrayList;
 import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.NickName;
+import static com.mafiago.MainActivity.Session_id;
 import static com.mafiago.MainActivity.User_id_2;
 import static com.mafiago.MainActivity.socket;
 
@@ -36,6 +41,7 @@ public class BackgroundTask extends Service {
 
     public int друг_айди = 1024;
 
+    public  int i = 0;
     // Идентификатор канала
     private static String CHANNEL_ID = "Notifications channel";
 
@@ -54,14 +60,40 @@ public class BackgroundTask extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flag, int startId) {
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
         socket.on("chat_message", OnChatMessage);
         socket.on("friend_request", OnFriendRequest);
+        socket.on("accept_friend_request", OnAcceptFriendRequest);
+        socket.on("ping", onPing);
 
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         createNotificationChannel();
         return START_STICKY;
     }
+
+    private Emitter.Listener onConnect = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            final JSONObject json2 = new JSONObject();
+            try {
+                json2.put("nick", NickName);
+                json2.put("session_id", Session_id);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("connection", json2);
+            Log.d("kkk", "CONNECTION");
+        }
+    };
+
+    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            Log.d("kkk", "DISCONNECTION");
+        }
+    };
 
     private Emitter.Listener OnChatMessage = new Emitter.Listener() {
         @Override
@@ -141,6 +173,52 @@ public class BackgroundTask extends Service {
                     .addLine(nick + " хочет добавить вас в друзья!"));
             showNotification(друг_айди);
             друг_айди++;
+        }
+    };
+
+    private Emitter.Listener OnAcceptFriendRequest = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            JSONObject data = (JSONObject) args[0];
+            Log.d("kkk", "принял - accept_friend_request в BackgroundTask - " + data);
+            String nick = "";
+            boolean accept = false;
+            try {
+                nick = data.getString("nick");
+                accept = data.getBoolean("accept");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            createNotificationChannel();
+            createNotification("Заявка в друзья", "message");
+            if (accept)
+            {
+                builder.setStyle(new NotificationCompat.InboxStyle()
+                        .addLine(nick + " принял(-а) вашу заявку в друзья!"));
+            }
+            else
+            {
+                builder.setStyle(new NotificationCompat.InboxStyle()
+                        .addLine(nick + " отклонил(-а) вашу заявку в друзья!"));
+            }
+            showNotification(друг_айди);
+            друг_айди++;
+        }
+    };
+
+    private Emitter.Listener onPing = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            //Log.d("kkk", "PING2 - " + args[0]);
+            /*
+            createNotificationChannel();
+            createNotification("PING", "ping");
+            друг_айди++;
+            builder.setStyle(new NotificationCompat.InboxStyle()
+                    .addLine("pinGGG + " + друг_айди));
+            showNotification(друг_айди);
+            hideNotification(друг_айди - 1);
+             */
         }
     };
 
