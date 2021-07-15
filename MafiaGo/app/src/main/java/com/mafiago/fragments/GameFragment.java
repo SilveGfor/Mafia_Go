@@ -115,6 +115,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public int StopTimer = 0;
     int messages_can_write = 10;
     public String journalist_check = null;
+    public boolean has_paused = false;
 
     public int mafia_max = 0, mafia_now = 0, peaceful_max = 0, peaceful_now = 0;
 
@@ -259,7 +260,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             e.printStackTrace();
         }
         socket.emit("get_in_room", json);
-        Log.d("kkk", "Socket_отправка - get_in_room"+ json.toString());
+        Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
 
         RL_my_role.setOnClickListener(v -> {
             Log.d("kkk", String.valueOf(player.Can_click()));
@@ -887,6 +888,33 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     }
 
     @Override
+    public void onResume() {
+        if (has_paused)
+        {
+            json = new JSONObject();
+            try {
+                json.put("nick", player.getNick());
+                json.put("session_id", player.getSession_id());
+                json.put("room", player.getRoom_num());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("get_in_room", json);
+            Log.d("kkk", "Socket_отправка - get_in_room onResume"+ json.toString());
+            has_paused = false;
+        }
+
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        has_paused = true;
+        Log.d("kkk", "onPause");
+        super.onPause();
+    }
+
+    @Override
     public void onBackPressed() {
         if (player.getTime() == Time.LOBBY) {
             if (!timer.getText().equals("--")) {
@@ -981,6 +1009,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes", avatar);
                         Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                         if (test_num != num) {
+                            for (int i = 0; i < list_chat.size(); i++) {
+                                if (list_chat.get(i).message.equals(nick + " вышел(-а) из чата") || list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
+                                    list_chat.remove(i);
+                                }
+                            }
                             if (test_num > num) {
                                 num = test_num;
                                 list_chat.add(messageModel);
@@ -1001,11 +1034,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 list_users.add(new UserModel(nick, Role.NONE, avatar));
                                 PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
                                 gridView_users.setAdapter(playersAdapter);
-                            }
-                            for (int i = 0; i < list_chat.size(); i++) {
-                                if (list_chat.get(i).message.equals(nick + " вышел(-а) из чата")) {
-                                    list_chat.remove(i);
-                                }
                             }
                             messageAdapter.notifyDataSetChanged();
                             if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
@@ -1195,18 +1223,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     }
                     socket.emit("get_in_room", json);
                     Log.d("kkk", "Socket_отправка - get_in_room"+ json.toString());
-
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", player.getNick());
-                        json2.put("room", player.getRoom_num());
-                        json2.put("last_message_num", num);
-                        json2.put("last_dead_message_num", -1);
-                        json2.put("session_id", player.getSession_id());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    socket.emit("connect_to_room", json2);
                     Log.d("kkk", "CONNECT");
                 }
             });
@@ -1274,7 +1290,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 String time;
                 try {
                     time = data.getString("time");
-                    time = getDate(time);
                     switch (time)
                     {
                         case "lobby":
@@ -1319,7 +1334,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             {
                                 int players = list_users.size() + 1;
                                 mafia_max = list_mafias[players];
-                                peaceful_max = list_mafias[players];
+                                peaceful_max = list_peaceful[players];
                                 mafia_now = mafia_max;
                                 peaceful_now = peaceful_max;
                                 TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
@@ -1852,6 +1867,17 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     data2 = data.getJSONObject("message");
                                     voter = data2.getString("voter");
                                     user_nick = data2.getString("user_nick");
+                                    String nick_from_iterator;
+                                    String avatar = "";
+                                    for (Iterator iterator = users.keys(); iterator.hasNext();)
+                                    {
+                                        nick_from_iterator = (String) iterator.next();
+                                        if (voter.equals(nick_from_iterator))
+                                        {
+                                            avatar = users.getString(voter);
+                                            break;
+                                        }
+                                    }
                                     if (!user_nick.equals(player.getNick())) {
                                         for (int i = 0; i < list_users.size(); i++) {
                                             if (list_users.get(i).getNick().equals(user_nick)) {
@@ -1867,7 +1893,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     }
                                     playersAdapter3 = new PlayersAdapter(list_users, getContext());
                                     gridView_users.setAdapter(playersAdapter3);
-                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes");
+                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes", avatar);
                                     break;
                                 case "time_info":
                                     messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
@@ -2179,7 +2205,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         role = data.getString("role");
                         status = data.getString("status");
                         time = data.getString("time");
-                        time = getDate(time);
                         can_vote = data.getBoolean("can_vote");
                         can_act = data.getBoolean("can_act");
                         influences = data.getJSONObject("influences");
@@ -2284,7 +2309,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     {
                         int players = list_users.size() + 1;
                         mafia_max = list_mafias[players];
-                        peaceful_max = list_mafias[players];
+                        peaceful_max = list_peaceful[players];
                         mafia_now = mafia_now + mafia_max;
                         peaceful_now = peaceful_now + peaceful_max;
                         TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);

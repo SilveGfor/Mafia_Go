@@ -1,5 +1,7 @@
 package com.mafiago.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -92,10 +94,14 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
         socket.off("get_friend");
         socket.off("get_friend_request");
+        socket.off("accept_friend_request_to_me");
+        socket.off("user_error");
         //socket.off("get_my_friend_request");
 
         socket.on("get_friend", OnGetFriend);
         socket.on("get_friend_request", OnGetFriendRequest);
+        socket.on("accept_friend_request_to_me", OnAcceptFriendRequestToMe);
+        socket.on("user_error", OnUserError);
         //socket.on("get_my_friend_request", OnGetMyFriendRequest);
 
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -111,6 +117,7 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
         return view;
     }
+
     public Bitmap fromBase64(String image) {
         // Декодируем строку Base64 в массив байтов
         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
@@ -233,6 +240,110 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
                 {
                     TV_no_friends.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+    };
+
+    private final Emitter.Listener OnAcceptFriendRequestToMe = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("kkk", "принял - accept_friend_request_to_me - " + args[0]);
+                JSONObject data = (JSONObject) args[0];
+                String status = "";
+                boolean accept = false;
+                try {
+                    status = data.getString("status");
+                    accept = data.getBoolean("accept");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog alert;
+                if (status.equals("OK"))
+                {
+
+                    if (accept)
+                    {
+                        builder.setTitle("Вы приняли заявку в друзья!")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_ok)
+                                .setCancelable(false)
+                                .setNegativeButton("Ок",
+                                        (dialog, id) -> dialog.cancel());
+                    }
+                    else
+                    {
+                        builder.setTitle("Вы отклонили заявку в друзья!")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("Ок",
+                                        (dialog, id) -> dialog.cancel());
+                    }
+                }
+                else
+                {
+                    builder.setTitle("Извините, но что-то пошло не так")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                }
+                alert = builder.create();
+                alert.show();
+            }
+        });
+    };
+
+    private final Emitter.Listener OnUserError = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("kkk", "принял - user_error - " + args[0]);
+                JSONObject data = (JSONObject) args[0];
+                String error = "";
+                try {
+                    error = data.getString("error");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog alert;
+                switch (error)
+                {
+                    case "you_are_already_friends":
+                        builder.setTitle("Вы уже друзья!")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("Ок",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                        break;
+                    default:
+                        builder.setTitle("Извините, но что-то пошло не так")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("Ок",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                        break;
+                }
+                alert = builder.create();
+                alert.show();
             }
         });
     };

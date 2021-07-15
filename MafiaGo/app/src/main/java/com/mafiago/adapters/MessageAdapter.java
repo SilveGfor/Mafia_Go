@@ -124,23 +124,23 @@
                         break;
                     case "moderator":
                         TV_main_role.setText("модератор");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_main_role.setTextColor(Color.parseColor("#C71585"));
                         break;
                     case "admin":
                         TV_main_role.setText("админ");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_main_role.setTextColor(Color.parseColor("#FF0000"));
                         break;
                     case "head_admin":
                         TV_main_role.setText("глав. админ");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_main_role.setTextColor(Color.parseColor("#008B8B"));
                         break;
                     case "designer":
                         TV_main_role.setText("дизайнер");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_main_role.setTextColor(Color.parseColor("#8A2BE2"));
                         break;
                     case "developer":
                         TV_main_role.setText("разработчик");
-                        TV_main_role.setTextColor(Color.parseColor("#FF0000"));
+                        TV_main_role.setTextColor(Color.parseColor("#8B0000"));
                         break;
                 }
 
