@@ -11,7 +11,6 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -23,11 +22,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
 import com.mafiago.fragments.StartFragment;
 
@@ -58,6 +55,12 @@ public class SettingsMainFragment extends Fragment {
     TextView TV_message;
 
     public String base64_screenshot = "";
+
+    View view_reportError;
+    ImageView IV_screen;
+    Button btn_addScreen;
+    EditText ET_message;
+    Button btm_sendError;
 
     ////////////////
 
@@ -113,6 +116,11 @@ public class SettingsMainFragment extends Fragment {
         if (mPage == 1)
         {
             view = inflater.inflate(R.layout.fragment_settings_main, container, false);
+            view_reportError =inflater.inflate(R.layout.dialog_report_error, container, false);
+            IV_screen = view_reportError.findViewById(R.id.dialogReportError_IV_screen);
+            btn_addScreen = view_reportError.findViewById(R.id.dialogReportError_btn_addScreen);
+            ET_message = view_reportError.findViewById(R.id.dialogReportError_ET_text);
+            btm_sendError = view_reportError.findViewById(R.id.dialogReportError_btn_sendError);
 
             btnReportError = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
             btnExitAccount = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
@@ -120,6 +128,10 @@ public class SettingsMainFragment extends Fragment {
             btnSelectTheme = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
             TV_role = view.findViewById(R.id.fragmentSettingsMain_TV_role);
             TV_message = view.findViewById(R.id.fragmentSettingsMain_TV_message);
+
+            socket.off("send_problem");
+
+            socket.on("send_problem", onSendProblem);
 
             if (!MainActivity.Role.equals("user")) {
                 boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
@@ -158,13 +170,28 @@ public class SettingsMainFragment extends Fragment {
 
             btnReportError.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view_report_error = getLayoutInflater().inflate(R.layout.dialog_report_error, null);
-                builder.setView(view_report_error);
+                builder.setView(view_reportError);
                 AlertDialog alert2 = builder.create();
+                btn_addScreen.setOnClickListener(v1 -> {
+                    Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                    photoPickerIntent.setType("image/*");
+                    startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+                });
+                btnReportError.setOnClickListener(v12 -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("comment", ET_message.getText());
+                        json.put("image", base64_screenshot);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("send_problem", json);
+                    Log.d("kkk", "Socket_отправка - send_problem" + json);
+                    alert2.cancel();
+                });
                 alert2.show();
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
             });
 
             btnExitAccount.setOnClickListener(v -> {
@@ -320,7 +347,7 @@ public class SettingsMainFragment extends Fragment {
 
                             base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
 
-
+                            IV_screen.setImageBitmap(fromBase64(base64_screenshot));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -414,8 +441,6 @@ public class SettingsMainFragment extends Fragment {
                 }
         }
     }
-
-
 
     public byte[] getDownsizedImageBytes(Bitmap fullBitmap, int scaleWidth, int scaleHeight) throws IOException {
 
@@ -513,6 +538,57 @@ public class SettingsMainFragment extends Fragment {
                 case "OK":
                     builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Профиль успешно изменён!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ok)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                default:
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Что-то пошло не так!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+            }
+            alert.show();
+            Log.d("kkk", "принял - edit_profile - " + data);
+        });
+    };
+
+    private final Emitter.Listener onSendProblem = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(() -> {
+            JSONObject data = (JSONObject) args[0];
+            String status = "";
+            try {
+                status = data.getString("status");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            AlertDialog.Builder builder;
+            AlertDialog alert;
+            switch (status)
+            {
+                case "OK":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Вы успешно сообщили о проблеме!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ok)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "problems_limit_exceeded":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Истрачен лимит ошибок!")
                             .setMessage("")
                             .setIcon(R.drawable.ic_ok)
                             .setCancelable(false)
