@@ -43,12 +43,10 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
     EditText ET_RoomName;
 
-    TextView TV_max_people;
-
     RangeSeekBar RSB_num_users;
 
     Button btnCreateRoom;
-    Button btnExitCreateRoom;
+    //Button btnExitCreateRoom;
 
     public GridView GridView;
 
@@ -75,14 +73,12 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        ET_RoomName = view.findViewById(R.id.fragmentCreateRoom_ET_room_name);
+        ET_RoomName = view.findViewById(R.id.fragmentCreateRoom_ET_roomName);
 
-        TV_max_people = view.findViewById(R.id.fragmentCreateRoom_TV_max_people);
+        RSB_num_users = view.findViewById(R.id.fragmentCreateRoom_PSB_playerNum);
 
-        RSB_num_users = view.findViewById(R.id.fragmentCreateRoom_RSB_num_users);
-
-        btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_create_room);
-        btnExitCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_exit);
+        btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_btn_createRoom);
+        //btnExitCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_exit);
 
         GridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
 
@@ -96,12 +92,11 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         socket.on("disconnect", onDisconnect);
         socket.on("user_error", onUserError);
 
-
         name = "";
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
         ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "London Bridge"));
-        TV_max_people.setText(String.valueOf(max_people));
+        //TV_max_people.setText(String.valueOf(max_people));
         RSB_num_users.setSelectedMaxValue(max_people);
         RSB_num_users.setSelectedMinValue(min_people);
         SetRoles(max_people);
@@ -178,6 +173,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
             }
         });
 
+        /*
         btnExitCreateRoom.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -187,6 +183,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
         });
+         */
 
         return view;
     }

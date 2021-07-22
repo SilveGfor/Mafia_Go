@@ -1,68 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@drawable/fon_menu"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/FragmentStart"
-    android:orientation="vertical">
-
-    <ImageView
-        android:layout_marginTop="20sp"
-        android:layout_gravity="center"
-        android:layout_width="150dp"
-        android:layout_height="150dp"
-        android:background="@drawable/mafiago" />
+    android:background="@drawable/fon_main">
 
     <ProgressBar
-        android:id="@+id/fragmentStart_PB_loading"
+        android:id="@+id/fragmentStart_PB"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="30dp"/>
-
-    <EditText
-        android:id="@+id/ETemail"
-        android:layout_width="250dp"
-        android:layout_height="35dp"
-        android:gravity="center"
-        android:hint="Введите почту"
-        android:textColorHint="@color/colorWhite"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_edit_text"
-        android:layout_gravity="center"/>
-
-    <EditText
-        android:id="@+id/ETpassword"
-        android:layout_width="160dp"
-        android:layout_height="35dp"
-        android:layout_marginTop="20dp"
-        android:gravity="center"
-        android:hint="Введите пароль"
-        android:inputType="textPassword"
-        android:textColorHint="@color/colorWhite"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_edit_text"
-        android:layout_gravity="center"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/btnSignIn"
-        android:layout_width="wrap_content"
+        android:id="@+id/fragmentStart_btn_enter"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:background="@drawable/orange_button"
         android:text="Войти"
-        android:textColor="@color/colorWhite"
-        android:layout_marginTop="25dp"
-        android:layout_gravity="center"/>
+        app:layout_constraintEnd_toEndOf="@+id/fragmentStart_btn_register"
+        app:layout_constraintStart_toStartOf="@+id/fragmentStart_btn_register"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentStart_ET_password" />
+
+    <ImageView
+        android:id="@+id/fragmentGame_roomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/mafia_go_text" />
+
+    <EditText
+        android:id="@+id/fragmentStart_ET_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/black_edit_text"
+        android:ems="10"
+        android:hint="Пароль"
+        android:textColorHint="@color/white"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateRoom_ET_roomName" />
+
+    <EditText
+        android:id="@+id/fragmentCreateRoom_ET_roomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/black_edit_text"
+        android:padding="10dp"
+        android:layout_marginTop="80dp"
+        android:ems="10"
+        android:hint="E-mail"
+        android:textColorHint="@color/white"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="ВХОД"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Забыл пароль"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentStart_btn_register" />
 
     <Button
-        android:id="@+id/btnReg"
-        android:layout_width="190dp"
+        android:id="@+id/fragmentStart_btn_register"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/orange_button"
-        android:text="Зарегистрироваться"
-        android:textColor="@color/colorWhite"
-        android:layout_gravity="center"/>
-</LinearLayout>
+        android:layout_marginTop="16dp"
+        android:text="ЗАРЕГИСТРИРОВАТЬСЯ"
+        android:padding="15dp"
+        android:background="@drawable/grey_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentStart_btn_enter" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

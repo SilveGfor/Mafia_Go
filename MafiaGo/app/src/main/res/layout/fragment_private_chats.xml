@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/fon_menu"
+    android:background="@drawable/fon_main"
     tools:context="com.mafiago.fragments.PrivateChatsFragment">
 
-    <Button
-        android:id="@+id/fragmentPrivateChat_btn_exit"
-        android:layout_width="70dp"
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="42dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/three_lines" />
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_roomName"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Назад"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_button" />
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Чаты"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/fragmentPrivateChat_TV_no_chats"
@@ -24,34 +39,46 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:text="Нет чатов"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:textSize="20sp" />
-
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/fragmentPrivateChats_SC_blocked_chats"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/fragmentPrivateChat_btn_exit"
-        android:checked="false"
         android:layout_margin="15dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
         android:text="Показывать заблокированные чаты"
         android:textOff="Нет"
-        android:textOn="Да"/>
+        android:textOn="Да"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGame_TV_roomName"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_roomName" />
 
     <ListView
         android:id="@+id/fragmentPrivateChat_list_friends"
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:layout_below="@+id/fragmentPrivateChat_btn_exit"
+        android:layout_margin="15dp"
         android:divider="@color/colorWhite"
         android:dividerHeight="2dp"
-        android:layout_margin="15dp"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentPrivateChats_SC_blocked_chats" />
 
     <ProgressBar
         android:id="@+id/fragmentPrivateChat_PB_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"/>
-</RelativeLayout>
+        android:layout_centerInParent="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/rounded_corner_dark_green"
-            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/Item_user_IV_role"
@@ -56,5 +50,4 @@
                 android:textColor="#FFFFFF"
                 android:textSize="13sp"
                 android:textStyle="normal" />
-        </RelativeLayout>
-</LinearLayout>
+</RelativeLayout>

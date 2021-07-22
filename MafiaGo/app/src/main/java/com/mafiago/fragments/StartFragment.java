@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,9 +25,7 @@ import androidx.fragment.app.Fragment;
 
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
-import com.mafiago.classes.OnBackPressedListener;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -41,7 +38,6 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
-import static android.content.Context.SYSTEM_HEALTH_SERVICE;
 import static com.mafiago.MainActivity.client;
 
 public class StartFragment extends Fragment {
@@ -89,11 +85,11 @@ public class StartFragment extends Fragment {
         View view;
         view = inflater.inflate(R.layout.fragment_start, container, false);
         //поиск айди кнопок
-        btnSignIn = view.findViewById(R.id.btnSignIn);
-        btnReg = view.findViewById(R.id.btnReg);
-        ETemail = view.findViewById(R.id.ETemail);
-        ETpassword = view.findViewById(R.id.ETpassword);
-        PB_loading = view.findViewById(R.id.fragmentStart_PB_loading);
+        btnSignIn = view.findViewById(R.id.fragmentStart_btn_enter);
+        btnReg = view.findViewById(R.id.fragmentStart_btn_register);
+        ETemail = view.findViewById(R.id.fragmentCreateRoom_ET_roomName);
+        ETpassword = view.findViewById(R.id.fragmentStart_ET_password);
+        PB_loading = view.findViewById(R.id.fragmentStart_PB);
 
         PB_loading.setVisibility(View.INVISIBLE);
 
@@ -194,6 +190,7 @@ public class StartFragment extends Fragment {
 
             json.put("email", MainActivity.nick);
             json.put("password", MainActivity.password);
+            json.put("current_game_version", MainActivity.CURRENT_GAME_VERSION);
 
             Log.d("kkk", "Отправил: " + json);
 
@@ -211,7 +208,6 @@ public class StartFragment extends Fragment {
 
                     Log.d("kkk", "Failure: " + e.getMessage());
                 }
-
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
                     resp[0] = response.body().string();
@@ -220,8 +216,8 @@ public class StartFragment extends Fragment {
                     try {
                         if (Answer.equals("incorrect_email")) {
                             if (!AutoRun) {
-                                PB_loading.setVisibility(View.INVISIBLE);
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    PB_loading.setVisibility(View.INVISIBLE);
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Такого аккаунта не существует!")
                                             .setMessage("")
@@ -239,8 +235,8 @@ public class StartFragment extends Fragment {
                             }
                         } else if (Answer.equals("incorrect_password")) {
                             if (!AutoRun) {
-                                PB_loading.setVisibility(View.INVISIBLE);
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    PB_loading.setVisibility(View.INVISIBLE);
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Неправильный пароль!")
                                             .setMessage("")
@@ -275,9 +271,16 @@ public class StartFragment extends Fragment {
                         }
                     } catch (Exception e) {
                         createNotificationChannel();
-                        createNotification("Ошибка", "message");
+                        createNotification(String.valueOf(e.getStackTrace()[0]).substring(20), "message");
                         builder.setStyle(new NotificationCompat.InboxStyle()
                                 .addLine(String.valueOf(e)));
+                        showNotification(друг_айди);
+                        друг_айди++;
+
+                        createNotificationChannel();
+                        createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");
+                        builder.setStyle(new NotificationCompat.InboxStyle()
+                                .addLine(String.valueOf(e.getMessage())));
                         showNotification(друг_айди);
                         друг_айди++;
                     }
@@ -285,11 +288,19 @@ public class StartFragment extends Fragment {
             });
         } catch (Exception e) {
             createNotificationChannel();
-            createNotification("Ошибка", "message");
+            createNotification(String.valueOf(e.getStackTrace()[0]).substring(20), "message");
             builder.setStyle(new NotificationCompat.InboxStyle()
                     .addLine(String.valueOf(e)));
             showNotification(друг_айди);
             друг_айди++;
+
+            createNotificationChannel();
+            createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");
+            builder.setStyle(new NotificationCompat.InboxStyle()
+                    .addLine(String.valueOf(e.getMessage())));
+            showNotification(друг_айди);
+            друг_айди++;
+
         }
     }
 

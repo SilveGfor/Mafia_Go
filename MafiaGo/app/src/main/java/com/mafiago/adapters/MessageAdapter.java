@@ -1,6 +1,7 @@
  package com.mafiago.adapters;
 
  import android.content.Context;
+ import android.content.SharedPreferences;
  import android.graphics.Bitmap;
  import android.graphics.BitmapFactory;
  import android.graphics.Color;
@@ -33,6 +34,11 @@
     public Context context;
     public LayoutInflater layout;
 
+     public static final String APP_PREFERENCES = "user";
+     public static final String APP_PREFERENCES_SHOW_ROLE= "show_role";
+
+     private SharedPreferences mSettings;
+
     public MessageAdapter(ArrayList<MessageModel> list_mess, Context context)
     {
         this.list_mess = list_mess;
@@ -40,6 +46,7 @@
         if (context != null) {
             layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
+        mSettings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
     }
     //количество сообщений
     @Override
@@ -64,6 +71,8 @@
                         ViewGroup parent)
     {
         View view = convertView;
+        boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
+        Log.d("kkk", String.valueOf(showRole));
         //проверяем шаблон
         //if(convertView==null) {}
         switch (list_mess.get(position).mesType) {
@@ -118,30 +127,36 @@
                     //shimmer.start(txt_nick);
                 }
 
-                switch (list_mess.get(position).rang)
-                {
-                    case "user":
-                        break;
-                    case "moderator":
-                        TV_main_role.setText("модератор");
-                        TV_main_role.setTextColor(Color.parseColor("#C71585"));
-                        break;
-                    case "admin":
-                        TV_main_role.setText("админ");
-                        TV_main_role.setTextColor(Color.parseColor("#FF0000"));
-                        break;
-                    case "head_admin":
-                        TV_main_role.setText("глав. админ");
-                        TV_main_role.setTextColor(Color.parseColor("#008B8B"));
-                        break;
-                    case "designer":
-                        TV_main_role.setText("дизайнер");
-                        TV_main_role.setTextColor(Color.parseColor("#8A2BE2"));
-                        break;
-                    case "developer":
-                        TV_main_role.setText("разработчик");
-                        TV_main_role.setTextColor(Color.parseColor("#8B0000"));
-                        break;
+                if (showRole) {
+                    switch (list_mess.get(position).rang) {
+                        case "user":
+                            break;
+                        case "moderator":
+                            TV_main_role.setVisibility(View.VISIBLE);
+                            TV_main_role.setText("модератор");
+                            TV_main_role.setTextColor(Color.parseColor("#C71585"));
+                            break;
+                        case "admin":
+                            TV_main_role.setVisibility(View.VISIBLE);
+                            TV_main_role.setText("админ");
+                            TV_main_role.setTextColor(Color.parseColor("#FF0000"));
+                            break;
+                        case "head_admin":
+                            TV_main_role.setVisibility(View.VISIBLE);
+                            TV_main_role.setText("глав. админ");
+                            TV_main_role.setTextColor(Color.parseColor("#008B8B"));
+                            break;
+                        case "designer":
+                            TV_main_role.setVisibility(View.VISIBLE);
+                            TV_main_role.setText("дизайнер");
+                            TV_main_role.setTextColor(Color.parseColor("#8A2BE2"));
+                            break;
+                        case "developer":
+                            TV_main_role.setVisibility(View.VISIBLE);
+                            TV_main_role.setText("разработчик");
+                            TV_main_role.setTextColor(Color.parseColor("#8B0000"));
+                            break;
+                    }
                 }
 
                 txt_nick.setTextColor(Color.parseColor(color));

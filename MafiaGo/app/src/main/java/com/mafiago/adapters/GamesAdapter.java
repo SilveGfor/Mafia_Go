@@ -16,8 +16,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.mafiago.R;
+import com.mafiago.MainActivity;
 import com.mafiago.enums.Role;
+import com.mafiago.fragments.GameFragment;
 import com.mafiago.models.RoomModel;
 
 import java.util.ArrayList;
@@ -54,12 +58,13 @@ public class GamesAdapter extends BaseAdapter {
 
         view = layout.inflate(R.layout.item_game, null);
 
-        ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
+        //ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
 
-        ImageView btn_info = view.findViewById(R.id.ItemGame_btn_info);
+        Button btn_players = view.findViewById(R.id.itemGame_btn_players);
 
         ArrayList<String> list_roles = list_room.get(position).list_roles;
 
+        /*
         ImageView IV_maniac = view.findViewById(R.id.itemGame_IV_maniac);
         ImageView IV_doctor = view.findViewById(R.id.itemGame_IV_doctor);
         ImageView IV_lover = view.findViewById(R.id.itemGame_IV_lover);
@@ -70,15 +75,17 @@ public class GamesAdapter extends BaseAdapter {
         ImageView IV_doctor_of_easy_virtue = view.findViewById(R.id.itemGame_IV_doctor_of_easy_virtue);
         ImageView IV_bodyguard = view.findViewById(R.id.itemGame_IV_bodyguard);
 
-        PB_users.setMax(list_room.get(position).max_people);
-        PB_users.setProgress(list_room.get(position).num_people);
+         */
 
-        TextView txt_room_name = view.findViewById(R.id.NameRoom);
-        TextView txt_is_on = view.findViewById(R.id.ItemGame_is_on);
-        TextView txt_min_max_people = view.findViewById(R.id.MaxMinPeople);
-        TextView txt_num_people = view.findViewById(R.id.NumPeople);
+        //PB_users.setMax(list_room.get(position).max_people);
+        //PB_users.setProgress(list_room.get(position).num_people);
 
-        btn_info.setOnClickListener(v -> {
+        TextView txt_room_name = view.findViewById(R.id.itemGame_TV_roomName);
+        TextView TV_roomState = view.findViewById(R.id.itemGame_TV_roomState);
+        TextView txt_min_max_people = view.findViewById(R.id.itemGame_TV_minMaxPlayers);
+        TextView txt_num_people = view.findViewById(R.id.itemGame_TV_playersInRoom);
+
+        btn_players.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View view_listOfUsers = layout.inflate(R.layout.dialog_list_of_users_in_room, null);
             builder.setView(view_listOfUsers);
@@ -93,6 +100,17 @@ public class GamesAdapter extends BaseAdapter {
             alert.show();
         });
 
+        View finalView = view;
+        view.setOnClickListener(v -> {
+            MainActivity.Game_id = list_room.get(position).id;
+            MainActivity.RoomName = list_room.get(position).name;
+            Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+            AppCompatActivity activity = (AppCompatActivity) finalView.getContext();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+
+        });
+
+        /*
         for (int i = 0; i < list_roles.size(); i++)
         {
             Log.d("kkk", list_roles.get(i));
@@ -127,16 +145,17 @@ public class GamesAdapter extends BaseAdapter {
                     break;
             }
         }
+         */
 
         if (list_room.get(position).is_on)
         {
-            txt_is_on.setText("Игра идёт");
-            txt_is_on.setTextColor(Color.parseColor("#F44336"));
+            TV_roomState.setText("Игра идёт");
+            TV_roomState.setTextColor(Color.parseColor("#F44336"));
         }
         else
         {
-            txt_is_on.setText("Набор в комнату");
-            txt_is_on.setTextColor(Color.parseColor("#4CAF50"));
+            TV_roomState.setText("Набор в комнату");
+            //TV_roomState.setTextColor(Color.parseColor("#4CAF50"));
         }
 
         txt_room_name.setText(list_room.get(position).name);

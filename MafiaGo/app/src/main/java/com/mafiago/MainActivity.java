@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     public static String Role = "";
     public static int Game_id;
     public static Bitmap bitmap_avatar_2;
+    public static String CURRENT_GAME_VERSION = "0.0.1";
 
     public static String url = "https://mafiagoserver.online:5000";
 

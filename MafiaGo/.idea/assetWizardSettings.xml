@@ -24,7 +24,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\tim\AppData\Local\Temp\baseline_campaign_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\tim\AppData\Local\Temp\baseline_handyman_24.xml" />
                                                 <entry key="opacityPercent" value="80" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
@@ -37,7 +37,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/campaign/baseline_campaign_24.xml" />
+                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/handyman/baseline_handyman_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -86,9 +86,9 @@
                                   </option>
                                   <option name="values">
                                     <map>
-                                      <entry key="outputName" value="ic_complain" />
+                                      <entry key="outputName" value="ic_razrabotka" />
                                       <entry key="theme" value="CUSTOM" />
-                                      <entry key="themeColor" value="ff9d3a" />
+                                      <entry key="themeColor" value="ff9200" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -206,7 +206,7 @@
                                       <entry key="assetType" value="IMAGE" />
                                       <entry key="iconShape" value="CIRCLE" />
                                       <entry key="imageAsset" value="C:\Users\tim\Desktop\#папка\ИКОНКИ мафии\512х512.png" />
-                                      <entry key="outputName" value="ic_launcher_circle" />
+                                      <entry key="outputName" value="ic_send" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -223,7 +223,7 @@
                                             <option name="values">
                                               <map>
                                                 <entry key="color" value="000000" />
-                                                <entry key="imagePath" value="C:\Users\TIM\AppData\Local\Temp\baseline_ac_unit_24.xml" />
+                                                <entry key="imagePath" value="C:\Users\tim\AppData\Local\Temp\baseline_send_24.xml" />
                                                 <entry key="trimmed" value="true" />
                                               </map>
                                             </option>
@@ -235,7 +235,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/ac_unit/baseline_ac_unit_24.xml" />
+                                                <entry key="url" value="file:/$USER_HOME$/AppData/Local/Android/Sdk/icons/material/materialicons/send/baseline_send_24.xml" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -366,7 +366,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputIconType" value="LAUNCHER_LEGACY" />
+                            <entry key="outputIconType" value="ACTIONBAR" />
                           </map>
                         </option>
                       </PersistentState>

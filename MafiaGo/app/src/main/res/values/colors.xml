@@ -11,6 +11,18 @@
     <color name="btn_register">#e27a5d</color>
     <color name="btn_register_stroke">#d16e53</color>
 
+    <color name="green">#4D8D58</color>
+    <color name="grey">#749595</color>
+    <color name="cards">#3A3535</color>
+    <color name="red">#BE3144</color>
+    <color name="orange">#F05941</color>
+    <color name="additional">#872341</color>
+    <color name="fon">#212121</color>
+    <color name="notActiveText">#848484</color>
+    <color name="white">#FFFFFF</color>
+    <color name="died">#8DADD3</color>
+    <color name="gold">#F0BF41</color>
+
     <color name="color_mafia">#D13737</color>
     <color name="color_citizen">#7EAE10</color>
     <color name="color_sheriff">#2E648E</color>

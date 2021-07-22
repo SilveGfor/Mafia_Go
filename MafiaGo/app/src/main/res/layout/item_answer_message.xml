@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:text="разработчик"
         android:textSize="12sp"
+        android:visibility="gone"
         android:textColor="#FF0000"
         android:layout_toRightOf="@id/item_answer_message_avatar"/>
 
@@ -56,6 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="модератор"
+                android:visibility="gone"
                 android:textSize="12sp"
                 android:textColor="#9C27B0" />
 

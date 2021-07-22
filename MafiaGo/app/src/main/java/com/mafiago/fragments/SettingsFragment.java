@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -27,8 +28,10 @@ import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
 import com.mafiago.MainActivity;
 import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.pager_adapters.SettingsPagerAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,21 +47,8 @@ import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class SettingsFragment extends Fragment implements OnBackPressedListener {
 
-    Button btnExitSettings;
-    Button btnExitAccount;
-    Button btnEditAvatar;
-    Button btnEditPassword;
-    Button btnEditNick;
-
-    EditText ET_new_password;
-    EditText ET_new_nick;
-
-    public static final String APP_PREFERENCES = "user";
-    public static final String APP_PREFERENCES_EMAIL = "email";
-    public static final String APP_PREFERENCES_PASSWORD = "password";
-    public static final String APP_PREFERENCES_LAST_ROLE = "role";
-
-    private SharedPreferences mSettings;
+    TabLayout tab;
+    ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,46 +56,18 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_settings, container, false);
 
-        btnExitSettings = view.findViewById(R.id.btnExitSettings);
-        btnExitAccount = view.findViewById(R.id.fragmentSettings_btn_exit_account);
-        btnEditAvatar = view.findViewById(R.id.fragmentSettings_btn_edit_avatar);
-        btnEditPassword = view.findViewById(R.id.fragmentSettings_btn_edit_password);
-        btnEditNick = view.findViewById(R.id.fragmentSettings_btn_edit_nick);
+        tab = view.findViewById(R.id.fragmentSettings_TabLayout);
+        viewPager = view.findViewById(R.id.fragmentSettings_ViewPager);
 
-        ET_new_nick = view.findViewById(R.id.fragmentSettings_ET_new_nick);
-        ET_new_password = view.findViewById(R.id.fragmentSettings_ET_new_password);
+        // Получаем ViewPager и устанавливаем в него адаптер
+        viewPager.setAdapter(
+                new SettingsPagerAdapter(getActivity().getSupportFragmentManager(), getActivity()));
 
-        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        // Передаём ViewPager в TabLayout
+        tab.setupWithViewPager(viewPager);
 
-        socket.off("edit_profile");
 
-        socket.on("edit_profile", onEditProfile);
 
-        btnExitSettings.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-        });
-
-        btnEditPassword.setOnClickListener(v -> {
-        });
-
-        btnEditNick.setOnClickListener(v -> {
-        });
-
-        btnExitAccount.setOnClickListener(v -> {
-            socket.emit("leave_app", "");
-            Log.d("kkk", "Socket_отправка - leave_app");
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-            SharedPreferences.Editor editor = mSettings.edit();
-            editor.putString(APP_PREFERENCES_EMAIL, null);
-            editor.putString(APP_PREFERENCES_PASSWORD, null);
-            editor.apply();
-        });
-
-        btnEditAvatar.setOnClickListener(v -> {
-            Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-            photoPickerIntent.setType("image/*");
-            startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
-        });
 
         return  view;
     }
@@ -351,12 +313,5 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 
-    private final Emitter.Listener onEditProfile = args -> {
-        if(getActivity() == null)
-            return;
-        getActivity().runOnUiThread(() -> {
-            JSONObject data = (JSONObject) args[0];
-            Log.d("kkk", "принял - edit_profile - " + data);
-        });
-    };
+
 }

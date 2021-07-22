@@ -32,7 +32,7 @@
         android:id="@+id/timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@id/ListUsers"
+        android:layout_alignBottom="@id/fragmentGame_listUsers"
         android:layout_marginStart="30dp"
         android:layout_marginLeft="30dp"
         android:layout_marginTop="30dp"
@@ -44,7 +44,7 @@
         android:textSize="40sp" />
 
     <ListView
-        android:id="@+id/ListUsers"
+        android:id="@+id/fragmentGame_listUsers"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="200dp"
@@ -84,7 +84,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/answerCard"
-        android:layout_below="@+id/ListUsers"
+        android:layout_below="@+id/fragmentGame_listUsers"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:divider="@color/colorWhite"

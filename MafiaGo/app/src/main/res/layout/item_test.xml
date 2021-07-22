@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/frgmChat"
+    android:background="@drawable/fon_day">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragmentGame_CV_room_name"
+        android:layout_width="match_parent"
+        app:cardCornerRadius="15dp"
+        android:layout_margin="10dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimaryDark">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/fragmentGame_TV_room_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_centerHorizontal="true"
+                android:text="London Bridge"
+                android:textSize="25sp" />
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <Button
+        android:id="@+id/btnExitChat"
+        android:layout_below="@+id/fragmentGame_CV_room_name"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content"
+        android:text="Назад"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorWhite"
+        android:background="@drawable/round_button" />
+
+    <RelativeLayout
+        android:id="@+id/fragmentGame_RL_my_role"
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:layout_below="@id/fragmentGame_CV_room_name"
+        android:layout_toLeftOf="@id/fragmentGame_listUsers"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="30dp">
+        <ImageView
+            android:id="@+id/IV_role"
+            android:src="@drawable/anonim"
+            android:layout_width="70dp"
+            android:layout_height="100dp"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:id="@+id/fragmentGame_IV_my_role_animation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_lover" />
+        <TextView
+            android:id="@+id/fragmentGame_voting_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:padding="3dp"
+            android:layout_margin="5dp"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/colorWhite"
+            android:textSize="20sp"
+            android:background="@drawable/rounded_corner_dark_green"/>
+
+    </RelativeLayout>
+
+
+    <ImageView
+        android:id="@+id/IV_influence_doctor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/timer"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_doctor"/>
+
+    <ImageView
+        android:id="@+id/IV_influence_lover"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_doctor"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_lover"/>
+
+    <ImageView
+        android:id="@+id/IV_influence_sheriff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_lover"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_sheriff"/>
+
+    <ImageView
+        android:id="@+id/IV_influence_bodyguard"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_sheriff"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_shield"/>
+
+    <ImageView
+        android:id="@+id/IV_influence_poisoner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/IV_influence_bodyguard"
+        android:layout_alignBottom="@id/timer"
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/ic_poisoner"/>
+
+    <TextView
+        android:id="@+id/day_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Lobby"
+        android:textSize="20sp"
+        android:layout_below="@id/btnExitChat"
+        android:textColor="@color/colorWhite"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_mafia_count"
+        android:layout_below="@id/day_time"
+        android:layout_toRightOf="@id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Мафия 2/3"
+        android:textStyle="italic"
+        android:textColor="#FF0000"/>
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_peaceful_count"
+        android:layout_below="@id/fragmentGame_TV_mafia_count"
+        android:layout_toRightOf="@id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Мирных 3/5"
+        android:textStyle="italic"
+        android:textColor="#4CFF00"/>
+
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/day_time"
+        android:text="--"
+        android:textColor="@color/colorWhite"
+        android:textSize="40sp"
+        android:layout_margin="15dp"/>
+    <GridView
+        android:id="@+id/fragmentGame_listUsers"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/fragmentGame_FAB_skip_day"
+        android:layout_alignTop="@id/btnExitChat"
+        android:layout_marginStart="5dp"
+
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@id/ListMes"
+        android:scrollbars=""
+        android:numColumns="2"
+        android:verticalSpacing="10dp"
+        android:horizontalSpacing="5dp"/>
+
+    <ListView
+        android:id="@+id/ListMes"
+        android:layout_marginTop="10dp"
+        android:layout_width="215dp"
+        android:layout_height="match_parent"
+        android:layout_above="@id/answerCard"
+        android:layout_below="@+id/timer"
+        android:layout_alignParentLeft="true"
+
+        android:layout_margin="15dp"
+        android:layout_alignParentStart="true" />
+
+    <androidx.cardview.widget.CardView
+        android:layout_above="@id/fragmentGame_LL_input"
+        android:id="@+id/answerCard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginRight="5sp"
+        android:layout_marginBottom="5sp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/answerNickChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorWhite"
+                android:text="Vova_Vor" />
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/answerTextChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/answerNickChat"
+                android:textColor="@color/colorWhite"
+                android:text="Кто ты?" />
+            <Button
+                android:id="@+id/btnDeleteAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="закрыть"
+                android:textSize="12sp"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/colorWhite"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fragmentGame_FAB_skip_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:src="@drawable/ic_skip"
+        app:backgroundTint="#F44336"
+        app:fabSize="mini"
+        android:padding="5dp"
+        android:layout_alignRight="@id/fragmentGame_listUsers"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/answerCard"/>
+
+    <LinearLayout
+        android:id="@+id/fragmentGame_LL_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorPrimaryDark"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/InputMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="#CFD8DC"
+            android:textColor="#CFD8DC"
+            android:hint="Напишите сообщение" />
+
+        <ImageView
+            android:id="@+id/btnSendMes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="5"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_send" />
+    </LinearLayout>
+
+
+</RelativeLayout>

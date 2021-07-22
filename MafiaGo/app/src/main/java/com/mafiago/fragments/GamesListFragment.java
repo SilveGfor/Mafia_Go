@@ -55,7 +55,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     public TextView TV_no_games;
 
-    public Button btnExit;
+    //public Button btnExit;
     public Button btnCreateRoom;
 
     public ProgressBar PB_loading;
@@ -77,9 +77,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         View view = inflater.inflate(R.layout.fragment_games_list, container, false);
         view_report = getLayoutInflater().inflate(R.layout.dialog_report, null);
 
-        listView = view.findViewById(R.id.GamesList);
-        btnCreateRoom = view.findViewById(R.id.btnCreateRoom);
-        btnExit = view.findViewById(R.id.btnExitGamesList);
+        listView = view.findViewById(R.id.fragmentGamesList_LV_games);
+        btnCreateRoom = view.findViewById(R.id.fragmentGamesList_btn_create_room);
+        //btnExit = view.findViewById(R.id.btnExitGamesList);
         TV_no_games = view.findViewById(R.id.fragmentGamesList_TV_no_games);
         PB_loading = view.findViewById(R.id.fragmentGamesList_PB_loading);
 
@@ -121,13 +121,14 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
             }
         });
-
+/*
         btnExit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
             }
         });
+ */
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -7,12 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -35,7 +33,6 @@ import androidx.fragment.app.Fragment;
 import com.example.mafiago.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
-import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
 
 import org.json.JSONException;
@@ -53,20 +50,25 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     Button btnRules;
     Button btnGames;
-    Button btnChats;
-    Button btnFriends;
     Button btnTools;
 
     TextView TV_money;
     TextView TV_exp;
+    TextView TV_rang;
+    TextView TV_gold;
     TextView TV_nick;
 
     CardView CV_info;
 
     static final int GALLERY_REQUEST = 1;
 
-    ImageView IV_background;
     ImageView IV_avatar;
+
+    ImageView Chats;
+    ImageView Friends;
+    ImageView Shop;
+    ImageView VK;
+    ImageView Telegram;
 
     String base64_screenshot = "", report_nick = "", report_id = "";
 
@@ -90,26 +92,32 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         View view;
         view = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        btnRules = view.findViewById(R.id.btnRules);
-        btnGames = view.findViewById(R.id.btnGame);
-        btnChats = view.findViewById(R.id.fragmentMenu_btn_chats);
-        btnFriends = view.findViewById(R.id.fragmentMenu_btn_friends);
-        btnTools = view.findViewById(R.id.btnTools);
-        TV_money = view.findViewById(R.id.fragmentMenu_TV_money);
-        TV_exp = view.findViewById(R.id.fragmentMenu_TV_exp);
-        TV_nick = view.findViewById(R.id.fragmentMenu_TV_nick);
+        btnRules = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
+        btnGames = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
+        Chats = view.findViewById(R.id.fragmentMenu_IV_chats);
+        Friends = view.findViewById(R.id.fragmentMenu_IV_friends);
+        Shop = view.findViewById(R.id.fragmentMenu_IV_shop);
+        VK = view.findViewById(R.id.fragmentMenu_IV_vk);
+        Telegram = view.findViewById(R.id.fragmentMenu_IV_telegram);
+        btnTools = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
+        TV_money = view.findViewById(R.id.fragmentSettingsProfile_TV_money);
+        TV_exp = view.findViewById(R.id.fragmentSettingsProfile_TV_exp);
+        TV_gold = view.findViewById(R.id.fragmentMenu_TV_gold);
+        TV_rang = view.findViewById(R.id.fragmentSettingsProfile_TV_rang);
+        TV_nick = view.findViewById(R.id.fragmentSettingsProfile_TV_nick);
 
-        IV_background = view.findViewById(R.id.fragmentMenu_IV_background);
-        IV_avatar = view.findViewById(R.id.fragmentMenu_IV_avatar);
+        IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-        SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
+
+        //TODO: Сделать что-то про последнюю роль
+        //SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
 
         socket.off("get_profile");
 
         socket.on("get_profile", OnGetProfile);
 
-        CV_info = view.findViewById(R.id.fragmentMenuMenu_CV_info);
+        CV_info = view.findViewById(R.id.fragmentMenu_CV);
 
         //настройки от Шлыкова
         //Nastroiki nastroiki = new Nastroiki();
@@ -132,11 +140,29 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         CV_info.startAnimation(animation);
 
+        Telegram.setOnClickListener(v -> {
+            Intent mIntent = new Intent();
+            mIntent.setAction(Intent.ACTION_VIEW);
+            mIntent.setData(Uri.parse("https://t.me/mafia_go_game"));
+            startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
+        });
+
+        VK.setOnClickListener(v -> {
+            Intent mIntent = new Intent();
+            mIntent.setAction(Intent.ACTION_VIEW);
+            mIntent.setData(Uri.parse("https://vk.com/mafia_go_game"));
+            startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
+        });
+
+        Shop.setOnClickListener(v -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+        });
+
         btnTools.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
         });
 
-        btnFriends.setOnClickListener(new View.OnClickListener() {
+        Friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -177,7 +203,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             }
         });
 
-        btnChats.setOnClickListener(new View.OnClickListener() {
+        Chats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
@@ -352,23 +378,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         return downsizedImageBytes;
     }
 
-    public String toBase64() {
-        // Получаем изображение из ImageView
-        BitmapDrawable drawable = (BitmapDrawable) IV_background.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-
-        // Записываем изображение в поток байтов.
-        // При этом изображение можно сжать и / или перекодировать в другой формат.
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-
-        // Получаем изображение из потока в виде байтов
-        byte[] bytes = byteArrayOutputStream.toByteArray();
-
-        // Кодируем байты в строку Base64 и возвращаем
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
     public Bitmap fromBase64(String image) {
         // Декодируем строку Base64 в массив байтов
         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
@@ -389,7 +398,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 JSONObject data = (JSONObject) args[0];
                 String nick = "", avatar = "";
                 boolean online = false;
-                int money = 0, exp = 0, gold = 0;
+                int money = 0, exp = 0, gold = 0, rang = 0;
                 JSONObject statistic = new JSONObject();
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
                 String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "";
@@ -410,6 +419,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     nick = data.getString("nick");
                     money = data.getInt("money");
                     exp = data.getInt("exp");
+                    rang = data.getInt("rang");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -420,6 +430,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
                 TV_money.setText(String.valueOf(money));
                 TV_exp.setText(String.valueOf(exp));
+                TV_gold.setText(String.valueOf(gold));
+                TV_rang.setText(String.valueOf(rang));
                 TV_nick.setText(nick);
 
                 int finalMoney = money;
@@ -606,30 +618,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             }
         });
     };
-
-    public void SetBackgroundRole(String role) {
-        switch (role)
-        {
-            case "citizen":
-                IV_background.setImageResource(R.drawable.citizen_alive);
-                break;
-            case "mafia":
-                IV_background.setImageResource(R.drawable.mafia_alive);
-                break;
-            case "sheriff":
-                IV_background.setImageResource(R.drawable.sheriff_alive);
-                break;
-            case "doctor":
-                IV_background.setImageResource(R.drawable.doctor_alive);
-                break;
-            case "lover":
-                IV_background.setImageResource(R.drawable.lover_alive);
-                break;
-            default:
-                IV_background.setImageResource(R.drawable.mafia_alive);
-                break;
-        }
-    }
 
     public boolean isNetworkOnline(Context context) {
         boolean status = false;

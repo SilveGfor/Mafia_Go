@@ -39,8 +39,6 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
     public ListView friendsView;
 
-    public Button btnExit;
-
     public SwitchCompat SC_blocked_chats;
 
     public TextView TV_no_chats;
@@ -57,7 +55,6 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_private_chats, container, false);
         friendsView = view.findViewById(R.id.fragmentPrivateChat_list_friends);
-        btnExit = view.findViewById(R.id.fragmentPrivateChat_btn_exit);
         SC_blocked_chats = view.findViewById(R.id.fragmentPrivateChats_SC_blocked_chats);
         TV_no_chats = view.findViewById(R.id.fragmentPrivateChat_TV_no_chats);
         PB_loading = view.findViewById(R.id.fragmentPrivateChat_PB_loading);
@@ -115,10 +112,6 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
             MainActivity.NickName_2 = list_friends.get(position).getNick();
             MainActivity.bitmap_avatar_2 = fromBase64(list_friends.get(position).getAvatar());
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
-        });
-
-        btnExit.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
         });
 
         return view;
