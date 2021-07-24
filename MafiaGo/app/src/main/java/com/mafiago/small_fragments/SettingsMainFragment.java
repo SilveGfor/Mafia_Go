@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -53,6 +54,8 @@ public class SettingsMainFragment extends Fragment {
 
     TextView TV_role;
     TextView TV_message;
+    TextView TV_usersAgreement;
+    TextView TV_privacyPolicy;
 
     public String base64_screenshot = "";
 
@@ -116,11 +119,11 @@ public class SettingsMainFragment extends Fragment {
         if (mPage == 1)
         {
             view = inflater.inflate(R.layout.fragment_settings_main, container, false);
-            view_reportError =inflater.inflate(R.layout.dialog_report_error, container, false);
+            view_reportError = inflater.inflate(R.layout.dialog_report_error, container, false);
             IV_screen = view_reportError.findViewById(R.id.dialogReportError_IV_screen);
             btn_addScreen = view_reportError.findViewById(R.id.dialogReportError_btn_addScreen);
-            ET_message = view_reportError.findViewById(R.id.dialogReportError_ET_text);
-            btm_sendError = view_reportError.findViewById(R.id.dialogReportError_btn_sendError);
+            ET_message = view_reportError.findViewById(R.id.dialogChangePassword_ET_newPassword2);
+            btm_sendError = view_reportError.findViewById(R.id.dialogChangeNick_btn_changeNick);
 
             btnReportError = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
             btnExitAccount = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
@@ -128,6 +131,8 @@ public class SettingsMainFragment extends Fragment {
             btnSelectTheme = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
             TV_role = view.findViewById(R.id.fragmentSettingsMain_TV_role);
             TV_message = view.findViewById(R.id.fragmentSettingsMain_TV_message);
+            TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
+            TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
 
             socket.off("send_problem");
 
@@ -170,28 +175,51 @@ public class SettingsMainFragment extends Fragment {
 
             btnReportError.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                if (view_reportError.getParent() != null) {
+                    ((ViewGroup) view_reportError.getParent()).removeView(view_reportError);
+                }
+                ET_message.setText("");
                 builder.setView(view_reportError);
-                AlertDialog alert2 = builder.create();
+                AlertDialog alert = builder.create();
                 btn_addScreen.setOnClickListener(v1 -> {
                     Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
                     photoPickerIntent.setType("image/*");
                     startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
                 });
-                btnReportError.setOnClickListener(v12 -> {
-                    final JSONObject json = new JSONObject();
-                    try {
-                        json.put("nick", MainActivity.NickName);
-                        json.put("session_id", MainActivity.Session_id);
-                        json.put("comment", ET_message.getText());
-                        json.put("image", base64_screenshot);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                btm_sendError.setOnClickListener(v12 -> {
+                    if (!base64_screenshot.equals("")) {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("comment", ET_message.getText());
+                            json.put("image", base64_screenshot);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("send_problem", json);
+                        Log.d("kkk", "Socket_отправка - send_problem" + json);
+                        alert.cancel();
                     }
-                    socket.emit("send_problem", json);
-                    Log.d("kkk", "Socket_отправка - send_problem" + json);
-                    alert2.cancel();
+                    else
+                    {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                        builder2.setTitle("Вставьте скриншот!")
+                                .setMessage("")
+                                .setIcon(R.drawable.ic_error)
+                                .setCancelable(false)
+                                .setNegativeButton("Ок",
+                                        new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                dialog.cancel();
+                                            }
+                                        });
+                        AlertDialog alert2 = builder2.create();
+                        alert2.show();
+                    }
                 });
-                alert2.show();
+                alert.show();
+
             });
 
             btnExitAccount.setOnClickListener(v -> {
@@ -262,6 +290,20 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.show();
             });
+
+            TV_usersAgreement.setOnClickListener(v -> {
+                Intent mIntent = new Intent();
+                mIntent.setAction(Intent.ACTION_VIEW);
+                mIntent.setData(Uri.parse("https://telegra.ph/Polzovatelskoe-soglashenie-prilozheniya-Mafia-Go-07-14"));
+                startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
+            });
+
+            TV_privacyPolicy.setOnClickListener(v -> {
+                Intent mIntent = new Intent();
+                mIntent.setAction(Intent.ACTION_VIEW);
+                mIntent.setData(Uri.parse("https://docs.google.com/document/d/1s7wDmirVRdSBXwuFyo5sjVi49qooOF9m0ZiE-9B499M/edit#heading=h.m6frwynu1mk5"));
+                startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
+            });
         }
         else
         {
@@ -270,7 +312,7 @@ public class SettingsMainFragment extends Fragment {
             TV_nick = view.findViewById(R.id.fragmentSettingsProfile_TV_nick);
             TV_rang = view.findViewById(R.id.fragmentSettingsProfile_TV_rang);
             TV_money = view.findViewById(R.id.fragmentSettingsProfile_TV_money);
-            TV_exp = view.findViewById(R.id.fragmentSettingsProfile_TV_exp);
+            TV_exp = view.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
             TV_gold = view.findViewById(R.id.fragmentSettingsProfile_TV_gold);
             IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
@@ -309,15 +351,22 @@ public class SettingsMainFragment extends Fragment {
             });
 
             btnChangeNick.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewChangeNick = inflater.inflate(R.layout.dialog_change_nick, container, false);
+                builder.setView(viewChangeNick);
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
             });
 
             btnChangePassword.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewChangeNick = inflater.inflate(R.layout.dialog_change_password, container, false);
+                builder.setView(viewChangeNick);
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
             });
-
-
-
-
-
         }
 
         return view;

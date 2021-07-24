@@ -127,7 +127,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_IV_avatar" />
 
             <TextView
-                android:id="@+id/fragmentSettingsProfile_TV_exp"
+                android:id="@+id/dialogYouHaveBeenBanned_TV_exp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"

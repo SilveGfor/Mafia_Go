@@ -46,7 +46,7 @@ import io.socket.emitter.Emitter;
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
 
-public class MenuFragment extends Fragment implements OnBackPressedListener {
+public class MenuFragment extends Fragment{
 
     Button btnRules;
     Button btnGames;
@@ -67,6 +67,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     ImageView Chats;
     ImageView Friends;
     ImageView Shop;
+    ImageView Competitions;
     ImageView VK;
     ImageView Telegram;
 
@@ -99,9 +100,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         Shop = view.findViewById(R.id.fragmentMenu_IV_shop);
         VK = view.findViewById(R.id.fragmentMenu_IV_vk);
         Telegram = view.findViewById(R.id.fragmentMenu_IV_telegram);
+        Competitions = view.findViewById(R.id.fragmentMenu_IV_competitions);
         btnTools = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
         TV_money = view.findViewById(R.id.fragmentSettingsProfile_TV_money);
-        TV_exp = view.findViewById(R.id.fragmentSettingsProfile_TV_exp);
+        TV_exp = view.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
         TV_gold = view.findViewById(R.id.fragmentMenu_TV_gold);
         TV_rang = view.findViewById(R.id.fragmentSettingsProfile_TV_rang);
         TV_nick = view.findViewById(R.id.fragmentSettingsProfile_TV_nick);
@@ -132,13 +134,14 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         }
         socket.emit("get_profile", json);
         Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
-        final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
+
+
+        //final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
 
         // amplitude 0.2 and frequency 20
-        BounceInterpolator interpolator = new BounceInterpolator();
-        animation.setInterpolator(interpolator);
-
-        CV_info.startAnimation(animation);
+        //BounceInterpolator interpolator = new BounceInterpolator();
+        //animation.setInterpolator(interpolator);
+        //CV_info.startAnimation(animation);
 
         Telegram.setOnClickListener(v -> {
             Intent mIntent = new Intent();
@@ -156,6 +159,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         Shop.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+        });
+
+        Competitions.setOnClickListener(v -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CompetitionsFragment()).commit();
         });
 
         btnTools.setOnClickListener(v -> {
@@ -228,17 +235,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             }
         });
         return view;
-    }
-
-    @Override
-    public void onBackPressed() {
-        socket.emit("leave_app", "");
-        Log.d("kkk", "Socket_отправка - leave_app");
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(APP_PREFERENCES_EMAIL, null);
-        editor.putString(APP_PREFERENCES_PASSWORD, null);
-        editor.apply();
     }
 
     @Override

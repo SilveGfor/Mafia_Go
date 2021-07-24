@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="32dp"
         android:background="@drawable/grey_button"
-        android:text="выйти"
+        android:text="выйти из аккаунта"
         app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsMain_TV_usersAgreement"
         app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
         app:layout_constraintHorizontal_bias="0.0"
@@ -47,8 +47,8 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/grey_button"
         android:padding="15dp"
-        android:visibility="gone"
         android:text="показывать роль"
+        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_changePassword"
         app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
         app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />

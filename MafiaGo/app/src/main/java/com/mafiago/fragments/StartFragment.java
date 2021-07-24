@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
@@ -17,7 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -25,10 +29,16 @@ import androidx.fragment.app.Fragment;
 
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
+import com.mafiago.adapters.PlayersAdapter;
+import com.mafiago.enums.Role;
+import com.mafiago.models.FineModel;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -53,12 +63,12 @@ public class StartFragment extends Fragment {
     EditText ETemail;
     EditText ETpassword;
 
+    TextView TV_changePassword;
+
     String NickName = "";
     String Email = "";
     String Session_id = "";
 
-    Boolean BadLogin = false;
-    Boolean BadPassword = false;
     Boolean AutoRun = false;
 
     public static final String APP_PREFERENCES = "user";
@@ -87,9 +97,10 @@ public class StartFragment extends Fragment {
         //поиск айди кнопок
         btnSignIn = view.findViewById(R.id.fragmentStart_btn_enter);
         btnReg = view.findViewById(R.id.fragmentStart_btn_register);
-        ETemail = view.findViewById(R.id.fragmentCreateRoom_ET_roomName);
+        ETemail = view.findViewById(R.id.fragmentRegister_ET_email);
         ETpassword = view.findViewById(R.id.fragmentStart_ET_password);
         PB_loading = view.findViewById(R.id.fragmentStart_PB);
+        TV_changePassword = view.findViewById(R.id.fragmentStart_TV_forgotPassword);
 
         PB_loading.setVisibility(View.INVISIBLE);
 
@@ -115,7 +126,7 @@ public class StartFragment extends Fragment {
             MainActivity.nick = mEmail;
             MainActivity.password = mPassword;
 
-            Login();
+            Login(container);
         }
         else
         {
@@ -135,7 +146,7 @@ public class StartFragment extends Fragment {
                     editor.apply();
                     if (!ETpassword.getText().toString().equals("") && !ETemail.getText().toString().equals("")) {
                         AutoRun = false;
-                        Login();
+                        Login(container);
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                         builder.setTitle("Заполните все поля!")
@@ -177,10 +188,17 @@ public class StartFragment extends Fragment {
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RegisterFragment()).commit();
             }
         });
+
+        TV_changePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ChangePasswordFragment()).commit();
+            }
+        });
         return view;
     }
 
-    public void Login() {
+    public void Login(ViewGroup container) {
         try {
             final JSONObject json = new JSONObject();
             PB_loading.setVisibility(View.VISIBLE);
@@ -207,6 +225,9 @@ public class StartFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
 
                     Log.d("kkk", "Failure: " + e.getMessage());
+                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                        PB_loading.setVisibility(View.INVISIBLE);
+                    });
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -214,60 +235,154 @@ public class StartFragment extends Fragment {
                     String Answer = resp[0];
                     Log.d("kkk", "Принял: " + Answer);
                     try {
-                        if (Answer.equals("incorrect_email")) {
-                            if (!AutoRun) {
-                                ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    PB_loading.setVisibility(View.INVISIBLE);
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Такого аккаунта не существует!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_info)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
-                                });
-                            }
-                        } else if (Answer.equals("incorrect_password")) {
-                            if (!AutoRun) {
-                                ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    PB_loading.setVisibility(View.INVISIBLE);
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Неправильный пароль!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_info)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
-                                    AlertDialog alert = builder.create();
-                                    alert.show();
-                                });
-                            }
-                        } else {
-                            JSONObject obj = new JSONObject(resp[0]);
+                        switch (Answer) {
+                            case "incorrect_email":
+                                if (!AutoRun) {
+                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                        PB_loading.setVisibility(View.INVISIBLE);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Такого аккаунта не существует!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_info)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                }
+                                break;
+                            case "incorrect_password":
+                                if (!AutoRun) {
+                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                        PB_loading.setVisibility(View.INVISIBLE);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Неправильный пароль!")
+                                                .setMessage("")
+                                                .setIcon(R.drawable.ic_info)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        new DialogInterface.OnClickListener() {
+                                                            public void onClick(DialogInterface dialog, int id) {
+                                                                dialog.cancel();
+                                                            }
+                                                        });
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                }
+                                break;
+                            case "incorrect_game_version":
+                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                        PB_loading.setVisibility(View.INVISIBLE);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        builder.setTitle("Обновите игру!")
+                                                .setMessage("У вас старая версия")
+                                                .setIcon(R.drawable.ic_info)
+                                                .setCancelable(false)
+                                                .setNegativeButton("Ок",
+                                                        (dialog, id) -> dialog.cancel());
+                                        AlertDialog alert = builder.create();
+                                        alert.show();
+                                    });
+                                    break;
+                            default:
+                                JSONObject data = new JSONObject(resp[0]);
+                                if (data.has("session_id"))
+                                {
+                                    NickName = data.get("nick").toString();
+                                    Email = data.get("email").toString();
+                                    Session_id = data.get("session_id").toString();
+                                    MainActivity.User_id = data.get("user_id").toString();
+                                    MainActivity.Sid = data.get("sid").toString();
+                                    MainActivity.Role = data.get("role").toString();
 
-                            NickName = obj.get("nick").toString();
-                            Email = obj.get("email").toString();
-                            Session_id = obj.get("session_id").toString();
-                            MainActivity.User_id = obj.get("user_id").toString();
-                            MainActivity.Sid = obj.get("sid").toString();
-                            MainActivity.Role = obj.get("role").toString();
+                                    MainActivity.NickName = NickName;
+                                    MainActivity.Session_id = Session_id;
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                                }
+                                else {
+                                    JSONObject fine = data.getJSONObject("actual_fines");
+                                    JSONObject dataBanTime = data.getJSONObject("ban_time");
 
-                            MainActivity.NickName = NickName;
-                            MainActivity.Session_id = Session_id;
 
-                            Log.d("kkk", "НИК: " + NickName);
-                            Log.d("kkk", "Переход в MenuFragment");
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                                    String admin_comment;
+                                    String creation_time;
+                                    int exp;
+                                    int hour;
+                                    int money;
+                                    String reason;
+
+                                    int days, hours, minutes, seconds;
+
+                                    admin_comment = fine.getString("admin_comment");
+                                    creation_time = fine.getString("creation_time");
+                                    exp = fine.getInt("exp");
+                                    hour = fine.getInt("hour");
+                                    money = fine.getInt("money");
+                                    reason = fine.getString("reason");
+
+                                    days = dataBanTime.getInt("days");
+                                    hours = dataBanTime.getInt("hours");
+                                    minutes = dataBanTime.getInt("minutes");
+                                    seconds = dataBanTime.getInt("seconds");
+
+
+
+                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                        PB_loading.setVisibility(View.INVISIBLE);
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        View viewBan = getLayoutInflater().inflate(R.layout.dialog_you_have_been_banned, container, false);
+                                        builder.setView(viewBan);
+                                        AlertDialog alert = builder.create();
+                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                                        TextView TV_reason = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_reason);
+                                        TextView TV_comment = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_comment);
+                                        TextView TV_banTime = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_banTime);
+                                        TextView TV_timeYouMustWait = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_timeYouMustWait);
+                                        TextView IV_money = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_money);
+                                        TextView IV_exp = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
+
+                                        TV_reason.setText("Причина: " + reason);
+                                        TV_comment.setText("Комментарий: " + admin_comment);
+                                        TV_banTime.setText("Время бана: " + hour + "ч");
+                                        IV_money.setText(money);
+                                        IV_exp.setText(exp);
+
+                                        if (days == 0)
+                                        {
+                                            if (hours == 0)
+                                            {
+                                                if (minutes == 0)
+                                                {
+                                                    TV_timeYouMustWait.setText(seconds + " секунд");
+                                                }
+                                                else
+                                                {
+                                                    TV_timeYouMustWait.setText(minutes + " минут " + seconds + " секунд");
+                                                }
+                                            }
+                                            else
+                                            {
+                                                TV_timeYouMustWait.setText(hours + " часов " + minutes + " минут");
+                                            }
+
+                                        }
+                                        else
+                                        {
+                                            TV_timeYouMustWait.setText(days + " дней " + hours + " часов");
+                                        }
+
+
+                                        alert.show();
+                                    });
+                                }
+                                break;
                         }
                     } catch (Exception e) {
                         createNotificationChannel();

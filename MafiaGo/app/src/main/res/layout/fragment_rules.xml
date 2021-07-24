@@ -1,32 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/FragmentRules"
-    android:background="@drawable/fon_menu">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/fon_main"
+    tools:context="com.mafiago.fragments.SettingsFragment">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-
-        android:foregroundGravity="center"
-        android:overScrollMode="never"
-        android:layout_above="@id/btnBack1"/>
-
-    <Button
-        android:id="@+id/btnBack1"
+    <TextView
+        android:id="@+id/fragmentRules_TV_roomName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Вернуться в меню"
-        android:textColor="#fff"
-        android:background="@drawable/round_button"
-        android:paddingLeft="30dp"
-        android:paddingRight="30dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="30dp"
-        android:layout_centerHorizontal="true"/>
-</RelativeLayout>
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Правила игры"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="42dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/three_lines" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/fragmentRules_TabLayout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        app:tabSelectedTextColor="@color/white"
+        app:tabIndicatorColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRules_TV_roomName">
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Правила"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Описание персонажей"/>
+    </com.google.android.material.tabs.TabLayout>
+
+    <com.mafiago.classes.NonSweepViewPager
+        android:id="@+id/fragmentRules_ViewPager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRules_TabLayout" />
+</androidx.constraintlayout.widget.ConstraintLayout>

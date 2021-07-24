@@ -133,12 +133,4 @@ android:background="@drawable/fon_night">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
-<TextView
-    android:id="@+id/fragmentGame_TV_day_time"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="TextView"
-    app:layout_constraintStart_toEndOf="@+id/textView3"
-    app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

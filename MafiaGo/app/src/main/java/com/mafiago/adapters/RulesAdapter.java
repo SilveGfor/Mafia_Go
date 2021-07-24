@@ -43,16 +43,16 @@ public class RulesAdapter extends PagerAdapter {
         layoutInflater = LayoutInflater.from(context);
         View view = layoutInflater.inflate(R.layout.item_rules, container, false);
 
-        ImageView imageView;
-        TextView title, desc;
+        ImageView IV_role;
+        TextView TV_role, TV_description;
 
-        imageView = view.findViewById(R.id.image);
-        title = view.findViewById(R.id.title);
-        desc = view.findViewById(R.id.desc);
+        IV_role = view.findViewById(R.id.itemRules_IV_role);
+        TV_role = view.findViewById(R.id.itemRules_TV_role);
+        TV_description = view.findViewById(R.id.itemRules_TV_description);
 
-        imageView.setImageResource(models.get(position).getImage());
-        title.setText(models.get(position).getTitle());
-        desc.setText(models.get(position).getDesc());
+        IV_role.setImageResource(models.get(position).getImage());
+        TV_role.setText(models.get(position).getTitle());
+        TV_description.setText(models.get(position).getDesc());
 
         container.addView(view, 0);
         return view;

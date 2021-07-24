@@ -12,10 +12,10 @@
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <Button
         android:id="@+id/fragmentStart_btn_enter"
@@ -27,16 +27,6 @@
         app:layout_constraintEnd_toEndOf="@+id/fragmentStart_btn_register"
         app:layout_constraintStart_toStartOf="@+id/fragmentStart_btn_register"
         app:layout_constraintTop_toBottomOf="@+id/fragmentStart_ET_password" />
-
-    <ImageView
-        android:id="@+id/fragmentGame_roomName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/mafia_go_text" />
 
     <EditText
         android:id="@+id/fragmentStart_ET_password"
@@ -52,10 +42,10 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateRoom_ET_roomName" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRegister_ET_email" />
 
     <EditText
-        android:id="@+id/fragmentCreateRoom_ET_roomName"
+        android:id="@+id/fragmentRegister_ET_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/black_edit_text"
@@ -79,8 +69,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName" />
 
+    <ImageView
+        android:id="@+id/fragmentGame_roomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/mafia_go_text" />
+
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/fragmentStart_TV_forgotPassword"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"

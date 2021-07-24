@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.SeekBar;
-import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -73,7 +72,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        ET_RoomName = view.findViewById(R.id.fragmentCreateRoom_ET_roomName);
+        ET_RoomName = view.findViewById(R.id.fragmentRegister_ET_email);
 
         RSB_num_users = view.findViewById(R.id.fragmentCreateRoom_PSB_playerNum);
 

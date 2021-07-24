@@ -7,7 +7,6 @@
     android:layout_height="wrap_content"
     android:background="@drawable/grey_card">
 
-
     <ImageView
         android:id="@+id/dialogReportError_IV_screen"
         android:layout_width="81dp"
@@ -16,8 +15,7 @@
         android:layout_marginLeft="24dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/bodyguard_alive" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/dialogReportError_btn_addScreen"
@@ -35,7 +33,7 @@
         app:layout_constraintTop_toTopOf="@+id/dialogReportError_IV_screen" />
 
     <EditText
-        android:id="@+id/dialogReportError_ET_text"
+        android:id="@+id/dialogChangePassword_ET_newPassword2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -54,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dialogReportError_IV_screen" />
 
     <Button
-        android:id="@+id/dialogReportError_btn_sendError"
+        android:id="@+id/dialogChangeNick_btn_changeNick"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="80dp"
@@ -66,7 +64,7 @@
         android:background="@drawable/orange_button"
         android:text="Сообщить об ошибке"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dialogReportError_ET_text"
-        app:layout_constraintStart_toStartOf="@+id/dialogReportError_ET_text"
-        app:layout_constraintTop_toBottomOf="@+id/dialogReportError_ET_text" />
+        app:layout_constraintEnd_toEndOf="@+id/dialogChangePassword_ET_newPassword2"
+        app:layout_constraintStart_toStartOf="@+id/dialogChangePassword_ET_newPassword2"
+        app:layout_constraintTop_toBottomOf="@+id/dialogChangePassword_ET_newPassword2" />
 </androidx.constraintlayout.widget.ConstraintLayout>
