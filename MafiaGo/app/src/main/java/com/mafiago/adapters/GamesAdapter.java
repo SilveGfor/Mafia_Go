@@ -64,18 +64,18 @@ public class GamesAdapter extends BaseAdapter {
 
         ArrayList<String> list_roles = list_room.get(position).list_roles;
 
-        /*
-        ImageView IV_maniac = view.findViewById(R.id.itemGame_IV_maniac);
-        ImageView IV_doctor = view.findViewById(R.id.itemGame_IV_doctor);
-        ImageView IV_lover = view.findViewById(R.id.itemGame_IV_lover);
-        ImageView IV_mafia_don = view.findViewById(R.id.itemGame_IV_mafia_don);
-        ImageView IV_poisoner = view.findViewById(R.id.itemGame_IV_poisoner);
-        ImageView IV_journalist = view.findViewById(R.id.itemGame_IV_journalist);
-        ImageView IV_terrorist = view.findViewById(R.id.itemGame_IV_terrorist);
-        ImageView IV_doctor_of_easy_virtue = view.findViewById(R.id.itemGame_IV_doctor_of_easy_virtue);
-        ImageView IV_bodyguard = view.findViewById(R.id.itemGame_IV_bodyguard);
 
-         */
+        ImageView IV_maniac = view.findViewById(R.id.itemGame_maniac);
+        ImageView IV_doctor = view.findViewById(R.id.itemGame_doctor);
+        ImageView IV_lover = view.findViewById(R.id.itemGame_lover);
+        ImageView IV_mafia_don = view.findViewById(R.id.itemGame_mafia_don);
+        ImageView IV_poisoner = view.findViewById(R.id.itemGame_poisoner);
+        ImageView IV_journalist = view.findViewById(R.id.itemGame_journalist);
+        ImageView IV_terrorist = view.findViewById(R.id.itemGame_terrorist);
+        ImageView IV_doctor_of_easy_virtue = view.findViewById(R.id.itemGame_doctor_of_easy_virtue);
+        ImageView IV_bodyguard = view.findViewById(R.id.itemGame_bodyguard);
+
+
 
         //PB_users.setMax(list_room.get(position).max_people);
         //PB_users.setProgress(list_room.get(position).num_people);
@@ -110,7 +110,7 @@ public class GamesAdapter extends BaseAdapter {
 
         });
 
-        /*
+
         for (int i = 0; i < list_roles.size(); i++)
         {
             Log.d("kkk", list_roles.get(i));
@@ -145,7 +145,6 @@ public class GamesAdapter extends BaseAdapter {
                     break;
             }
         }
-         */
 
         if (list_room.get(position).is_on)
         {

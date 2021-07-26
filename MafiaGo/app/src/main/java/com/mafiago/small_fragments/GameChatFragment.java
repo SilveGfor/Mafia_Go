@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -100,9 +101,13 @@ public class GameChatFragment extends Fragment {
             socket.on("get_in_room", onGetInRoom);
             socket.on("user_message", onNewMessage);
             socket.on("leave_room", onLeaveUser);
+            socket.on("system_message", onSystemMessage);
+            socket.on("ban_user_in_room", OnBanUserInRoom);
         }
         else
         {
+            socket.on("system_message", onSystemMessage);
+            socket.on("user_message", onNewDiedMessage);
             RL_send.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.died_button));
         }
 
@@ -275,8 +280,39 @@ public class GameChatFragment extends Fragment {
                 ET_message.setText("");
             }
         });
+
+        LV_chat.setOnScrollListener(new AbsListView.OnScrollListener() {
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+            }
+
+            public void onScroll(AbsListView view, int firstVisibleItem,
+                                 int visibleItemCount, int totalItemCount) {
+                FirstVisibleItem = firstVisibleItem;
+                VisibleItemsCount = visibleItemCount;
+                TotalItemsCount = totalItemCount;
+            }
+        });
+
+        LV_chat.setOnItemClickListener((parent, view12, position, id) -> {
+            Log.d("kkk", "----");
+            Log.d("kkk", "position - " + position + " ' " + list_chat.get(position).mesType);
+            Log.d("kkk", "----");
+            if(list_chat.get(position).mesType.equals("UsersMes") || list_chat.get(position).mesType.equals("AnswerMes"))
+            {
+                answer_id = list_chat.get(position).num;
+                //answer_nick.setText(list_chat.get(position).nickName);
+                //answer_mes.setText(list_chat.get(position).message);
+                //cardAnswer.setVisibility(View.VISIBLE);
+            }
+        });
         return view;
     }
+
+    /*******************************
+     *                             *
+     *       SOCKETS start         *
+     *                             *
+     *******************************/
 
     private Emitter.Listener onGetInRoom = new Emitter.Listener() {
         @Override
@@ -356,61 +392,142 @@ public class GameChatFragment extends Fragment {
                     try {
                         main_role = data.getString("role");
                         nick = data.getString("nick");
-                        String avatar = "";
-                        for (Iterator iterator = users.keys(); iterator.hasNext();)
+                        status = data.getString("status");
+                        if (!status.equals("dead"))
                         {
-                            nick_from_iterator = (String) iterator.next();
-                            if (nick.equals(nick_from_iterator))
-                            {
-                                avatar = users.getString(nick);
-                                break;
+                            String avatar = "";
+                            for (Iterator iterator = users.keys(); iterator.hasNext(); ) {
+                                nick_from_iterator = (String) iterator.next();
+                                if (nick.equals(nick_from_iterator)) {
+                                    avatar = users.getString(nick);
+                                    break;
+                                }
                             }
-                        }
-                        test_num = data.getInt("num");
-                        Log.d("kkk", "new_message GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
-                        if (test_num != num) {
-                            if (test_num > num) {
-                                num = test_num;
-                                time = data.getString("time");
-                                time = getDate(time);
-                                message = data.getString("message");
-                                status = data.getString("status");
-                                link = data.getInt("link");
-                                MessageModel messageModel;
-                                if (link == -1) {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                            test_num = data.getInt("num");
+                            Log.d("kkk", "new_message GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
+                            if (test_num != num) {
+                                if (test_num > num) {
+                                    num = test_num;
+                                    time = data.getString("time");
+                                    time = getDate(time);
+                                    message = data.getString("message");
+                                    link = data.getInt("link");
+                                    MessageModel messageModel;
+                                    if (link == -1) {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                    } else {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                    }
+                                    list_chat.add(messageModel);
                                 } else {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
-                                }
-                                list_chat.add(messageModel);
-                                messageAdapter.notifyDataSetChanged();
-                            } else {
-                                time = data.getString("time");
-                                time = getDate(time);
-                                message = data.getString("message");
-                                status = data.getString("status");
-                                link = data.getInt("link");
-                                MessageModel messageModel;
-                                if (link == -1) {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
-                                } else {
-                                    messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
-                                }
-                                for (int i = 0; i < list_chat.size(); i++) {
-                                    if (test_num < list_chat.get(i).num) {
-                                        list_chat.add(i, messageModel);
-                                        break;
+                                    time = data.getString("time");
+                                    time = getDate(time);
+                                    message = data.getString("message");
+                                    status = data.getString("status");
+                                    link = data.getInt("link");
+                                    MessageModel messageModel;
+                                    if (link == -1) {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                    } else {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                    }
+                                    for (int i = 0; i < list_chat.size(); i++) {
+                                        if (test_num < list_chat.get(i).num) {
+                                            list_chat.add(i, messageModel);
+                                            break;
+                                        }
                                     }
                                 }
                                 messageAdapter.notifyDataSetChanged();
-                            }
-                            if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
-                                LV_chat.setSelection(messageAdapter.getCount() - 1);
+                                if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
+                                    LV_chat.setSelection(messageAdapter.getCount() - 1);
+                                }
+                            } else {
+                                Log.d("kkk", "Сообщение забанено!");
                             }
                         }
-                        else
+                    } catch (JSONException e) {
+                        Log.d("kkk", "JSONException");
+                        return;
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onNewDiedMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String nick;
+                    String message;
+                    String time;
+                    String status;
+                    String main_role;
+                    String nick_from_iterator;
+                    int test_num;
+                    int link;
+                    try {
+                        main_role = data.getString("role");
+                        nick = data.getString("nick");
+                        status = data.getString("status");
+                        if (status.equals("dead"))
                         {
-                            Log.d("kkk", "Сообщение забанено!");
+                            String avatar = "";
+                            for (Iterator iterator = users.keys(); iterator.hasNext(); ) {
+                                nick_from_iterator = (String) iterator.next();
+                                if (nick.equals(nick_from_iterator)) {
+                                    avatar = users.getString(nick);
+                                    break;
+                                }
+                            }
+                            test_num = data.getInt("num");
+                            Log.d("kkk", "new_message GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
+                            if (test_num != num) {
+                                if (test_num > num) {
+                                    num = test_num;
+                                    time = data.getString("time");
+                                    time = getDate(time);
+                                    message = data.getString("message");
+                                    link = data.getInt("link");
+                                    MessageModel messageModel;
+                                    if (link == -1) {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                    } else {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                    }
+                                    list_chat.add(messageModel);
+                                } else {
+                                    time = data.getString("time");
+                                    time = getDate(time);
+                                    message = data.getString("message");
+                                    status = data.getString("status");
+                                    link = data.getInt("link");
+                                    MessageModel messageModel;
+                                    if (link == -1) {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                    } else {
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                    }
+                                    for (int i = 0; i < list_chat.size(); i++) {
+                                        if (test_num < list_chat.get(i).num) {
+                                            list_chat.add(i, messageModel);
+                                            break;
+                                        }
+                                    }
+                                }
+                                messageAdapter.notifyDataSetChanged();
+                                if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
+                                    LV_chat.setSelection(messageAdapter.getCount() - 1);
+                                }
+                            } else {
+                                Log.d("kkk", "Сообщение забанено!");
+                            }
                         }
                     } catch (JSONException e) {
                         Log.d("kkk", "JSONException");
@@ -488,6 +605,148 @@ public class GameChatFragment extends Fragment {
             });
         }
     };
+
+    private Emitter.Listener onSystemMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String message, time, status, mafia_nick, user_nick, voter, nick;
+                    int test_num, money, exp;
+                    JSONObject data2;
+                    try {
+                        status = data.getString("status");
+                        test_num = data.getInt("num");
+                        time = data.getString("time");
+                        time = getDate(time);
+                        message = data.getString("message");
+                        MessageModel messageModel = new MessageModel(test_num, "Ошибка вывода сообщения", time, "Server", "SystemMes");
+                        Log.d("kkk", "system message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + " , status - " + status + "/" +  data);
+                        if (test_num != num) {
+                            switch (status)
+                            {
+                                case "game_over":
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
+                                    break;
+                                case "dead_user":
+                                    data2 = data.getJSONObject("message");
+                                    message = data2.getString("message");
+                                    nick = data2.getString("nick");
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
+                                    break;
+                                case "role_action_mafia":
+                                    data2 = data.getJSONObject("message");
+                                    mafia_nick = data2.getString("mafia_nick");
+                                    user_nick = data2.getString("user_nick");
+                                    messageModel = new MessageModel(test_num, "Голосует за " + user_nick, time, mafia_nick, "VotingMes");
+                                    break;
+                                case "voting":
+                                    data2 = data.getJSONObject("message");
+                                    voter = data2.getString("voter");
+                                    user_nick = data2.getString("user_nick");
+                                    String nick_from_iterator;
+                                    String avatar = "";
+                                    for (Iterator iterator = users.keys(); iterator.hasNext();)
+                                    {
+                                        nick_from_iterator = (String) iterator.next();
+                                        if (voter.equals(nick_from_iterator))
+                                        {
+                                            avatar = users.getString(voter);
+                                            break;
+                                        }
+                                    }
+                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes", avatar);
+                                    break;
+                                case "time_info":
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
+                                    break;
+                                case "journalist":
+                                    data2 = data.getJSONObject("message");
+                                    message = data2.getString("message");
+                                    messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
+                                    break;
+                            }
+
+                            //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место
+
+                            if (test_num > num) {
+                                num = test_num;
+                                list_chat.add(messageModel);
+                            } else {
+                                for (int i = 0; i < list_chat.size(); i++) {
+                                    if (test_num < list_chat.get(i).num) {
+                                        list_chat.add(i, messageModel);
+                                        break;
+                                    }
+                                }
+                            }
+                            messageAdapter.notifyDataSetChanged();
+                            if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
+                                LV_chat.setSelection(messageAdapter.getCount() - 1);
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener OnBanUserInRoom = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - ban_user_in_room - " + data);
+                String nick = "";
+                String time = "";
+                int test_num = -1;
+                try {
+                    test_num = data.getInt("num");
+                    nick = data.getString("nick");
+                    time = data.getString("time");
+                    time = getDate(time);
+                } catch (JSONException e) {
+                    return;
+                }
+                MessageModel messageModel = new MessageModel(test_num, player.getHost_nick(), time, nick, "KickMes");
+
+                if (test_num > num)
+                {
+                    num = test_num;
+                    list_chat.add(messageModel);
+                }
+                else
+                {
+                    for (int i = 0; i < list_chat.size(); i++)
+                    {
+                        if (test_num > list_chat.get(i).num)
+                        {
+                            list_chat.add(i, messageModel);
+                            break;
+                        }
+                    }
+                }
+                messageAdapter.notifyDataSetChanged();
+                if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
+                    LV_chat.setSelection(messageAdapter.getCount() - 1);
+                }
+            }
+        });
+    };
+
+    /*******************************
+     *                             *
+     *       SOCKETS end           *
+     *                             *
+     *******************************/
 
     public String getDate(String ourDate) {
         try

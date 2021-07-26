@@ -34,6 +34,7 @@ import com.mafiago.enums.Role;
 import com.mafiago.models.FineModel;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -306,81 +307,146 @@ public class StartFragment extends Fragment {
                                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
                                 }
                                 else {
-                                    JSONObject fine = data.getJSONObject("actual_fines");
-                                    JSONObject dataBanTime = data.getJSONObject("ban_time");
+                                    if (!data.getString("ban_time").equals("forever")) {
+                                        JSONObject fine = data.getJSONObject("fine");
+                                        JSONObject dataBanTime = data.getJSONObject("ban_time");
+
+                                        String admin_comment;
+                                        String creation_time;
+                                        int exp = 0;
+                                        int hour;
+                                        int money = 0;
+                                        String reason;
+
+                                        int days, hours, minutes, seconds;
+
+                                        admin_comment = fine.getString("admin_comment");
+                                        creation_time = fine.getString("creation_time");
+                                        if (fine.has("exp")) exp = fine.getInt("exp");
+                                        if (fine.has("money")) money = fine.getInt("money");
+                                        hour = fine.getInt("hour");
+                                        reason = fine.getString("reason");
+
+                                        days = dataBanTime.getInt("days");
+                                        hours = dataBanTime.getInt("hours");
+                                        minutes = dataBanTime.getInt("minutes");
+                                        seconds = dataBanTime.getInt("seconds");
 
 
-                                    String admin_comment;
-                                    String creation_time;
-                                    int exp;
-                                    int hour;
-                                    int money;
-                                    String reason;
+                                        int finalMoney = money;
+                                        int finalExp = exp;
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            PB_loading.setVisibility(View.INVISIBLE);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewBan = getLayoutInflater().inflate(R.layout.dialog_you_have_been_banned, container, false);
+                                            builder.setView(viewBan);
+                                            AlertDialog alert = builder.create();
+                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                    int days, hours, minutes, seconds;
+                                            TextView TV_reason = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_reason);
+                                            TextView TV_comment = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_comment);
+                                            TextView TV_banTime = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_banTime);
+                                            TextView TV_timeYouMustWait = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_timeYouMustWait);
+                                            TextView IV_money = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_money);
+                                            TextView IV_exp = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
 
-                                    admin_comment = fine.getString("admin_comment");
-                                    creation_time = fine.getString("creation_time");
-                                    exp = fine.getInt("exp");
-                                    hour = fine.getInt("hour");
-                                    money = fine.getInt("money");
-                                    reason = fine.getString("reason");
+                                            TV_reason.setText("Причина: " + reason);
+                                            TV_comment.setText("Комментарий: " + admin_comment);
+                                            TV_banTime.setText("Время бана: " + hour + "ч");
+                                            IV_money.setText(String.valueOf(finalMoney));
+                                            IV_exp.setText(String.valueOf(finalExp));
 
-                                    days = dataBanTime.getInt("days");
-                                    hours = dataBanTime.getInt("hours");
-                                    minutes = dataBanTime.getInt("minutes");
-                                    seconds = dataBanTime.getInt("seconds");
+                                            if (days == 0) {
+                                                if (hours == 0) {
+                                                    if (minutes == 0) {
+                                                        TV_timeYouMustWait.setText("Вы сможете зайти через " + seconds + " с");
+                                                    } else {
+                                                        TV_timeYouMustWait.setText("Вы сможете зайти через " + minutes + " м " + seconds + " с");
+                                                    }
+                                                } else {
+                                                    TV_timeYouMustWait.setText("Вы сможете зайти через " + hours + " ч " + minutes + " м");
+                                                }
+
+                                            } else {
+                                                TV_timeYouMustWait.setText("Вы сможете зайти через " + days + " д " + hours + " ч");
+                                            }
 
 
+                                            alert.show();
+                                        });
+                                    }
+                                    else
+                                    {
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            PB_loading.setVisibility(View.INVISIBLE);
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewBan = getLayoutInflater().inflate(R.layout.dialog_you_have_been_banned, container, false);
+                                            builder.setView(viewBan);
+                                            AlertDialog alert = builder.create();
+                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                        PB_loading.setVisibility(View.INVISIBLE);
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        View viewBan = getLayoutInflater().inflate(R.layout.dialog_you_have_been_banned, container, false);
-                                        builder.setView(viewBan);
-                                        AlertDialog alert = builder.create();
-                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            TextView TV_reason = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_reason);
+                                            TextView TV_comment = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_comment);
+                                            TextView TV_banTime = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_banTime);
+                                            TextView TV_timeYouMustWait = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_timeYouMustWait);
+                                            TextView IV_money = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_money);
+                                            TextView IV_exp = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
 
-                                        TextView TV_reason = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_reason);
-                                        TextView TV_comment = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_comment);
-                                        TextView TV_banTime = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_banTime);
-                                        TextView TV_timeYouMustWait = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_timeYouMustWait);
-                                        TextView IV_money = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_money);
-                                        TextView IV_exp = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
-
-                                        TV_reason.setText("Причина: " + reason);
-                                        TV_comment.setText("Комментарий: " + admin_comment);
-                                        TV_banTime.setText("Время бана: " + hour + "ч");
-                                        IV_money.setText(money);
-                                        IV_exp.setText(exp);
-
-                                        if (days == 0)
-                                        {
-                                            if (hours == 0)
-                                            {
-                                                if (minutes == 0)
+                                            try {
+                                                if (data.getJSONObject("fine").has("reason"))
                                                 {
-                                                    TV_timeYouMustWait.setText(seconds + " секунд");
+                                                    JSONObject fine = data.getJSONObject("fine");
+
+                                                    String admin_comment;
+                                                    String creation_time;
+                                                    int exp = 0;
+                                                    int hour;
+                                                    int money = 0;
+                                                    String reason;
+
+                                                    int days, hours, minutes, seconds;
+
+                                                    admin_comment = fine.getString("admin_comment");
+                                                    creation_time = fine.getString("creation_time");
+                                                    if (fine.has("exp")) exp = fine.getInt("exp");
+                                                    if (fine.has("money")) money = fine.getInt("money");
+                                                    if (!fine.getString("hour").equals("forever"))
+                                                    {
+                                                        hour = fine.getInt("hour");
+                                                        TV_banTime.setText("Время бана: " + hour + "ч");
+                                                    }
+                                                    else
+                                                    {
+                                                        TV_banTime.setText("Время бана: ВЕЧНОСТЬ");
+                                                    }
+
+                                                    reason = fine.getString("reason");
+
+                                                    TV_reason.setText("Причина: " + reason);
+                                                    TV_comment.setText("Комментарий: " + admin_comment);
+
+                                                    IV_money.setText(String.valueOf(money));
+                                                    IV_exp.setText(String.valueOf(exp));
                                                 }
                                                 else
                                                 {
-                                                    TV_timeYouMustWait.setText(minutes + " минут " + seconds + " секунд");
+                                                    TV_reason.setText("Причина: Разработчик игры решил вас забанить!");
+                                                    TV_comment.setText("Комментарий: Если вас забанил разработчик, то вы сделали что-то очень плохое, так что подумайте над своим поведением!");
+                                                    TV_banTime.setText("Время бана: ВЕЧНОСТЬ");
+                                                    IV_money.setText(String.valueOf(0));
+                                                    IV_exp.setText(String.valueOf(0));
                                                 }
-                                            }
-                                            else
-                                            {
-                                                TV_timeYouMustWait.setText(hours + " часов " + minutes + " минут");
+                                            } catch (JSONException e) {
+                                                e.printStackTrace();
                                             }
 
-                                        }
-                                        else
-                                        {
-                                            TV_timeYouMustWait.setText(days + " дней " + hours + " часов");
-                                        }
+                                            TV_timeYouMustWait.setText("Вы забанены навсегда!");
 
 
-                                        alert.show();
-                                    });
+
+                                            alert.show();
+                                        });
+                                    }
                                 }
                                 break;
                         }
@@ -391,6 +457,8 @@ public class StartFragment extends Fragment {
                                 .addLine(String.valueOf(e)));
                         showNotification(друг_айди);
                         друг_айди++;
+
+                        Log.d("kkk", String.valueOf(e.getMessage()));
 
                         createNotificationChannel();
                         createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");

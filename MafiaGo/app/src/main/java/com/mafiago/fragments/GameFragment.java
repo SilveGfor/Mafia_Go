@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -24,10 +26,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -65,17 +67,11 @@ import static  com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class GameFragment extends Fragment implements OnBackPressedListener {
-    public ListView listView_chat;
     public GridView gridView_users;
 
-    public CardView cardAnswer;
-
     public TextView timer;
-    public TextView day_time;
-    public TextView answer_nick;
-    public TextView answer_mes;
+    public TextView dayTime;
     public TextView room_name;
-    public TextView voting_number;
     public TextView TV_mafia_count;
     public TextView TV_peaceful_count;
 
@@ -84,17 +80,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public ImageView IV_influence_sheriff;
     public ImageView IV_influence_bodyguard;
     public ImageView IV_influence_poisoner;
-    public ImageView IV_role;
-    public ImageView IV_my_role_animation;
+
+    public ConstraintLayout Constrain;
 
     public Player player;
-
-    public FloatingActionButton FAB_skip_day;
-
-    public RelativeLayout RL_my_role;
-
-    public Button btnExit;
-    public Button btnDeleteAnswer;
 
     public Animation animation;
 
@@ -143,33 +132,21 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        listView_chat = view.findViewById(R.id.ListMes);
         gridView_users = view.findViewById(R.id.fragmentGame_listUsers);
-        cardAnswer = view.findViewById(R.id.answerCard);
-        answer_nick = view.findViewById(R.id.answerNickChat);
-        answer_mes = view.findViewById(R.id.answerTextChat);
         room_name = view.findViewById(R.id.fragmentGame_TV_roomName);
-        voting_number = view.findViewById(R.id.fragmentGame_voting_number);
-        TV_mafia_count = view.findViewById(R.id.fragmentGame_TV_mafia_count);
-        TV_peaceful_count = view.findViewById(R.id.fragmentGame_TV_peaceful_count);
-
-        btnDeleteAnswer = view.findViewById(R.id.btnDeleteAnswer);
-        btnExit = view.findViewById(R.id.btnExitChat);
-
-        FAB_skip_day = view.findViewById(R.id.fragmentGame_FAB_skip_day);
-
-        RL_my_role = view.findViewById(R.id.fragmentGame_RL_my_role);
+        TV_mafia_count = view.findViewById(R.id.fragmentGame_TV_mafiaCount);
+        TV_peaceful_count = view.findViewById(R.id.fragmentGame_TV_peacefulCount);
 
         timer = view.findViewById(R.id.fragmentGame_TV_timer);
-        day_time = view.findViewById(R.id.day_time);
+        dayTime = view.findViewById(R.id.fragmentGame_TV_dayTime);
 
-        IV_influence_doctor = view.findViewById(R.id.IV_influence_doctor);
-        IV_influence_lover = view.findViewById(R.id.IV_influence_lover);
-        IV_influence_sheriff = view.findViewById(R.id.IV_influence_sheriff);
-        IV_influence_bodyguard = view.findViewById(R.id.IV_influence_bodyguard);
-        IV_influence_poisoner = view.findViewById(R.id.IV_influence_poisoner);
-        IV_role = view.findViewById(R.id.IV_role);
-        IV_my_role_animation = view.findViewById(R.id.fragmentGame_IV_my_role_animation);
+        Constrain = view.findViewById(R.id.fragmentGame_CL);
+
+        IV_influence_doctor = view.findViewById(R.id.fragmentGame_ic_doctor);
+        IV_influence_lover = view.findViewById(R.id.fragmentGame_ic_lover);
+        IV_influence_sheriff = view.findViewById(R.id.fragmentGame_ic_sheriff);
+        IV_influence_bodyguard = view.findViewById(R.id.fragmentGame_ic_bodyguard);
+        IV_influence_poisoner = view.findViewById(R.id.fragmentGame_ic_poisoner);
 
         IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
@@ -185,31 +162,15 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         playersAdapter = new PlayersAdapter(list_users, getContext());
         gridView_users.setAdapter(playersAdapter);
 
-        /*
         IV_influence_doctor.setVisibility(View.GONE);
         IV_influence_lover.setVisibility(View.GONE);
         IV_influence_sheriff.setVisibility(View.GONE);
         IV_influence_bodyguard.setVisibility(View.GONE);
         IV_influence_poisoner.setVisibility(View.GONE);
-        IV_my_role_animation.setVisibility(View.GONE);
-
-        voting_number.setVisibility(View.GONE);
-
-        TV_mafia_count.setVisibility(View.GONE);
-        TV_peaceful_count.setVisibility(View.GONE);
-
-        FAB_skip_day.setVisibility(View.GONE);
-
-         */
 
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 
-        //cardAnswer.setVisibility(View.GONE);
-
         room_name.setText(MainActivity.RoomName);
-
-        messageAdapter = new MessageAdapter(list_chat, getContext());
-        //listView_chat.setAdapter(messageAdapter);
 
         //socket.off("connect");
         //socket.off("disconnect");
@@ -270,161 +231,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.emit("get_in_room", json);
         Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
 
-
-/*
-        RL_my_role.setOnClickListener(v -> {
-            Log.d("kkk", String.valueOf(player.Can_click()));
-            if (player.Can_click() && player.getStatus().equals("alive") && IV_my_role_animation.getVisibility() == View.VISIBLE)
-            {
-                switch (player.getTime())
-                {
-                    case LOBBY:
-                        sendText.setText(sendText.getText() + player.getNick());
-                        sendText.setSelection(sendText.length());
-                        break;
-                    case NIGHT_LOVE:
-                        break;
-                    case NIGHT_OTHER:
-                        switch (player.getRole())
-                        {
-                            case DOCTOR:
-                                RoleAction(player.getNick());
-                                break;
-                            case JOURNALIST:
-                                if (journalist_check == null)
-                                {
-                                    journalist_check = player.getNick();
-                                    IV_my_role_animation.setVisibility(View.GONE);
-                                }
-                                else
-                                {
-                                    final JSONObject json = new JSONObject();
-                                    try {
-                                        json.put("nick", player.getNick());
-                                        json.put("session_id", player.getSession_id());
-                                        json.put("room", player.getRoom_num());
-                                        json.put("influence_on_nick", journalist_check);
-                                        json.put("influence_on_nick_2", player.getNick());
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    socket.emit("role_action", json);
-                                    Log.d("kkk", "Socket_отправка - role_action"+ json.toString());
-
-                                    int journalist_checks_count = 0;
-                                    player.setJournalist_checked(true);
-                                    for (int i = 0; i < list_users.size(); i++)
-                                    {
-                                        if (list_users.get(i).getNick().equals(journalist_check))
-                                        {
-                                            list_users.get(i).setChecked(true);
-                                        }
-                                        if (!list_users.get(i).getChecked())
-                                        {
-                                            journalist_checks_count++;
-                                        }
-                                    }
-                                    if (journalist_checks_count < 2)
-                                    {
-                                        for (int i = 0; i < list_users.size(); i++)
-                                        {
-                                            list_users.get(i).setChecked(true);
-                                        }
-                                    }
-                                    PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                                    gridView_users.setAdapter(playersAdapter);
-                                    journalist_check = null;
-                                }
-                                IV_my_role_animation.setVisibility(View.GONE);
-                                break;
-                            default:
-                                Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
-                        }
-                        break;
-                    case DAY:
-                        break;
-                    case VOTING:
-                        break;
-                    default:
-                        Log.d("kkk", "Что-то пошло не так. Такого времени дня не может быть!");
-                }
-                if (journalist_check == null)
-                {
-                    IV_my_role_animation.setVisibility(View.GONE);
-                    StopAnimation();
-                }
-            }
-            else
-            {
-                sendText.setText(sendText.getText() + player.getNick());
-                sendText.setSelection(sendText.length());
-            }
-        });
-
-        btnExit.setOnClickListener(v -> {
-            if (player.getTime() == Time.LOBBY) {
-                if (!timer.getText().equals("--")) {
-                    if (Integer.parseInt(String.valueOf(timer.getText())) > 5) {
-                        final JSONObject json2 = new JSONObject();
-                        try {
-                            json2.put("nick", MainActivity.NickName);
-                            json2.put("session_id", MainActivity.Session_id);
-                            json2.put("room", player.getRoom_num());
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
-                        socket.emit("leave_room", json2);
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
-                    }
-                    else
-                    {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                        builder.setTitle("Вы не имеете права!")
-                                .setMessage("Нельзя выходить из комнаты за несколько секунд до начала игры!")
-                                .setIcon(R.drawable.ic_error)
-                                .setCancelable(false)
-                                .setNegativeButton("Ок",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
-                        AlertDialog alert = builder.create();
-                        alert.show();
-                    }
-                }
-                else
-                {
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", MainActivity.NickName);
-                        json2.put("session_id", MainActivity.Session_id);
-                        json2.put("room", player.getRoom_num());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
-                    socket.emit("leave_room", json2);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
-                }
-            }
-            else
-            {
-                final JSONObject json2 = new JSONObject();
-                try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id", MainActivity.Session_id);
-                    json2.put("room", player.getRoom_num());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
-                socket.emit("leave_room", json2);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
-            }
-        });
-
         gridView_users.setOnItemClickListener((parent, view1, position, id) -> {
             String nick = list_users.get(position).getNick();
             if (player.Can_click() && player.getStatus().equals("alive"))
@@ -432,8 +238,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 switch (player.getTime())
                 {
                     case LOBBY:
-                        sendText.setText(sendText.getText() + nick);
-                        sendText.setSelection(sendText.length());
+                        ShowProfile(nick);
                         break;
                     case NIGHT_LOVE:
                         switch (player.getRole())
@@ -483,8 +288,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                             break;
                                         }
                                     }
-                                    PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                                    gridView_users.setAdapter(playersAdapter);
+                                    playersAdapter.notifyDataSetChanged();
                                 }
                                 else
                                 {
@@ -528,10 +332,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                             list_users.get(i).setChecked(true);
                                         }
                                         player.setJournalist_checked(true);
-                                        IV_my_role_animation.setVisibility(View.GONE);
                                     }
-                                    PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                                    gridView_users.setAdapter(playersAdapter);
+                                    playersAdapter.notifyDataSetChanged();
                                     journalist_check = null;
                                 }
                                 break;
@@ -543,8 +345,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         if (player.getRole() == Role.BODYGUARD) {
                             RoleAction(nick);
                         } else {
-                            sendText.setText(sendText.getText() + nick);
-                            sendText.setSelection(sendText.length());
+                            ShowProfile(nick);
                         }
                         break;
                     case VOTING:
@@ -560,62 +361,40 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 if (journalist_check == null)
                 {
                     StopAnimation();
-                    IV_my_role_animation.setVisibility(View.GONE);
                 }
             }
             else
             {
-                sendText.setText(sendText.getText() + nick);
-                sendText.setSelection(sendText.length());
+                ShowProfile(nick);
             }
         });
 
-        listView_chat.setOnItemClickListener((parent, view12, position, id) -> {
-            Log.d("kkk", "----");
-            Log.d("kkk", "position - " + position + " ' " + list_chat.get(position).mesType);
-            Log.d("kkk", "----");
-            if(list_chat.get(position).mesType.equals("UsersMes") || list_chat.get(position).mesType.equals("AnswerMes"))
+        dayTime.setOnClickListener(v -> {
+            switch (player.getTime())
             {
-                answer_id = list_chat.get(position).num;
-                answer_nick.setText(list_chat.get(position).nickName);
-                answer_mes.setText(list_chat.get(position).message);
-                cardAnswer.setVisibility(View.VISIBLE);
+                case LOBBY:
+                    break;
+                case NIGHT_LOVE:
+                    break;
+                case NIGHT_OTHER:
+                    break;
+                case DAY:
+                    final JSONObject json2 = new JSONObject();
+                    try {
+                        json2.put("nick", MainActivity.NickName);
+                        json2.put("session_id", MainActivity.Session_id);
+                        json2.put("room", player.getRoom_num());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("kkk", "Socket_отправка_skip_day - " + json2.toString());
+                    socket.emit("skip_day", json2);
+                    dayTime.setBackgroundResource(R.drawable.grey_button);
+                    break;
+                case VOTING:
+                    break;
             }
         });
-
-        btnDeleteAnswer.setOnClickListener(v -> {
-            answer_id = -1;
-            cardAnswer.setVisibility(View.GONE);
-        });
-
-        FAB_skip_day.setOnClickListener(v -> {
-            FAB_skip_day.setVisibility(View.GONE);
-            final JSONObject json2 = new JSONObject();
-            try {
-                json2.put("nick", MainActivity.NickName);
-                json2.put("session_id", MainActivity.Session_id);
-                json2.put("room", player.getRoom_num());
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            Log.d("kkk", "Socket_отправка_skip_day - " + json2.toString());
-            socket.emit("skip_day", json2);
-        });
-
-        listView_chat.setOnScrollListener(new AbsListView.OnScrollListener() {
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-
-            }
-
-            public void onScroll(AbsListView view, int firstVisibleItem,
-                                 int visibleItemCount, int totalItemCount) {
-                FirstVisibleItem = firstVisibleItem;
-                VisibleItemsCount = visibleItemCount;
-                TotalItemsCount = totalItemCount;
-            }
-        });
- */
-
         return view;
     }
 
@@ -991,32 +770,38 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     {
                         case "lobby":
                             player.setTime(Time.LOBBY);
+                            dayTime.setText("лобби");
+                            dayTime.setBackgroundResource(R.drawable.green_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_day);
                             break;
                         case "night_love":
-                            voting_number.setVisibility(View.GONE);
-                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
                             player.setTime(Time.NIGHT_LOVE);
+                            dayTime.setText("ночь");
+                            dayTime.setBackgroundResource(R.drawable.died_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_night);
                             break;
                         case "night_other":
                             player.setTime(Time.NIGHT_OTHER);
+                            dayTime.setText("ночь");
+                            dayTime.setBackgroundResource(R.drawable.died_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_night);
                             break;
                         case "day":
-                            Log.d("kkk", String.valueOf(IV_my_role_animation.getVisibility()));
-                            voting_number.setVisibility(View.GONE);
-                            IV_my_role_animation.setVisibility(View.GONE);
-                            Log.d("kkk", String.valueOf(IV_my_role_animation.getVisibility()));
-                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
-
                             player.setTime(Time.DAY);
+                            dayTime.setText("пропуск дня");
+                            dayTime.setBackgroundResource(R.drawable.green_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_day);
                             break;
                         case "voting":
-                            FAB_skip_day.setVisibility(View.GONE);
                             player.setTime(Time.VOTING);
+                            dayTime.setText("Голосование");
+                            dayTime.setBackgroundResource(R.drawable.grey_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_day);
                             break;
                     }
-                    day_time.setText(time);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1055,9 +840,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 case MAFIA_DON:
                                     player.setCan_write(true);
                                     break;
-                                default:
-                                    Log.d("kkk", "В " + player.getTime() + " - нельзя активировать роль " + player.getRole());
-                                    break;
                             }
                             break;
                         case NIGHT_OTHER:
@@ -1088,19 +870,14 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         break;
                                     case JOURNALIST:
                                         if (!player.getJournalist_checked()) {
-                                            IV_my_role_animation.setImageResource(R.drawable.ic_journalist);
-                                            IV_my_role_animation.setVisibility(View.VISIBLE);
                                             animation = AnimationUtils.loadAnimation(getContext(), R.anim.voting);
-                                            IV_my_role_animation.startAnimation(animation);
                                         }
-
                                         StartAnimation(Role.JOURNALIST);
                                         break;
                                 }
                             }
                             break;
                         case DAY:
-                            FAB_skip_day.setVisibility(View.VISIBLE);
                             IV_influence_doctor.setVisibility(View.GONE);
                             player.setVoted_at_night(false);
                             player.setCan_write(true);
@@ -1143,71 +920,87 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         SharedPreferences.Editor editor = mSettings.edit();
                         editor.putString(APP_PREFERENCES_LAST_ROLE, role);
                         editor.apply();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewNewRole = getLayoutInflater().inflate(R.layout.dialog_new_role, null);
+                        builder.setView(viewNewRole);
+
+                        TextView TV_role = viewNewRole.findViewById(R.id.dialogNewRole_TV_mainText);
+                        TextView TV_roleDescription = viewNewRole.findViewById(R.id.dialogNewRole_TV_roleDescription);
+                        ImageView IV_role = viewNewRole.findViewById(R.id.dialogNewRole_IV_role);
+
                         player.setRole(ConvertToRole(role));
                         switch (player.getRole())
                         {
                             case NONE:
-                                IV_role.setImageResource(R.drawable.anonim);
-                                rus_role = "пустышка";
+                                TV_role.setText("У вас нет роли");
+                                TV_roleDescription.setText("Извините, но что-то пошло не так");
+                                IV_role.setBackgroundResource(R.drawable.ic_error);
                                 break;
                             case CITIZEN:
-                                IV_role.setImageResource(R.drawable.citizen_alive);
-                                rus_role = "мирный житель";
+                                TV_role.setText("Ваша роль - Мирный житель");
+                                TV_roleDescription.setText("Мирный житель - он живет в городе, где никого не знает. Его задача выяснить, кто из жителей стоит на стороне мафии, а кто - нет, и уничтожить всех мафиози, пока они не уничтожили весь город. Каждый раз по окончанию дня мирные жители могут голосовать за того, кого они считают мафией.");
+                                IV_role.setBackgroundResource(R.drawable.citizen_round);
                                 break;
                             case MAFIA:
-                                IV_role.setImageResource(R.drawable.mafia_alive);
-                                rus_role = "мафия";
+                                TV_role.setText("Ваша роль - мафия");
+                                TV_roleDescription.setText("Мафия - неотъемлемый персонаж игры. Мафия образует опасную группировку из своих членов, и ее цель - уничтожить все мирное население города. Каждый член мафии знает всех остальных мафиози. Ночью мафия может обсуждать в отдельном чате свои мысли и выбирать свою новую жертву. Присутствует во всех играх.");
+                                IV_role.setBackgroundResource(R.drawable.mafia_round);
                                 break;
                             case SHERIFF:
-                                IV_role.setImageResource(R.drawable.sheriff_alive);
-                                rus_role = "шериф";
+                                TV_role.setText("Ваша роль - Шериф");
+                                TV_roleDescription.setText("Шериф - играет на стороне мирных жителей. Задача шерифа - упростить мирным жителям задачу поиска мафии. Ночью шериф может проверить любого игрока и узнать его роль. Присутствует во всех играх.");
+                                IV_role.setBackgroundResource(R.drawable.sheriff_round);
                                 break;
                             case DOCTOR:
-                                IV_role.setImageResource(R.drawable.doctor_alive);
-                                rus_role = "доктор";
+                                TV_role.setText("Ваша роль - Доктор");
+                                TV_roleDescription.setText("Доктор - играет на стороне мирных. Доктор может защитить любого игрока от смерти ночью, тем самым увеличивая шансы мирных жителей на победу. Также доктор сможет защитить от смерти игрока, к которому пришел отравитель.");
+                                IV_role.setBackgroundResource(R.drawable.doctor_round);
                                 break;
                             case LOVER:
-                                IV_role.setImageResource(R.drawable.lover_alive);
-                                rus_role = "любовница";
+                                TV_role.setText("Ваша роль - Любовница");
+                                TV_roleDescription.setText("Любовница - на стороне мирных жителей. Никто не способен противостоять ее красоте, даже члены мафии, чем любовница и пользуется, чтобы помочь мирным. Ночью любовница самая первая может использовать свои чары против любого игрока, тем самым лишая его способностей роли и возможности голосовать днем. ");
+                                IV_role.setBackgroundResource(R.drawable.lover_round);
                                 break;
                             case MAFIA_DON:
-                                IV_role.setImageResource(R.drawable.mafia_don_alive);
-                                rus_role = "дон мафии";
+                                TV_role.setText("Ваша роль - Дон мафии");
+                                TV_roleDescription.setText("Дон мафии - лидер мафиозной группировки. Дон обладает теми же способностями, что и обычная мафия, но его голос на ночном выборе жертвы считается за два.");
+                                IV_role.setBackgroundResource(R.drawable.mafia_don_round);
                                 break;
                             case MANIAC:
-                                IV_role.setImageResource(R.drawable.maniac_alive);
-                                rus_role = "маньяк";
+                                TV_role.setText("Ваша роль - Маньяк");
+                                TV_roleDescription.setText("Маньяк - играет за мирных. Маньяк примкнул к стороне мирных, потому что у него появился ночной конкурент - мафия. Маньяк не желает, чтобы его цели убивал кто-то еще, поэтому он старается каждую ночь убить кого-то из клана мафии.");
+                                IV_role.setBackgroundResource(R.drawable.maniac_round);
                                 break;
                             case TERRORIST:
-                                IV_role.setImageResource(R.drawable.terrorist_alive);
-                                rus_role = "террорист";
+                                TV_role.setText("Ваша роль - Террорист");
+                                TV_roleDescription.setText("Террорист - играет на стороне мафии. Он не знает, кто член мафиозной группировки, однако мафия знает, кто террорист, и не может его убить ночью. Задача террориста - во время дневного голосования выгодно подорвать свою жизнь вместе с жизнью мирного игрока, обладающего значительными способностями, например, шерифа или любовницу.");
+                                IV_role.setBackgroundResource(R.drawable.terrorist_round);
                                 break;
                             case BODYGUARD:
-                                IV_role.setImageResource(R.drawable.bodyguard_alive);
-                                rus_role = "телохранитель";
+                                TV_role.setText("Ваша роль - Телохранитель");
+                                TV_roleDescription.setText("Телохранитель - играет на стороне мирных. Телохранитель может прийти к любому игроку днем и защищать его от смерти до конца следующей ночи. Если террорист попробует взорвать игрока, который под защитой телохранителя, то умрет только террорист, но игрок уже останется без защиты телохранителя. Защита телохранителя от смерти не действует для смерти по результатам дневного голосования. ");
+                                IV_role.setBackgroundResource(R.drawable.bodyguard_round);
                                 break;
                             case DOCTOR_OF_EASY_VIRTUE:
-                                IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_alive);
-                                rus_role = "доктор лёгкого поведения";
+                                TV_role.setText("Ваша роль - Доктор легкого поведения");
+                                TV_roleDescription.setText("Доктор легкого поведения - на стороне мирных. Имеет опыт любовницы, однако его призвание - врачевание, поэтому ночью доктор легкого поведения может решить, воспользоваться ему способностями любовницы или доктора.\n");
+                                IV_role.setBackgroundResource(R.drawable.doctor_of_easy_virtue_round);
                                 break;
                             case POISONER:
-                                IV_role.setImageResource(R.drawable.poisoner_alive);
-                                rus_role = "отравитель";
+                                TV_role.setText("Ваша роль - Отравитель");
+                                TV_roleDescription.setText("Отравитель - играет за мафию. Отравитель не знает, кто мафия, а мафия не знает, кто отравитель, поэтому при неосторожной игре отравитель может быть убит мафией ночью. Отравитель ночью может отравить любого игрока, который умрет на следующий день после голосования, если к нему не придет доктор или телохранитель. Отравленный человек настолько обессилел, что может написать только одно сообщение следующим днем. ");
+                                IV_role.setBackgroundResource(R.drawable.poisoner_round);
                                 break;
                             case JOURNALIST:
-                                IV_role.setImageResource(R.drawable.journalist_alive);
-                                rus_role = "журналист";
+                                TV_role.setText("Ваша роль - Агент СМИ");
+                                TV_roleDescription.setText("Агент СМИ - проводит расследования на стороне мирных жителей. Ночью он может проверить любых двух игроков и выяснить, играют ли они в одной команде или нет.\n");
+                                IV_role.setBackgroundResource(R.drawable.journalist_round);
                                 break;
                         }
                         Log.d("kkk", "Socket_принять - role " + role);
-                        AlertDialog.Builder builder=new AlertDialog.Builder(getContext());
-                        builder.setTitle("Вам выдали роль!").setMessage("Ваша роль - " + rus_role).setIcon(R.drawable.icon_mir).setPositiveButton("ОК", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.cancel();
-                            }
-                        });
+
                         AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1274,8 +1067,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             case "poisoner":
                                 IV_influence_poisoner.setVisibility(View.VISIBLE);
                                 break;
-                            default:
-                                Log.d("kkk", "ERROR!!! INFLUENCE");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1307,8 +1098,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 break;
                             }
                         }
-                        PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                        gridView_users.setAdapter(playersAdapter);
+                        playersAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1356,6 +1146,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     TV_exp.setText(String.valueOf(exp));
 
                                     AlertDialog alert2 = builder2.create();
+                                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert2.show();
                                     break;
                                 case "dead_user":
@@ -1385,27 +1176,18 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
                                     for (int i = 0; i < list_users.size(); i++)
                                     {
+                                        list_users.get(i).setRole(role);
+                                        list_users.get(i).setAlive(false);
                                         if (nick.equals(player.getNick()))
                                         {
                                             player.setStatus("dead");
                                             player.setCan_write(true);
-                                            list_users.get(i).setRole(role);
-                                            list_users.get(i).setAlive(false);
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                            builder.setTitle("Вас убили!")
-                                                    .setMessage("Но вы всё равно ещё можете отправить последнее сообщение!")
-                                                    .setIcon(R.drawable.ic_mafia)
-                                                    .setCancelable(false)
-                                                    .setNegativeButton("Ок",
-                                                            (dialog, id) -> dialog.cancel());
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewNewRole = getLayoutInflater().inflate(R.layout.dialog_new_role, null);
+                                            builder.setView(viewNewRole);
                                             AlertDialog alert = builder.create();
                                             alert.show();
-                                            break;
-                                        }
-                                        else if (list_users.get(i).getNick().equals(nick))
-                                        {
-                                            list_users.get(i).setRole(role);
-                                            list_users.get(i).setAlive(false);
                                             break;
                                         }
                                     }
@@ -1434,31 +1216,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
                                         for (int i = 0; i < list_users.size(); i++)
                                         {
-                                            if (list_users.get(i).getNick().equals(nick2))
-                                            {
-                                                list_users.get(i).setRole(role2);
-                                                list_users.get(i).setAlive(false);
-                                            }
-                                            else if (nick2.equals(player.getNick()))
+                                            list_users.get(i).setRole(role);
+                                            list_users.get(i).setAlive(false);
+                                            if (nick.equals(player.getNick()))
                                             {
                                                 player.setStatus("dead");
                                                 player.setCan_write(true);
-                                                list_users.get(i).setRole(role2);
-                                                list_users.get(i).setAlive(false);
-                                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                builder.setTitle("Вас убили!")
-                                                        .setMessage("Но вы всё равно ещё можете отправить последнее сообщение!")
-                                                        .setIcon(R.drawable.ic_mafia)
-                                                        .setCancelable(false)
-                                                        .setNegativeButton("Ок",
-                                                                (dialog, id) -> dialog.cancel());
+
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                View viewNewRole = getLayoutInflater().inflate(R.layout.dialog_new_role, null);
+                                                builder.setView(viewNewRole);
                                                 AlertDialog alert = builder.create();
                                                 alert.show();
                                                 break;
                                             }
                                         }
                                     }
-                                    StopAnimation();
                                     playersAdapter.notifyDataSetChanged();
                                     break;
                                 case "role_action_mafia":
@@ -1479,20 +1252,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     user_nick = data2.getString("user_nick");
                                     String nick_from_iterator;
                                     String avatar = "";
-                                    for (Iterator iterator = users.keys(); iterator.hasNext();)
-                                    {
-                                        nick_from_iterator = (String) iterator.next();
-                                        if (voter.equals(nick_from_iterator))
-                                        {
-                                            avatar = users.getString(voter);
-                                            break;
+                                    for (int i = 0; i < list_users.size(); i++) {
+                                        if (list_users.get(i).getNick().equals(user_nick)) {
+                                            list_users.get(i).setVoting_number(list_users.get(i).getVoting_number() + 1);
                                         }
                                     }
-                                        for (int i = 0; i < list_users.size(); i++) {
-                                            if (list_users.get(i).getNick().equals(user_nick)) {
-                                                list_users.get(i).setVoting_number(list_users.get(i).getVoting_number() + 1);
-                                            }
-                                        }
                                     playersAdapter.notifyDataSetChanged();
                                     break;
                                 case "time_info":
@@ -1522,130 +1286,52 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     Log.d("kkk", "Socket_принять - user_error " + args[0]);
                     JSONObject data = (JSONObject) args[0];
                     String error;
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewError);
+                    TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
                     try {
                         error = data.getString("error");
                         AlertDialog alert;
                         switch (error) {
                             case "game_has_been_started":
-                                builder.setTitle("Извините, но игра уже началась")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-
+                                TV_error.setText("Игра уже началась");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "max_people_in_room":
-                                builder.setTitle("Извините, но в комнате нет мест")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("В комнате нет мест");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "you_are_playing_in_another_room":
-                                builder.setTitle("Извините, но вы играете в другой игре")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Вы играете в другой игре");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "game_is_over":
-                                builder.setTitle("Извините, но игра закончена")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Игра закончена");
                                 break;
                             case "you_are_banned_in_this_room":
-                                builder.setTitle("Извините, но вы забанены в этой комнате")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Ыы забанены в этой комнате");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "you_are_already_friends":
-                                builder.setTitle("Вы уже друзья!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Вы уже друзья!");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "you_are_already_sent_request":
-                                builder.setTitle("Вы уже отправили запрос этому человеку!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Вы уже отправили запрос этому человеку!");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "you_are_already_got_request":
-                                builder.setTitle("Вы уже получили запрос в друзья от этого человека!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Вы уже получили запрос в друзья от этого человека!");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             default:
-                                builder.setTitle("Извините, но что-то пошло не так")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
+                                TV_error.setText("Что-то пошло не так");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                         }
                         alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1666,6 +1352,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     JSONObject data = (JSONObject) args[0];
                     JSONObject data2;
                     String nick;
+                    Log.d("kkk", "Socket_принять - mafias - " + args[0]);
                     try {
                         data2 = data.getJSONObject("mafias");
                         for (Iterator iterator = data2.keys(); iterator.hasNext();)
@@ -1679,13 +1366,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     list_users.get(i).setRole(role);
                                 }
                             }
-                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                            gridView_users.setAdapter(playersAdapter);
+                            playersAdapter.notifyDataSetChanged();
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("kkk", "Socket_принять - mafias - " + args[0]);
                 }
             });
         }
@@ -1724,8 +1409,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     }
                                 }
                             }
-                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                            gridView_users.setAdapter(playersAdapter);
+                            playersAdapter.notifyDataSetChanged();
                         }
                         if (data.has("journalist_checks"))
                         {
@@ -1745,13 +1429,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     }
                                 }
                             }
-                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                            gridView_users.setAdapter(playersAdapter);
+                            playersAdapter.notifyDataSetChanged();
                         }
                         if (!data.isNull("voting"))
                         {
-                            voting_number.setVisibility(View.GONE);
-                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
                             JSONObject voting = data.getJSONObject("voting");
                             for (Iterator iterator = voting.keys(); iterator.hasNext();)
@@ -1760,24 +1441,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 voted_number = voting.getInt(nick);
                                 for (int i = 0; i < list_users.size(); i++)
                                 {
-                                    if (list_users.get(i).getNick().equals(nick))
-                                    {
-                                        list_users.get(i).setVoting_number(voted_number);
-                                    }
-                                    else if (nick.equals(player.getNick()))
-                                    {
-                                        voting_number.setVisibility(View.VISIBLE);
-                                        player.setVoting_number(voted_number);
-                                        voting_number.setText(String.valueOf(player.getVoting_number()));
-                                    }
+                                    list_users.get(i).setVoting_number(voted_number);
                                 }
                             }
-                            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                            gridView_users.setAdapter(playersAdapter);
+                            playersAdapter.notifyDataSetChanged();
                         }
                         else {
-                            voting_number.setVisibility(View.GONE);
-                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
                         }
                         can_skip_day = data.getBoolean("can_skip_day");
@@ -1803,88 +1472,43 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     if (bodyguard) IV_influence_bodyguard.setVisibility(View.VISIBLE);
                     if (poisoner) IV_influence_poisoner.setVisibility(View.VISIBLE);
 
-                    day_time.setText(time);
+
                     player.setRole(ConvertToRole(role));
                     player.setStatus(status);
                     switch (time) {
                         case "lobby":
                             player.setTime(Time.LOBBY);
+                            dayTime.setText("лобби");
+                            dayTime.setBackgroundResource(R.drawable.green_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_day);
                             break;
                         case "night_love":
-                            voting_number.setVisibility(View.GONE);
-                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
                             player.setTime(Time.NIGHT_LOVE);
+                            dayTime.setText("ночь");
+                            dayTime.setBackgroundResource(R.drawable.died_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_night);
                             break;
                         case "night_other":
                             player.setTime(Time.NIGHT_OTHER);
+                            dayTime.setText("ночь");
+                            dayTime.setBackgroundResource(R.drawable.died_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_night);
                             break;
                         case "day":
-                            IV_my_role_animation.setVisibility(View.GONE);
-                            voting_number.setVisibility(View.GONE);
-                            player.setVoting_number(0);
                             DeleteNumbersFromVoting();
                             player.setTime(Time.DAY);
+                            dayTime.setText("пропуск дня");
+                            dayTime.setBackgroundResource(R.drawable.green_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_day);
                             break;
                         case "voting":
-                            FAB_skip_day.setVisibility(View.GONE);
                             player.setTime(Time.VOTING);
+                            dayTime.setText("Голосование");
+                            dayTime.setBackgroundResource(R.drawable.grey_button);
+                            Constrain.setBackgroundResource(R.drawable.fon_day);
                             break;
                     }
-                    switch (player.getRole()) {
-                        case NONE:
-                            IV_role.setImageResource(R.drawable.anonim);
-                            break;
-                        case CITIZEN:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.citizen_alive); }
-                            else { IV_role.setImageResource(R.drawable.citizen_dead); }
-                            break;
-                        case MAFIA:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.mafia_alive); }
-                            else { IV_role.setImageResource(R.drawable.mafia_dead); }
-                            break;
-                        case SHERIFF:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.sheriff_alive); }
-                            else { IV_role.setImageResource(R.drawable.sheriff_dead); }
-                            break;
-                        case DOCTOR:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.doctor_alive); }
-                            else { IV_role.setImageResource(R.drawable.doctor_dead); }
-                            break;
-                        case LOVER:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.lover_alive); }
-                            else { IV_role.setImageResource(R.drawable.lover_dead); }
-                            break;
-                        case MAFIA_DON:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.mafia_don_alive); }
-                            else { IV_role.setImageResource(R.drawable.mafia_don_dead); }
-                            break;
-                        case MANIAC:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.maniac_alive); }
-                            else { IV_role.setImageResource(R.drawable.maniac_dead); }
-                            break;
-                        case TERRORIST:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.terrorist_alive); }
-                            else { IV_role.setImageResource(R.drawable.terrorist_dead); }
-                            break;
-                        case BODYGUARD:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.bodyguard_alive); }
-                            else { IV_role.setImageResource(R.drawable.bodyguard_dead); }
-                            break;
-                        case DOCTOR_OF_EASY_VIRTUE:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_alive); }
-                            else { IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_dead); }
-                            break;
-                        case POISONER:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.poisoner_alive); }
-                            else { IV_role.setImageResource(R.drawable.poisoner_dead); }
-                            break;
-                        case JOURNALIST:
-                            if (status.equals("alive")) { IV_role.setImageResource(R.drawable.journalist_alive); }
-                            else { IV_role.setImageResource(R.drawable.journalist_dead); }
-                            break;
-                    }
-                    IV_my_role_animation.setVisibility(View.GONE);
                     if (TV_mafia_count.getVisibility() != View.VISIBLE)
                     {
                         int players = list_users.size() + 1;
@@ -1939,10 +1563,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         if (can_act) StartAnimation(Role.JOURNALIST);
                                         if (!player.getJournalist_checked())
                                         {
-                                            IV_my_role_animation.setImageResource(R.drawable.ic_journalist);
-                                            IV_my_role_animation.setVisibility(View.VISIBLE);
                                             animation = AnimationUtils.loadAnimation(getContext(), R.anim.voting);
-                                            IV_my_role_animation.startAnimation(animation);
                                         }
                                         break;
                                     default:
@@ -1950,7 +1571,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 }
                                 break;
                             case DAY:
-                                FAB_skip_day.setVisibility(View.VISIBLE);
                                 IV_influence_doctor.setVisibility(View.GONE);
                                 player.setVoted_at_night(false);
                                 player.setCan_write(true);
@@ -2256,43 +1876,20 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 }
                 if (nick.equals(MainActivity.NickName))
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Вас кикнули из комнаты!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewError);
+                    TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Вас кикнули из комнаты!");
+                    TV_error.setText("Попробуйте зайти в другие комнаты");
+
                     AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert.show();
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                 }
-                MessageModel messageModel = new MessageModel(test_num, player.getHost_nick(), time, nick, "KickMes");
-
-                if (test_num > num)
-                {
-                    num = test_num;
-                    list_chat.add(messageModel);
-                }
-                else
-                {
-                    for (int i = 0; i < list_chat.size(); i++)
-                    {
-                        if (test_num > list_chat.get(i).num)
-                        {
-                            list_chat.add(i, messageModel);
-                            break;
-                        }
-                    }
-                }
                 messageAdapter.notifyDataSetChanged();
-                if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
-                    listView_chat.setSelection(messageAdapter.getCount() - 1);
-                }
                 for (int i=list_users.size()-1; i>=0; i--)
                 {
                     if (list_users.get(i).getNick().equals(nick))
@@ -2301,8 +1898,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         list_users.remove(i);
                     }
                 }
-                PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-                gridView_users.setAdapter(playersAdapter);
+                playersAdapter.notifyDataSetChanged();
             }
         });
     };
@@ -2314,18 +1910,14 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             @Override
             public void run() {
                 Log.d("kkk", "принял - ban_user_in_room_error");
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Вы не можете выгонять админов из комнаты!")
-                        .setMessage("")
-                        .setIcon(R.drawable.ic_error)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                builder.setView(viewError);
+                TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                TV_error.setText("Вы не можете кикать админов из комнаты!");
+
                 AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             }
         });
@@ -2340,14 +1932,17 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 //JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - user_message_delay - " + args[0]);
                 String time_to_unmute = String.valueOf(args[0]);
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("Вs слишком часто отправляете сообщения!")
-                        .setMessage("Вы сможете написать следующее сообщение через " + time_to_unmute + " секунд")
-                        .setIcon(R.drawable.ic_error)
-                        .setCancelable(false)
-                        .setNegativeButton("ок",
-                                (dialog, id) -> dialog.cancel());
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                builder.setView(viewError);
+                TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                TV_title.setText("Вы слишком часто отправляете сообщения!");
+                TV_error.setText("Вы сможете написать следующее сообщение через " + time_to_unmute + " секунд");
+
                 AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             }
         });
@@ -2434,17 +2029,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         {
             if (list_users.get(i).getAlive())
             {
-                if (type != Role.VOTING)
-                {
-                    list_users.get(i).setAnimation_type(type);
-                }
-                else
-                {
-                    list_users.get(i).setAnimation_type(type);
-                }
+                list_users.get(i).setAnimation_type(type);
             }
-            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-            gridView_users.setAdapter(playersAdapter);
+            playersAdapter.notifyDataSetChanged();
         }
     }
     //конец анимации
@@ -2453,10 +2040,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         for (int i = 0; i < list_users.size(); i++)
         {
             list_users.get(i).setAnimation_type(Role.NONE);
-            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-            gridView_users.setAdapter(playersAdapter);
         }
-        IV_my_role_animation.setVisibility(View.GONE);
+        playersAdapter.notifyDataSetChanged();
     }
     //действие роли
     public void RoleAction(String nick) {
@@ -2538,11 +2123,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         for (int i = 0; i < list_users.size(); i++)
         {
             list_users.get(i).setVoting_number(0);
-            PlayersAdapter playersAdapter = new PlayersAdapter(list_users, getContext());
-            gridView_users.setAdapter(playersAdapter);
         }
+        playersAdapter.notifyDataSetChanged();
     }
-
     public String getDate(String ourDate) {
         try
         {

@@ -62,7 +62,7 @@ import io.socket.emitter.Emitter;
 import static android.app.Activity.RESULT_OK;
 import static  com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
-
+/*
 public class GameFragmentLate extends Fragment implements OnBackPressedListener {
     public ListView listView_chat;
     public GridView gridView_users;
@@ -179,7 +179,7 @@ public class GameFragmentLate extends Fragment implements OnBackPressedListener 
         TabLayout tabLayout = view.findViewById(R.id.fragmentGame_tabLayout);
         tabLayout.setupWithViewPager(viewPager);
 
-        /*
+
         IV_influence_doctor.setVisibility(View.GONE);
         IV_influence_lover.setVisibility(View.GONE);
         IV_influence_sheriff.setVisibility(View.GONE);
@@ -194,7 +194,7 @@ public class GameFragmentLate extends Fragment implements OnBackPressedListener 
 
         FAB_skip_day.setVisibility(View.GONE);
 
-         */
+
 
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 
@@ -608,7 +608,7 @@ public class GameFragmentLate extends Fragment implements OnBackPressedListener 
                 TotalItemsCount = totalItemCount;
             }
         });
- */
+
 
         return view;
     }
@@ -816,11 +816,7 @@ public class GameFragmentLate extends Fragment implements OnBackPressedListener 
         }
     }
 
-    /*******************************
-     *                             *
-     *       SOCKETS start         *
-     *                             *
-     *******************************/
+
 
     private Emitter.Listener onGetInRoom = new Emitter.Listener() {
         @Override
@@ -2678,11 +2674,7 @@ public class GameFragmentLate extends Fragment implements OnBackPressedListener 
         });
     };
 
-    /*******************************
-     *                             *
-     *       SOCKETS end           *
-     *                             *
-     *******************************/
+
 
     //запуск анимации
     public void StartAnimation(Role type) {
@@ -2817,4 +2809,6 @@ public class GameFragmentLate extends Fragment implements OnBackPressedListener 
         }
         return ourDate;
     }
+
 }
+        */

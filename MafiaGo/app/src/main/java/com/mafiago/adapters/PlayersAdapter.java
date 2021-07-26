@@ -34,6 +34,12 @@ public class PlayersAdapter extends BaseAdapter
         }
     }
 
+    public void refresh(ArrayList<UserModel> list_users)
+    {
+        this.list_users = list_users;
+        notifyDataSetChanged();
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 

@@ -2,19 +2,23 @@ package com.mafiago.small_fragments;
 
 import android.animation.ArgbEvaluator;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.mafiago.R;
 import com.mafiago.adapters.RulesAdapter;
@@ -23,6 +27,7 @@ import com.mafiago.models.RuleModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 public class RulesSmallFragment extends Fragment {
 

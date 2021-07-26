@@ -20,7 +20,7 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@+id/dialogNewRole_IV_role"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -32,12 +32,12 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:text="Причина: модератор/администратор злоупотребляет своими полномочиями или положением"
+        android:text="Ошибка в системе"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
+        app:layout_constraintTop_toBottomOf="@+id/dialogNewRole_IV_role" />
 
     <TextView
         android:id="@+id/dialogYouHaveBeenBanned_TV_comment"
@@ -48,7 +48,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:text="Комментарий: ты плохой"
+        android:text="Ошибка в системе"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -64,7 +64,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:text="Время бана: 3 ч"
+        android:text="Ошибка в системе"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -80,7 +80,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:text="Вы сможете зайти через: 2 часа 8 минут"
+        android:text="Ошибка в системе"
         android:textColor="@color/white"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -88,7 +88,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dialogYouHaveBeenBanned_TV_banTime" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/dialogNewRole_IV_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -127,11 +127,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="TextView"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/imageView6"
         app:layout_constraintTop_toTopOf="@+id/imageView6"
-        tools:text="1000XP" />
+        tools:text="0" />
 
     <ImageView
         android:id="@+id/imageView7"
@@ -148,10 +147,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:text="TextView"
         android:textSize="14sp"
         app:layout_constraintStart_toEndOf="@+id/imageView7"
         app:layout_constraintTop_toTopOf="@+id/imageView7"
-        tools:text="1000XP" />
-
+        tools:text="0" />
 </androidx.constraintlayout.widget.ConstraintLayout>
