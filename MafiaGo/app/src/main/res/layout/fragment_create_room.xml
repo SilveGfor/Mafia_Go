@@ -50,7 +50,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="@drawable/black_edit_text"
+        android:background="@drawable/shape_black"
         android:ems="10"
         android:hint="Название комнаты"
         android:inputType="textPersonName"

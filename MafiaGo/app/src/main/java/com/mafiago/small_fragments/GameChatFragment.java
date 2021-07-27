@@ -70,16 +70,13 @@ public class GameChatFragment extends Fragment {
         args.putInt(ARG_PAGE, page);
         GameChatFragment fragment = new GameChatFragment();
         fragment.setArguments(args);
-        Log.d("kkk","newInstance - " + page);
         return fragment;
     }
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("kkk","onCreate");
         if (getArguments() != null) {
             mPage = getArguments().getInt(ARG_PAGE);
-            Log.d("kkk","onCreate args != 0, = " + mPage);
         }
     }
 
@@ -95,7 +92,6 @@ public class GameChatFragment extends Fragment {
 
         messageAdapter = new MessageAdapter(list_chat, getContext());
         LV_chat.setAdapter(messageAdapter);
-        Log.d("kkk", "onCreateView - страница - " + String.valueOf(mPage));
         if (mPage == 1)
         {
             socket.on("get_in_room", onGetInRoom);
@@ -106,7 +102,6 @@ public class GameChatFragment extends Fragment {
         }
         else
         {
-            socket.on("system_message", onSystemMessage);
             socket.on("user_message", onNewDiedMessage);
             RL_send.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.died_button));
         }
@@ -625,7 +620,7 @@ public class GameChatFragment extends Fragment {
                         time = getDate(time);
                         message = data.getString("message");
                         MessageModel messageModel = new MessageModel(test_num, "Ошибка вывода сообщения", time, "Server", "SystemMes");
-                        Log.d("kkk", "system message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + " , status - " + status + "/" +  data);
+                        Log.d("kkk", "system message GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + " , status - " + status + "/" +  data);
                         if (test_num != num) {
                             switch (status)
                             {
@@ -704,7 +699,7 @@ public class GameChatFragment extends Fragment {
             @Override
             public void run() {
                 JSONObject data = (JSONObject) args[0];
-                Log.d("kkk", "принял - ban_user_in_room - " + data);
+                Log.d("kkk", "принял - ban_user_in_room GameChatFragment - " + data);
                 String nick = "";
                 String time = "";
                 int test_num = -1;

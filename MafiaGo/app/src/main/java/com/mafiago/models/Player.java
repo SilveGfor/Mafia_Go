@@ -10,7 +10,7 @@ public class Player {
 
     private Time time;
     private Role role;
-    private  boolean can_click, can_write, voted_at_night, journalist_checked;
+    private  boolean can_click, can_write, voted_at_night;
     private int room_num, ban_limit;
 
     public Player(String nick, String session_id, int room_num, String main_role)
@@ -25,15 +25,6 @@ public class Player {
         voted_at_night = false;
         can_click = false;
         can_write = true;
-        journalist_checked = false;
-    }
-
-    public boolean getJournalist_checked() {
-        return journalist_checked;
-    }
-
-    public void setJournalist_checked(boolean journalist_checked) {
-        this.journalist_checked = journalist_checked;
     }
 
 

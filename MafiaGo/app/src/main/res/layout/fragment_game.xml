@@ -9,14 +9,17 @@
 
     <TextView
         android:id="@+id/fragmentGame_TV_roomName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
         android:text="Комната 1"
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_peacefulCount"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,49 +38,53 @@
         android:id="@+id/fragmentGame_TV_mafiaCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="Мирных: 5"
         android:textColor="@color/green"
         android:textSize="12sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGame_TV_roomName"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_roomName" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_timer" />
 
     <TextView
         android:id="@+id/fragmentGame_TV_peacefulCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="Мафий: 3"
         android:textColor="@color/red"
         android:textSize="12sp"
         android:visibility="invisible"
-        app:layout_constraintStart_toStartOf="@+id/fragmentGame_TV_mafiaCount"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_mafiaCount" />
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_mafiaCount"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_mafiaCount" />
 
     <TextView
         android:id="@+id/textView6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
         android:text="Осталось:"
         android:textColor="@color/notActiveText"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_mafiaCount"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGame_TV_mafiaCount" />
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_timer"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_timer"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_timer" />
 
     <TextView
         android:id="@+id/fragmentGame_TV_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="34"
         android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
-        app:layout_constraintStart_toEndOf="@+id/textView6" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <GridView
         android:id="@+id/fragmentGame_listUsers"
@@ -137,10 +144,11 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_doctor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="36dp"
+        android:layout_height="34dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -148,10 +156,11 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_sheriff"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="32dp"
+        android:layout_height="37dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/fragmentGame_ic_doctor"
         app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -159,10 +168,11 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_lover"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="34dp"
+        android:layout_height="33dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/fragmentGame_ic_sheriff"
         app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -170,10 +180,11 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_bodyguard"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="23dp"
+        android:layout_height="38dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/fragmentGame_ic_lover"
         app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -181,10 +192,11 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_poisoner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="37dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/fragmentGame_ic_bodyguard"
         app:layout_constraintTop_toTopOf="@+id/textView8"
@@ -202,4 +214,5 @@
         app:layout_constraintBottom_toTopOf="@+id/fragmentGame_VP_chat"
         app:layout_constraintEnd_toEndOf="@+id/fragmentGame_listUsers"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_listUsers" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
