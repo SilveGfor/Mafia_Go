@@ -1,61 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/itemMessage_main_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/itemMessage_avatar"
         android:text="разработчик"
-        android:visibility="gone"
-        android:textSize="12sp"
         android:textColor="#FF0000"
-        android:layout_toRightOf="@id/item_message_avatar"/>
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="74dp" />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/item_message_avatar"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginRight="5dp"
-            android:layout_below="@id/itemMessage_main_role"
-            android:src="@drawable/sheriff_alive"
-            app:civ_border_width="1dp"
-            app:civ_border_color="#FF0000"/>
-
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/mesNick"
-        android:text="SilveGfor"
-        android:textSize="16sp"
-        android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@id/item_message_avatar"
-        android:layout_toRightOf="@id/item_message_avatar"
-        android:textStyle="bold"
-        app:reflectionColor="#f00"/>
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/itemMessage_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@id/itemMessage_main_role"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:src="@drawable/sheriff_alive"
+        app:civ_border_color="#FF0000"
+        app:civ_border_width="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/itemMessage_time"
+        app:layout_constraintStart_toEndOf="@+id/itemMessage_time"
+        app:layout_constraintTop_toTopOf="@+id/itemMessage_time" />
 
     <TextView
-        android:id="@+id/mesTime"
-        android:textColor="@color/colorWhite"
+        android:id="@+id/itemMessage_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="21:00" />
+        android:layout_marginTop="8dp"
+        android:text="21:00"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemMessage_main_role" />
 
     <TextView
-        android:id="@+id/mesText"
-        android:layout_width="wrap_content"
+        android:id="@+id/itemMessage_text"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/mesNick"
-        android:layout_toRightOf="@id/item_message_avatar"
-        android:text="Однако здравствуйте"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_toRightOf="@id/itemMessage_avatar"
+        android:text="SilveGfor: Однако здравствуйте"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorWhite"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemMessage_avatar"
+        app:layout_constraintTop_toTopOf="@+id/itemMessage_time" />
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -931,67 +931,68 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             case NONE:
                                 TV_role.setText("У вас нет роли");
                                 TV_roleDescription.setText("Извините, но что-то пошло не так");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.ic_error));
+                                IV_role.setImageResource(R.drawable.journalist_round);
+                                IV_role.setImageResource(R.drawable.ic_error);
                                 break;
                             case CITIZEN:
                                 TV_role.setText("Ваша роль - Мирный житель");
                                 TV_roleDescription.setText("Мирный житель - он живет в городе, где никого не знает. Его задача выяснить, кто из жителей стоит на стороне мафии, а кто - нет, и уничтожить всех мафиози, пока они не уничтожили весь город. Каждый раз по окончанию дня мирные жители могут голосовать за того, кого они считают мафией.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.citizen_round));
+                                IV_role.setImageResource(R.drawable.citizen_round);
                                 break;
                             case MAFIA:
                                 TV_role.setText("Ваша роль - мафия");
                                 TV_roleDescription.setText("Мафия - неотъемлемый персонаж игры. Мафия образует опасную группировку из своих членов, и ее цель - уничтожить все мирное население города. Каждый член мафии знает всех остальных мафиози. Ночью мафия может обсуждать в отдельном чате свои мысли и выбирать свою новую жертву. Присутствует во всех играх.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.mafia_round));
+                                IV_role.setImageResource(R.drawable.mafia_round);
                                 break;
                             case SHERIFF:
                                 TV_role.setText("Ваша роль - Шериф");
                                 TV_roleDescription.setText("Шериф - играет на стороне мирных жителей. Задача шерифа - упростить мирным жителям задачу поиска мафии. Ночью шериф может проверить любого игрока и узнать его роль. Присутствует во всех играх.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.sheriff_round));
+                                IV_role.setImageResource(R.drawable.sheriff_round);
                                 break;
                             case DOCTOR:
                                 TV_role.setText("Ваша роль - Доктор");
                                 TV_roleDescription.setText("Доктор - играет на стороне мирных. Доктор может защитить любого игрока от смерти ночью, тем самым увеличивая шансы мирных жителей на победу. Также доктор сможет защитить от смерти игрока, к которому пришел отравитель.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.doctor_round));
+                                IV_role.setImageResource(R.drawable.doctor_round);
                                 break;
                             case LOVER:
                                 TV_role.setText("Ваша роль - Любовница");
                                 TV_roleDescription.setText("Любовница - на стороне мирных жителей. Никто не способен противостоять ее красоте, даже члены мафии, чем любовница и пользуется, чтобы помочь мирным. Ночью любовница самая первая может использовать свои чары против любого игрока, тем самым лишая его способностей роли и возможности голосовать днем. ");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.lover_round));
+                                IV_role.setImageResource(R.drawable.lover_round);
                                 break;
                             case MAFIA_DON:
                                 TV_role.setText("Ваша роль - Дон мафии");
                                 TV_roleDescription.setText("Дон мафии - лидер мафиозной группировки. Дон обладает теми же способностями, что и обычная мафия, но его голос на ночном выборе жертвы считается за два.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.mafia_don_round));
+                                IV_role.setImageResource(R.drawable.mafia_don_round);
                                 break;
                             case MANIAC:
                                 TV_role.setText("Ваша роль - Маньяк");
                                 TV_roleDescription.setText("Маньяк - играет за мирных. Маньяк примкнул к стороне мирных, потому что у него появился ночной конкурент - мафия. Маньяк не желает, чтобы его цели убивал кто-то еще, поэтому он старается каждую ночь убить кого-то из клана мафии.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.maniac_round));
+                                IV_role.setImageResource(R.drawable.maniac_round);
                                 break;
                             case TERRORIST:
                                 TV_role.setText("Ваша роль - Террорист");
                                 TV_roleDescription.setText("Террорист - играет на стороне мафии. Он не знает, кто член мафиозной группировки, однако мафия знает, кто террорист, и не может его убить ночью. Задача террориста - во время дневного голосования выгодно подорвать свою жизнь вместе с жизнью мирного игрока, обладающего значительными способностями, например, шерифа или любовницу.");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.terrorist_round));
+                                IV_role.setImageResource(R.drawable.terrorist_round);
                                 break;
                             case BODYGUARD:
                                 TV_role.setText("Ваша роль - Телохранитель");
                                 TV_roleDescription.setText("Телохранитель - играет на стороне мирных. Телохранитель может прийти к любому игроку днем и защищать его от смерти до конца следующей ночи. Если террорист попробует взорвать игрока, который под защитой телохранителя, то умрет только террорист, но игрок уже останется без защиты телохранителя. Защита телохранителя от смерти не действует для смерти по результатам дневного голосования. ");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.bodyguard_round));
+                                IV_role.setImageResource(R.drawable.bodyguard_round);
                                 break;
                             case DOCTOR_OF_EASY_VIRTUE:
                                 TV_role.setText("Ваша роль - Доктор легкого поведения");
                                 TV_roleDescription.setText("Доктор легкого поведения - на стороне мирных. Имеет опыт любовницы, однако его призвание - врачевание, поэтому ночью доктор легкого поведения может решить, воспользоваться ему способностями любовницы или доктора.\n");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.doctor_of_easy_virtue_round));
+                                IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_round);
                                 break;
                             case POISONER:
                                 TV_role.setText("Ваша роль - Отравитель");
                                 TV_roleDescription.setText("Отравитель - играет за мафию. Отравитель не знает, кто мафия, а мафия не знает, кто отравитель, поэтому при неосторожной игре отравитель может быть убит мафией ночью. Отравитель ночью может отравить любого игрока, который умрет на следующий день после голосования, если к нему не придет доктор или телохранитель. Отравленный человек настолько обессилел, что может написать только одно сообщение следующим днем. ");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.poisoner_round));
+                                IV_role.setImageResource(R.drawable.poisoner_round);
                                 break;
                             case JOURNALIST:
                                 TV_role.setText("Ваша роль - Агент СМИ");
                                 TV_roleDescription.setText("Агент СМИ - проводит расследования на стороне мирных жителей. Ночью он может проверить любых двух игроков и выяснить, играют ли они в одной команде или нет.\n");
-                                IV_role.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.journalist_round));
+                                IV_role.setImageResource(R.drawable.journalist_round);
                                 break;
                         }
                         Log.d("kkk", "Socket_принять - role " + role);

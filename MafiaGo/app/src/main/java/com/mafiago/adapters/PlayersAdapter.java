@@ -62,7 +62,7 @@ public class PlayersAdapter extends BaseAdapter
 
         switch (list_users.get(position).getRole()) {
             case NONE:
-                IV_role.setImageResource(R.drawable.anonim);
+                IV_role.setImageResource(R.drawable.grey_card);
                 break;
             case CITIZEN:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.citizen_alive); }

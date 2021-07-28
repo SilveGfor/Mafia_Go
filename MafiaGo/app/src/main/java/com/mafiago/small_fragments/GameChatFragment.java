@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -52,6 +53,7 @@ public class GameChatFragment extends Fragment {
     EditText ET_message;
     Button btnSend;
     RelativeLayout RL_send;
+    TextView TV_answerMes;
 
     JSONObject users = new JSONObject();
 
@@ -87,6 +89,7 @@ public class GameChatFragment extends Fragment {
         ET_message = view.findViewById(R.id.itemChat_ET_message);
         RL_send = view.findViewById(R.id.itemChat_RL_send);
         btnSend = view.findViewById(R.id.itemChat_btn_send);
+        TV_answerMes = view.findViewById(R.id.itemChat_TV_answerMes);
 
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 
@@ -155,7 +158,7 @@ public class GameChatFragment extends Fragment {
                                     Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
                                     socket.emit("user_message", json2);
                                     answer_id = -1;
-                                    //cardAnswer.setVisibility(View.GONE);
+                                    TV_answerMes.setVisibility(View.GONE);
                                     ET_message.setText("");
                                 } else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -230,7 +233,7 @@ public class GameChatFragment extends Fragment {
                             Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
                             socket.emit("user_message", json2);
                             answer_id = -1;
-                            //cardAnswer.setVisibility(View.GONE);
+                            TV_answerMes.setVisibility(View.GONE);
                             ET_message.setText("");
                         }
                     } else {
@@ -271,7 +274,7 @@ public class GameChatFragment extends Fragment {
                 Log.d("kkk", "Socket_отправка user_message - " + json2.toString());
                 socket.emit("user_message", json2);
                 answer_id = -1;
-                //cardAnswer.setVisibility(View.GONE);
+                TV_answerMes.setVisibility(View.GONE);
                 ET_message.setText("");
             }
         });
@@ -295,10 +298,14 @@ public class GameChatFragment extends Fragment {
             if(list_chat.get(position).mesType.equals("UsersMes") || list_chat.get(position).mesType.equals("AnswerMes"))
             {
                 answer_id = list_chat.get(position).num;
-                //answer_nick.setText(list_chat.get(position).nickName);
-                //answer_mes.setText(list_chat.get(position).message);
-                //cardAnswer.setVisibility(View.VISIBLE);
+                TV_answerMes.setText(list_chat.get(position).nickName + ": " + list_chat.get(position).message);
+                TV_answerMes.setVisibility(View.VISIBLE);
             }
+        });
+
+        TV_answerMes.setOnClickListener(v -> {
+            answer_id = -1;
+            TV_answerMes.setVisibility(View.GONE);
         });
         return view;
     }

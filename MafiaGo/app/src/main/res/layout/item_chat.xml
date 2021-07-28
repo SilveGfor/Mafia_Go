@@ -14,7 +14,7 @@
 
         android:layout_alignParentLeft="true"
         android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/textView3"
+        app:layout_constraintBottom_toTopOf="@+id/itemChat_TV_answerMes"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -68,13 +68,15 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
+        android:id="@+id/itemChat_TV_answerMes"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
         android:background="@drawable/shape_transparent_black"
         android:padding="5dp"
         android:text="SilveGfor: Что-то пошло не так"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/itemChat_ET_message"
+        app:layout_constraintEnd_toEndOf="@+id/itemChat_ET_message"
         app:layout_constraintStart_toStartOf="@+id/itemChat_ET_message" />
 </androidx.constraintlayout.widget.ConstraintLayout>

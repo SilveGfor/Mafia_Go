@@ -11,7 +11,6 @@
  import android.view.View;
  import android.view.ViewGroup;
  import android.widget.BaseAdapter;
- import android.widget.ImageView;
  import android.widget.TextView;
 
  import com.mafiago.MainActivity;
@@ -79,7 +78,7 @@
             case "UsersMes":
                 view = layout.inflate(R.layout.item_message, null);
 
-                CircleImageView IV_avatar = view.findViewById(R.id.item_message_avatar);
+                CircleImageView IV_avatar = view.findViewById(R.id.itemMessage_avatar);
 
                 if (list_mess.get(position).avatar != null) {
                     IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
@@ -101,9 +100,8 @@
                     }
                 });
 
-                ShimmerTextView txt_nick = view.findViewById(R.id.mesNick);
-                TextView txt_time = view.findViewById(R.id.mesTime);
-                TextView txt_mess = view.findViewById(R.id.mesText);
+                TextView txt_time = view.findViewById(R.id.itemMessage_time);
+                TextView txt_mess = view.findViewById(R.id.itemMessage_text);
                 TextView TV_main_role = view.findViewById(R.id.itemMessage_main_role);
 
                 String color= "#FFFFFF";
@@ -159,13 +157,11 @@
                     }
                 }
 
-                txt_nick.setTextColor(Color.parseColor(color));
                 txt_time.setTextColor(Color.parseColor(color));
                 txt_mess.setTextColor(Color.parseColor(color));
 
-                txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
-                txt_mess.setText(list_mess.get(position).message);
+                txt_mess.setText(list_mess.get(position).nickName + ": " + list_mess.get(position).message);
                 break;
 
             case "DisconnectMes":
@@ -174,7 +170,7 @@
                 TextView txt_disconnect_mes = view.findViewById(R.id.mesConnect);
                 TextView txt_disconnect_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_disconnect_mes.setTextColor(Color.parseColor("#FF0000"));
+                txt_disconnect_mes.setTextColor(Color.parseColor("#BE3144"));
 
                 txt_disconnect_mes.setText(list_mess.get(position).message);
                 txt_disconnect_time.setText(list_mess.get(position).time);
@@ -199,7 +195,7 @@
                 TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
                 TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_connect_mes.setTextColor(Color.parseColor("#08FB00"));
+                txt_connect_mes.setTextColor(Color.parseColor("#4D8D58"));
 
                 txt_connect_mes.setText(list_mess.get(position).message);
                 txt_connect_time.setText(list_mess.get(position).time);
@@ -221,9 +217,27 @@
             case "VotingMes":
                 view = layout.inflate(R.layout.item_message, null);
 
-                txt_nick = view.findViewById(R.id.mesNick);
-                txt_time = view.findViewById(R.id.mesTime);
-                txt_mess = view.findViewById(R.id.mesText);
+                txt_time = view.findViewById(R.id.itemMessage_time);
+                txt_mess = view.findViewById(R.id.itemMessage_text);
+
+                IV_avatar = view.findViewById(R.id.itemMessage_avatar);
+
+                if (list_mess.get(position).avatar != null) {
+                    IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
+                }
+
+                IV_avatar.setOnClickListener(v -> {
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", list_mess.get(position).nickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+                });
 
                 if (list_mess.get(position).nickName.equals("SilveGfor"))
                 {
@@ -231,29 +245,23 @@
                     //shimmer.start(txt_nick);
                 }
 
-                txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
 
                 txt_mess.setTextColor(Color.parseColor("#FFFF00"));
-                //txt_time.setTextColor(Color.parseColor("#FFFF00"));
-                txt_nick.setTextColor(Color.parseColor("#FFFF00"));
                 break;
             case "AnswerMes":
                 view = layout.inflate(R.layout.item_answer_message, null);
-                txt_nick = view.findViewById(R.id.mesNick);
-                txt_time = view.findViewById(R.id.mesTime);
-                txt_mess = view.findViewById(R.id.mesText);
+                txt_time = view.findViewById(R.id.itemAnswerMessage_time);
+                txt_mess = view.findViewById(R.id.itemAnswerMessage_text);
                 TV_main_role = view.findViewById(R.id.itemAnswerMessage_main_role);
 
-                ShimmerTextView txt_answer_nick = view.findViewById(R.id.answerNick);
-                TextView txt_answer_mes = view.findViewById(R.id.answerText);
-                TextView txt_answer_time = view.findViewById(R.id.answerTime);
-                TextView TV_answer_main_role = view.findViewById(R.id.itemAnswerMessage_answer_main_role);
+                TextView txt_answer_mes = view.findViewById(R.id.itemAnswerMessage_answerText);
+                TextView TV_answer_main_role = view.findViewById(R.id.itemAnswerMessage_main_role);
 
                 int id = list_mess.get(position).answerId;
 
-                IV_avatar = view.findViewById(R.id.item_answer_message_avatar);
+                IV_avatar = view.findViewById(R.id.itemAnswerMessage_avatar);
 
                 if (list_mess.get(position).avatar != null) {
                     IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
@@ -298,9 +306,8 @@
                 }
 
 
-                txt_nick.setText(list_mess.get(position).nickName);
                 txt_time.setText(list_mess.get(position).time);
-                txt_mess.setText(list_mess.get(position).message);
+                txt_mess.setText(list_mess.get(position).nickName + ": " + list_mess.get(position).message);
 
                 color= "#FFFFFF";
                 switch (list_mess.get(position).textType)
@@ -326,11 +333,7 @@
                 {
                     if (id == list_mess.get(i).num)
                     {
-                        txt_answer_nick.setText(list_mess.get(i).nickName);
-                        txt_answer_mes.setText(list_mess.get(i).message);
-                        txt_answer_time.setText(list_mess.get(i).time);
-
-
+                        txt_answer_mes.setText(list_mess.get(i).nickName + ": " + list_mess.get(i).message);
                         switch (list_mess.get(i).rang) {
                             case "user":
                                 break;
@@ -360,10 +363,7 @@
 
                 txt_mess.setTextColor(Color.parseColor(color));
                 txt_time.setTextColor(Color.parseColor(color));
-                txt_nick.setTextColor(Color.parseColor(color));;
-                txt_answer_nick.setTextColor(Color.parseColor(color));
                 txt_answer_mes.setTextColor(Color.parseColor(color));
-                txt_answer_time.setTextColor(Color.parseColor(color));
                 break;
             case "SystemMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);
@@ -371,7 +371,7 @@
                 TextView txt_system_mes = view.findViewById(R.id.mesConnect);
                 TextView txt_system_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_system_mes.setTextColor(Color.parseColor("#FF0000"));
+                txt_system_mes.setTextColor(Color.parseColor("#F05941"));
 
                 txt_system_mes.setText(list_mess.get(position).message);
                 txt_system_time.setText(list_mess.get(position).time);

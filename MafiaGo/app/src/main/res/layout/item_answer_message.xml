@@ -1,116 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/itemAnswerMessage_main_role"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/itemAnswerMessage_avatar"
         android:text="разработчик"
+        android:textColor="#FF0000"
         android:textSize="12sp"
         android:visibility="gone"
-        android:textColor="#FF0000"
-        android:layout_toRightOf="@id/item_answer_message_avatar"/>
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="74dp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/item_answer_message_avatar"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/itemAnswerMessage_avatar"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:layout_below="@id/itemAnswerMessage_main_role"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:src="@drawable/sheriff_alive"
-        android:layout_marginRight="5dp"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#08FF00"/>
-
-    <com.romainpiel.shimmer.ShimmerTextView
-        android:id="@+id/mesNick"
-        android:text="SilveGfor"
-        android:textSize="16dp"
-        android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/itemAnswerMessage_main_role"
-        android:layout_toRightOf="@+id/item_answer_message_avatar"
-        android:textStyle="bold"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/answerCard"
-        android:layout_below="@id/mesNick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/item_answer_message_avatar"
-        android:layout_marginLeft="5sp"
-        android:layout_marginTop="5sp"
-        android:layout_marginRight="5sp"
-        android:layout_marginBottom="5sp">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/itemAnswerMessage_answer_main_role"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="модератор"
-                android:visibility="gone"
-                android:textSize="12sp"
-                android:textColor="#9C27B0" />
-
-            <com.romainpiel.shimmer.ShimmerTextView
-                android:id="@+id/answerNick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/itemAnswerMessage_answer_main_role"
-                android:text="D A R 1 N A"
-                android:textStyle="italic"
-                android:textSize="16sp"
-                android:textColor="#FFFFFF" />
-
-            <TextView
-                android:id="@+id/answerText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/answerNick"
-                android:text="Кто ты?"
-                android:textStyle="italic"
-                android:textSize="14sp"
-                android:textColor="#FFFFFF" />
-
-            <TextView
-                android:id="@+id/answerTime"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:text="--:--"
-                android:textStyle="italic"
-                android:textColor="#FFFFFF" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
+        app:civ_border_color="#FF0000"
+        app:civ_border_width="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/itemAnswerMessage_time"
+        app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_time"
+        app:layout_constraintTop_toTopOf="@+id/itemAnswerMessage_time" />
 
     <TextView
-        android:id="@+id/mesTime"
-        android:textColor="@color/colorWhite"
+        android:id="@+id/itemAnswerMessage_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:text="21:00" />
-    <TextView
-        android:id="@+id/mesText"
-        android:text="Я Тима)"
+        android:layout_marginTop="8dp"
+        android:text="21:00"
         android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/item_answer_message_avatar"
-        android:layout_below="@+id/answerCard"
-        android:textSize="14sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_main_role" />
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/itemAnswerMessage_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:text="SilveGfor: Однако здравствуйте"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_avatar"
+        app:layout_constraintTop_toTopOf="@+id/itemAnswerMessage_time" />
+
+    <TextView
+        android:id="@+id/itemAnswerMessage_answerText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/shape_transparent_black"
+        android:padding="5dp"
+        android:text="SilveGfor: Что-то пошло не так  "
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="@+id/itemAnswerMessage_text"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/itemAnswerMessage_text"
+        app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_text" />
+</androidx.constraintlayout.widget.ConstraintLayout>
