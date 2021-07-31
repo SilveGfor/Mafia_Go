@@ -1,24 +1,27 @@
 package com.mafiago.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
-
 import com.example.mafiago.R;
-import com.mafiago.enums.Role;
+import com.mafiago.MainActivity;
 import com.mafiago.models.DailyTaskModel;
-import com.mafiago.models.UserModel;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import static com.mafiago.MainActivity.socket;
 
 public class DailyTasksAdapter extends BaseAdapter {
     public ArrayList<DailyTaskModel> list_tasks;
@@ -46,7 +49,30 @@ public class DailyTasksAdapter extends BaseAdapter {
         ImageView IV_prize = view.findViewById(R.id.itemDailyTask_IV_prize);
         TextView TV_prize = view.findViewById(R.id.itemDailyTask_TV_prize);
         ProgressBar PB = view.findViewById(R.id.itemDailyTask_PB_horizontal);
-        TextView TV_progress = view.findViewById(R.id.itemDailyTask_TV_progress);
+        TextView TV_progress = view.findViewById(R.id.dialogCompleteDailyTask_TV_progress);
+        Button btn_change = view.findViewById(R.id.itemDailyTask_btn_changeTask);
+
+        if (!list_tasks.get(position).completed)
+        {
+            btn_change.setOnClickListener(v -> {
+                final JSONObject json = new JSONObject();
+                try {
+                    json.put("nick", MainActivity.NickName);
+                    json.put("session_id", MainActivity.Session_id);
+                    json.put("change_task_num", list_tasks.get(position).num);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                list_tasks.get(position).changed = true;
+                socket.emit("change_daily_task", json);
+                Log.d("kkk", "Socket_отправка - change_daily_task - "+ json.toString());
+            });
+        }
+        else
+        {
+            btn_change.setTextColor(Color.parseColor("#848484"));
+        }
+
 
         TV_title.setText(list_tasks.get(position).title);
         TV_description.setText(list_tasks.get(position).description);

@@ -66,6 +66,7 @@ public class BackgroundTask extends Service {
         socket.on("friend_request", OnFriendRequest);
         socket.on("accept_friend_request", OnAcceptFriendRequest);
         socket.on("ping", onPing);
+        socket.on("new_fine", onNewFine);
 
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
@@ -176,6 +177,27 @@ public class BackgroundTask extends Service {
         }
     };
 
+    private Emitter.Listener onNewFine = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            JSONObject data = (JSONObject) args[0];
+            Log.d("kkk", "принял - new_fine в BackgroundTask - " + data);
+            String nick = "";
+            String admin_comment = "";
+            try {
+                admin_comment = data.getString("admin_comment");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            createNotificationChannel();
+            createNotification("Новый штраф!", "message");
+            builder.setStyle(new NotificationCompat.InboxStyle()
+                    .addLine(admin_comment));
+            showNotification(друг_айди);
+            друг_айди++;
+        }
+    };
+
     private Emitter.Listener OnAcceptFriendRequest = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
@@ -236,12 +258,12 @@ public class BackgroundTask extends Service {
 
     private void createNotification(String title, String message) {
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setSmallIcon(R.drawable.mafiago)
+                .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(),
-                        R.drawable.mafiago)) // большая картинка
+                        R.mipmap.ic_launcher_circle)) // большая картинка
                 .setAutoCancel(true); // автоматически закрыть уведомление после нажатия
     }
 

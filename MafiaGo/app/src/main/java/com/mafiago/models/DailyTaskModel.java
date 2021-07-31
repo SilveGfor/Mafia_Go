@@ -8,8 +8,10 @@ public class DailyTaskModel {
     public int progress;
     public int maxProgress;
     public int num;
+    public boolean completed;
+    public boolean changed;
 
-    public DailyTaskModel(String title, String description, String prizeType, int prize, int progress, int maxProgress, int num) {
+    public DailyTaskModel(String title, String description, String prizeType, int prize, int progress, int maxProgress, int num, boolean completed) {
         this.title = title;
         this.description = description;
         this.prizeType = prizeType;
@@ -17,5 +19,7 @@ public class DailyTaskModel {
         this.progress = progress;
         this.maxProgress = maxProgress;
         this.num = num;
+        this.completed = completed;
+        changed = false;
     }
 }

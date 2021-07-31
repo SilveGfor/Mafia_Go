@@ -8,7 +8,7 @@
 
     <ListView
         android:id="@+id/itemChat_LV_chat"
-        android:layout_width="379dp"
+        android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_alignParentStart="true"
 

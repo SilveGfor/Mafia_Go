@@ -4,67 +4,82 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/grey_card">
+    android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/dialogReportError_IV_screen"
-        android:layout_width="81dp"
-        android:layout_height="126dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/dialogReportError_btn_addScreen"
-        android:layout_width="wrap_content"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginLeft="32dp"
-        android:background="@drawable/grey_button"
-        android:padding="10dp"
-        android:text="Вставить скриншот"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="@+id/dialogReportError_IV_screen"
-        app:layout_constraintStart_toEndOf="@+id/dialogReportError_IV_screen"
-        app:layout_constraintTop_toTopOf="@+id/dialogReportError_IV_screen" />
-
-    <EditText
-        android:id="@+id/dialogChangePassword_ET_newPassword2"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:background="@drawable/shape_black"
-        android:ems="10"
-        android:hint="Подробно опишите ошибку"
-        android:padding="10dp"
-        android:textColorHint="@color/white"
-        android:inputType="textPersonName"
+        app:cardBackgroundColor="@color/cards"
+        app:cardCornerRadius="60dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dialogReportError_IV_screen" />
+        app:layout_constraintTop_toTopOf="parent">
 
-    <Button
-        android:id="@+id/dialogChangeNick_btn_changeNick"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="80dp"
-        android:layout_marginRight="80dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/orange_button"
-        android:text="Сообщить об ошибке"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/dialogChangePassword_ET_newPassword2"
-        app:layout_constraintStart_toStartOf="@+id/dialogChangePassword_ET_newPassword2"
-        app:layout_constraintTop_toBottomOf="@+id/dialogChangePassword_ET_newPassword2" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+
+            <ImageView
+                android:id="@+id/dialogReportError_IV_screen"
+                android:layout_width="81dp"
+                android:layout_height="126dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="24dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/dialogReportError_btn_addScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginLeft="32dp"
+                android:background="@drawable/grey_button"
+                android:padding="10dp"
+                android:text="Вставить скриншот"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toBottomOf="@+id/dialogReportError_IV_screen"
+                app:layout_constraintStart_toEndOf="@+id/dialogReportError_IV_screen"
+                app:layout_constraintTop_toTopOf="@+id/dialogReportError_IV_screen" />
+
+            <EditText
+                android:id="@+id/dialogChangePassword_ET_newPassword2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/shape_black"
+                android:ems="10"
+                android:hint="Подробно опишите ошибку"
+                android:inputType="textPersonName"
+                android:padding="10dp"
+                android:textColorHint="@color/white"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/dialogReportError_IV_screen" />
+
+            <Button
+                android:id="@+id/dialogChangeNick_btn_changeNick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="80dp"
+                android:layout_marginLeft="80dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="80dp"
+                android:layout_marginRight="80dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/orange_button"
+                android:text="Сообщить об ошибке"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/dialogChangePassword_ET_newPassword2"
+                app:layout_constraintStart_toStartOf="@+id/dialogChangePassword_ET_newPassword2"
+                app:layout_constraintTop_toBottomOf="@+id/dialogChangePassword_ET_newPassword2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+    </androidx.constraintlayout.widget.ConstraintLayout>

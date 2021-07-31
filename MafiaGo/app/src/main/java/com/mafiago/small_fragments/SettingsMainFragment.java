@@ -138,6 +138,7 @@ public class SettingsMainFragment extends Fragment {
 
             socket.on("send_problem", onSendProblem);
 
+            /*
             if (!MainActivity.Role.equals("user")) {
                 boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
                 btnShowRole.setVisibility(View.VISIBLE);
@@ -172,6 +173,7 @@ public class SettingsMainFragment extends Fragment {
                     }
                 }
             }
+             */
 
             btnReportError.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -187,7 +189,7 @@ public class SettingsMainFragment extends Fragment {
                     startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
                 });
                 btm_sendError.setOnClickListener(v12 -> {
-                    if (!base64_screenshot.equals("")) {
+                    if (!base64_screenshot.equals("") && ET_message.length() != 0) {
                         final JSONObject json = new JSONObject();
                         try {
                             json.put("nick", MainActivity.NickName);
@@ -204,7 +206,7 @@ public class SettingsMainFragment extends Fragment {
                     else
                     {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                        builder2.setTitle("Вставьте скриншот!")
+                        builder2.setTitle("Заполните все поля!")
                                 .setMessage("")
                                 .setIcon(R.drawable.ic_error)
                                 .setCancelable(false)
@@ -218,6 +220,7 @@ public class SettingsMainFragment extends Fragment {
                         alert2.show();
                     }
                 });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             });
 
@@ -231,6 +234,7 @@ public class SettingsMainFragment extends Fragment {
                 editor.apply();
             });
 
+            btnShowRole.setVisibility(View.GONE);
             btnShowRole.setOnClickListener(v -> {
                 boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
                 if (showRole)
@@ -356,6 +360,20 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
+
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                builder2.setTitle("В разработке...")
+                        .setMessage("")
+                        .setIcon(R.drawable.ic_razrabotka)
+                        .setCancelable(false)
+                        .setNegativeButton("Ок",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert2 = builder2.create();
+                alert2.show();
             });
 
             btnChangePassword.setOnClickListener(v -> {
@@ -365,6 +383,20 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
+
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                builder2.setTitle("В разработке...")
+                        .setMessage("")
+                        .setIcon(R.drawable.ic_razrabotka)
+                        .setCancelable(false)
+                        .setNegativeButton("Ок",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert2 = builder2.create();
+                alert2.show();
             });
         }
 

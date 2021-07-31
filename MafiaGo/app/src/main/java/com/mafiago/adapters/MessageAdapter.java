@@ -112,7 +112,7 @@
                         //color = "#999999";
                         //break;
                     case "last_message":
-                        color = "#008800";
+                        color = "#F05941";
                         break;
                 }
 
@@ -193,7 +193,7 @@
                 TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
                 TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_connect_mes.setTextColor(Color.parseColor("#4D8D58"));
+                txt_connect_mes.setTextColor(Color.parseColor("#BA2F6E28"));
 
                 txt_connect_mes.setText(list_mess.get(position).message);
                 txt_connect_time.setText(list_mess.get(position).time);
@@ -318,7 +318,7 @@
                         //color = "#999999";
                         //break;
                     case "last_message":
-                        color = "#008800";
+                        color = "#F05941";
                         break;
                 }
 
