@@ -138,6 +138,7 @@ public class SettingsMainFragment extends Fragment {
 
             socket.on("send_problem", onSendProblem);
 
+            /*
             if (!MainActivity.Role.equals("user")) {
                 boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
                 btnShowRole.setVisibility(View.VISIBLE);
@@ -172,6 +173,7 @@ public class SettingsMainFragment extends Fragment {
                     }
                 }
             }
+             */
 
             btnReportError.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -187,7 +189,7 @@ public class SettingsMainFragment extends Fragment {
                     startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
                 });
                 btm_sendError.setOnClickListener(v12 -> {
-                    if (!base64_screenshot.equals("")) {
+                    if (!base64_screenshot.equals("") && ET_message.length() != 0) {
                         final JSONObject json = new JSONObject();
                         try {
                             json.put("nick", MainActivity.NickName);
@@ -204,7 +206,7 @@ public class SettingsMainFragment extends Fragment {
                     else
                     {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                        builder2.setTitle("Вставьте скриншот!")
+                        builder2.setTitle("Заполните все поля!")
                                 .setMessage("")
                                 .setIcon(R.drawable.ic_error)
                                 .setCancelable(false)
@@ -218,8 +220,8 @@ public class SettingsMainFragment extends Fragment {
                         alert2.show();
                     }
                 });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
-
             });
 
             btnExitAccount.setOnClickListener(v -> {
@@ -232,6 +234,7 @@ public class SettingsMainFragment extends Fragment {
                 editor.apply();
             });
 
+            btnShowRole.setVisibility(View.GONE);
             btnShowRole.setOnClickListener(v -> {
                 boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
                 if (showRole)
@@ -294,14 +297,14 @@ public class SettingsMainFragment extends Fragment {
             TV_usersAgreement.setOnClickListener(v -> {
                 Intent mIntent = new Intent();
                 mIntent.setAction(Intent.ACTION_VIEW);
-                mIntent.setData(Uri.parse("https://telegra.ph/Polzovatelskoe-soglashenie-prilozheniya-Mafia-Go-07-14"));
+                mIntent.setData(Uri.parse("https://multi-games-dev.wixsite.com/mafia-go/%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B5-%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5"));
                 startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
             });
 
             TV_privacyPolicy.setOnClickListener(v -> {
                 Intent mIntent = new Intent();
                 mIntent.setAction(Intent.ACTION_VIEW);
-                mIntent.setData(Uri.parse("https://docs.google.com/document/d/1s7wDmirVRdSBXwuFyo5sjVi49qooOF9m0ZiE-9B499M/edit#heading=h.m6frwynu1mk5"));
+                mIntent.setData(Uri.parse("https://multi-games-dev.wixsite.com/mafia-go/%D0%BF%D0%BE%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B0-%D0%BA%D0%BE%D0%BD%D1%84%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8"));
                 startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
             });
         }
@@ -357,6 +360,20 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
+
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                builder2.setTitle("В разработке...")
+                        .setMessage("")
+                        .setIcon(R.drawable.ic_razrabotka)
+                        .setCancelable(false)
+                        .setNegativeButton("Ок",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert2 = builder2.create();
+                alert2.show();
             });
 
             btnChangePassword.setOnClickListener(v -> {
@@ -366,6 +383,20 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog alert = builder.create();
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
+
+                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                builder2.setTitle("В разработке...")
+                        .setMessage("")
+                        .setIcon(R.drawable.ic_razrabotka)
+                        .setCancelable(false)
+                        .setNegativeButton("Ок",
+                                new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int id) {
+                                        dialog.cancel();
+                                    }
+                                });
+                AlertDialog alert2 = builder2.create();
+                alert2.show();
             });
         }
 

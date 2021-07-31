@@ -3,17 +3,18 @@
     package="com.example.mafiago">
 
     <application
-        android:hardwareAccelerated="false"
         android:usesCleartextTraffic="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:screenOrientation="portrait"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_circle"
         android:supportsRtl="true"
         android:theme="@style/Theme.MafiaGo">
-        <activity android:name="com.mafiago.MainActivity">
+        <activity android:name="com.mafiago.MainActivity"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"
+            android:turnScreenOn="false">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

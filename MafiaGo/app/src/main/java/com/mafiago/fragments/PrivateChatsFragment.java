@@ -1,7 +1,10 @@
 package com.mafiago.fragments;
 
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -61,6 +64,18 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
         privateChatsAdapter = new PrivateChatsAdapter(list_friends, getContext());
         friendsView.setAdapter(privateChatsAdapter);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+        builder.setView(viewDang);
+        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+        TV_title.setText("Опасная зона!");
+        TV_error.setText("Личные сообщения все еще разрабатываются, ими можно пользоваться, но некоторые функции и внешний вид могут не соответствовать ожиданиям");
+
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
 
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_chats.setVisibility(View.GONE);

@@ -1,333 +1,266 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="match_parent"
+        android:id="@+id/fragmentSettingsProfile_CV"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorPrimaryDark">
-        <RelativeLayout
-            android:padding="15sp"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/cards"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/itemProfile_btn_sendMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/profile_button"
+                android:text="Написать"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemDailyTask_TV_prize" />
+
             <TextView
-                android:id="@+id/Item_profile_TV_profile"
+                android:id="@+id/itemProfile_TV_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:text="Профиль"
-                android:textSize="15sp"/>
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:text="Римский гусь"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/itemProfile_IV_avatar"
+                app:layout_constraintTop_toTopOf="@+id/itemProfile_IV_avatar" />
 
-            <ImageView
-                android:id="@+id/Item_profile_IV_avatar"
-                android:layout_width="70dp"
-                android:layout_height="100dp"
-                android:layout_below="@+id/Item_profile_TV_profile"/>
-
-            <TextView
-                android:id="@+id/Item_profile_TV_nick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="SilveGfor"
-                android:layout_toLeftOf="@id/Item_profile_send_message"
-                android:textSize="25dp"
-                android:layout_toRightOf="@id/Item_profile_IV_on_off"
-                android:layout_alignTop="@id/Item_profile_IV_avatar" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/Item_profile_send_message"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:src="@drawable/ic_message"
-                app:backgroundTint="#673AB7"
-                android:layout_alignTop="@id/Item_profile_IV_avatar"
-                android:layout_alignParentRight="true"
-                app:fabSize="mini" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/Item_profile_add_friend"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:src="@drawable/ic_add_friend"
-                app:backgroundTint="#673AB7"
-                android:layout_marginTop="15dp"
-                android:layout_alignParentRight="true"
-                android:layout_below="@id/Item_profile_send_message"
-                app:fabSize="mini" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/Item_profile_kick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_ban"
-                app:backgroundTint="#673AB7"
-                android:layout_below="@id/Item_profile_add_friend"
-                android:layout_alignParentRight="true"
-                app:fabSize="mini" />
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/Item_profile_complain"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:layout_marginTop="15dp"
-                android:src="@drawable/ic_complain"
-                app:backgroundTint="#673AB7"
-                android:layout_below="@id/Item_profile_kick"
-                android:layout_alignParentRight="true"
-                app:fabSize="mini" />
-
-            <ImageView
-                android:id="@+id/Item_profile_IV_rang"
-                android:layout_width="35dp"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemProfile_IV_avatar"
+                android:layout_width="50dp"
                 android:layout_height="50dp"
-                android:background="@drawable/rang3"
-                android:layout_below="@id/Item_profile_TV_nick"
-                android:layout_alignLeft="@id/Item_profile_TV_nick"/>
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/lover_alive"
+                app:civ_border_color="#FF0000"
+                app:civ_border_width="1dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/itemDailyTask_TV_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="в сети"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_nick"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_nick" />
 
             <ImageView
-                android:id="@+id/Item_profile_IV_on_off"
-                android:layout_width="28dp"
-                android:layout_height="28dp"
-                android:layout_margin="5dp"
-                android:background="@drawable/ic_online"
-                android:layout_alignTop="@id/Item_profile_IV_avatar"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar" />
+                android:id="@+id/imageView8"
+                android:layout_width="21dp"
+                android:layout_height="14dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:background="@drawable/rang"
+                app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_nick" />
 
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_gold"
+            <TextView
+                android:id="@+id/itemDailyTask_TV_prize"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_toRightOf="@id/Item_profile_IV_rang"
-                android:layout_alignTop="@id/Item_profile_IV_rang"
-                android:layout_margin="10dp">
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
+                app:layout_constraintStart_toEndOf="@+id/itemDailyTask_IV_prize"
+                tools:text="1000XP" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_cake" />
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_gold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="5"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_money"
-                android:layout_toRightOf="@id/Item_profile_IV_rang"
-                android:layout_below="@id/ItemProfile_LL_gold"
+            <TextView
+                android:id="@+id/itemProfile_TV_rang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
+                android:layout_marginStart="4dp"
+                android:layout_marginLeft="4dp"
+                android:text="TextView"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView8"
+                app:layout_constraintStart_toEndOf="@+id/imageView8"
+                tools:text="10 ранг" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_money" />
+            <ImageView
+                android:id="@+id/itemDailyTask_IV_prize"
+                android:layout_width="15dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/experience"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_IV_avatar"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_IV_avatar" />
 
-                <TextView
-                    android:id="@+id/ItemProfile_TV_money"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="150"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_exp"
-                android:layout_toRightOf="@id/Item_profile_IV_rang"
-                android:layout_below="@id/ItemProfile_LL_money"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/ic_exp" />
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_exp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="75"
-                    android:textStyle="bold"
-                    android:textSize="20dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_games_сounter"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="200dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Сыграно игр:"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_game_counter"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="75"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_max_money_score"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_below="@id/ItemProfile_LL_games_сounter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Максимальное число монет:"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_max_money_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="75"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_max_exp_score"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_below="@id/ItemProfile_LL_max_money_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Максимальное число опыта:"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_max_exp_score"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="75"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_general_pers_of_wins"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_below="@id/ItemProfile_LL_max_exp_score"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Процент побед"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_general_pers_of_wins"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="55.00%"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_mafia_pers_of_wins"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_below="@id/ItemProfile_LL_general_pers_of_wins"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Процент побед мафии"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_mafia_pers_of_wins"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="55.00%"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ItemProfile_LL_peaceful_pers_of_wins"
-                android:layout_toRightOf="@id/Item_profile_IV_avatar"
-                android:layout_below="@id/ItemProfile_LL_mafia_pers_of_wins"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_margin="10dp">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Процент побед мирных"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-
-                <TextView
-                    android:id="@+id/ItemProfile_TV_peaceful_pers_of_wins"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="55.00%"
-                    android:textStyle="bold"
-                    android:textSize="14dp"
-                    android:layout_marginLeft="5dp"/>
-            </LinearLayout>
-        </RelativeLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-</LinearLayout>
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragmentSettingsProfile_CV2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardBackgroundColor="@color/cards"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_CV"
+        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_CV"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_CV">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Статистика"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/itemProfile_TV_gamesCouner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Сыграно игр 5"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@+id/textView10"
+                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+            <TextView
+                android:id="@+id/itemProfile_TV_maxMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Макс. монет за игру 78"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCouner"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesCouner" />
+
+            <TextView
+                android:id="@+id/itemProfile_TV_maxExp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Макс. опыта за игру 90"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCouner"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_maxMoney" />
+
+            <TextView
+                android:id="@+id/itemProfile_TV_percentWins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginLeft="24dp"
+                android:text="Процент побед 45%"
+                android:textColor="@color/white"
+                android:textSize="10sp"
+                app:layout_constraintStart_toEndOf="@+id/itemProfile_TV_maxExp"
+                app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesCouner" />
+
+            <TextView
+                android:id="@+id/itemProfile_TV_percentMafiaWins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Побед мафии 67%"
+                android:textSize="10sp"
+                android:textColor="@color/white"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_percentWins"
+                app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_maxMoney" />
+
+            <TextView
+                android:id="@+id/itemProfile_TV_percentPeacefulWins"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:text="Побед мирных 45%"
+                android:textSize="10sp"
+                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_percentMafiaWins"
+                app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_maxExp" />
+
+            <Button
+                android:id="@+id/itemProfile_btn_addFriend"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/profile_button"
+                android:drawableLeft="@drawable/ic_add_friend"
+                android:gravity="fill"
+                android:padding="5dp"
+                android:text="  Добавить в друзья"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_maxExp" />
+
+            <Button
+                android:id="@+id/itemProfile_btn_report"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/profile_button"
+                android:drawableLeft="@drawable/ic_ban"
+                android:gravity="fill"
+                android:padding="5dp"
+                android:text="  Пожаловаться"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_btn_addFriend" />
+
+            <Button
+                android:id="@+id/itemProfile_btn_kickFromRoom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/profile_button"
+                android:drawableLeft="@drawable/ic_delete_user"
+                android:gravity="fill"
+                android:padding="5dp"
+                android:text="  Удалить из комнаты"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemProfile_btn_report" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

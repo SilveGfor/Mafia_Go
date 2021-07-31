@@ -27,6 +27,10 @@ public class Player {
         can_write = true;
     }
 
+    public Boolean isHost()
+    {
+        return nick.equals(host_nick);
+    }
 
     public void setBan_limit(int ban_limit) {
         this.ban_limit = ban_limit;

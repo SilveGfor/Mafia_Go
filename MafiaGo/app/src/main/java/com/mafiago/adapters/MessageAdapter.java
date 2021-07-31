@@ -71,9 +71,6 @@
     {
         View view = convertView;
         boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
-        Log.d("kkk", String.valueOf(showRole));
-        //проверяем шаблон
-        //if(convertView==null) {}
         switch (list_mess.get(position).mesType) {
             case "UsersMes":
                 view = layout.inflate(R.layout.item_message, null);
@@ -108,13 +105,14 @@
                 switch (list_mess.get(position).textType)
                 {
                     case "alive":
+                    case "dead":
                         color = "#FFFFFF";
                         break;
-                    case "dead":
-                        color = "#999999";
-                        break;
+                    //case "dead":
+                        //color = "#999999";
+                        //break;
                     case "last_message":
-                        color = "#008800";
+                        color = "#F05941";
                         break;
                 }
 
@@ -195,7 +193,7 @@
                 TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
                 TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_connect_mes.setTextColor(Color.parseColor("#4D8D58"));
+                txt_connect_mes.setTextColor(Color.parseColor("#BA2F6E28"));
 
                 txt_connect_mes.setText(list_mess.get(position).message);
                 txt_connect_time.setText(list_mess.get(position).time);
@@ -313,13 +311,14 @@
                 switch (list_mess.get(position).textType)
                 {
                     case "alive":
+                    case "dead":
                         color = "#FFFFFF";
                         break;
-                    case "dead":
-                        color = "#999999";
-                        break;
+                    //case "dead":
+                        //color = "#999999";
+                        //break;
                     case "last_message":
-                        color = "#008800";
+                        color = "#F05941";
                         break;
                 }
 
@@ -375,6 +374,28 @@
 
                 txt_system_mes.setText(list_mess.get(position).message);
                 txt_system_time.setText(list_mess.get(position).time);
+                break;
+            case "JournalistMes":
+                view = layout.inflate(R.layout.item_connect_disconnect, null);
+
+                TextView txt_jour_mes = view.findViewById(R.id.mesConnect);
+                TextView txt_jour_time = view.findViewById(R.id.mesTimeConnect);
+
+                txt_jour_mes.setTextColor(Color.parseColor("#F0BF41"));
+
+                txt_jour_mes.setText(list_mess.get(position).message);
+                txt_jour_time.setText(list_mess.get(position).time);
+                break;
+            case "KillMes":
+                view = layout.inflate(R.layout.item_connect_disconnect, null);
+
+                TextView txt_kill_mes = view.findViewById(R.id.mesConnect);
+                TextView txt_kill_time = view.findViewById(R.id.mesTimeConnect);
+
+                txt_kill_mes.setTextColor(Color.parseColor("#BE3144"));
+
+                txt_kill_mes.setText(list_mess.get(position).message);
+                txt_kill_time.setText(list_mess.get(position).time);
                 break;
             case "KickMes":
                 view = layout.inflate(R.layout.item_connect_disconnect, null);

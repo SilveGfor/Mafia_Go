@@ -25,8 +25,8 @@
         android:layout_marginTop="32dp"
         android:background="@drawable/orange_button"
         android:text="Играть"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsMain_btn_showRole"
-        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsMain_btn_showRole"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentMenu_btn_dailyTasks"
+        app:layout_constraintStart_toStartOf="@+id/fragmentMenu_btn_dailyTasks"
         app:layout_constraintTop_toBottomOf="@+id/fragmentMenu_CV" />
 
     <Button
@@ -36,10 +36,10 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/grey_button"
         android:text="НАСТРОЙКИ"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsMain_btn_showRole"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentMenu_btn_dailyTasks"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsMain_btn_showRole"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsMain_btn_showRole" />
+        app:layout_constraintStart_toStartOf="@+id/fragmentMenu_btn_dailyTasks"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentMenu_btn_dailyTasks" />
 
     <Button
         android:id="@+id/fragmentSettingsProfile_btn_changeNick"
@@ -48,13 +48,13 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/grey_button"
         android:text="ПРАВИЛА ИГРЫ"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsMain_btn_showRole"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentMenu_btn_dailyTasks"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsMain_btn_showRole"
+        app:layout_constraintStart_toStartOf="@+id/fragmentMenu_btn_dailyTasks"
         app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_btn_changePassword" />
 
     <Button
-        android:id="@+id/fragmentSettingsMain_btn_showRole"
+        android:id="@+id/fragmentMenu_btn_dailyTasks"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
@@ -92,6 +92,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ProgressBar
+                android:id="@+id/fragmentMenu_PB"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/fragmentSettingsProfile_TV_nick"
                 android:layout_width="wrap_content"
@@ -100,6 +109,7 @@
                 android:layout_marginLeft="24dp"
                 android:text="Римский гусь"
                 android:textSize="18sp"
+                android:visibility="invisible"
                 app:layout_constraintStart_toEndOf="@+id/fragmentSettingsProfile_IV_avatar"
                 app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_IV_avatar" />
 
@@ -111,6 +121,7 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/lover_alive"
+                android:visibility="invisible"
                 app:civ_border_color="#FF0000"
                 app:civ_border_width="1dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -123,6 +134,7 @@
                 android:layout_marginTop="8dp"
                 android:text="В сети"
                 android:textSize="14sp"
+                android:visibility="invisible"
                 app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_nick"
                 app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_TV_nick" />
 
@@ -133,7 +145,7 @@
                 android:layout_marginTop="16dp"
                 android:background="@drawable/experience"
                 app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_IV_avatar"
-                app:layout_constraintTop_toBottomOf="@+id/imageView6" />
+                app:layout_constraintTop_toBottomOf="@+id/itemDailyTask_IV_prize" />
 
             <ImageView
                 android:id="@+id/imageView8"
@@ -142,7 +154,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginLeft="24dp"
                 android:background="@drawable/rang"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
+                app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
                 app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_nick" />
 
             <ImageView
@@ -161,8 +173,9 @@
                 android:layout_marginLeft="4dp"
                 android:text="TextView"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="@+id/imageView6"
-                app:layout_constraintStart_toEndOf="@+id/imageView6"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
+                app:layout_constraintStart_toEndOf="@+id/itemDailyTask_IV_prize"
                 tools:text="100$" />
 
             <TextView
@@ -173,6 +186,7 @@
                 android:layout_marginLeft="4dp"
                 android:text="TextView"
                 android:textSize="14sp"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView8"
                 app:layout_constraintStart_toEndOf="@+id/imageView8"
                 tools:text="10 ранг" />
@@ -185,12 +199,13 @@
                 android:layout_marginLeft="4dp"
                 android:text="TextView"
                 android:textSize="14sp"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView9"
                 app:layout_constraintStart_toEndOf="@+id/imageView9"
                 tools:text="100 золота" />
 
             <ImageView
-                android:id="@+id/imageView6"
+                android:id="@+id/itemDailyTask_IV_prize"
                 android:layout_width="15dp"
                 android:layout_height="18dp"
                 android:layout_marginTop="16dp"
@@ -206,6 +221,7 @@
                 android:layout_marginLeft="4dp"
                 android:text="TextView"
                 android:textSize="14sp"
+                android:visibility="invisible"
                 app:layout_constraintBottom_toBottomOf="@+id/imageView7"
                 app:layout_constraintStart_toEndOf="@+id/imageView7"
                 tools:text="1000XP" />
@@ -276,15 +292,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_competitions"
         app:srcCompat="@drawable/chats" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:orientation="horizontal"
-        tools:layout_editor_absoluteX="39dp"
-        tools:layout_editor_absoluteY="594dp">
-
-    </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
 

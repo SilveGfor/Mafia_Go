@@ -14,12 +14,14 @@
         android:layout_marginStart="24dp"
         android:layout_marginLeft="24dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:text="Комната 1"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="Комната 1 "
         android:textSize="24sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_peacefulCount"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_timer"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -29,7 +31,7 @@
         android:layout_height="23dp"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/three_lines" />
@@ -41,7 +43,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="Мирных: 5"
-        android:textColor="@color/green"
+        android:textColor="@color/red"
         android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
@@ -54,24 +56,11 @@
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:text="Мафий: 3"
-        android:textColor="@color/red"
+        android:textColor="@color/green"
         android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_mafiaCount"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_mafiaCount" />
-
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:text="Осталось:"
-        android:textColor="@color/notActiveText"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_timer"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_timer"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_timer" />
 
     <TextView
         android:id="@+id/fragmentGame_TV_timer"
@@ -116,7 +105,11 @@
         android:id="@+id/fragmentGame_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="5dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tabIndicatorColor="@color/white">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -144,8 +137,8 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_doctor"
-        android:layout_width="36dp"
-        android:layout_height="34dp"
+        android:layout_width="30dp"
+        android:layout_height="26dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:visibility="gone"
@@ -156,8 +149,8 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_sheriff"
-        android:layout_width="32dp"
-        android:layout_height="37dp"
+        android:layout_width="25dp"
+        android:layout_height="28dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:visibility="gone"
@@ -168,8 +161,8 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_lover"
-        android:layout_width="34dp"
-        android:layout_height="33dp"
+        android:layout_width="25dp"
+        android:layout_height="26dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:visibility="gone"
@@ -180,8 +173,8 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_bodyguard"
-        android:layout_width="23dp"
-        android:layout_height="38dp"
+        android:layout_width="19dp"
+        android:layout_height="32dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:visibility="gone"
@@ -192,8 +185,8 @@
 
     <ImageView
         android:id="@+id/fragmentGame_ic_poisoner"
-        android:layout_width="20dp"
-        android:layout_height="37dp"
+        android:layout_width="13dp"
+        android:layout_height="26dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:visibility="gone"

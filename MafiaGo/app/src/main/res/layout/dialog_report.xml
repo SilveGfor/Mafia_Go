@@ -2,127 +2,142 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ImageView
-        android:id="@+id/dialogReport_IV_screenshot"
-        android:layout_width="70dp"
-        android:layout_margin="30dp"
-        android:layout_height="100dp"
-        android:scaleType="centerCrop" />
-
-    <Button
-        android:id="@+id/dialogReport_btn_add_screenshot"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Вставить скриншот"
-        android:layout_marginTop="60dp"
-        android:layout_marginLeft="30dp"
-        android:textSize="16sp"
-        android:padding="10dp"
-        android:layout_toRightOf="@id/dialogReport_IV_screenshot"
-        android:background="@drawable/round_button"/>
-
-    <ScrollView
-        android:id="@+id/dialogReport_SV"
-        android:layout_width="wrap_content"
-        android:layout_height="300dp"
-        android:layout_below="@id/dialogReport_IV_screenshot">
-        <RadioGroup
-            android:id="@+id/dialogReport_RG"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <RadioButton
-                android:id="@+id/dialogReport_RB_1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="спам или флуд"
-                android:layout_weight="1" />
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="размещение материалов рекламного, эротического, порнографического или оскорбительного характера или иной информации, размещение которой запрещено или противоречит нормам действующего законодательства РФ"
-                android:layout_weight="1" />
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="распространение информации, которая направлена на пропаганду войны, разжигание национальной, расовой или религиозной ненависти и вражды или иной информации, за распространение которой предусмотрена уголовная или административная ответственность"
-                android:layout_weight="1" />
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="игра против/не в интересах своей команды"
-                android:layout_weight="1"/>
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="фарм (т.е. ведение игры организованной группой лиц, цель которой направлена на быстрое извлечение прибыли вне зависимости от того, кто из участников группы победит)"
-                android:layout_weight="1"/>
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="создание нескольких учётных записей в Приложении, фактически принадлежащих одному и тому же лицу"
-                android:layout_weight="1"/>
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="совершение действий, направленный на введение других Пользователей в заблуждение (не касается игрового процесса)"
-                android:layout_weight="1"/>
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_8"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="модератор/администратор злоупотребляет своими полномочиями или положением"
-                android:layout_weight="1"/>
-
-            <RadioButton
-                android:id="@+id/dialogReport_RB_9"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="24dp"
-                android:text="другое"
-                android:layout_weight="1"/>
-        </RadioGroup>
-    </ScrollView>
-
-    <EditText
-        android:id="@+id/dialogReport_ET_report"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Опишите вашу жалобу"
-        android:layout_marginTop="30dp"
-        android:layout_below="@id/dialogReport_SV"
-        android:layout_centerHorizontal="true" />
+        app:cardBackgroundColor="@color/cards"
+        app:cardCornerRadius="60dp">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+            <ImageView
+                android:id="@+id/dialogReport_IV_screenshot"
+                android:layout_width="70dp"
+                android:layout_margin="30dp"
+                android:layout_height="100dp"
+                android:scaleType="centerCrop" />
 
-    <Button
-        android:id="@+id/dialogReport_btn_report"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Отправить жалобу"
-        android:padding="10dp"
-        android:layout_marginTop="30dp"
-        android:layout_below="@id/dialogReport_ET_report"
-        android:layout_centerHorizontal="true"
-        android:background="@drawable/round_button"/>
+            <Button
+                android:id="@+id/dialogReport_btn_add_screenshot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Вставить скриншот"
+                android:layout_marginTop="60dp"
+                android:layout_marginLeft="30dp"
+                android:textSize="16sp"
+                android:padding="10dp"
+                android:layout_toRightOf="@id/dialogReport_IV_screenshot"
+                android:background="@drawable/round_button"/>
+
+            <ScrollView
+                android:id="@+id/dialogReport_SV"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_below="@id/dialogReport_IV_screenshot">
+                <RadioGroup
+                    android:id="@+id/dialogReport_RG"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="спам или флуд"
+                        android:layout_weight="1" />
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="размещение материалов рекламного, эротического, порнографического или оскорбительного характера или иной информации, размещение которой запрещено или противоречит нормам действующего законодательства РФ"
+                        android:layout_weight="1" />
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="распространение информации, которая направлена на пропаганду войны, разжигание национальной, расовой или религиозной ненависти и вражды или иной информации, за распространение которой предусмотрена уголовная или административная ответственность"
+                        android:layout_weight="1" />
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="игра против/не в интересах своей команды"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_5"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="фарм (т.е. ведение игры организованной группой лиц, цель которой направлена на быстрое извлечение прибыли вне зависимости от того, кто из участников группы победит)"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="создание нескольких учётных записей в Приложении, фактически принадлежащих одному и тому же лицу"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_7"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="совершение действий, направленный на введение других Пользователей в заблуждение (не касается игрового процесса)"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_8"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="модератор/администратор злоупотребляет своими полномочиями или положением"
+                        android:layout_weight="1"/>
+
+                    <RadioButton
+                        android:id="@+id/dialogReport_RB_9"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="24dp"
+                        android:text="другое"
+                        android:layout_weight="1"/>
+                </RadioGroup>
+            </ScrollView>
+
+            <EditText
+                android:id="@+id/dialogReport_ET_report"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Опишите вашу жалобу"
+                android:layout_margin="10dp"
+                android:background="@drawable/shape_black"
+                android:padding="10dp"
+                android:layout_marginTop="30dp"
+                android:layout_below="@id/dialogReport_SV"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:id="@+id/dialogReport_btn_report"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Отправить жалобу"
+                android:padding="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="15dp"
+                android:layout_below="@id/dialogReport_ET_report"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/orange_button"/>
+        </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 </RelativeLayout>

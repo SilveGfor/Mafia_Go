@@ -48,7 +48,6 @@
         android:background="@drawable/grey_button"
         android:padding="15dp"
         android:text="показывать роль"
-        android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_changePassword"
         app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
         app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />

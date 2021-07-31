@@ -15,8 +15,8 @@
         android:textColor="#FF0000"
         android:textSize="12sp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="74dp" />
+        app:layout_constraintStart_toStartOf="@+id/itemMessage_text"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/itemMessage_avatar"
@@ -41,6 +41,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginTop="8dp"
         android:text="21:00"
+        android:textStyle="italic"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemMessage_main_role" />
@@ -49,7 +50,6 @@
         android:id="@+id/itemMessage_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mesNick"
         android:layout_marginStart="4dp"
         android:layout_marginLeft="4dp"
         android:layout_toRightOf="@id/itemMessage_avatar"

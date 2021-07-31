@@ -81,6 +81,7 @@ public class PrivateChatsAdapter extends BaseAdapter {
                             socket.emit("unlock_chat", json);
                             Log.d("kkk", "Socket_отправка - unlock_chat - " + json.toString());
                             list_friends.remove(position);
+                            this.notifyDataSetChanged();
                         })
                         .setPositiveButton(" Нет", (dialog, id) -> {
                             dialog.cancel();
