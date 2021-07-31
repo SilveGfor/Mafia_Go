@@ -40,6 +40,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="8dp"
+        android:textStyle="italic"
         android:text="21:00"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -97,6 +98,7 @@ public class GamesAdapter extends BaseAdapter {
 
 
             AlertDialog alert = builder.create();
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
         });
 

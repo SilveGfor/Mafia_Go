@@ -451,39 +451,44 @@ public class StartFragment extends Fragment {
                                 break;
                         }
                     } catch (Exception e) {
+                        /*
                         createNotificationChannel();
                         createNotification(String.valueOf(e.getStackTrace()[0]).substring(20), "message");
                         builder.setStyle(new NotificationCompat.InboxStyle()
                                 .addLine(String.valueOf(e)));
                         showNotification(друг_айди);
                         друг_айди++;
-
+                         */
                         Log.d("kkk", String.valueOf(e.getMessage()));
-
+                        /*
                         createNotificationChannel();
                         createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");
                         builder.setStyle(new NotificationCompat.InboxStyle()
                                 .addLine(String.valueOf(e.getMessage())));
                         showNotification(друг_айди);
                         друг_айди++;
+                         */
                     }
                 }
             });
         } catch (Exception e) {
+            /*
             createNotificationChannel();
             createNotification(String.valueOf(e.getStackTrace()[0]).substring(20), "message");
             builder.setStyle(new NotificationCompat.InboxStyle()
                     .addLine(String.valueOf(e)));
             showNotification(друг_айди);
             друг_айди++;
+             */
 
+            /*
             createNotificationChannel();
             createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");
             builder.setStyle(new NotificationCompat.InboxStyle()
                     .addLine(String.valueOf(e.getMessage())));
             showNotification(друг_айди);
             друг_айди++;
-
+             */
         }
     }
 

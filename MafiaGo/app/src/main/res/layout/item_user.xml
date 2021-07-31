@@ -13,17 +13,7 @@
                 android:layout_centerHorizontal="true"
 
                 android:scaleType="centerCrop"
-                android:src="@drawable/grey_card" />
-
-    <TextView
-        android:id="@+id/ItemUser_voting_number"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:text="3"
-        android:textColor="@color/colorWhite"
-        android:textSize="18sp"
-        android:visibility="invisible"/>
+                android:src="@drawable/sheriff_alive" />
 
     <ImageView
         android:id="@+id/Item_user_IV_Animation"
@@ -34,7 +24,18 @@
         android:scaleType="centerCrop"
         android:visibility="invisible" />
 
-            <TextView
+    <TextView
+        android:id="@+id/ItemUser_voting_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="3"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="invisible"/>
+
+    <TextView
                 android:id="@+id/Item_user_TV_nick"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

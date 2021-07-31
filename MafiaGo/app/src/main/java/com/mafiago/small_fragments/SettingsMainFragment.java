@@ -219,7 +219,6 @@ public class SettingsMainFragment extends Fragment {
                     }
                 });
                 alert.show();
-
             });
 
             btnExitAccount.setOnClickListener(v -> {
@@ -294,14 +293,14 @@ public class SettingsMainFragment extends Fragment {
             TV_usersAgreement.setOnClickListener(v -> {
                 Intent mIntent = new Intent();
                 mIntent.setAction(Intent.ACTION_VIEW);
-                mIntent.setData(Uri.parse("https://telegra.ph/Polzovatelskoe-soglashenie-prilozheniya-Mafia-Go-07-14"));
+                mIntent.setData(Uri.parse("https://multi-games-dev.wixsite.com/mafia-go/%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8C%D1%81%D0%BA%D0%BE%D0%B5-%D1%81%D0%BE%D0%B3%D0%BB%D0%B0%D1%88%D0%B5%D0%BD%D0%B8%D0%B5"));
                 startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
             });
 
             TV_privacyPolicy.setOnClickListener(v -> {
                 Intent mIntent = new Intent();
                 mIntent.setAction(Intent.ACTION_VIEW);
-                mIntent.setData(Uri.parse("https://docs.google.com/document/d/1s7wDmirVRdSBXwuFyo5sjVi49qooOF9m0ZiE-9B499M/edit#heading=h.m6frwynu1mk5"));
+                mIntent.setData(Uri.parse("https://multi-games-dev.wixsite.com/mafia-go/%D0%BF%D0%BE%D0%BB%D0%B8%D1%82%D0%B8%D0%BA%D0%B0-%D0%BA%D0%BE%D0%BD%D1%84%D0%B8%D0%B4%D0%B5%D0%BD%D1%86%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%D1%81%D1%82%D0%B8"));
                 startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
             });
         }

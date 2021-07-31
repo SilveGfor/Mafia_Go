@@ -34,11 +34,13 @@ public class PlayersAdapter extends BaseAdapter
         }
     }
 
+    /*
     public void refresh(ArrayList<UserModel> list_users)
     {
         this.list_users = list_users;
         notifyDataSetChanged();
     }
+     */
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -53,11 +55,8 @@ public class PlayersAdapter extends BaseAdapter
 
         if (list_users.get(position).getVoting_number() != 0)
         {
+            TV_voting_number.setVisibility(View.VISIBLE);
             TV_voting_number.setText(String.valueOf(list_users.get(position).getVoting_number()));
-        }
-        else
-        {
-            TV_voting_number.setVisibility(View.GONE);
         }
 
         switch (list_users.get(position).getRole()) {
@@ -156,7 +155,7 @@ public class PlayersAdapter extends BaseAdapter
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case BODYGUARD:
-                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_shield));
+                    IV_action.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_bodyguard));
                     animation = AnimationUtils.loadAnimation(context, R.anim.voting);
                     break;
                 case POISONER:

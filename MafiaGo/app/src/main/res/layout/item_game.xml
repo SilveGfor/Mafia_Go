@@ -9,13 +9,10 @@
         android:id="@+id/itemGame_TV_roomName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:text="Комната 1"
         android:textColor="@color/white"
         android:textSize="24sp"
-        app:layout_constraintEnd_toStartOf="@+id/itemGame_TV_playersInRoom"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="в комнате:"
+        android:ellipsize="end"
+        android:singleLine="true"
         android:textColor="@color/colorWhite"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_roomState" />
@@ -57,13 +56,12 @@
         android:id="@+id/itemGame_TV_playersInRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:text="сейчас: 1"
         android:textColor="@color/notActiveText"
-        app:layout_constraintBottom_toTopOf="@+id/itemGame_TV_minMaxPlayers"
-        app:layout_constraintEnd_toStartOf="@+id/itemGame_btn_players" />
+        app:layout_constraintEnd_toStartOf="@+id/itemGame_btn_players"
+        app:layout_constraintTop_toTopOf="@+id/textView5" />
 
     <Button
         android:id="@+id/itemGame_btn_players"

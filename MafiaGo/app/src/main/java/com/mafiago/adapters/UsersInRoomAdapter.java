@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -63,6 +64,7 @@ public class UsersInRoomAdapter extends BaseAdapter {
 
         TextView TV_nick = view.findViewById(R.id.itemUserInRoom_TV_nick);
         TextView TV_alive = view.findViewById(R.id.itemUserInRoom_TV_alive);
+        Button btn_profile = view.findViewById(R.id.itemUserInRoom_btn_profile);
 
         TV_nick.setText(list_users.get(position).getNick());
         if (list_users.get(position).getAlive())
@@ -74,7 +76,7 @@ public class UsersInRoomAdapter extends BaseAdapter {
             TV_alive.setText("Мёртв");
         }
 
-        TV_nick.setOnClickListener(new View.OnClickListener() {
+        btn_profile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final JSONObject json = new JSONObject();

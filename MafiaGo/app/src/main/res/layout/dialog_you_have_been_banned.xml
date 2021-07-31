@@ -111,7 +111,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dialogYouHaveBeenBanned_TV_timeYouMustWait" />
 
     <ImageView
-        android:id="@+id/imageView6"
+        android:id="@+id/itemDailyTask_IV_prize"
         android:layout_width="15dp"
         android:layout_height="18dp"
         android:layout_marginStart="32dp"
@@ -128,8 +128,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@+id/imageView6"
-        app:layout_constraintTop_toTopOf="@+id/imageView6"
+        app:layout_constraintStart_toEndOf="@+id/itemDailyTask_IV_prize"
+        app:layout_constraintTop_toTopOf="@+id/itemDailyTask_IV_prize"
         tools:text="0" />
 
     <ImageView
@@ -139,7 +139,7 @@
         android:background="@drawable/experience"
         app:layout_constraintEnd_toEndOf="@+id/textView14"
         app:layout_constraintStart_toStartOf="@+id/textView14"
-        app:layout_constraintTop_toTopOf="@+id/imageView6" />
+        app:layout_constraintTop_toTopOf="@+id/itemDailyTask_IV_prize" />
 
     <TextView
         android:id="@+id/dialogYouHaveBeenBanned_TV_exp"
