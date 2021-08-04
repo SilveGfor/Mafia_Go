@@ -9,22 +9,11 @@
         android:id="@+id/mesConnect"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:text="Пользователь SilveGfor вошёл(-а) в чат"
         android:textColor="#BA2F6E28"
+        android:gravity="center"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/mesTimeConnect"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/mesTimeConnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="21:00"
-        android:textColor="@color/colorWhite"
-        android:textStyle="italic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

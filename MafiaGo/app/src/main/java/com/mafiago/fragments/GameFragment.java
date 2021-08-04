@@ -1343,7 +1343,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     data2 = data.getJSONObject("message");
                                     mafia_nick = data2.getString("mafia_nick");
                                     user_nick = data2.getString("user_nick");
-                                    boolean is_don = data2.getBoolean("is_don");
+                                    boolean is_don = data.getBoolean("is_don");
                                     for (int i = 0; i < list_users.size(); i++) {
                                         if (list_users.get(i).getNick().equals(user_nick)) {
                                             if (!is_don) {
@@ -1900,6 +1900,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             alert2.cancel();
                         });
 
+                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert2.show();
                     });
 
@@ -1989,13 +1990,25 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                radioGroup.clearCheck();
+                                IV_screen.setImageDrawable(null);
+                                ET_reportMessage.setText("");
+                                base64_screenshot = "";
                                 socket.emit("send_complaint", json2);
                                 Log.d("kkk", "Socket_отправка - send_complaint" + json2);
                                 alert2.cancel();
                             }
                             else
                             {
-
+                                AlertDialog.Builder builder3 = new AlertDialog.Builder(getActivity());
+                                View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                builder3.setView(viewError);
+                                TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                                AlertDialog alert3;
+                                TV_error.setText("Заполните все поля!");
+                                alert3 = builder3.create();
+                                alert3.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert3.show();
                             }
                         });
 
