@@ -747,24 +747,33 @@ public class GameChatFragment extends Fragment {
                                     data2 = data.getJSONObject("message");
                                     mafia_nick = data2.getString("mafia_nick");
                                     user_nick = data2.getString("user_nick");
-                                    messageModel = new MessageModel(test_num, mafia_nick + " голосует за " + user_nick, time, mafia_nick, "VotingMes");
+                                    String avatar = "";
+                                    String nick_from_iterator = "";
+                                    for (Iterator iterator = USERS.keys(); iterator.hasNext(); ) {
+                                        nick_from_iterator = (String) iterator.next();
+                                        if (mafia_nick.equals(nick_from_iterator)) {
+                                            avatar = USERS.getString(mafia_nick);
+                                            break;
+                                        }
+                                    }
+                                    messageModel = new MessageModel(test_num, mafia_nick + " голосует за " + user_nick, time, mafia_nick, "VotingMes", avatar);
                                     break;
                                 case "voting":
                                     data2 = data.getJSONObject("message");
                                     voter = data2.getString("voter");
                                     user_nick = data2.getString("user_nick");
-                                    String nick_from_iterator;
-                                    String avatar = "";
+                                    String nick_from_iterator2;
+                                    String avatar2 = "";
                                     for (Iterator iterator = USERS.keys(); iterator.hasNext();)
                                     {
-                                        nick_from_iterator = (String) iterator.next();
-                                        if (voter.equals(nick_from_iterator))
+                                        nick_from_iterator2 = (String) iterator.next();
+                                        if (voter.equals(nick_from_iterator2))
                                         {
-                                            avatar = USERS.getString(voter);
+                                            avatar2 = USERS.getString(voter);
                                             break;
                                         }
                                     }
-                                    messageModel = new MessageModel(test_num,voter + " голосует за " + user_nick, time, voter, "VotingMes", avatar);
+                                    messageModel = new MessageModel(test_num,voter + " голосует за " + user_nick, time, voter, "VotingMes", avatar2);
                                     break;
                                 case "time_info":
                                     messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");

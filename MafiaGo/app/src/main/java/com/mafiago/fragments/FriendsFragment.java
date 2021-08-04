@@ -61,7 +61,7 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_friends, container, false);
-
+/*
         friendsView = view.findViewById(R.id.fragmentFriends_list_friends);
         btnExit = view.findViewById(R.id.fragmentFriends_btn_exit);
         TV_no_friends = view.findViewById(R.id.fragmentFriends_TV_no_friends);
@@ -128,6 +128,8 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
         btnExit.setOnClickListener(v -> {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
         });
+
+ */
 
         return view;
     }

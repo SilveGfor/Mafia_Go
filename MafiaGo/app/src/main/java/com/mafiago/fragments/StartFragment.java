@@ -220,6 +220,7 @@ public class StartFragment extends Fragment {
                     .url(url).post(body)
                     .build();
 
+
             Call call = client.newCall(request);
             call.enqueue(new Callback() {
                 @Override
@@ -491,7 +492,6 @@ public class StartFragment extends Fragment {
              */
         }
     }
-
 
     public boolean isNetworkOnline(Context context) {
         boolean status = false;
