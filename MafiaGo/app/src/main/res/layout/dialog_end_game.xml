@@ -70,7 +70,7 @@
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/dialogEndGame_IV_prize"
-                app:layout_constraintTop_toTopOf="@+id/dialogEndGame_IV_prize"/>
+                app:layout_constraintTop_toTopOf="@+id/dialogEndGame_IV_prize" />
 
             <TextView
                 android:id="@+id/dialogEndGame_TV_money"
@@ -88,10 +88,8 @@
                 android:id="@+id/dialogEndGame_IV_prize"
                 android:layout_width="15dp"
                 android:layout_height="18dp"
-                android:layout_marginStart="32dp"
-                android:layout_marginLeft="32dp"
+                android:layout_marginTop="24dp"
                 android:src="@drawable/experience"
-                android:layout_marginTop="32dp"
                 app:layout_constraintStart_toStartOf="@+id/dialogEndGame_TV_youGet"
                 app:layout_constraintTop_toBottomOf="@+id/dialogEndGame_TV_youGet" />
 

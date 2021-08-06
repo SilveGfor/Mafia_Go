@@ -12,14 +12,13 @@ import com.mafiago.small_fragments.GameChatFragment;
 import java.util.ArrayList;
 
 public class GameChatPagerAdapter extends FragmentStatePagerAdapter {
-    public int PAGE_COUNT;
+    public int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Tab1", "Tab2"};
     private Context context;
 
-    public GameChatPagerAdapter(FragmentManager fm, Context context, int PAGE_COUNT) {
+    public GameChatPagerAdapter(FragmentManager fm, Context context) {
         super(fm);
         this.context = context;
-        this.PAGE_COUNT = PAGE_COUNT;
     }
 
     public void setPAGE_COUNT(int PAGE_COUNT) {
@@ -32,7 +31,7 @@ public class GameChatPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override public Fragment getItem(int position) {
-        Log.d("kkk", "getItem in GameChatPagerAdapter");
+        //Log.d("kkk", "getItem in GameChatPagerAdapter");
         return GameChatFragment.newInstance(position + 1);
     }
 

@@ -1,5 +1,6 @@
 package com.mafiago.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -99,8 +100,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     int num = -1;
 
-    public int PAGE_COUNT = 1;
-
     ImageView IV_screenshot;
     ViewPager viewPager;
     TabLayout tabLayout;
@@ -123,6 +122,27 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
 
     private SharedPreferences mSettings;
+
+    OnHeadlineSelectedListener mCallback;
+
+    // Container Activity must implement this interface
+    public interface OnHeadlineSelectedListener {
+        public void onArticleSelected(int position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+
+        // This makes sure that the container activity has implemented
+        // the callback interface. If not, it throws an exception
+        try {
+            mCallback = (OnHeadlineSelectedListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnHeadlineSelectedListener");
+        }
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
@@ -154,7 +174,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         // Получаем ViewPager и устанавливаем в него адаптер
         viewPager = view.findViewById(R.id.fragmentGame_VP_chat);
-        gameChatPagerAdapter = new GameChatPagerAdapter(getActivity().getSupportFragmentManager(), getActivity(), PAGE_COUNT);
+        gameChatPagerAdapter = new GameChatPagerAdapter(getActivity().getSupportFragmentManager(), getActivity());
         viewPager.setAdapter(gameChatPagerAdapter);
 
         // Передаём ViewPager в TabLayout
@@ -170,9 +190,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
         //socket.off("connect");
         //socket.off("disconnect");
-        //socket.off("get_in_room");
-        //socket.off("user_message");
-        //socket.off("leave_room");
+        socket.off("get_in_room");
+        socket.off("user_message");
+        socket.off("leave_room");
         socket.off("timer");
         socket.off("time");
         socket.off("role");
@@ -229,6 +249,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
 
         gridView_users.setOnItemClickListener((parent, view1, position, id) -> {
+            mCallback.onArticleSelected(position);
             String nick = list_users.get(position).getNick();
             if (nick.equals(player.getNick()) && player.getTime() != Time.LOBBY && !player.Can_click())
             {
@@ -422,7 +443,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 }
             }
         });
-
         dayTime.setOnClickListener(v -> {
             switch (player.getTime())
             {
@@ -526,7 +546,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     @Override
     public void onBackPressed() {
         if (player.getTime() == Time.LOBBY) {
-            if (!timer.getText().equals("--")) {
+            if (!timer.getText().equals("\u221e")) {
                 if (Integer.parseInt(String.valueOf(timer.getText())) > 5) {
                     final JSONObject json2 = new JSONObject();
                     try {
@@ -700,12 +720,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         status = data.getString("status");
 
                         Log.e("kkk", status + data.getString("message") + nick);
-                    if (status.equals("last_message") && nick.equals(player.getNick()))
-                        {
-                            tabLayout.setVisibility(View.VISIBLE);
-                            PAGE_COUNT = 2;
-                            gameChatPagerAdapter.setPAGE_COUNT(PAGE_COUNT);
-                        }
                     } catch (JSONException e) {
                         Log.d("kkk", "JSONException");
                         return;
@@ -770,7 +784,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         {
                             if (StopTimer == 1)
                             {
-                                timer.setText("--");
+                                timer.setText("\u221e");
                                 StopTimer = 0;
                             }
                             else {
@@ -1185,10 +1199,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     money = data.getInt("money");
                                     exp = data.getInt("exp");
 
-                                    tabLayout.setVisibility(View.VISIBLE);
-                                    PAGE_COUNT = 2;
-                                    gameChatPagerAdapter.setPAGE_COUNT(PAGE_COUNT);
-
                                     AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                                     View view_end_game = getLayoutInflater().inflate(R.layout.dialog_end_game, null);
                                     builder2.setView(view_end_game);
@@ -1204,6 +1214,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     AlertDialog alert2 = builder2.create();
                                     alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert2.show();
+
+                                    StopAnimation();
 
                                     socket.off("connect");
                                     socket.off("disconnect");
@@ -1259,8 +1271,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         if (list_users.get(i).getNick().equals(nick)) {
                                             list_users.get(i).setRole(role);
                                             list_users.get(i).setAlive(false);
-                                            StopAnimation();
                                             if (nick.equals(player.getNick())) {
+                                                StopAnimation();
                                                 IV_influence_doctor.setVisibility(View.GONE);
                                                 IV_influence_lover.setVisibility(View.GONE);
                                                 IV_influence_sheriff.setVisibility(View.GONE);
@@ -1311,8 +1323,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                             if (list_users.get(i).getNick().equals(nick2)) {
                                                 list_users.get(i).setRole(role2);
                                                 list_users.get(i).setAlive(false);
-                                                StopAnimation();
                                                 if (nick.equals(player.getNick())) {
+                                                    StopAnimation();
                                                     IV_influence_doctor.setVisibility(View.GONE);
                                                     IV_influence_lover.setVisibility(View.GONE);
                                                     IV_influence_sheriff.setVisibility(View.GONE);
@@ -1422,7 +1434,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 TV_error.setText("Игра закончена");
                                 break;
                             case "you_are_banned_in_this_room":
-                                TV_error.setText("Ыы забанены в этой комнате");
+                                TV_error.setText("Вы забанены в этой комнате");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 break;
                             case "you_are_already_friends":
@@ -1745,7 +1757,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         e.printStackTrace();
                     }
                     socket.emit("connect_to_room", json);
-                    Log.d("kkk", "connect_to_room - " + json);
+                    Log.e("kkk", "connect_to_room - " + player.getRoom_num() + " " + json);
                 }
             });
         }
@@ -1824,20 +1836,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
                     if (player.isHost())
                     {
+                        String finalNick1 = nick;
                         btn_kick.setOnClickListener(v -> {
                             if (player.getTime() == Time.LOBBY) {
-                                if (!timer.getText().equals("--")) {
+                                if (!timer.getText().equals("\u221e")) {
                                     if (Integer.parseInt(String.valueOf(timer.getText())) > 5) {
                                         final JSONObject json2 = new JSONObject();
                                         try {
                                             json2.put("nick", MainActivity.NickName);
                                             json2.put("session_id", MainActivity.Session_id);
                                             json2.put("room", player.getRoom_num());
+                                            json2.put("ban_nick", finalNick1);
                                         } catch (JSONException e) {
                                             e.printStackTrace();
                                         }
-                                        Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
-                                        socket.emit("leave_room", json2);
+                                        Log.d("kkk", "Socket_отправка_ban_user_in_room - " + json2.toString());
+                                        socket.emit("ban_user_in_room", json2);
                                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                     } else {
                                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
@@ -1858,14 +1872,14 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         json2.put("nick", MainActivity.NickName);
                                         json2.put("session_id", MainActivity.Session_id);
                                         json2.put("room", player.getRoom_num());
+                                        json2.put("ban_nick", finalNick1);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
-                                    Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
-                                    socket.emit("leave_room", json2);
+                                    Log.d("kkk", "Socket_отправка_ban_user_in_room - " + json2.toString());
+                                    socket.emit("ban_user_in_room", json2);
                                 }
                             }
-
                         });
                     }
                     else
@@ -1907,6 +1921,17 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     String finalNick = nick;
                     String finalUser_id_ = user_id_2;
                     btn_send_message.setOnClickListener(v -> {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("room", player.getRoom_num());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                        socket.emit("leave_room", json2);
+
                         alert.cancel();
                         MainActivity.User_id_2 = finalUser_id_;
                         MainActivity.NickName_2 = finalNick;

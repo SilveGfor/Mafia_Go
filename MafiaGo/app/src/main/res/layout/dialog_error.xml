@@ -32,7 +32,7 @@
         android:layout_marginRight="32dp"
         android:text=""
         android:textColor="@color/white"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/dialogError_TV_errorTitle"
         app:layout_constraintTop_toBottomOf="@+id/dialogError_TV_errorTitle" />

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
 import android.app.NotificationChannel;
@@ -26,8 +27,11 @@ import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.security.ProviderInstaller;
 import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.fragments.GameFragment;
 import com.mafiago.fragments.StartFragment;
 import com.mafiago.models.NotificationModel;
+import com.mafiago.pager_adapters.GameChatPagerAdapter;
+import com.mafiago.small_fragments.GameChatFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,7 +52,7 @@ import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
 
-  public class MainActivity extends AppCompatActivity {
+  public class MainActivity extends AppCompatActivity implements GameFragment.OnHeadlineSelectedListener {
 
     static String str = "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ\n" +
             "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM\n" +
@@ -86,6 +90,78 @@ import okhttp3.TlsVersion;
 
     NotificationCompat.Builder builder;
     NotificationManager manager;
+
+      public void onArticleSelected(int position) {
+          FragmentManager fm = getSupportFragmentManager();
+
+          Fragment fragment = fm.findFragmentById(R.id.fragment_item_chat);
+          if (fragment == null) {
+              Log.e("kkk", "ok1");
+              /*
+              fragment = new Fragment2();
+
+              Bundle bundle = new Bundle();
+              bundle.putString(Fragment2.KEY, string);
+              fragment.setArguments(bundle);
+
+              fm.beginTransaction()
+                      .add(R.id.fragmentContainer2, fragment)
+                      .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                      .commit();
+               */
+          }
+          else {
+              Log.e("kkk", "ok2");
+              /*
+              if (fragment instanceof OnActivityDataListener) {
+                  mListenerActivity = (OnActivityDataListener) fragment;
+              } else {
+                  throw new RuntimeException(fragment.toString()
+                          + " must implement onActivityDataListener");
+              }
+              mListenerActivity.onActivityDataListener(string);
+               */
+          }
+          /*
+          // The user selected the headline of an article from the HeadlinesFragment
+          // Do something here to display that article
+
+          //GameChatFragment articleFrag = (GameChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item_chat);
+          GameFragment articleFrag = (GameFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentGame_CL);
+          //GameChatFragment articleFrag = new GameChatFragment();
+
+          if (articleFrag != null) {
+              // If article frag is available, we're in two-pane layout...
+
+              //articleFrag.ET_message.setText("");
+              Log.e("kkk", "ok1");
+
+              // Call a method in the ArticleFragment to update its content
+              //articleFrag.updateArticleView(position);
+          } else {
+              Log.e("kkk", "ok2");
+              /*
+              // Otherwise, we're in the one-pane layout and must swap frags...
+
+              // Create fragment and give it an argument for the selected article
+              GameFragment newFragment = new GameFragment();
+              Bundle args = new Bundle();
+              args.putInt(GameFragment.ARG_POSITION, position);
+              newFragment.setArguments(args);
+
+              FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+              // Replace whatever is in the fragment_container view with this fragment,
+              // and add the transaction to the back stack so the user can navigate back
+              transaction.replace(R.id.fragment_container, newFragment);
+              transaction.addToBackStack(null);
+
+              // Commit the transaction
+              transaction.commit();
+
+          }
+          */
+      }
 
 public static Socket socket;
     {

@@ -53,11 +53,12 @@ public class GameChatFragment extends Fragment {
     public boolean Once = true;
 
     ListView LV_chat;
-    EditText ET_message;
+    public EditText ET_message;
     Button btnSend;
     RelativeLayout RL_send;
     TextView TV_answerMes;
     TextView TV_toDeadChat;
+    TextView TV_deadChat;
     TextView TV_BI;
     ImageView IV_toDeadChatArrow;
 
@@ -90,23 +91,20 @@ public class GameChatFragment extends Fragment {
 
     @Override public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                                        Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.item_chat, container, false);
-        LV_chat = view.findViewById(R.id.itemChat_LV_chat);
-        ET_message = view.findViewById(R.id.itemChat_ET_message);
-        RL_send = view.findViewById(R.id.itemChat_RL_send);
-        btnSend = view.findViewById(R.id.itemChat_btn_send);
-        TV_answerMes = view.findViewById(R.id.itemChat_TV_answerMes);
-        TV_toDeadChat = view.findViewById(R.id.itemChat_TV_toDeadChat);
-        TV_BI = view.findViewById(R.id.itemChat_TV_BI);
-        IV_toDeadChatArrow = view.findViewById(R.id.itemChat_TV_toDeadChatArrow);
-
-
-        player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
-
-        messageAdapter = new MessageAdapter(list_chat, getContext());
-        LV_chat.setAdapter(messageAdapter);
+        View view;
         if (mPage == 1)
         {
+            view = inflater.inflate(R.layout.item_chat, container, false);
+            LV_chat = view.findViewById(R.id.itemChat_LV_chat);
+            ET_message = view.findViewById(R.id.itemChat_ET_message);
+            RL_send = view.findViewById(R.id.itemChat_RL_send);
+            btnSend = view.findViewById(R.id.itemChat_btn_send);
+            TV_answerMes = view.findViewById(R.id.itemChat_TV_answerMes);
+            TV_toDeadChat = view.findViewById(R.id.itemChat_TV_toDeadChat);
+            TV_deadChat = view.findViewById(R.id.itemChat_TV_deadChat);
+            TV_BI = view.findViewById(R.id.itemChat_TV_BI);
+            IV_toDeadChatArrow = view.findViewById(R.id.itemChat_TV_toDeadChatArrow);
+
             socket.on("get_in_room", onGetInRoom);
             socket.on("user_message", onNewMessage);
             socket.on("leave_room", onLeaveUser);
@@ -117,14 +115,36 @@ public class GameChatFragment extends Fragment {
         }
         else
         {
+            view = inflater.inflate(R.layout.item_chat_dead, container, false);
+            LV_chat = view.findViewById(R.id.itemChat_LV_chat);
+            ET_message = view.findViewById(R.id.itemChat_ET_message);
+            RL_send = view.findViewById(R.id.itemChat_RL_send);
+            btnSend = view.findViewById(R.id.itemChat_btn_send);
+            TV_answerMes = view.findViewById(R.id.itemChat_TV_answerMes);
+            TV_toDeadChat = view.findViewById(R.id.itemChat_TV_toDeadChat);
+            TV_deadChat = view.findViewById(R.id.itemChat_TV_deadChat);
+            TV_BI = view.findViewById(R.id.itemChat_TV_BI);
+            IV_toDeadChatArrow = view.findViewById(R.id.itemChat_TV_toDeadChatArrow);
+
             Log.e("kkk", "onCreateGameChatFragment");
             Log.e("kkk", "num = " + num);
             num = -1;
             Log.e("kkk", "num = " + num);
             socket.on("get_in_room", onGetInDeadRoom);
             socket.on("user_message", onNewDiedMessage);
+            TV_deadChat.setVisibility(View.VISIBLE);
+            TV_BI.setVisibility(View.GONE);
+            RL_send.setVisibility(View.GONE);
+            ET_message.setVisibility(View.GONE);
             RL_send.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.died_button));
         }
+
+
+        player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
+
+        messageAdapter = new MessageAdapter(list_chat, getContext());
+        LV_chat.setAdapter(messageAdapter);
+
 
         btnSend.setOnClickListener(v -> {
             String input = String.valueOf(ET_message.getText());
@@ -453,6 +473,8 @@ public class GameChatFragment extends Fragment {
                             ET_message.setVisibility(View.INVISIBLE);
                             RL_send.setVisibility(View.INVISIBLE);
                             TV_BI.setVisibility(View.INVISIBLE);
+                            answer_id = -1;
+                            TV_answerMes.setVisibility(View.GONE);
                         }
                         if (!status.equals("dead"))
                         {
@@ -548,6 +570,13 @@ public class GameChatFragment extends Fragment {
                         status = data.getString("status");
                         test_num = data.getInt("num");
                         Log.e("kkk", "newDiedMessage GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
+                        if (status.equals("last_message") && nick.equals(player.getNick()))
+                        {
+                            TV_deadChat.setVisibility(View.GONE);
+                            TV_BI.setVisibility(View.VISIBLE);
+                            RL_send.setVisibility(View.VISIBLE);
+                            ET_message.setVisibility(View.VISIBLE);
+                        }
                         if (status.equals("dead"))
                         {
                             String avatar = "";
@@ -841,7 +870,12 @@ public class GameChatFragment extends Fragment {
                         break;
                     }
                 }
-                if (test_num != test_num && good) {
+                if (num != test_num && good) {
+                    for (int i = 0; i < list_chat.size(); i++) {
+                        if (list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
+                            list_chat.remove(i);
+                        }
+                    }
                     if (test_num > num) {
                         num = test_num;
                         list_chat.add(messageModel);

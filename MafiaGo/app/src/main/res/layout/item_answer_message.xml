@@ -54,6 +54,7 @@
         android:background="@drawable/shape_transparent_black"
         android:padding="5dp"
         android:text="Ошибка вывода сообщения"
+        android:textColor="#FFFFFF"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="@+id/itemAnswerMessage_text"
         app:layout_constraintHorizontal_bias="0.0"

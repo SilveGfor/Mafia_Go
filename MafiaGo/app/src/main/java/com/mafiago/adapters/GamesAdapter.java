@@ -109,13 +109,11 @@ public class GamesAdapter extends BaseAdapter {
             Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
             AppCompatActivity activity = (AppCompatActivity) finalView.getContext();
             activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
-
         });
 
 
         for (int i = 0; i < list_roles.size(); i++)
         {
-            Log.d("kkk", list_roles.get(i));
             switch (list_roles.get(i))
             {
                 case "doctor":

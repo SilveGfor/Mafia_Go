@@ -24,37 +24,41 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/orange_button"
         android:text="Войти"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentStart_btn_register"
-        app:layout_constraintStart_toStartOf="@+id/fragmentStart_btn_register"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentStart_ET_password"
+        app:layout_constraintStart_toStartOf="@+id/fragmentStart_ET_password"
         app:layout_constraintTop_toBottomOf="@+id/fragmentStart_ET_password" />
 
     <EditText
         android:id="@+id/fragmentStart_ET_password"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/shape_black"
         android:ems="10"
         android:hint="Пароль"
-        android:textColorHint="@color/white"
         android:inputType="textPassword"
         android:padding="10dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRegister_ET_email"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRegister_ET_email"
         app:layout_constraintTop_toBottomOf="@+id/fragmentRegister_ET_email" />
 
     <EditText
         android:id="@+id/fragmentRegister_ET_email"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/shape_black"
-        android:padding="10dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginLeft="70dp"
         android:layout_marginTop="80dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginRight="70dp"
+        android:background="@drawable/shape_black"
         android:ems="10"
         android:hint="E-mail"
-        android:textColorHint="@color/white"
         android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColorHint="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -91,14 +95,14 @@
 
     <Button
         android:id="@+id/fragmentStart_btn_register"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="ЗАРЕГИСТРИРОВАТЬСЯ"
-        android:padding="15dp"
         android:background="@drawable/grey_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:padding="15dp"
+        android:text="ЗАРЕГИСТРИРОВАТЬСЯ"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentStart_btn_enter"
+        app:layout_constraintStart_toStartOf="@+id/fragmentStart_btn_enter"
         app:layout_constraintTop_toBottomOf="@+id/fragmentStart_btn_enter" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

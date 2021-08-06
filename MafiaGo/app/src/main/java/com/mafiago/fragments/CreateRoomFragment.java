@@ -94,7 +94,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         name = "";
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
-        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "London Bridge"));
+        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "King's road"));
         //TV_max_people.setText(String.valueOf(max_people));
         RSB_num_users.setSelectedMaxValue(max_people);
         RSB_num_users.setSelectedMinValue(min_people);

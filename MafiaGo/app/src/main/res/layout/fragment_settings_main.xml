@@ -58,7 +58,7 @@
         android:layout_height="wrap_content"
         android:text="Политика конфиденциальности"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsMain_TV_usersAgreement" />
 
     <TextView
         android:id="@+id/fragmentSettingsMain_TV_usersAgreement"
@@ -67,7 +67,7 @@
         android:layout_marginBottom="16dp"
         android:text="Пользовательское соглашение"
         app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsMain_TV_privacyPolicy"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeNick" />
 
     <TextView
         android:id="@+id/fragmentSettingsMain_TV_message"

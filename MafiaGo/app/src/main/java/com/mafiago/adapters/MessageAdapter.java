@@ -112,7 +112,7 @@
                         //color = "#999999";
                         //break;
                     case "last_message":
-                        color = "#F05941";
+                        color = "#FFB7AC";
                         break;
                 }
 
@@ -193,7 +193,7 @@
                 TextView txt_connect_mes = view.findViewById(R.id.mesConnect);
                 //TextView txt_connect_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_connect_mes.setTextColor(Color.parseColor("#BA2F6E28"));
+                txt_connect_mes.setTextColor(Color.parseColor("#45744C"));
 
                 txt_connect_mes.setText(list_mess.get(position).message);
                 //txt_connect_time.setText(list_mess.get(position).time);
@@ -246,7 +246,7 @@
                 //txt_time.setText(list_mess.get(position).time);
                 txt_mess.setText(list_mess.get(position).message);
 
-                txt_mess.setTextColor(Color.parseColor("#FFFF00"));
+                txt_mess.setTextColor(Color.parseColor("#AFFFFF"));
                 break;
             case "AnswerMes":
                 view = layout.inflate(R.layout.item_answer_message, null);
@@ -318,7 +318,7 @@
                         //color = "#999999";
                         //break;
                     case "last_message":
-                        color = "#F05941";
+                        color = "#FFB7AC";
                         break;
                 }
 
@@ -362,32 +362,32 @@
 
                 txt_mess.setTextColor(Color.parseColor(color));
                 //txt_time.setTextColor(Color.parseColor(color));
-                txt_answer_mes.setTextColor(Color.parseColor(color));
+                //txt_answer_mes.setTextColor(Color.parseColor("#3E4A5A"));
                 break;
             case "SystemMes":
-                view = layout.inflate(R.layout.item_connect_disconnect, null);
+                view = layout.inflate(R.layout.item_system_message, null);
 
                 TextView txt_system_mes = view.findViewById(R.id.mesConnect);
                 //TextView txt_system_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_system_mes.setTextColor(Color.parseColor("#F05941"));
+                txt_system_mes.setTextColor(Color.parseColor("#FFE5A1"));
 
                 txt_system_mes.setText(list_mess.get(position).message);
                 //txt_system_time.setText(list_mess.get(position).time);
                 break;
             case "JournalistMes":
-                view = layout.inflate(R.layout.item_connect_disconnect, null);
+                view = layout.inflate(R.layout.item_system_message, null);
 
                 TextView txt_jour_mes = view.findViewById(R.id.mesConnect);
                 //TextView txt_jour_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_jour_mes.setTextColor(Color.parseColor("#F0BF41"));
+                txt_jour_mes.setTextColor(Color.parseColor("#AFFFFF"));
 
                 txt_jour_mes.setText(list_mess.get(position).message);
                 //txt_jour_time.setText(list_mess.get(position).time);
                 break;
             case "KillMes":
-                view = layout.inflate(R.layout.item_connect_disconnect, null);
+                view = layout.inflate(R.layout.item_system_message, null);
 
                 TextView txt_kill_mes = view.findViewById(R.id.mesConnect);
                 //TextView txt_kill_time = view.findViewById(R.id.mesTimeConnect);
@@ -398,12 +398,12 @@
                 //txt_kill_time.setText(list_mess.get(position).time);
                 break;
             case "KickMes":
-                view = layout.inflate(R.layout.item_connect_disconnect, null);
+                view = layout.inflate(R.layout.item_system_message, null);
 
                 txt_connect_mes = view.findViewById(R.id.mesConnect);
                 //txt_connect_time = view.findViewById(R.id.mesTimeConnect);
 
-                txt_connect_mes.setTextColor(Color.parseColor("#FF0000"));
+                txt_connect_mes.setTextColor(Color.parseColor("#BE3144"));
 
                 txt_connect_mes.setText(list_mess.get(position).message + " кикнул(-а) " + list_mess.get(position).nickName);
                 //txt_connect_time.setText(list_mess.get(position).time);
