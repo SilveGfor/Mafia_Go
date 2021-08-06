@@ -20,10 +20,6 @@ import android.util.Log;
 
 import com.example.mafiago.R;
 
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.common.GooglePlayServicesRepairableException;
-import com.google.android.gms.common.GooglePlayServicesUtil;
-import com.google.android.gms.security.ProviderInstaller;
 import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.fragments.StartFragment;
