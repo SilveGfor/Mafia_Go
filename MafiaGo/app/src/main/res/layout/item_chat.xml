@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fragment_item_chat"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:tag="item_chat_tag"
     android:layout_height="match_parent">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
         <TextView
             android:id="@+id/itemChat_TV_deadChat"
@@ -129,5 +127,4 @@
             app:layout_constraintStart_toEndOf="@+id/itemChat_TV_toDeadChat"
             app:layout_constraintTop_toTopOf="@+id/itemChat_TV_toDeadChat"
             app:srcCompat="@drawable/arrow_right" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

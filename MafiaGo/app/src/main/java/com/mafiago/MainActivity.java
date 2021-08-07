@@ -36,6 +36,8 @@ import java.net.URI;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
@@ -48,7 +50,7 @@ import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
 
-  public class MainActivity extends AppCompatActivity implements GameFragment.OnHeadlineSelectedListener {
+  public class MainActivity extends AppCompatActivity implements GameFragment.OnUserSelectedListener {
 
     static String str = "йцукенгшщзхъфывапролджэячсмитьбюёЙЦУКЕНГШЩЗХЪФЫВАПРОЛДЖЭЯЧСМИТЬБЮЁ\n" +
             "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM\n" +
@@ -70,6 +72,7 @@ import okhttp3.TlsVersion;
     public static Bitmap bitmap_avatar_2;
     public static String CURRENT_GAME_VERSION = "0.0.1";
     public static JSONObject USERS = new JSONObject();
+    public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
     public static String url = "https://mafiagoserver.online:5000";
 
@@ -87,76 +90,31 @@ import okhttp3.TlsVersion;
     NotificationCompat.Builder builder;
     NotificationManager manager;
 
-      public void onArticleSelected(int position) {
-          FragmentManager fm = getSupportFragmentManager();
+    public void onUserSelected(String nick2) {
+        FragmentManager fm = getSupportFragmentManager();
 
-          Fragment fragment = fm.findFragmentById(R.id.fragment_item_chat);
-          if (fragment == null) {
-              Log.e("kkk", "ok1");
-              /*
-              fragment = new Fragment2();
+        //GameChatFragment fragment = (GameChatFragment) fm.findFragmentByTag("item_chat_tag");
+        GameChatFragment fragment = mPageReferenceMap.get(2);
+        if (fragment == null) {
+            Log.e("kkk", "ok1");
+        }
+        else {
+            Log.e("kkk", "ok2");
+            fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
+            //fragment.ET_message.append();
+            fragment.ET_message.setSelection(fragment.ET_message.length());
+        }
 
-              Bundle bundle = new Bundle();
-              bundle.putString(Fragment2.KEY, string);
-              fragment.setArguments(bundle);
-
-              fm.beginTransaction()
-                      .add(R.id.fragmentContainer2, fragment)
-                      .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                      .commit();
-               */
-          }
-          else {
-              Log.e("kkk", "ok2");
-              /*
-              if (fragment instanceof OnActivityDataListener) {
-                  mListenerActivity = (OnActivityDataListener) fragment;
-              } else {
-                  throw new RuntimeException(fragment.toString()
-                          + " must implement onActivityDataListener");
-              }
-              mListenerActivity.onActivityDataListener(string);
-               */
-          }
-          /*
-          // The user selected the headline of an article from the HeadlinesFragment
-          // Do something here to display that article
-
-          //GameChatFragment articleFrag = (GameChatFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_item_chat);
-          GameFragment articleFrag = (GameFragment) getSupportFragmentManager().findFragmentById(R.id.fragmentGame_CL);
-          //GameChatFragment articleFrag = new GameChatFragment();
-
-          if (articleFrag != null) {
-              // If article frag is available, we're in two-pane layout...
-
-              //articleFrag.ET_message.setText("");
-              Log.e("kkk", "ok1");
-
-              // Call a method in the ArticleFragment to update its content
-              //articleFrag.updateArticleView(position);
-          } else {
-              Log.e("kkk", "ok2");
-              /*
-              // Otherwise, we're in the one-pane layout and must swap frags...
-
-              // Create fragment and give it an argument for the selected article
-              GameFragment newFragment = new GameFragment();
-              Bundle args = new Bundle();
-              args.putInt(GameFragment.ARG_POSITION, position);
-              newFragment.setArguments(args);
-
-              FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-              // Replace whatever is in the fragment_container view with this fragment,
-              // and add the transaction to the back stack so the user can navigate back
-              transaction.replace(R.id.fragment_container, newFragment);
-              transaction.addToBackStack(null);
-
-              // Commit the transaction
-              transaction.commit();
-
-          }
-          */
+        fragment = mPageReferenceMap.get(1);
+        if (fragment == null) {
+            Log.e("kkk", "ok1");
+        }
+        else {
+            Log.e("kkk", "ok2");
+            fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
+            //fragment.ET_message.append();
+            fragment.ET_message.setSelection(fragment.ET_message.length());
+        }
       }
 
 public static Socket socket;

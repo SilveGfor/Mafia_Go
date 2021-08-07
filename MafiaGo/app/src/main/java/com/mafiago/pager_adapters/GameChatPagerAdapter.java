@@ -11,6 +11,8 @@ import com.mafiago.small_fragments.GameChatFragment;
 
 import java.util.ArrayList;
 
+import static com.mafiago.MainActivity.mPageReferenceMap;
+
 public class GameChatPagerAdapter extends FragmentStatePagerAdapter {
     public int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Tab1", "Tab2"};
@@ -31,8 +33,10 @@ public class GameChatPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override public Fragment getItem(int position) {
-        //Log.d("kkk", "getItem in GameChatPagerAdapter");
-        return GameChatFragment.newInstance(position + 1);
+        Log.e("kkk", "getItem in GameChatPagerAdapter");
+        GameChatFragment myFragment = GameChatFragment.newInstance(position + 1);
+        mPageReferenceMap.put(position + 1, myFragment);
+        return myFragment;
     }
 
     @Override public CharSequence getPageTitle(int position) {

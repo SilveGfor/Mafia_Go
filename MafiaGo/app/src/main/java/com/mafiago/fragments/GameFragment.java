@@ -59,6 +59,7 @@ import java.util.TimeZone;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
+import static com.mafiago.MainActivity.nick;
 import static  com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
@@ -123,11 +124,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     private SharedPreferences mSettings;
 
-    OnHeadlineSelectedListener mCallback;
+    OnUserSelectedListener mCallback;
 
     // Container Activity must implement this interface
-    public interface OnHeadlineSelectedListener {
-        public void onArticleSelected(int position);
+    public interface OnUserSelectedListener {
+        public void onUserSelected(String nick);
     }
 
     @Override
@@ -137,7 +138,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         // This makes sure that the container activity has implemented
         // the callback interface. If not, it throws an exception
         try {
-            mCallback = (OnHeadlineSelectedListener) activity;
+            mCallback = (OnUserSelectedListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
                     + " must implement OnHeadlineSelectedListener");
@@ -249,7 +250,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
 
         gridView_users.setOnItemClickListener((parent, view1, position, id) -> {
-            mCallback.onArticleSelected(position);
             String nick = list_users.get(position).getNick();
             if (nick.equals(player.getNick()) && player.getTime() != Time.LOBBY && !player.Can_click())
             {
@@ -340,7 +340,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 if (player.Can_click() && player.getStatus().equals("alive") && list_users.get(position).getAlive()) {
                     switch (player.getTime()) {
                         case LOBBY:
-                            ShowProfile(nick);
+                            mCallback.onUserSelected(nick);
                             break;
                         case NIGHT_LOVE:
                             switch (player.getRole()) {
@@ -424,7 +424,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             if (player.getRole() == Role.BODYGUARD) {
                                 RoleAction(nick);
                             } else {
-                                ShowProfile(nick);
+                                mCallback.onUserSelected(nick);
                             }
                             break;
                         case VOTING:
@@ -439,7 +439,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         StopAnimation();
                     }
                 } else {
-                    ShowProfile(nick);
+                    mCallback.onUserSelected(nick);
                 }
             }
         });
