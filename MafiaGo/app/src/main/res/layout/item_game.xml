@@ -41,27 +41,26 @@
         app:layout_constraintTop_toTopOf="@+id/itemGame_TV_roomState" />
 
     <TextView
-        android:id="@+id/textView5"
+        android:id="@+id/itemGame_TV_playersInRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:text="в комнате:"
-        android:ellipsize="end"
-        android:singleLine="true"
-        android:textColor="@color/colorWhite"
+        android:layout_marginTop="8dp"
+        android:text="Игроков: 6"
+        android:textColor="@color/notActiveText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_roomState" />
 
     <TextView
-        android:id="@+id/itemGame_TV_playersInRoom"
+        android:id="@+id/itemGame_TV_customRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:text="сейчас: 1"
-        android:textColor="@color/notActiveText"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:text="кастомная"
+        android:textColor="@color/red"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/itemGame_btn_players"
-        app:layout_constraintTop_toTopOf="@+id/textView5" />
+        app:layout_constraintTop_toTopOf="@+id/itemGame_TV_playersInRoom" />
 
     <Button
         android:id="@+id/itemGame_btn_players"
@@ -69,7 +68,7 @@
         android:layout_height="35dp"
         android:background="@drawable/grey_button"
         android:padding="10dp"
-        android:text="список игроков"
+        android:text="информация"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -79,10 +78,9 @@
         android:id="@+id/itemGame_maniac"
         android:layout_width="25dp"
         android:layout_height="25dp"
-        android:layout_marginTop="8dp"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toBottomOf="@+id/textView5"
+        app:layout_constraintTop_toTopOf="@+id/textView11"
         app:srcCompat="@drawable/maniac_round" />
 
     <ImageView
@@ -183,5 +181,5 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_playersInRoom" />
 </androidx.constraintlayout.widget.ConstraintLayout>

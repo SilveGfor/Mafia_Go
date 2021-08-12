@@ -4,16 +4,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 
 import androidx.fragment.app.Fragment;
@@ -32,9 +37,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 import io.socket.emitter.Emitter;
 
+import static android.content.Context.APP_OPS_SERVICE;
 import static com.mafiago.MainActivity.f;
 import static  com.mafiago.MainActivity.socket;
 
@@ -45,16 +53,18 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     RangeSeekBar RSB_num_users;
 
     Button btnCreateRoom;
-    //Button btnExitCreateRoom;
+    Button btnCustomRoom;
 
-    public GridView GridView;
+    GridView gridView;
 
     String name;
 
     ArrayList<RoleModel> list_roles = new ArrayList<>();
 
-    static public JSONArray peaceful = new JSONArray();
-    static public JSONArray mafia = new JSONArray();
+    RoleAdapter roleAdapter;
+
+    public JSONArray peaceful = new JSONArray();
+    public JSONArray mafia = new JSONArray();
 
     public static final String APP_PREFERENCES = "create_room";
     public static final String APP_PREFERENCES_ROOM_NAME = "room_name";
@@ -77,9 +87,9 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         RSB_num_users = view.findViewById(R.id.fragmentCreateRoom_PSB_playerNum);
 
         btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_btn_createRoom);
-        //btnExitCreateRoom = view.findViewById(R.id.fragmentCreateRoom_BTN_exit);
+        btnCustomRoom = view.findViewById(R.id.fragmentCreateRoom_btn_customRoom);
 
-        GridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
+        gridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
 
         //socket.off("connect");
         //socket.off("disconnect");
@@ -91,6 +101,9 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         socket.on("disconnect", onDisconnect);
         socket.on("user_error", onUserError);
 
+        roleAdapter = new RoleAdapter(list_roles, getContext());
+        gridView.setAdapter(roleAdapter);
+
         name = "";
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
@@ -99,6 +112,80 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         RSB_num_users.setSelectedMaxValue(max_people);
         RSB_num_users.setSelectedMinValue(min_people);
         SetRoles(max_people);
+
+        Set<String> set = mSettings.getStringSet(APP_PREFERENCES_ROLES, new HashSet<String>());
+        for(String r : set) {
+            for (int i = 0; i < list_roles.size(); i++)
+            {
+                if (list_roles.get(i).role == ConvertToRole(r))
+                {
+                    list_roles.get(i).visible = true;
+                    if (list_roles.get(i).peaceful)
+                    {
+                        peaceful.put(list_roles.get(i).role.toString().toLowerCase());
+                    }
+                    else
+                    {
+                        mafia.put(list_roles.get(i).role.toString().toLowerCase());
+                    }
+                }
+            }
+        }
+
+        gridView.setOnItemClickListener((parent, view1, position, id) -> {
+            if (!list_roles.get(position).visible) {
+                list_roles.get(position).visible = true;
+                if (list_roles.get(position).peaceful)
+                {
+                    peaceful.put(list_roles.get(position).role.toString().toLowerCase());
+                }
+                else
+                {
+                    mafia.put(list_roles.get(position).role.toString().toLowerCase());
+                }
+            }
+            else
+            {
+                list_roles.get(position).visible = false;
+                if (list_roles.get(position).peaceful)
+                {
+                    try {
+                        for (int i = 0; i < peaceful.length(); i++) {
+                            if (peaceful.get(i).equals(list_roles.get(position).role.toString().toLowerCase())) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                    peaceful.remove(i);
+                                }
+                            }
+
+                        }
+                    }
+                     catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    try {
+                        for (int i = 0; i < mafia.length(); i++) {
+                            if (mafia.get(i).equals(list_roles.get(position).role.toString().toLowerCase())) {
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                                    mafia.remove(i);
+                                }
+                            }
+
+                        }
+                    }
+                    catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            roleAdapter.notifyDataSetChanged();
+        });
+
+        btnCustomRoom.setOnClickListener(v -> {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateCustomRoomFragment()).commit();
+        });
 
         RSB_num_users.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
@@ -134,6 +221,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                         }
                     }
 
+                    Set<String> roles = new HashSet<String>();
                     final JSONObject json = new JSONObject();
                     final JSONObject json_roles = new JSONObject();
                     try {
@@ -145,10 +233,20 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                         json.put("min_people_num", RSB_num_users.getSelectedMinValue());
                         json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
                         json.put("roles", json_roles);
+
+                        for (int i = 0; i < peaceful.length(); i++)
+                        {
+                            roles.add(peaceful.getString(i));
+                        }
+                        for (int i = 0; i < mafia.length(); i++)
+                        {
+                            roles.add(mafia.getString(i));
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                     SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putStringSet(APP_PREFERENCES_ROLES, roles);
                     editor.putString(APP_PREFERENCES_ROOM_NAME, name);
                     editor.apply();
                     socket.emit("create_room", json);
@@ -172,23 +270,14 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
             }
         });
 
-        /*
-        btnExitCreateRoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
-                editor.apply();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
-            }
-        });
-         */
-
         return view;
     }
 
     @Override
     public void onBackPressed() {
+        SharedPreferences.Editor editor = mSettings.edit();
+        editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+        editor.apply();
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
     }
 
@@ -329,23 +418,39 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         }
     };
 
+    /*
+    public void SetRoles(int max_people) {
+        if (list_roles.size() < max_people)
+        {
+            while (list_roles.size() < max_people)
+            {
+                list_roles.add(new RoleModel(Role.NONE, true));
+            }
+        }
+        else
+        {
+            while (list_roles.size() > max_people)
+            {
+                list_roles.remove(list_roles.size() - 1);
+            }
+        }
+        roleAdapter.notifyDataSetChanged();
+    }
+     */
+
     public void SetRoles(int people) {
-        RoleAdapter roleAdapter;
-        list_roles = new ArrayList<>();
-        peaceful = new JSONArray();
-        mafia = new JSONArray();
+
+        list_roles.clear();
         switch (people)
         {
             case 5:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
-                roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 6:
             case 7:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
-                roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 8:
             case 9:
@@ -355,7 +460,6 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 list_roles.add(new RoleModel(Role.LOVER, true));
                 list_roles.add(new RoleModel(Role.MAFIA_DON, false));
                 list_roles.add(new RoleModel(Role.JOURNALIST, true));
-                roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 12:
             case 13:
@@ -366,7 +470,6 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 list_roles.add(new RoleModel(Role.BODYGUARD, true));
                 list_roles.add(new RoleModel(Role.TERRORIST, false));
                 list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
-                roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             case 14:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
@@ -378,7 +481,6 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
                 list_roles.add(new RoleModel(Role.MANIAC, true));
                 list_roles.add(new RoleModel(Role.POISONER, false));
-                roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
             default:
                 list_roles.add(new RoleModel(Role.DOCTOR, true));
@@ -390,10 +492,10 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, true));
                 list_roles.add(new RoleModel(Role.MANIAC, true));
                 list_roles.add(new RoleModel(Role.POISONER, false));
-                roleAdapter = new RoleAdapter(list_roles, getContext());
                 break;
         }
-        GridView.setAdapter(roleAdapter);
+        roleAdapter.notifyDataSetChanged();
+
     }
 
     public boolean isNetworkOnline(Context context) {
@@ -415,4 +517,38 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         return status;
     }
 
+    //конвертировать String в Role
+    public Role ConvertToRole(String role) {
+        switch (role)
+        {
+            case "none":
+                return Role.NONE;
+            case "citizen":
+                return Role.CITIZEN;
+            case "mafia":
+                return Role.MAFIA;
+            case "sheriff":
+                return Role.SHERIFF;
+            case "doctor":
+                return Role.DOCTOR;
+            case "lover":
+                return Role.LOVER;
+            case "mafia_don":
+                return Role.MAFIA_DON;
+            case "maniac":
+                return Role.MANIAC;
+            case "terrorist":
+                return Role.TERRORIST;
+            case "bodyguard":
+                return Role.BODYGUARD;
+            case "poisoner":
+                return Role.POISONER;
+            case "journalist":
+                return Role.JOURNALIST;
+            case "doctor_of_easy_virtue":
+                return Role.DOCTOR_OF_EASY_VIRTUE;
+            default:
+                return Role.NONE;
+        }
+    }
 }

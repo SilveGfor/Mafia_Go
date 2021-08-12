@@ -10,8 +10,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginTop="0dp"
-            android:layout_weight="3"
-            android:src="@drawable/ic_snow" />
+            android:layout_weight="3" />
 
         <ImageView
             android:id="@+id/imageView1"
@@ -21,8 +20,6 @@
             android:layout_marginTop="6.5dp"
             android:layout_weight="1"
             android:src="@drawable/arrow_bg2" />
-
-
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -1,5 +1,7 @@
 package com.mafiago.models;
 
+import android.graphics.Bitmap;
+
 public class MessageModel {
     public int num;
     public  String message;
@@ -9,10 +11,10 @@ public class MessageModel {
     public String textType;
     public String rang;
     public int answerId;
-    public String avatar;
+    public Bitmap avatar;
 
     //сообщения пользователей
-    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, String rang, String avatar) {
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, String rang, Bitmap avatar) {
         this.num = num;
         this.message = message;
         this.time = time;
@@ -23,7 +25,7 @@ public class MessageModel {
         this.avatar = avatar;
     }
     //connect/disconnect сообщения
-    public MessageModel(int num, String message, String time, String nickName, String mesType, String avatar) {
+    public MessageModel(int num, String message, String time, String nickName, String mesType, Bitmap avatar) {
         this.num = num;
         this.message = message;
         this.time = time;
@@ -40,7 +42,7 @@ public class MessageModel {
         this.mesType = mesType;
     }
     //ответы на сообщения
-    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, int answerId, String rang, String avatar) {
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, int answerId, String rang, Bitmap avatar) {
         this.num = num;
         this.message = message;
         this.time = time;

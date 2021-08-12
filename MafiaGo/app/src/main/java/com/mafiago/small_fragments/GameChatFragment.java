@@ -1,7 +1,10 @@
 package com.mafiago.small_fragments;
 
 import android.app.AlertDialog;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,10 +27,12 @@ import androidx.fragment.app.Fragment;
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
 import com.mafiago.adapters.MessageAdapter;
+import com.mafiago.enums.Role;
 import com.mafiago.enums.Time;
 import com.mafiago.models.MessageModel;
 import com.mafiago.models.Player;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,7 +78,6 @@ public class GameChatFragment extends Fragment {
 
     public int FirstVisibleItem = 0, VisibleItemsCount = 0,TotalItemsCount = 0;
 
-
     public static GameChatFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -112,10 +116,13 @@ public class GameChatFragment extends Fragment {
             socket.on("ban_user_in_room", OnBanUserInRoom);
             socket.on("host_info", OnHostInfo);
             socket.on("role_action", onRoleAction);
+            socket.on("success_get_in_room_observer", onSuccessGetInRoomObserver);
+            socket.on("time", onTime);
+            socket.on("get_my_game_info", onGetMyGameInfo);
         }
         else
         {
-            view = inflater.inflate(R.layout.item_chat_dead, container, false);
+            view = inflater.inflate(R.layout.item_chat, container, false);
             LV_chat = view.findViewById(R.id.itemChat_LV_chat);
             ET_message = view.findViewById(R.id.itemChat_ET_message);
             RL_send = view.findViewById(R.id.itemChat_RL_send);
@@ -126,10 +133,7 @@ public class GameChatFragment extends Fragment {
             TV_BI = view.findViewById(R.id.itemChat_TV_BI);
             IV_toDeadChatArrow = view.findViewById(R.id.itemChat_TV_toDeadChatArrow);
 
-            Log.e("kkk", "onCreateGameChatFragment");
-            Log.e("kkk", "num = " + num);
             num = -1;
-            Log.e("kkk", "num = " + num);
             socket.on("get_in_room", onGetInDeadRoom);
             socket.on("user_message", onNewDiedMessage);
             TV_deadChat.setVisibility(View.VISIBLE);
@@ -138,7 +142,6 @@ public class GameChatFragment extends Fragment {
             ET_message.setVisibility(View.GONE);
             RL_send.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.died_button));
         }
-
 
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 
@@ -167,11 +170,13 @@ public class GameChatFragment extends Fragment {
                     flag = 0;
                 }
             }
+            Log.e("kkk", String.valueOf(poisoner));
+            Log.e("kkk", String.valueOf(messages_can_write));
             if (player.getStatus().equals("alive")) {
                 if (player.Can_write()) {
                     if (!input.equals("") && !input.equals("/n")) {
                         if (player.getTime() == Time.DAY) {
-                            if (poisoner) {
+                            if (!poisoner) {
                                 if (messages_can_write > 0) {
                                     messages_can_write--;
                                     final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
@@ -334,9 +339,11 @@ public class GameChatFragment extends Fragment {
             Log.d("kkk", "----");
             if(list_chat.get(position).mesType.equals("UsersMes") || list_chat.get(position).mesType.equals("AnswerMes"))
             {
-                answer_id = list_chat.get(position).num;
-                TV_answerMes.setText(list_chat.get(position).nickName + ": " + list_chat.get(position).message);
-                TV_answerMes.setVisibility(View.VISIBLE);
+                if (player.getStatus().equals("alive") || mPage == 2) {
+                    answer_id = list_chat.get(position).num;
+                    TV_answerMes.setText(list_chat.get(position).nickName + ": " + list_chat.get(position).message);
+                    TV_answerMes.setVisibility(View.VISIBLE);
+                }
             }
         });
 
@@ -345,6 +352,17 @@ public class GameChatFragment extends Fragment {
             TV_answerMes.setVisibility(View.GONE);
         });
         return view;
+    }
+
+    public Bitmap fromBase64(String image) {
+        // Декодируем строку Base64 в массив байтов
+        byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
+
+        // Декодируем массив байтов в изображение
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+
+        // Помещаем изображение в ImageView
+        return decodedByte;
     }
 
     /*******************************
@@ -374,7 +392,7 @@ public class GameChatFragment extends Fragment {
                         nick = data.getString("nick");
                         avatar = data.getString("avatar");
                         USERS.put(nick, avatar);
-                        MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes", avatar);
+                        MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes", fromBase64(avatar));
                         Log.e("kkk", num + "get_in_room GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                         boolean good = true;
                         for (int i = 0; i < list_chat.size(); i++)
@@ -404,7 +422,7 @@ public class GameChatFragment extends Fragment {
                             }
                             for (int i = 0; i < list_chat.size(); i++) {
                                 if (list_chat.get(i).nickName.equals(nick)) {
-                                    list_chat.get(i).avatar = avatar;
+                                    list_chat.get(i).avatar = fromBase64(avatar);
                                 }
                             }
                             messageAdapter.notifyDataSetChanged();
@@ -474,6 +492,7 @@ public class GameChatFragment extends Fragment {
                             RL_send.setVisibility(View.INVISIBLE);
                             TV_BI.setVisibility(View.INVISIBLE);
                             answer_id = -1;
+                            player.setStatus("dead");
                             TV_answerMes.setVisibility(View.GONE);
                         }
                         if (!status.equals("dead"))
@@ -506,9 +525,9 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
                                     }
                                     list_chat.add(messageModel);
                                 } else {
@@ -519,9 +538,9 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
                                     }
                                     for (int i = 0; i < list_chat.size(); i++) {
                                         if (test_num < list_chat.get(i).num) {
@@ -580,7 +599,6 @@ public class GameChatFragment extends Fragment {
                         if (status.equals("dead"))
                         {
                             String avatar = "";
-                            Log.e("kkk", String.valueOf(USERS.length()));
                             for (Iterator iterator = USERS.keys(); iterator.hasNext(); ) {
                                 nick_from_iterator = (String) iterator.next();
                                 if (nick.equals(nick_from_iterator)) {
@@ -597,11 +615,10 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
                                     }
-                                    Log.e("kkk", "all is good1");
                                     list_chat.add(messageModel);
                                 } else {
                                     time = data.getString("time");
@@ -611,14 +628,12 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, avatar);
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
                                     }
-                                    Log.e("kkk", "all is good2");
                                     for (int i = 0; i < list_chat.size(); i++) {
                                         if (test_num < list_chat.get(i).num) {
-                                            Log.e("kkk", "all is good3" + i);
                                             list_chat.add(i, messageModel);
                                             break;
                                         }
@@ -679,7 +694,7 @@ public class GameChatFragment extends Fragment {
                         }
                     }
 
-                    MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes", avatar);
+                    MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes", fromBase64(avatar));
 
                     boolean good = true;
                     for (int i = 0; i < list_chat.size(); i++)
@@ -785,7 +800,7 @@ public class GameChatFragment extends Fragment {
                                             break;
                                         }
                                     }
-                                    messageModel = new MessageModel(test_num, mafia_nick + " голосует за " + user_nick, time, mafia_nick, "VotingMes", avatar);
+                                    messageModel = new MessageModel(test_num, mafia_nick + " голосует за " + user_nick, time, mafia_nick, "VotingMes", fromBase64(avatar));
                                     break;
                                 case "voting":
                                     data2 = data.getJSONObject("message");
@@ -802,7 +817,7 @@ public class GameChatFragment extends Fragment {
                                             break;
                                         }
                                     }
-                                    messageModel = new MessageModel(test_num,voter + " голосует за " + user_nick, time, voter, "VotingMes", avatar2);
+                                    messageModel = new MessageModel(test_num,voter + " голосует за " + user_nick, time, voter, "VotingMes", fromBase64(avatar2));
                                     break;
                                 case "time_info":
                                     messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
@@ -849,17 +864,19 @@ public class GameChatFragment extends Fragment {
                 JSONObject data = (JSONObject) args[0];
                 Log.d("kkk", "принял - ban_user_in_room GameChatFragment - " + data);
                 String nick = "";
+                String host_nick = "";
                 String time = "";
                 int test_num = -1;
                 try {
                     test_num = data.getInt("num");
                     nick = data.getString("nick");
+                    host_nick = data.getString("host_nick");
                     time = data.getString("time");
                     time = getDate(time);
                 } catch (JSONException e) {
                     return;
                 }
-                MessageModel messageModel = new MessageModel(test_num, player.getHost_nick(), time, nick, "KickMes");
+                MessageModel messageModel = new MessageModel(test_num, host_nick + " кикнул(-а) " + nick, time, nick, "KickMes");
 
                 boolean good = true;
                 for (int i = 0; i < list_chat.size(); i++)
@@ -948,6 +965,116 @@ public class GameChatFragment extends Fragment {
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onSuccessGetInRoomObserver = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ET_message.setVisibility(View.INVISIBLE);
+                    RL_send.setVisibility(View.INVISIBLE);
+                    TV_BI.setVisibility(View.INVISIBLE);
+                    player.is_observer = true;
+                }
+            });
+        }
+    };
+
+    //принимает время дня
+    private Emitter.Listener onTime = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(() -> {
+                JSONObject data = (JSONObject) args[0];
+                String time;
+                try {
+                    time = data.getString("time");
+                    switch (time)
+                    {
+                        case "lobby":
+                            player.setTime(Time.LOBBY);
+                            break;
+                        case "night_love":
+                            player.setTime(Time.NIGHT_LOVE);
+                            break;
+                        case "night_other":
+                            player.setTime(Time.NIGHT_OTHER);
+                            break;
+                        case "day":
+                            player.setTime(Time.DAY);
+                            messages_can_write = 10;
+                            Log.e("kkk", messages_can_write + "from on_time");
+                            break;
+                        case "voting":
+                            messages_can_write = 10;
+                            player.setTime(Time.VOTING);
+                            break;
+                    }
+
+                    if (player.getStatus().equals("alive")) {
+                        switch (player.getTime()) {
+                            case NIGHT_LOVE:
+                                switch (player.getRole()) {
+                                    case MAFIA:
+                                        player.setCan_write(true);
+                                        break;
+                                    case MAFIA_DON:
+                                        player.setCan_write(true);
+                                        break;
+                                }
+                                break;
+                            case NIGHT_OTHER:
+                                break;
+                            case DAY:
+                                player.setCan_write(true);
+                                break;
+                            case VOTING:
+                                break;
+                        }
+                    }
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onGetMyGameInfo = new Emitter.Listener()  {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (!player.is_observer) {
+                        JSONObject data = (JSONObject) args[0];
+                        String role = "", status = "", time = "", nick;
+                        boolean can_act = false, can_vote = false, last_message = false, can_skip_day = true;
+                        boolean sheriff = false, doctor = false, lover = false, bodyguard = false, poisoner = false;
+                        int voted_number;
+                        Log.d("kkk", "Socket_принять - get_my_game_info in GameChat Fragment - " + args[0]);
+                        JSONObject data2;
+                        JSONObject influences;
+                        try {
+                            if (data.has("messages_counter")) {
+                                messages_can_write = data.getInt("messages_counter");
+                                Log.e("kkk", messages_can_write + "from Get_info");
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             });

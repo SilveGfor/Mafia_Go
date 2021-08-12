@@ -69,8 +69,9 @@ import okhttp3.TlsVersion;
     public static String Sid = "";
     public static String Role = "";
     public static int Game_id;
+    public static boolean onResume = false;
     public static Bitmap bitmap_avatar_2;
-    public static String CURRENT_GAME_VERSION = "0.0.1";
+    public static String CURRENT_GAME_VERSION = "0.0.2";
     public static JSONObject USERS = new JSONObject();
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
@@ -95,14 +96,16 @@ import okhttp3.TlsVersion;
 
         //GameChatFragment fragment = (GameChatFragment) fm.findFragmentByTag("item_chat_tag");
         GameChatFragment fragment = mPageReferenceMap.get(2);
+        String just_a = "[" + nick2 + "]";
         if (fragment == null) {
             Log.e("kkk", "ok1");
         }
         else {
-            Log.e("kkk", "ok2");
-            fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
-            //fragment.ET_message.append();
-            fragment.ET_message.setSelection(fragment.ET_message.length());
+            if (!fragment.ET_message.getText().toString().contains(just_a)) {
+                fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
+                //fragment.ET_message.append();
+                fragment.ET_message.setSelection(fragment.ET_message.length());
+            }
         }
 
         fragment = mPageReferenceMap.get(1);
@@ -110,10 +113,11 @@ import okhttp3.TlsVersion;
             Log.e("kkk", "ok1");
         }
         else {
-            Log.e("kkk", "ok2");
-            fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
-            //fragment.ET_message.append();
-            fragment.ET_message.setSelection(fragment.ET_message.length());
+            if (!fragment.ET_message.getText().toString().contains(just_a)) {
+                fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
+                //fragment.ET_message.append();
+                fragment.ET_message.setSelection(fragment.ET_message.length());
+            }
         }
       }
 
@@ -135,6 +139,8 @@ public static Socket socket;
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.startService(new Intent(this, BackgroundTask.class));
+
         socket.connect();
 
         /*
@@ -147,7 +153,64 @@ public static Socket socket;
         } catch (GooglePlayServicesNotAvailableException e) {
             Log.e("SecurityException", "Google Play Services not available.");
             }
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+        builder.setView(viewDang);
+        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+        TV_title.setText("Опасная зона!");
+        TV_error.setText("Личные сообщения все еще разрабатываются, ими можно пользоваться, но некоторые функции и внешний вид могут не соответствовать ожиданиям");
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+        builder.setView(viewDang);
+        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+        TV_title.setText("Заголовок!");
+        TV_text.setText("текст");
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+            builder.setView(viewQuestion);
+            AlertDialog alert = builder.create();
+            TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+            Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+            Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+            TV_text.setText("Вы уверены, что хотите удалить пользователя из списка друзей?");
+            btn_yes.setOnClickListener(v1 -> {
+                JSONObject json = new JSONObject();
+                try {
+                    json.put("nick", MainActivity.NickName);
+                    json.put("session_id", MainActivity.Session_id);
+                    json.put("user_id_2", list_friends.get(position).user_id_2);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.emit("delete_friend", json);
+                Log.d("kkk", "Socket_отправка - delete_friend - "+ json.toString());
+                list_friends.remove(position);
+                alert.cancel();
+                this.notifyDataSetChanged();
+            });
+            btn_no.setOnClickListener(v12 -> {
+                alert.cancel();
+            });
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert.show();
+
          */
+
 
         ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
                 .tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0)
@@ -161,8 +224,6 @@ public static Socket socket;
         client = new OkHttpClient.Builder().//connectionSpecs(Collections.singletonList(spec)).
                 connectTimeout(30, TimeUnit.SECONDS).callTimeout(30, TimeUnit.SECONDS).
                 readTimeout(30, TimeUnit.SECONDS).build();
-
-        this.startService(new Intent(this, BackgroundTask.class));
 
         //socket.on("connect", onConnect);
         //socket.on("disconnect", onDisconnect);
@@ -194,15 +255,18 @@ public static Socket socket;
 
     @Override
     protected void onResume() {
-        final JSONObject json2 = new JSONObject();
-        try {
-            json2.put("nick", NickName);
-            json2.put("session_id", Session_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (onResume) {
+            final JSONObject json2 = new JSONObject();
+            try {
+                json2.put("nick", NickName);
+                json2.put("session_id", Session_id);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("connection", json2);
+            Log.d("kkk", "CONNECTION onResume in mainActivity");
         }
-        socket.emit("connection", json2);
-        Log.d("kkk", "CONNECTION");
+
         super.onResume();
     }
 

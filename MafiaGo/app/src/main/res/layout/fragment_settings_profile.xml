@@ -157,7 +157,7 @@
             android:layout_height="match_parent" >
 
             <TextView
-                android:id="@+id/textView10"
+                android:id="@+id/dialogOkNo_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -174,8 +174,8 @@
                 android:layout_marginTop="16dp"
                 android:text="Сыграно игр 5"
                 android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="@+id/textView10"
-                app:layout_constraintTop_toBottomOf="@+id/textView10" />
+                app:layout_constraintStart_toStartOf="@+id/dialogOkNo_text"
+                app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text" />
 
             <TextView
                 android:id="@+id/fragmentSettingsProfile_TV_maxMoney"

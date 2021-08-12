@@ -182,6 +182,7 @@ public class MenuFragment extends Fragment{
         Friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
                 builder2.setTitle("В разработке...")
                         .setMessage("")
@@ -195,7 +196,8 @@ public class MenuFragment extends Fragment{
                                 });
                 AlertDialog alert2 = builder2.create();
                 alert2.show();
-                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                 */
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
             }
         });
 

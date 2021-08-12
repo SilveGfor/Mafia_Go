@@ -4,12 +4,15 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,7 +53,7 @@ public class PrivateChatsAdapter extends BaseAdapter {
         ImageView IV_ban_unban_chat = view.findViewById(R.id.itemPrivateChat_IV_ban_chat);
         ImageView IV_avatar = view.findViewById(R.id.Item_friend_avatar);
 
-        ImageView online = view.findViewById(R.id.Item_friend_IV_on_off);
+        ImageView IV_online = view.findViewById(R.id.itemPrivateChat_IV_online);
 
         if (list_friends.get(position).getAvatar() != null) {
             IV_avatar.setImageBitmap(fromBase64(list_friends.get(position).getAvatar()));
@@ -63,30 +66,33 @@ public class PrivateChatsAdapter extends BaseAdapter {
             IV_ban_unban_chat.setImageResource(R.drawable.ic_change);
             IV_ban_unban_chat.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Разблокировка чата!")
-                        .setMessage("Вы точно хотите разблокировать чат с игроком " + list_friends.get(position).getNick() + "?")
-                        .setIcon(R.drawable.ic_info)
-                        .setCancelable(false)
-                        .setNegativeButton("Да", (dialog, id) -> {
-                            dialog.cancel();
-                            final JSONObject json = new JSONObject();
-                            try {
-                                json.put("nick", MainActivity.NickName);
-                                json.put("session_id", MainActivity.Session_id);
-                                json.put("user_id", MainActivity.User_id);
-                                json.put("user_id_2", list_friends.get(position).getUser_id_2());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            socket.emit("unlock_chat", json);
-                            Log.d("kkk", "Socket_отправка - unlock_chat - " + json.toString());
-                            list_friends.remove(position);
-                            this.notifyDataSetChanged();
-                        })
-                        .setPositiveButton(" Нет", (dialog, id) -> {
-                            dialog.cancel();
-                        });
+                View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                builder.setView(viewQuestion);
                 AlertDialog alert = builder.create();
+                TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                TV_text.setText("Вы точно хотите разблокировать чат с игроком " + list_friends.get(position).getNick() + "?");
+                btn_yes.setOnClickListener(v1 -> {
+                    alert.cancel();
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("user_id", MainActivity.User_id);
+                        json.put("user_id_2", list_friends.get(position).getUser_id_2());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("unlock_chat", json);
+                    Log.d("kkk", "Socket_отправка - unlock_chat - " + json.toString());
+                    list_friends.remove(position);
+                    this.notifyDataSetChanged();
+                });
+                btn_no.setOnClickListener(v12 -> {
+                    alert.cancel();
+                });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             });
         }
@@ -95,40 +101,39 @@ public class PrivateChatsAdapter extends BaseAdapter {
             IV_ban_unban_chat.setImageResource(R.drawable.ic_ban);
             IV_ban_unban_chat.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Блокировка чата!")
-                        .setMessage("Вы точно хотите заблокировать чат с игроком " + list_friends.get(position).getNick() + "?")
-                        .setIcon(R.drawable.ic_info)
-                        .setCancelable(false)
-                        .setNegativeButton("Да", (dialog, id) -> {
-                            dialog.cancel();
-                            final JSONObject json = new JSONObject();
-                            try {
-                                json.put("nick", MainActivity.NickName);
-                                json.put("session_id", MainActivity.Session_id);
-                                json.put("user_id", MainActivity.User_id);
-                                json.put("user_id_2", list_friends.get(position).getUser_id_2());
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            socket.emit("block_chat", json);
-                            Log.d("kkk", "Socket_отправка - block_chat - " + json.toString());
-                            list_friends.remove(position);
-                            this.notifyDataSetChanged();
-                                })
-                        .setPositiveButton(" Нет", (dialog, id) -> {
-                            dialog.cancel();
-                        });
+                View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                builder.setView(viewQuestion);
                 AlertDialog alert = builder.create();
+                TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                TV_text.setText("Вы точно хотите заблокировать чат с игроком " + list_friends.get(position).getNick() + "?");
+                btn_yes.setOnClickListener(v1 -> {
+                    alert.cancel();
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("user_id", MainActivity.User_id);
+                        json.put("user_id_2", list_friends.get(position).getUser_id_2());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("block_chat", json);
+                    Log.d("kkk", "Socket_отправка - block_chat - " + json.toString());
+                    list_friends.remove(position);
+                    this.notifyDataSetChanged();
+                });
+                btn_no.setOnClickListener(v12 -> {
+                    alert.cancel();
+                });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             });
         }
 
         if (list_friends.get(position).getOnline()) {
-            online.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_online));
-        }
-        else
-        {
-            online.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_offline));
+            IV_online.setVisibility(View.VISIBLE);
         }
         return view;
     }

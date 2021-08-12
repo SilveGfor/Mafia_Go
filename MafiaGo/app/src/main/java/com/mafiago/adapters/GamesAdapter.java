@@ -85,6 +85,7 @@ public class GamesAdapter extends BaseAdapter {
         TextView TV_roomState = view.findViewById(R.id.itemGame_TV_roomState);
         TextView txt_min_max_people = view.findViewById(R.id.itemGame_TV_minMaxPlayers);
         TextView txt_num_people = view.findViewById(R.id.itemGame_TV_playersInRoom);
+        TextView TV_customRoom = view.findViewById(R.id.itemGame_TV_customRoom);
 
         btn_players.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -146,6 +147,11 @@ public class GamesAdapter extends BaseAdapter {
             }
         }
 
+        if (list_room.get(position).is_custom)
+        {
+            TV_customRoom.setVisibility(View.VISIBLE);
+        }
+
         if (list_room.get(position).is_on)
         {
             TV_roomState.setText("Игра идёт");
@@ -159,7 +165,7 @@ public class GamesAdapter extends BaseAdapter {
 
         txt_room_name.setText(list_room.get(position).name);
         txt_min_max_people.setText("от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people);
-        txt_num_people.setText("Игроки: " + list_room.get(position).num_people);
+        txt_num_people.setText("Игроков: " + list_room.get(position).num_people);
         return view;
     }
 }

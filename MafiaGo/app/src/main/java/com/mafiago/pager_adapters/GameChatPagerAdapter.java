@@ -15,7 +15,7 @@ import static com.mafiago.MainActivity.mPageReferenceMap;
 
 public class GameChatPagerAdapter extends FragmentStatePagerAdapter {
     public int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Tab1", "Tab2"};
+    private String tabTitles[] = new String[] { "чат игры", "чат мёртвых"};
     private Context context;
 
     public GameChatPagerAdapter(FragmentManager fm, Context context) {

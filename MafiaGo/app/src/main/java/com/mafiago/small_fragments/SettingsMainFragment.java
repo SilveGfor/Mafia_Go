@@ -38,6 +38,7 @@ import java.io.IOException;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
+import static com.mafiago.MainActivity.f;
 import static com.mafiago.MainActivity.socket;
 
 public class SettingsMainFragment extends Fragment {
@@ -357,23 +358,79 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 View viewChangeNick = inflater.inflate(R.layout.dialog_change_nick, container, false);
                 builder.setView(viewChangeNick);
+
+                EditText ET_nick = viewChangeNick.findViewById(R.id.dialogChangeNick_ET_newNick);
+                Button btn_changeNick = viewChangeNick.findViewById(R.id.dialogChangeNick_btn_changeNick);
+
+                btn_changeNick.setOnClickListener(v13 -> {
+                    String nick = ET_nick.getText().toString();
+
+                    Log.e("kkk", nick);
+                    int flag = 0;
+                    for (int i = 0; i < nick.length(); i ++)
+                    {
+                        if (Character.isLetter(nick.charAt(i))) {
+                            for (int j = 0; j < f.length; j++) {
+                                if (nick.charAt(i) == f[j]) {
+                                    flag = 1;
+                                }
+                            }
+
+                            if (flag != 1) {
+                                nick = nick.replace(String.valueOf(nick.charAt(i)), "");
+                            }
+                            flag = 0;
+                        }
+                    }
+                    Log.e("kkk", nick);
+                    Log.e("kkk", String.valueOf(nick.length()));
+                    if (nick.length() >= 3)
+                    {
+                        if (nick.length() <= 15)
+                        {
+                            final JSONObject json2 = new JSONObject();
+                            try {
+                                json2.put("nick", MainActivity.NickName);
+                                json2.put("session_id", MainActivity.Session_id);
+                                json2.put("new_nick", nick);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
+                            socket.emit("edit_profile", json2);
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Длинный ник!");
+                            TV_error.setText("Ваш ник должен быть меньше 21 символа");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
+                        }
+                    }
+                    else
+                    {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder2.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_title.setText("Короткий ник!");
+                        TV_error.setText("Ваш ник должен быть больше 2 символов");
+                        AlertDialog alert2 = builder2.create();
+                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert2.show();
+                    }
+                });
+
                 AlertDialog alert = builder.create();
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
-
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                builder2.setTitle("В разработке...")
-                        .setMessage("")
-                        .setIcon(R.drawable.ic_razrabotka)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert2 = builder2.create();
-                alert2.show();
             });
 
             btnChangePassword.setOnClickListener(v -> {

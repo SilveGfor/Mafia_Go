@@ -8,6 +8,7 @@ public class FriendModel {
     public String room;
     public int room_num;
     public boolean is_friend_request;
+    public boolean is_my_request;
 
     //Друг в комнате
     public FriendModel(String nick, String user_id_2, boolean online, String avatar, String room, int room_num) {
@@ -17,7 +18,6 @@ public class FriendModel {
         this.avatar = avatar;
         this.room = room;
         this.room_num = room_num;
-        is_friend_request = false;
     }
     //Друг не в комнате
     public FriendModel(String nick, String user_id_2, boolean online, String avatar) {
@@ -30,12 +30,12 @@ public class FriendModel {
         room_num = -1;
     }
     //Запрос на дружбу
-    public FriendModel(String nick, String user_id_2, boolean online, String avatar, boolean is_friend_request) {
+    public FriendModel(String nick, String user_id_2, boolean online, String avatar, boolean is_my_request) {
         this.nick = nick;
         this.online = online;
         this.user_id_2 = user_id_2;
         this.avatar = avatar;
-        this.is_friend_request = is_friend_request;
+        this.is_my_request = is_my_request;
         room = "";
         room_num = -1;
     }

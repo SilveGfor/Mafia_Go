@@ -1,6 +1,8 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -38,19 +40,20 @@ import static com.mafiago.MainActivity.socket;
 
 public class PrivateMessagesFragment extends Fragment implements OnBackPressedListener {
 
-    public ListView MessageView;
+    public ListView LV_chat;
 
-    public Button btnExit, btnDeleteAnswer;
+    public Button btnSend;
+    public Button btnEdit;
+    public RelativeLayout RL_send;
 
-    public ImageView btnSend;
-    public ImageView btnEditMessage;
+
     public ImageView IV_avatar;
+    public ImageView IV_back;
 
     public EditText ET_input;
 
-    public RelativeLayout RL_answer;
-
-    public TextView TV_answer_nick, TV_answer_mes, TV_nick;
+    public TextView TV_nick;
+    public TextView TV_answer;
 
     public PrivateMessagesAdapter messageAdapter;
 
@@ -66,23 +69,19 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_private_chat, container, false);
-        MessageView = view.findViewById(R.id.fragmentPrivateChat_list_messages);
-        btnExit = view.findViewById(R.id.fragmentPrivateChat_btn_exit);
-        btnSend = view.findViewById(R.id.fragmentPrivateChat_btn_send_mes);
-        btnEditMessage = view.findViewById(R.id.fragmentPrivateChat_btn_edit);
-        btnDeleteAnswer = view.findViewById(R.id.fragmentPrivateChat_btn_delete_answer);
-        ET_input = view.findViewById(R.id.fragmentPrivateChat_ET_input);
+        LV_chat = view.findViewById(R.id.fragmentPrivateChat_LV_chat);
+        IV_back = view.findViewById(R.id.fragmentPrivateChat_IV_back);
+        ET_input = view.findViewById(R.id.fragmentPrivateChat_ET_message);
 
-        RL_answer = view.findViewById(R.id.fragmentPrivateChat_RL_answer);
-        TV_answer_nick = view.findViewById(R.id.fragmentPrivateChat_answer_nick);
-        TV_answer_mes = view.findViewById(R.id.fragmentPrivateChat_answer_text);
+        btnEdit = view.findViewById(R.id.fragmentPrivateChat_btn_edit);
+        btnSend = view.findViewById(R.id.fragmentPrivateChat_btn_send);
+        RL_send = view.findViewById(R.id.fragmentPrivateChat_RL_send);
         TV_nick = view.findViewById(R.id.fragmentPrivateChat_TV_nick);
+        TV_answer = view.findViewById(R.id.fragmentPrivateChat_TV_answerMes);
         IV_avatar = view.findViewById(R.id.fragmentPrivateChat_IV_avatar);
 
         TV_nick.setText(MainActivity.NickName_2);
         IV_avatar.setImageBitmap(MainActivity.bitmap_avatar_2);
-
-        RL_answer.setVisibility(View.GONE);
 
         JSONObject json = new JSONObject();
         try {
@@ -98,7 +97,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         Log.d("kkk", "Socket_отправка - get_chat - "+ json.toString());
 
         messageAdapter = new PrivateMessagesAdapter(list_messages, getContext());
-        MessageView.setAdapter(messageAdapter);
+        LV_chat.setAdapter(messageAdapter);
 
         //socket.off("connect");
         //socket.off("disconnect");
@@ -113,7 +112,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.on("delete_message", OnDeleteMessage);
         socket.on("edit_message", OnEditMessage);
 
-        MessageView.setOnItemClickListener((parent, view12, position, id) -> {
+        LV_chat.setOnItemClickListener((parent, view12, position, id) -> {
             if (list_messages.get(position).nickName.equals(MainActivity.NickName))
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -123,29 +122,25 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                 AlertDialog alert = builder.create();
 
                 Button btnAnswer = view_menu.findViewById(R.id.item_chat_menu_btn_answer);
-                Button btnEdit = view_menu.findViewById(R.id.item_chat_menu_btn_edit);
+                Button btnEditMessage = view_menu.findViewById(R.id.item_chat_menu_btn_edit);
                 Button btnDelete = view_menu.findViewById(R.id.item_chat_menu_btn_delete);
 
                 btnAnswer.setOnClickListener(v -> {
-                    alert.cancel();
-                    Log.d("kkk", "----");
-                    Log.d("kkk", "position - " + String.valueOf(position));
-                    Log.d("kkk", "----");
+                    alert.cancel();;
                     answer_id = position;
-                    TV_answer_nick.setText(list_messages.get(position).nickName);
-                    TV_answer_mes.setText(list_messages.get(position).message);
-                    RL_answer.setVisibility(View.VISIBLE);
+                    TV_answer.setText(list_messages.get(position).nickName + ": " + list_messages.get(position).message);
+                    TV_answer.setVisibility(View.VISIBLE);
                 });
 
-                btnEdit.setOnClickListener(v -> {
+                btnEditMessage.setOnClickListener(v -> {
                     alert.cancel();
 
-                    btnSend.setVisibility(View.INVISIBLE);
-                    btnEditMessage.setVisibility(View.VISIBLE);
+                    btnEdit.setVisibility(View.VISIBLE);
+                    btnSend.setVisibility(View.GONE);
 
                     ET_input.setText(list_messages.get(position).message);
 
-                    btnEditMessage.setOnClickListener(v1 -> {
+                    btnEdit.setOnClickListener(v1 -> {
                         JSONObject json2 = new JSONObject();
                         try {
                             json2.put("nick", MainActivity.NickName);
@@ -158,7 +153,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             e.printStackTrace();
                         }
                         btnSend.setVisibility(View.VISIBLE);
-                        btnEditMessage.setVisibility(View.GONE);
+                        btnEdit.setVisibility(View.GONE);
                         ET_input.setText("");
                         socket.emit("edit_message", json2);
                         Log.d("kkk", "Socket_отправка - edit_message - "+ json2.toString());
@@ -180,19 +175,13 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     socket.emit("delete_message", json2);
                     Log.d("kkk", "Socket_отправка - delete_message - "+ json2.toString());
                 });
-
-
-
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             }
             else {
-                Log.d("kkk", "----");
-                Log.d("kkk", "position - " + String.valueOf(position));
-                Log.d("kkk", "----");
                 answer_id = position;
-                TV_answer_nick.setText(list_messages.get(position).nickName);
-                TV_answer_mes.setText(list_messages.get(position).message);
-                RL_answer.setVisibility(View.VISIBLE);
+                TV_answer.setText(list_messages.get(position).nickName + ": " + list_messages.get(position).message);
+                TV_answer.setVisibility(View.VISIBLE);
             }
         });
 
@@ -223,7 +212,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                 Log.d("kkk", "Socket_отправка chat_message - " + json2.toString());
                 socket.emit("chat_message", json2);
                 answer_id = -1;
-                RL_answer.setVisibility(View.GONE);
+                TV_answer.setVisibility(View.GONE);
                 ET_input.setText("");
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -238,18 +227,17 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
             }
         });
 
-        btnExit.setOnClickListener(v -> {
+        IV_back.setOnClickListener(v -> {
             MainActivity.User_id_2 = "";
-            socket.off("chat_message", OnChatMessage);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
         });
 
-        btnDeleteAnswer.setOnClickListener(v -> {
+        TV_answer.setOnClickListener(v -> {
             answer_id = -1;
-            RL_answer.setVisibility(View.GONE);
+            TV_answer.setVisibility(View.GONE);
         });
 
-        MessageView.setOnScrollListener(new AbsListView.OnScrollListener() {
+        LV_chat.setOnScrollListener(new AbsListView.OnScrollListener() {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
             }
@@ -267,7 +255,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
     @Override
     public void onBackPressed() {
-        socket.off("chat_message", OnChatMessage);
         MainActivity.User_id_2 = "";
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
     }
@@ -369,7 +356,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                         }
                         messageAdapter.notifyDataSetChanged();
                         if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 2) {
-                            MessageView.setSelection(messageAdapter.getCount() - 1);
+                            LV_chat.setSelection(messageAdapter.getCount() - 1);
                         }
                     }
                     else

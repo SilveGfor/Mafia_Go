@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fragmentSettingsProfile_CV"
+                android:layout_width="268dp"
+                android:layout_height="163dp"
+                android:layout_marginTop="24dp"
+                app:cardBackgroundColor="#80848484"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_nick"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginLeft="24dp"
+                        android:text="Римский гусь"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toEndOf="@+id/fragmentSettingsProfile_IV_avatar"
+                        app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_IV_avatar" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/fragmentSettingsProfile_IV_avatar"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:src="@drawable/lover_alive"
+                        app:civ_border_color="#FF0000"
+                        app:civ_border_width="1dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_onlineOffline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="В сети"
+                        android:textSize="14sp"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_nick"
+                        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_TV_nick" />
+
+                    <ImageView
+                        android:id="@+id/imageView7"
+                        android:layout_width="16dp"
+                        android:layout_height="20dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/experience"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_IV_avatar"
+                        app:layout_constraintTop_toBottomOf="@+id/itemDailyTask_IV_prize" />
+
+                    <ImageView
+                        android:id="@+id/imageView8"
+                        android:layout_width="21dp"
+                        android:layout_height="14dp"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginLeft="24dp"
+                        android:background="@drawable/rang"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_nick" />
+
+                    <ImageView
+                        android:id="@+id/imageView9"
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:background="@drawable/gold"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+                        app:layout_constraintStart_toStartOf="@+id/imageView8" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_money"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:text="TextView"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
+                        app:layout_constraintStart_toEndOf="@+id/itemDailyTask_IV_prize"
+                        tools:text="100$" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_rang"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:text="TextView"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
+                        app:layout_constraintStart_toEndOf="@+id/imageView8"
+                        tools:text="10 ранг" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_gold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:text="TextView"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
+                        app:layout_constraintStart_toEndOf="@+id/imageView9"
+                        tools:text="100 золота" />
+
+                    <ImageView
+                        android:id="@+id/itemDailyTask_IV_prize"
+                        android:layout_width="15dp"
+                        android:layout_height="18dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/money"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_IV_avatar"
+                        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_IV_avatar" />
+
+                    <TextView
+                        android:id="@+id/dialogYouHaveBeenBanned_TV_exp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginLeft="4dp"
+                        android:text="TextView"
+                        android:textSize="14sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/imageView7"
+                        app:layout_constraintStart_toEndOf="@+id/imageView7"
+                        tools:text="1000XP" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/fragmentSettingsProfile_CV2"
+                android:layout_width="268dp"
+                android:layout_height="163dp"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="#80848484"
+                app:cardCornerRadius="8dp"
+                app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_CV"
+                app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_CV"
+                app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_CV">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/dialogOkNo_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginTop="16dp"
+                        android:text="Статистика"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_gamesCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Сыграно игр 5"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/dialogOkNo_text"
+                        app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_maxMoney"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Макс число монет 78"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_gamesCount"
+                        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_TV_gamesCount" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_maxExp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:text="Макс число опыта 90"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_gamesCount"
+                        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_TV_maxMoney" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_percentWins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:layout_marginLeft="24dp"
+                        android:text="Процент побед 45%"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toEndOf="@+id/fragmentSettingsProfile_TV_maxExp"
+                        app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_TV_gamesCount" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_percentMafiaWins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Побед мафии 67%"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_percentWins"
+                        app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_TV_maxMoney" />
+
+                    <TextView
+                        android:id="@+id/fragmentSettingsProfile_TV_percentPeacefulWins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Побед мирных 45%"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_percentMafiaWins"
+                        app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_TV_maxExp" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <Button
+                android:id="@+id/fragmentSettingsProfile_btn_changeAvatar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/orange_button"
+                android:text="Сменить аватар"
+                app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_CV2"
+                app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_CV2"
+                app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_CV2" />
+
+            <Button
+                android:id="@+id/fragmentSettingsProfile_btn_changePassword"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/grey_button"
+                android:text="сменить пароль"
+                app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeNick"
+                app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeNick"
+                app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_btn_changeNick" />
+
+            <Button
+                android:id="@+id/fragmentSettingsProfile_btn_changeNick"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/grey_button"
+                android:text="сменить ник"
+                app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
+                app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
+                app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

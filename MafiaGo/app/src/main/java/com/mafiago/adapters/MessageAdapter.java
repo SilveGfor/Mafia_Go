@@ -78,7 +78,7 @@
                 CircleImageView IV_avatar = view.findViewById(R.id.itemMessage_avatar);
 
                 if (list_mess.get(position).avatar != null) {
-                    IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
+                    IV_avatar.setImageBitmap(list_mess.get(position).avatar);
                 }
 
                 IV_avatar.setOnClickListener(new View.OnClickListener() {
@@ -221,7 +221,7 @@
                 IV_avatar = view.findViewById(R.id.itemMessage_avatar);
 
                 if (list_mess.get(position).avatar != null) {
-                    IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
+                    IV_avatar.setImageBitmap(list_mess.get(position).avatar);
                 }
 
                 IV_avatar.setOnClickListener(v -> {
@@ -262,7 +262,7 @@
                 IV_avatar = view.findViewById(R.id.itemAnswerMessage_avatar);
 
                 if (list_mess.get(position).avatar != null) {
-                    IV_avatar.setImageBitmap(fromBase64(list_mess.get(position).avatar));
+                    IV_avatar.setImageBitmap(list_mess.get(position).avatar);
                 }
 
                 IV_avatar.setOnClickListener(v -> {
@@ -405,7 +405,7 @@
 
                 txt_connect_mes.setTextColor(Color.parseColor("#BE3144"));
 
-                txt_connect_mes.setText(list_mess.get(position).message + " кикнул(-а) " + list_mess.get(position).nickName);
+                txt_connect_mes.setText(list_mess.get(position).message);
                 //txt_connect_time.setText(list_mess.get(position).time);
                 break;
         }

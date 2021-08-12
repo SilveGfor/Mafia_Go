@@ -50,6 +50,7 @@ import okhttp3.Response;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.mafiago.MainActivity.client;
+import static com.mafiago.MainActivity.socket;
 
 public class StartFragment extends Fragment {
 
@@ -305,6 +306,17 @@ public class StartFragment extends Fragment {
 
                                     MainActivity.NickName = NickName;
                                     MainActivity.Session_id = Session_id;
+                                    MainActivity.onResume = true;
+                                    final JSONObject json2 = new JSONObject();
+                                    try {
+                                        json2.put("nick", NickName);
+                                        json2.put("session_id", Session_id);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    socket.emit("connection", json2);
+                                    Log.d("kkk", "CONNECTION after Login");
+
                                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
                                 }
                                 else {

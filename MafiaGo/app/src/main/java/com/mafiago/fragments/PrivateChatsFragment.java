@@ -65,18 +65,6 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         privateChatsAdapter = new PrivateChatsAdapter(list_friends, getContext());
         friendsView.setAdapter(privateChatsAdapter);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-        builder.setView(viewDang);
-        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-        TV_title.setText("Опасная зона!");
-        TV_error.setText("Личные сообщения все еще разрабатываются, ими можно пользоваться, но некоторые функции и внешний вид могут не соответствовать ожиданиям");
-
-        AlertDialog alert = builder.create();
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alert.show();
-
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_chats.setVisibility(View.GONE);
 
@@ -172,6 +160,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                             user_id_1 = user_id_2;
                             user_id_2 = test_id;
                         }
+                        online = data.getBoolean("is_online");
                         nick = user_nicks.getString(user_id_2);
                         avatar = data.getString("avatar");
 
@@ -180,7 +169,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, true, false, avatar));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
