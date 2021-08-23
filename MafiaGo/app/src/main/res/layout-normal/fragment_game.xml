@@ -62,6 +62,30 @@
         app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_mafiaCount" />
 
     <TextView
+        android:id="@+id/fragmentGame_TV_playersCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:text="Игроков: 4"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_roomName" />
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_playersMinMaxInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="комната от 5 до 8"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_peacefulCount"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGame_TV_playersCount"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_playersCount" />
+
+    <TextView
         android:id="@+id/fragmentGame_TV_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

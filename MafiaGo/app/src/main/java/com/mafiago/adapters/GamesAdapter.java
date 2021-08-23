@@ -97,19 +97,36 @@ public class GamesAdapter extends BaseAdapter {
             UsersInRoomAdapter usersInRoomAdapter = new UsersInRoomAdapter(list_room.get(position).list_users, context);
             LV_users.setAdapter(usersInRoomAdapter);
 
-
             AlertDialog alert = builder.create();
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
         });
 
         View finalView = view;
+
         view.setOnClickListener(v -> {
-            MainActivity.Game_id = list_room.get(position).id;
-            MainActivity.RoomName = list_room.get(position).name;
-            Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
             AppCompatActivity activity = (AppCompatActivity) finalView.getContext();
-            activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+
+            if (MainActivity.Rang >= 2 || !list_room.get(position).is_custom) {
+                MainActivity.Game_id = list_room.get(position).id;
+                MainActivity.RoomName = list_room.get(position).name;
+                MainActivity.PlayersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;
+                Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+            }
+            else
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                View viewDang = layout.inflate(R.layout.dialog_error, null);
+                builder.setView(viewDang);
+                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                TV_title.setText("Вход до 2 ранга запрещён!");
+                TV_error.setText("Создавать и играть в кастомных комнатах можно только после достижения 2 ранга");
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
         });
 
 

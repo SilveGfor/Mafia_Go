@@ -134,6 +134,7 @@ public class FriendsAdapter extends BaseAdapter {
             TV_room.setOnClickListener(v -> {
                 MainActivity.Game_id = list_friends.get(position).room_num;
                 MainActivity.RoomName = list_friends.get(position).room;
+                MainActivity.PlayersMinMaxInfo = "от " + list_friends.get(position).min_people + " до " + list_friends.get(position).max_people;
                 AppCompatActivity activity = (AppCompatActivity) view.getContext();
                 activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
             });

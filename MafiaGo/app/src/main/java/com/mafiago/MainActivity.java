@@ -12,6 +12,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -21,6 +22,9 @@ import android.util.Log;
 
 import com.example.mafiago.R;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.fragments.GameFragment;
@@ -68,10 +72,14 @@ import okhttp3.TlsVersion;
     public static String User_id_2 = "";
     public static String Sid = "";
     public static String Role = "";
+    public static String Theme = "";
+    public static String PlayersMinMaxInfo = "";
     public static int Game_id;
+    public static int Rang;
+    public static int MyInviteCode;
     public static boolean onResume = false;
     public static Bitmap bitmap_avatar_2;
-    public static String CURRENT_GAME_VERSION = "0.0.2";
+    public static String CURRENT_GAME_VERSION = "0.1.0";
     public static JSONObject USERS = new JSONObject();
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
@@ -79,6 +87,11 @@ import okhttp3.TlsVersion;
 
     public static String password = "";
     public static String nick = "";
+
+      public static final String APP_PREFERENCES = "user";
+      public static final String APP_PREFERENCES_THEME = "theme";
+
+      private SharedPreferences mSettings;
 
     ArrayList<NotificationModel> notifications = new ArrayList<>();
 
@@ -136,6 +149,15 @@ public static Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String theme = mSettings.getString(APP_PREFERENCES_THEME, "dark");
+        Theme = theme;
+        if (theme.equals("dark")) {
+            setTheme(R.style.DarkTheme);
+        } else
+        {
+            setTheme(R.style.LightTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -154,7 +176,7 @@ public static Socket socket;
             Log.e("SecurityException", "Google Play Services not available.");
             }
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
         builder.setView(viewDang);
         TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
@@ -211,6 +233,13 @@ public static Socket socket;
 
          */
 
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+
 
         ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
                 .tlsVersions(TlsVersion.TLS_1_2, TlsVersion.TLS_1_1, TlsVersion.TLS_1_0)
@@ -255,6 +284,8 @@ public static Socket socket;
 
     @Override
     protected void onResume() {
+        //socket.close();
+        socket.connect();
         if (onResume) {
             final JSONObject json2 = new JSONObject();
             try {

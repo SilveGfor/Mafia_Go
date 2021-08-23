@@ -23,7 +23,7 @@ import static com.mafiago.MainActivity.socket;
 public class SettingsPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 2;
-    private String tabTitles[] = new String[] { "Основные", "Настройки профиля"};
+    private String tabTitles[] = new String[] { "Настройки профиля", "Основные"};
     private Context context;
 
     public SettingsPagerAdapter(FragmentManager fm, Context context) {

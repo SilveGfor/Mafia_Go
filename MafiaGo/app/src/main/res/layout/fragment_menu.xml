@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fon_main">
+    android:background="?attr/background">
 
     <ImageView
         android:id="@+id/imageView5"
@@ -22,7 +22,7 @@
         android:id="@+id/fragmentSettingsProfile_btn_changeAvatar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/orange_button"
         android:text="Играть"
         app:layout_constraintEnd_toEndOf="@+id/fragmentMenu_btn_dailyTasks"
@@ -81,7 +81,7 @@
         android:layout_width="268dp"
         android:layout_height="163dp"
         android:layout_marginTop="24dp"
-        app:cardBackgroundColor="#80848484"
+        app:cardBackgroundColor="?attr/card_background"
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -236,6 +236,7 @@
         android:layout_marginStart="80dp"
         android:layout_marginLeft="80dp"
         android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_telegram"
         app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeNick"
         app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_btn_changeNick"
         app:srcCompat="@drawable/vk" />
@@ -248,6 +249,8 @@
         android:layout_marginRight="80dp"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_vk"
         app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeNick"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_vk"
         app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_vk"
         app:layout_constraintVertical_bias="0.0"
         app:srcCompat="@drawable/telegram" />
@@ -256,11 +259,11 @@
         android:id="@+id/fragmentMenu_IV_friends"
         android:layout_width="65dp"
         android:layout_height="44dp"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_chats"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_chats"
-        app:srcCompat="@drawable/friends" />
+        app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_chats"
+        app:srcCompat="?attr/ic_friends" />
 
     <ImageView
         android:id="@+id/fragmentMenu_IV_competitions"
@@ -268,10 +271,10 @@
         android:layout_height="41dp"
         android:layout_marginBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_chats"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_vk"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_shop"
-        app:srcCompat="@drawable/competitions" />
+        app:srcCompat="?attr/ic_competitions" />
 
     <ImageView
         android:id="@+id/fragmentMenu_IV_shop"
@@ -281,7 +284,9 @@
         app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_competitions"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/shop" />
+        app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_competitions"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="?attr/ic_shop" />
 
     <ImageView
         android:id="@+id/fragmentMenu_IV_chats"
@@ -290,7 +295,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_competitions"
         app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_friends"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_competitions"
-        app:srcCompat="@drawable/chats" />
+        app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_telegram"
+        app:srcCompat="?attr/ic_chats" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

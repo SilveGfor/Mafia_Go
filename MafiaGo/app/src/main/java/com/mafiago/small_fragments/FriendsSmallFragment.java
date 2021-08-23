@@ -239,7 +239,7 @@ public class FriendsSmallFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_friend - " + data);
                     String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "", playing_room_name = "";
-                    int playing_room_num = 0;
+                    int playing_room_num = 0, min_people = 0, max_people = 0;
                     boolean online = false;
                     try {
                         nick = data.getString("nick");
@@ -250,7 +250,9 @@ public class FriendsSmallFragment extends Fragment {
                         if (playing_room_num != -1)
                         {
                             playing_room_name = data.getString("playing_room_name");
-                            list_friends.add(new FriendModel(nick, user_id_2, online, avatar, playing_room_name, playing_room_num));
+                            min_people = data.getInt("min_people_num");
+                            max_people = data.getInt("max_people_num");
+                            list_friends.add(new FriendModel(nick, user_id_2, online, avatar, playing_room_name, playing_room_num, min_people, max_people));
                         }
                         else
                         {

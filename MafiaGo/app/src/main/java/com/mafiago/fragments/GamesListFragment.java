@@ -141,10 +141,27 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         LV_games.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainActivity.Game_id = list_room.get(position).id;
-                MainActivity.RoomName = list_room.get(position).name;
-                Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                if (MainActivity.Rang >= 2 || !list_room.get(position).is_custom) {
+                    Log.e("kkk", MainActivity.Rang + " - " + list_room.get(position).is_custom);
+                    MainActivity.Game_id = list_room.get(position).id;
+                    MainActivity.RoomName = list_room.get(position).name;
+                    Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewDang);
+                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Вход до 2 ранга запрещён!");
+                    TV_error.setText("Создавать и играть в кастомных комнатах можно только после достижения 2 ранга");
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                }
+
             }
         });
 

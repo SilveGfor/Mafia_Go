@@ -1,6 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CircularProgress" parent="Theme.AppCompat.Light">
-        <item name="colorAccent">@color/color_doctor</item>
+    <style name="LightTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="main_color">@color/yellow</item>
+        <item name="help_color">#3A3535</item>
+        <item name="background">@drawable/fon_main_light</item>
+        <item name="card_background">#CD333333</item>
+        <item name="item_game_text_green">#FFE5A1</item>
+        <item name="item_game_text_grey">@color/white</item>
+        <item name="ic_shop">@drawable/ic_shop_light</item>
+        <item name="ic_competitions">@drawable/ic_competitions_light</item>
+        <item name="ic_chats">@drawable/ic_chats_light</item>
+        <item name="ic_friends">@drawable/ic_friends_light</item>
+    </style>
+
+    <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="main_color">@color/orange</item>
+        <item name="help_color">#848484</item>
+        <item name="background">@drawable/fon_main_dark</item>
+        <item name="card_background">#80848484</item>
+        <item name="item_game_text_green">@color/green</item>
+        <item name="item_game_text_grey">@color/grey</item>
+        <item name="ic_shop">@drawable/shop</item>
+        <item name="ic_competitions">@drawable/competitions</item>
+        <item name="ic_chats">@drawable/chats</item>
+        <item name="ic_friends">@drawable/friends</item>
     </style>
 </resources>

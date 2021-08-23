@@ -39,6 +39,7 @@ import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.f;
+import static com.mafiago.MainActivity.nick;
 import static com.mafiago.MainActivity.socket;
 
 public class SettingsMainFragment extends Fragment {
@@ -57,6 +58,7 @@ public class SettingsMainFragment extends Fragment {
     TextView TV_message;
     TextView TV_usersAgreement;
     TextView TV_privacyPolicy;
+    TextView TV_inviteCode;
 
     public String base64_screenshot = "";
 
@@ -91,6 +93,7 @@ public class SettingsMainFragment extends Fragment {
     public static final String APP_PREFERENCES_PASSWORD = "password";
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
     public static final String APP_PREFERENCES_SHOW_ROLE= "show_role";
+    public static final String APP_PREFERENCES_THEME= "theme";
 
     private SharedPreferences mSettings;
 
@@ -119,6 +122,225 @@ public class SettingsMainFragment extends Fragment {
 
         if (mPage == 1)
         {
+            view = inflater.inflate(R.layout.fragment_settings_profile, container, false);
+
+            TV_nick = view.findViewById(R.id.fragmentSettingsProfile_TV_nick);
+            TV_rang = view.findViewById(R.id.fragmentSettingsProfile_TV_rang);
+            TV_money = view.findViewById(R.id.fragmentSettingsProfile_TV_money);
+            TV_exp = view.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
+            TV_gold = view.findViewById(R.id.fragmentSettingsProfile_TV_gold);
+            IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
+
+            TV_game_counter = view.findViewById(R.id.fragmentSettingsProfile_TV_gamesCount);
+            TV_max_money_score = view.findViewById(R.id.fragmentSettingsProfile_TV_maxMoney);
+            TV_max_exp_score = view.findViewById(R.id.fragmentSettingsProfile_TV_maxExp);
+            TV_general_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentWins);
+            TV_mafia_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentMafiaWins);
+            TV_peaceful_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentPeacefulWins);
+
+            btnChangeAvatar = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
+            btnChangeNick = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
+            btnChangePassword = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
+
+            socket.off("get_profile");
+            socket.off("edit_profile");
+
+            socket.on("get_profile", OnGetProfile);
+            socket.on("edit_profile", onEditProfile);
+
+            final JSONObject json = new JSONObject();
+            try {
+                json.put("nick", MainActivity.NickName);
+                json.put("session_id", MainActivity.Session_id);
+                json.put("info_nick", MainActivity.NickName);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("get_profile", json);
+            Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+
+            btnChangeAvatar.setOnClickListener(v -> {
+                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
+                photoPickerIntent.setType("image/*");
+                startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
+            });
+
+            btnChangeNick.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewChangeNick = inflater.inflate(R.layout.dialog_change_nick, container, false);
+                builder.setView(viewChangeNick);
+
+                EditText ET_nick = viewChangeNick.findViewById(R.id.dialogChangeNick_ET_newNick);
+                Button btn_changeNick = viewChangeNick.findViewById(R.id.dialogChangeNick_btn_changeNick);
+
+                btn_changeNick.setOnClickListener(v13 -> {
+                    String nick = ET_nick.getText().toString();
+
+                    Log.e("kkk", nick);
+                    int flag = 0;
+                    for (int i = 0; i < nick.length(); i ++)
+                    {
+                        if (Character.isLetter(nick.charAt(i))) {
+                            for (int j = 0; j < f.length; j++) {
+                                if (nick.charAt(i) == f[j]) {
+                                    flag = 1;
+                                }
+                            }
+
+                            if (flag != 1) {
+                                nick = nick.replace(String.valueOf(nick.charAt(i)), "");
+                            }
+                            flag = 0;
+                        }
+                    }
+                    Log.e("kkk", nick);
+                    Log.e("kkk", String.valueOf(nick.length()));
+                    if (nick.length() >= 3)
+                    {
+                        if (nick.length() <= 15) {
+                            if (!nick.contains(".")) {
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", MainActivity.NickName);
+                                    json2.put("session_id", MainActivity.Session_id);
+                                    json2.put("new_nick", nick);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
+                                socket.emit("edit_profile", json2);
+                            } else {
+                                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                builder2.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Некорректный символ!");
+                                TV_error.setText("Нельзя использовать точку в нике");
+                                AlertDialog alert2 = builder2.create();
+                                alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert2.show();
+                            }
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Длинный ник!");
+                            TV_error.setText("Ваш ник должен быть меньше 21 символа");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
+                        }
+                    }
+                    else
+                    {
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder2.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_title.setText("Короткий ник!");
+                        TV_error.setText("Ваш ник должен быть больше 2 символов");
+                        AlertDialog alert2 = builder2.create();
+                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert2.show();
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            });
+
+            btnChangePassword.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewChangePas = inflater.inflate(R.layout.dialog_change_password, container, false);
+                builder.setView(viewChangePas);
+
+                Button btn_changePasswordInAlert = viewChangePas.findViewById(R.id.dialogChangePassword_btn_changePassword);
+                EditText ET_oldPassword = viewChangePas.findViewById(R.id.dialogChangePassword_ET_oldPassword);
+                EditText ET_newPassword1 = viewChangePas.findViewById(R.id.dialogChangePassword_ET_newPassword1);
+                EditText ET_newPassword2 = viewChangePas.findViewById(R.id.dialogChangePassword_ET_newPassword2);
+
+                btn_changePasswordInAlert.setOnClickListener(v14 -> {
+                    if (ET_newPassword1.getText().toString().equals(ET_newPassword2.getText().toString()) &&
+                            !ET_newPassword1.getText().toString().trim().equals("") &&
+                            ET_newPassword1.length() >= 7 &&
+                            ET_newPassword1.length() <= 20) {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("new_password", ET_newPassword1.getText());
+                            json2.put("password", ET_oldPassword.getText());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
+                        socket.emit("edit_profile", json2);
+                    }
+                    else {
+                        if (!ET_newPassword1.getText().toString().equals(ET_newPassword2.getText().toString())) {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Ошибка!");
+                            TV_error.setText("Ваши новые пароли не совпадают!");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
+                        } else if (ET_newPassword1.getText().toString().trim().equals("")) {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Ошибка!");
+                            TV_error.setText("Ваш пароль не может быть пустым!");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
+                        } else if (ET_newPassword1.length() < 7) {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Ошибка!");
+                            TV_error.setText("Ваш пароль слишком короткий!");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
+                        } else if (ET_newPassword1.length() > 20) {
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Ошибка!");
+                            TV_error.setText("Ваш пароль слишком длинный!");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
+                        }
+                    }
+                });
+
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+
+
+            });
+        }
+        else
+        {
             view = inflater.inflate(R.layout.fragment_settings_main, container, false);
             view_reportError = inflater.inflate(R.layout.dialog_report_error, container, false);
             IV_screen = view_reportError.findViewById(R.id.dialogReportError_IV_screen);
@@ -134,10 +356,36 @@ public class SettingsMainFragment extends Fragment {
             TV_message = view.findViewById(R.id.fragmentSettingsMain_TV_message);
             TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
             TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
+            TV_inviteCode = view.findViewById(R.id.fragmentSettingsMain_TV_inviteCode);
 
             socket.off("send_problem");
 
             socket.on("send_problem", onSendProblem);
+
+            TV_inviteCode.setText("Пригласительный код для друзей: " + MainActivity.MyInviteCode + "\nВаш друг может указать его при регистрации и сыграть 50 игр - тогда вы оба получите по 100 золота");
+
+            String theme = mSettings.getString(APP_PREFERENCES_THEME, "dark");
+            Log.e("kkk", theme);
+            if (theme.equals("dark"))
+            {
+                btnSelectTheme.setText("Выбрать светлую тему");
+            }
+            else
+            {
+                btnSelectTheme.setText("Выбрать тёмную тему");
+            }
+
+            btnSelectTheme.setOnClickListener(v -> {
+                SharedPreferences.Editor editor = mSettings.edit();
+                if (theme.equals("dark")) {
+                    editor.putString(APP_PREFERENCES_THEME, "light");
+                }
+                else {
+                    editor.putString(APP_PREFERENCES_THEME, "dark");
+                }
+                editor.apply();
+                reset();
+            });
 
             /*
             if (!MainActivity.Role.equals("user")) {
@@ -279,22 +527,6 @@ public class SettingsMainFragment extends Fragment {
                 Log.d("kkk", String.valueOf(showRole));
             });
 
-            btnSelectTheme.setOnClickListener(v -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("В разработке...")
-                        .setMessage("")
-                        .setIcon(R.drawable.ic_razrabotka)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert = builder.create();
-                alert.show();
-            });
-
             TV_usersAgreement.setOnClickListener(v -> {
                 Intent mIntent = new Intent();
                 mIntent.setAction(Intent.ACTION_VIEW);
@@ -309,157 +541,16 @@ public class SettingsMainFragment extends Fragment {
                 startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
             });
         }
-        else
-        {
-            view = inflater.inflate(R.layout.fragment_settings_profile, container, false);
 
-            TV_nick = view.findViewById(R.id.fragmentSettingsProfile_TV_nick);
-            TV_rang = view.findViewById(R.id.fragmentSettingsProfile_TV_rang);
-            TV_money = view.findViewById(R.id.fragmentSettingsProfile_TV_money);
-            TV_exp = view.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
-            TV_gold = view.findViewById(R.id.fragmentSettingsProfile_TV_gold);
-            IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
-
-            TV_game_counter = view.findViewById(R.id.fragmentSettingsProfile_TV_gamesCount);
-            TV_max_money_score = view.findViewById(R.id.fragmentSettingsProfile_TV_maxMoney);
-            TV_max_exp_score = view.findViewById(R.id.fragmentSettingsProfile_TV_maxExp);
-            TV_general_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentWins);
-            TV_mafia_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentMafiaWins);
-            TV_peaceful_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentPeacefulWins);
-
-            btnChangeAvatar = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
-            btnChangeNick = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
-            btnChangePassword = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
-
-            socket.off("get_profile");
-
-            socket.on("get_profile", OnGetProfile);
-
-            final JSONObject json = new JSONObject();
-            try {
-                json.put("nick", MainActivity.NickName);
-                json.put("session_id", MainActivity.Session_id);
-                json.put("info_nick", MainActivity.NickName);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            socket.emit("get_profile", json);
-            Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
-
-            socket.on("edit_profile", onEditProfile);
-
-            btnChangeAvatar.setOnClickListener(v -> {
-                Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-                photoPickerIntent.setType("image/*");
-                startActivityForResult(photoPickerIntent, GALLERY_REQUEST);
-            });
-
-            btnChangeNick.setOnClickListener(v -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View viewChangeNick = inflater.inflate(R.layout.dialog_change_nick, container, false);
-                builder.setView(viewChangeNick);
-
-                EditText ET_nick = viewChangeNick.findViewById(R.id.dialogChangeNick_ET_newNick);
-                Button btn_changeNick = viewChangeNick.findViewById(R.id.dialogChangeNick_btn_changeNick);
-
-                btn_changeNick.setOnClickListener(v13 -> {
-                    String nick = ET_nick.getText().toString();
-
-                    Log.e("kkk", nick);
-                    int flag = 0;
-                    for (int i = 0; i < nick.length(); i ++)
-                    {
-                        if (Character.isLetter(nick.charAt(i))) {
-                            for (int j = 0; j < f.length; j++) {
-                                if (nick.charAt(i) == f[j]) {
-                                    flag = 1;
-                                }
-                            }
-
-                            if (flag != 1) {
-                                nick = nick.replace(String.valueOf(nick.charAt(i)), "");
-                            }
-                            flag = 0;
-                        }
-                    }
-                    Log.e("kkk", nick);
-                    Log.e("kkk", String.valueOf(nick.length()));
-                    if (nick.length() >= 3)
-                    {
-                        if (nick.length() <= 15)
-                        {
-                            final JSONObject json2 = new JSONObject();
-                            try {
-                                json2.put("nick", MainActivity.NickName);
-                                json2.put("session_id", MainActivity.Session_id);
-                                json2.put("new_nick", nick);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                            Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
-                            socket.emit("edit_profile", json2);
-                        }
-                        else
-                        {
-                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                            builder2.setView(viewDang);
-                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                            TV_title.setText("Длинный ник!");
-                            TV_error.setText("Ваш ник должен быть меньше 21 символа");
-                            AlertDialog alert2 = builder2.create();
-                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                            alert2.show();
-                        }
-                    }
-                    else
-                    {
-                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                        builder2.setView(viewDang);
-                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                        TV_title.setText("Короткий ник!");
-                        TV_error.setText("Ваш ник должен быть больше 2 символов");
-                        AlertDialog alert2 = builder2.create();
-                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        alert2.show();
-                    }
-                });
-
-                AlertDialog alert = builder.create();
-                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                alert.show();
-            });
-
-            btnChangePassword.setOnClickListener(v -> {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View viewChangeNick = inflater.inflate(R.layout.dialog_change_password, container, false);
-                builder.setView(viewChangeNick);
-                AlertDialog alert = builder.create();
-                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                alert.show();
-
-                AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                builder2.setTitle("В разработке...")
-                        .setMessage("")
-                        .setIcon(R.drawable.ic_razrabotka)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
-                AlertDialog alert2 = builder2.create();
-                alert2.show();
-            });
-        }
 
         return view;
     }
 
+    private void reset()
+    {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
@@ -663,6 +754,7 @@ public class SettingsMainFragment extends Fragment {
         getActivity().runOnUiThread(() -> {
             JSONObject data = (JSONObject) args[0];
             String status = "";
+            Log.d("kkk", "принял - edit_profile - " + data);
             try {
                 status = data.getString("status");
             } catch (JSONException e) {
@@ -675,8 +767,78 @@ public class SettingsMainFragment extends Fragment {
                 case "OK":
                     builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Профиль успешно изменён!")
-                            .setMessage("")
+                            .setMessage("Перезайдите в приложение для отображения изменений")
                             .setIcon(R.drawable.ic_ok)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "incorrect_password":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Старый пароль введён неверно!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "new_nick_is_the_same_with_old_nick":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Новый ник такой же, как и старый!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "incorrect_new_nick ":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Такой ник уже занят!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "last_nick_update_was_less_than_a_month_ago":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Вы уже меняли ник в этом месяце!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "mat_in_new_nick":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Ваш ник не проходит цензуру!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "cant_change_nick_because_you_are_playing_in_room":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Нельзя менять ник, если вы играете в комнате!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "cant_change_nick_because_you_are_observer":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Нельзя менять ник, если вы наблюдаете за другой игрой!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
                             .setCancelable(false)
                             .setNegativeButton("Ок",
                                     (dialog, id) -> dialog.cancel());
@@ -694,7 +856,6 @@ public class SettingsMainFragment extends Fragment {
                     break;
             }
             alert.show();
-            Log.d("kkk", "принял - edit_profile - " + data);
         });
     };
 

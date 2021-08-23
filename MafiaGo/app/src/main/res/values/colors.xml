@@ -23,6 +23,8 @@
     <color name="died">#8DADD3</color>
     <color name="gold">#F0BF41</color>
 
+    <color name="yellow">#AC7C00</color>
+
     <color name="color_mafia">#D13737</color>
     <color name="color_citizen">#7EAE10</color>
     <color name="color_sheriff">#2E648E</color>

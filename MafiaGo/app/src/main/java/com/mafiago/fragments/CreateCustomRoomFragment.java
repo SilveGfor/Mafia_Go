@@ -165,7 +165,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
             TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
             TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
             TV_title.setText("Кастомные игры");
-            TV_text.setText("Это игры, где вы сами выбираете количество ролей в комнате. Каждая карточка - это условно игрок. Зелёные карточки - минимальное количество игроков. Если вы поставите игру от 5 человек, то зелёных карточек будет 5 и вы должны выбрать роли, которые будут в игре при минимальном кол-ве игроков. Белые карточки - это роли, которые будут включены в игру, если людей будет больше минимума. \n Пример: Вы выбрали игру от 5 до 8, но зашло всего 6 человек. Это значит, что люди получат все зелёные роли и самую первую белую роль. Если игроков будет всего 5, то они получат только зелёные роли, ну а если игроков 8 - они получат и зелёные, и белые роли");
+            TV_text.setText("Это игры, где вы сами выбираете количество ролей в комнате. Каждая карточка - это условно игрок. Зелёные карточки - минимальное количество игроков. Если вы поставите игру от 5 человек, то зелёных карточек будет 5 и вы должны выбрать роли, которые будут в игре при минимальном кол-ве игроков. Белые карточки - это роли, которые будут включены в игру, если людей будет больше минимума. \n Пример: Вы выбрали игру от 5 до 8, но зашло всего 6 человек. Это значит, что люди получат все зелёные роли и самую первую белую роль. Если игроков будет всего 5, то они получат только зелёные роли, ну а если игроков 8 - они получат и зелёные, и белые роли. В списке комнат роли шериф, мирный и мафия отображаться не будут");
             AlertDialog alert = builder.create();
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
@@ -201,95 +201,122 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                         if (i < min_people && list_roles.get(i).peaceful) have_citizen_in_start = true;
                         else if (i < min_people && !list_roles.get(i).peaceful) have_mafia_in_start = true;
                     }
+                    name = ET_RoomName.getText().toString();
 
                     if (all_roles) {
                         if (have_citizen) {
                             if (have_mafia) {
                                 if (have_citizen_in_start) {
                                     if (have_mafia_in_start) {
-                                        name = ET_RoomName.getText().toString();
-                                        int flag = 0;
-                                        for (int i = 0; i < name.length(); i++) {
-                                            if (Character.isLetter(name.charAt(i))) {
-                                                for (int j = 0; j < f.length; j++) {
-                                                    if (name.charAt(i) == f[j]) {
-                                                        flag = 1;
+                                        if (name.length() >= 1) {
+                                            if (name.length() <= 25) {
+
+                                                int flag = 0;
+                                                for (int i = 0; i < name.length(); i++) {
+                                                    if (Character.isLetter(name.charAt(i))) {
+                                                        for (int j = 0; j < f.length; j++) {
+                                                            if (name.charAt(i) == f[j]) {
+                                                                flag = 1;
+                                                            }
+                                                        }
+
+                                                        if (flag != 1) {
+                                                            name = name.replace(String.valueOf(name.charAt(i)), "");
+                                                        }
+                                                        flag = 0;
                                                     }
                                                 }
 
-                                                if (flag != 1) {
-                                                    name = name.replace(String.valueOf(name.charAt(i)), "");
-                                                }
-                                                flag = 0;
-                                            }
-                                        }
+                                                JSONArray peaceful = new JSONArray();
+                                                JSONArray mafia = new JSONArray();
+                                                Set<String> custom_roles = new HashSet<String>();
+                                                JSONArray roles = new JSONArray();
+                                                try {
+                                                    for (int i = 0; i < list_roles.size(); i++) {
+                                                        custom_roles.add(list_roles.get(i).role.toString().toLowerCase());
+                                                        roles.put(list_roles.get(i).role.toString().toLowerCase());
+                                                        if (list_roles.get(i).role != Role.SHERIFF && list_roles.get(i).role != Role.CITIZEN && list_roles.get(i).role != Role.MAFIA) {
+                                                            boolean flak = true;
+                                                            if (list_roles.get(i).peaceful) {
+                                                                for (int j = 0; j < peaceful.length(); j++) {
+                                                                    if (peaceful.get(j).equals(list_roles.get(i).role.toString().toLowerCase())) {
+                                                                        flak = false;
+                                                                    }
+                                                                }
+                                                                if (flak) {
+                                                                    peaceful.put(list_roles.get(i).role.toString().toLowerCase());
+                                                                }
+                                                            } else {
+                                                                for (int j = 0; j < mafia.length(); j++) {
+                                                                    if (mafia.get(j).equals(list_roles.get(i).role.toString().toLowerCase())) {
+                                                                        flak = false;
+                                                                    }
+                                                                }
+                                                                if (flak) {
+                                                                    mafia.put(list_roles.get(i).role.toString().toLowerCase());
+                                                                }
 
-                                        JSONArray peaceful = new JSONArray();
-                                        JSONArray mafia = new JSONArray();
-                                        Set<String> custom_roles = new HashSet<String>();
-                                        JSONArray roles = new JSONArray();
-                                        try {
-                                            for (int i = 0; i < list_roles.size(); i++) {
-                                                custom_roles.add(list_roles.get(i).role.toString().toLowerCase());
-                                                roles.put(list_roles.get(i).role.toString().toLowerCase());
-                                                if (list_roles.get(i).role != Role.SHERIFF && list_roles.get(i).role != Role.CITIZEN && list_roles.get(i).role != Role.MAFIA) {
-                                                    boolean flak = true;
-                                                    if (list_roles.get(i).peaceful) {
-                                                        for (int j = 0; j < peaceful.length(); j++) {
-                                                            if (peaceful.get(j).equals(list_roles.get(i).role.toString().toLowerCase()))
-                                                            {
-                                                                flak = false;
                                                             }
                                                         }
-                                                        if (flak) {
-                                                            peaceful.put(list_roles.get(i).role.toString().toLowerCase());
-                                                        }
-                                                    } else {
-                                                        for (int j = 0; j < mafia.length(); j++) {
-                                                            if (mafia.get(j).equals(list_roles.get(i).role.toString().toLowerCase()))
-                                                            {
-                                                                flak = false;
-                                                            }
-                                                        }
-                                                        if (flak) {
-                                                            mafia.put(list_roles.get(i).role.toString().toLowerCase());
-                                                        }
-
                                                     }
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
                                                 }
-                                            }
-                                        }
-                                         catch (JSONException e) {
-                                            e.printStackTrace();
-                                        }
-                                        final JSONObject json = new JSONObject();
-                                        final JSONObject json_roles = new JSONObject();
-                                        try {
-                                            json_roles.put("peaceful", peaceful);
-                                            json_roles.put("mafia", mafia);
-                                            json.put("nick", MainActivity.NickName);
-                                            json.put("session_id", MainActivity.Session_id);
-                                            json.put("name", name);
-                                            json.put("min_people_num", RSB_num_users.getSelectedMinValue());
-                                            json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
-                                            json.put("roles", json_roles);
-                                            json.put("custom_roles_list", roles);
-                                            json.put("is_custom", true);
+                                                final JSONObject json = new JSONObject();
+                                                final JSONObject json_roles = new JSONObject();
+                                                try {
+                                                    json_roles.put("peaceful", peaceful);
+                                                    json_roles.put("mafia", mafia);
+                                                    json.put("nick", MainActivity.NickName);
+                                                    json.put("session_id", MainActivity.Session_id);
+                                                    json.put("name", name);
+                                                    json.put("min_people_num", RSB_num_users.getSelectedMinValue());
+                                                    json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
+                                                    json.put("roles", json_roles);
+                                                    json.put("custom_roles_list", roles);
+                                                    json.put("is_custom", true);
 
-                                            SharedPreferences.Editor editor = mSettings.edit();
-                                            editor.putString(APP_PREFERENCES_ROOM_NAME, name);
-                                            for (int i = 0; i < roles.length(); i++)
+                                                    SharedPreferences.Editor editor = mSettings.edit();
+                                                    editor.putString(APP_PREFERENCES_ROOM_NAME, name);
+                                                    for (int i = 0; i < roles.length(); i++) {
+                                                        editor.putString("role_" + i, roles.getString(i));
+                                                    }
+                                                    editor.putString(APP_PREFERENCES_ROLES, roles.toString());
+                                                    editor.apply();
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+
+                                                socket.emit("create_room", json);
+                                                Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
+                                            }
+                                            else
                                             {
-                                                editor.putString("role_" + i, roles.getString(i));
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                builder.setView(viewDang);
+                                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                TV_title.setText("Слишком длинное название!");
+                                                TV_error.setText("Название комнаты должно быть меньше 26 символов!");
+                                                AlertDialog alert = builder.create();
+                                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                alert.show();
                                             }
-                                            editor.putString(APP_PREFERENCES_ROLES, roles.toString());
-                                            editor.apply();
-                                        } catch (JSONException e) {
-                                            e.printStackTrace();
                                         }
-
-                                        socket.emit("create_room", json);
-                                        Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
+                                        else
+                                        {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                            builder.setView(viewDang);
+                                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                            TV_title.setText("Слишком короткое название!");
+                                            TV_error.setText("Название комнаты должно содержать хотя бы один символ!");
+                                            AlertDialog alert = builder.create();
+                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            alert.show();
+                                        }
                                     } else {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);

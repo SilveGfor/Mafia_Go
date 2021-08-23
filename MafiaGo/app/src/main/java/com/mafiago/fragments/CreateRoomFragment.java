@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
@@ -184,7 +185,22 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         });
 
         btnCustomRoom.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateCustomRoomFragment()).commit();
+            if (MainActivity.Rang >= 2) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateCustomRoomFragment()).commit();
+            }
+            else
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                builder.setView(viewDang);
+                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                TV_title.setText("Вход до 2 ранга запрещён!");
+                TV_error.setText("Создавать и играть в кастомных комнатах можно только после достижения 2 ранга");
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
         });
 
         RSB_num_users.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
@@ -220,37 +236,64 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                             flag = 0;
                         }
                     }
+                    if (name.length() >= 1) {
+                        if (name.length() <= 25) {
+                            Set<String> roles = new HashSet<String>();
+                            final JSONObject json = new JSONObject();
+                            final JSONObject json_roles = new JSONObject();
+                            try {
+                                json_roles.put("peaceful", peaceful);
+                                json_roles.put("mafia", mafia);
+                                json.put("nick", MainActivity.NickName);
+                                json.put("session_id", MainActivity.Session_id);
+                                json.put("name", name);
+                                json.put("min_people_num", RSB_num_users.getSelectedMinValue());
+                                json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
+                                json.put("roles", json_roles);
 
-                    Set<String> roles = new HashSet<String>();
-                    final JSONObject json = new JSONObject();
-                    final JSONObject json_roles = new JSONObject();
-                    try {
-                        json_roles.put("peaceful", peaceful);
-                        json_roles.put("mafia", mafia);
-                        json.put("nick", MainActivity.NickName);
-                        json.put("session_id", MainActivity.Session_id);
-                        json.put("name", name);
-                        json.put("min_people_num", RSB_num_users.getSelectedMinValue());
-                        json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
-                        json.put("roles", json_roles);
-
-                        for (int i = 0; i < peaceful.length(); i++)
-                        {
-                            roles.add(peaceful.getString(i));
+                                for (int i = 0; i < peaceful.length(); i++) {
+                                    roles.add(peaceful.getString(i));
+                                }
+                                for (int i = 0; i < mafia.length(); i++) {
+                                    roles.add(mafia.getString(i));
+                                }
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            SharedPreferences.Editor editor = mSettings.edit();
+                            editor.putStringSet(APP_PREFERENCES_ROLES, roles);
+                            editor.putString(APP_PREFERENCES_ROOM_NAME, name);
+                            editor.apply();
+                            socket.emit("create_room", json);
+                            Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
                         }
-                        for (int i = 0; i < mafia.length(); i++)
+                        else
                         {
-                            roles.add(mafia.getString(i));
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Слишком длинное название!");
+                            TV_error.setText("Название комнаты должно быть меньше 26 символов!");
+                            AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert.show();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
-                    SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putStringSet(APP_PREFERENCES_ROLES, roles);
-                    editor.putString(APP_PREFERENCES_ROOM_NAME, name);
-                    editor.apply();
-                    socket.emit("create_room", json);
-                    Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
+                    else
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_title.setText("Слишком короткое название!");
+                        TV_error.setText("Название комнаты должно содержать хотя бы один символ!");
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
                 }
                 else {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -440,6 +483,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
     public void SetRoles(int people) {
 
+        peaceful = new JSONArray();
+        mafia = new JSONArray();
         list_roles.clear();
         switch (people)
         {

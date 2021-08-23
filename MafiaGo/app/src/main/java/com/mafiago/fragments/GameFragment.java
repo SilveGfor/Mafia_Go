@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -36,7 +37,9 @@ import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.mafiago.adapters.MessageAdapter;
 import com.mafiago.adapters.PlayersAdapter;
+import com.mafiago.adapters.RoleInRoomAdapter;
 import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.models.RoleModel;
 import com.mafiago.pager_adapters.GameChatPagerAdapter;
 import com.mafiago.enums.Role;
 import com.mafiago.enums.Time;
@@ -56,6 +59,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.TimeZone;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
@@ -70,6 +74,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public TextView room_name;
     public TextView TV_mafia_count;
     public TextView TV_peaceful_count;
+    public TextView TV_playersCount;
+    public TextView TV_playersMinMaxInfo;
 
     public ImageView IV_influence_doctor;
     public ImageView IV_influence_lover;
@@ -83,6 +89,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     public Animation animation;
 
+    ArrayList<RoleModel> list_roles = new ArrayList<>();
     ArrayList<MessageModel> list_chat = new ArrayList<>();
     ArrayList<UserModel> list_users = new ArrayList<>();
     int[] list_mafias = new int[] {0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9};
@@ -158,6 +165,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         room_name = view.findViewById(R.id.fragmentGame_TV_roomName);
         TV_mafia_count = view.findViewById(R.id.fragmentGame_TV_mafiaCount);
         TV_peaceful_count = view.findViewById(R.id.fragmentGame_TV_peacefulCount);
+        TV_playersCount = view.findViewById(R.id.fragmentGame_TV_playersCount);
+        TV_playersMinMaxInfo = view.findViewById(R.id.fragmentGame_TV_playersMinMaxInfo);
 
         timer = view.findViewById(R.id.fragmentGame_TV_timer);
         dayTime = view.findViewById(R.id.fragmentGame_TV_dayTime);
@@ -187,6 +196,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 
         room_name.setText(MainActivity.RoomName);
+        TV_playersMinMaxInfo.setText(MainActivity.PlayersMinMaxInfo);
 
         //socket.off("connect");
         //socket.off("disconnect");
@@ -251,6 +261,23 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
         socket.emit("get_in_room", json);
         Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
+
+        room_name.setOnClickListener(v -> {
+            if (player.getTime() != Time.LOBBY)
+            {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewDang = getLayoutInflater().inflate(R.layout.dialog_roles_in_room, null);
+                builder.setView(viewDang);
+                ListView LV_role = viewDang.findViewById(R.id.dialogRolesInRoom_LV);
+                RoleInRoomAdapter rolesAdapter = new RoleInRoomAdapter(list_roles, getContext());
+                LV_role.setAdapter(rolesAdapter);
+                rolesAdapter.notifyDataSetChanged();
+
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
+        });
 
         gridView_users.setOnItemClickListener((parent, view1, position, id) -> {
             String nick = list_users.get(position).getNick();
@@ -446,7 +473,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         StopAnimation();
                     }
                 } else {
-                    mCallback.onUserSelected(nick);
+                    if (!player.is_observer) {
+                        mCallback.onUserSelected(nick);
+                    }
                 }
             }
         });
@@ -564,7 +593,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                    Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
                     socket.emit("leave_room", json2);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                 }
@@ -591,7 +620,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
                 socket.emit("leave_room", json2);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
@@ -614,7 +643,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Log.d("kkk", "Socket_отправка_leave_user - " + json2.toString());
+                Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
                 socket.emit("leave_room", json2);
             }
             else
@@ -677,6 +706,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             }
                             list_users.add(new UserModel(nick, Role.NONE, avatar));
                             playersAdapter.notifyDataSetChanged();
+                            TV_playersCount.setText("Игроки: " + list_users.size());
                         }
                     } catch (JSONException e) {
                         return;
@@ -721,6 +751,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             }
                         }
                         playersAdapter.notifyDataSetChanged();
+                        TV_playersCount.setText("Игроки: " + list_users.size());
                     }
                 }
             });
@@ -816,7 +847,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         }
                         else {
                             StopTimer = 1;
-                            timer.setText("--");
+                            timer.setText("\u221e");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -890,6 +921,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     switch (player.getTime())
                     {
                         case NIGHT_LOVE:
+                            player.setVoted_at_night(false);
                             /*
                             if (TV_mafia_count.getVisibility() != View.VISIBLE)
                             {
@@ -956,7 +988,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             break;
                         case DAY:
                             IV_influence_doctor.setVisibility(View.GONE);
-                            player.setVoted_at_night(false);
                             player.setCan_write(true);
                             IV_influence_bodyguard.setVisibility(View.GONE);
                             if (player.getRole() == Role.BODYGUARD && IV_influence_lover.getVisibility() != View.VISIBLE) {
@@ -1301,7 +1332,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                                 StopAnimation();
                                                 IV_influence_doctor.setVisibility(View.GONE);
                                                 IV_influence_lover.setVisibility(View.GONE);
-                                                IV_influence_sheriff.setVisibility(View.GONE);
                                                 IV_influence_bodyguard.setVisibility(View.GONE);
                                                 IV_influence_poisoner.setVisibility(View.GONE);
                                                 player.setStatus("dead");
@@ -1350,11 +1380,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                                 list_users.get(i).setRole(role2);
                                                 list_users.get(i).setAlive(false);
                                                 list_users.get(i).setAnimation_type(Role.NONE);
-                                                if (nick.equals(player.getNick())) {
+                                                if (nick2.equals(player.getNick())) {
                                                     StopAnimation();
                                                     IV_influence_doctor.setVisibility(View.GONE);
                                                     IV_influence_lover.setVisibility(View.GONE);
-                                                    IV_influence_sheriff.setVisibility(View.GONE);
                                                     IV_influence_bodyguard.setVisibility(View.GONE);
                                                     IV_influence_poisoner.setVisibility(View.GONE);
                                                     player.setStatus("dead");
@@ -1364,7 +1393,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                                         dayTime.setText("день");
                                                         dayTime.setBackgroundResource(R.drawable.grey_button);
                                                     }
-
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewNewRole = getLayoutInflater().inflate(R.layout.dialog_died_user, null);
                                                     builder.setView(viewNewRole);
@@ -1513,6 +1541,16 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;
+                            case "you_are_already_observer":
+                                TV_error.setText("Вы уже наблюдаете за другой игрой!");
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
+                            case "you_are_observer":
+                                TV_error.setText("Вы уже наблюдаете за этой игрой!");
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
                             default:
                                 TV_error.setText("Что-то пошло не так");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
@@ -1646,13 +1684,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             e.printStackTrace();
                         }
 
-                        if (sheriff) IV_influence_sheriff.setVisibility(View.VISIBLE);
-                        if (doctor) IV_influence_doctor.setVisibility(View.VISIBLE);
-                        if (lover) IV_influence_lover.setVisibility(View.VISIBLE);
-                        if (bodyguard) IV_influence_bodyguard.setVisibility(View.VISIBLE);
-                        if (poisoner) IV_influence_poisoner.setVisibility(View.VISIBLE);
-
-
                         player.setRole(ConvertToRole(role));
                         player.setStatus(status);
                         for (int i = 0; i < list_users.size(); i++) {
@@ -1733,6 +1764,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                             break;
                                         case LOVER:
                                             if (can_act) StartAnimation(Role.LOVER);
+                                            break;
+                                        case DOCTOR_OF_EASY_VIRTUE:
+                                            if (can_act) StartAnimation(Role.LOVER);
+                                            break;
                                     }
                                     break;
                                 case NIGHT_OTHER:
@@ -1751,7 +1786,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                             if (can_act) StartAnimation(Role.MANIAC);
                                             break;
                                         case DOCTOR_OF_EASY_VIRTUE:
-                                            if (can_act) StartAnimation(Role.DOCTOR_OF_EASY_VIRTUE);
+                                            if (can_act) StartAnimation(Role.DOCTOR);
                                             break;
                                         case POISONER:
                                             if (can_act) StartAnimation(Role.POISONER);
@@ -1769,22 +1804,30 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     player.setCan_write(true);
                                     IV_influence_bodyguard.setVisibility(View.GONE);
                                     if (player.getRole() == Role.BODYGUARD && IV_influence_lover.getVisibility() != View.VISIBLE) {
-                                        StartAnimation(Role.BODYGUARD);
+                                        if (can_act) StartAnimation(Role.BODYGUARD);
                                     }
                                     break;
                                 case VOTING:
                                     messages_can_write = 10;
                                     if (IV_influence_lover.getVisibility() != View.VISIBLE) {
                                         if (player.getRole() == Role.TERRORIST) {
-                                            StartAnimation(Role.TERRORIST);
+                                            if (can_act) StartAnimation(Role.TERRORIST);
                                         } else {
-                                            StartAnimation(Role.VOTING);
+                                            if (can_vote) {
+                                                StartAnimation(Role.VOTING);
+                                            }
                                         }
                                     }
                             }
                         } else {
                             player.setCan_write(true);
                         }
+
+                        if (sheriff) IV_influence_sheriff.setVisibility(View.VISIBLE);
+                        if (doctor) IV_influence_doctor.setVisibility(View.VISIBLE);
+                        if (lover) IV_influence_lover.setVisibility(View.VISIBLE);
+                        if (bodyguard) IV_influence_bodyguard.setVisibility(View.VISIBLE);
+                        if (poisoner) IV_influence_poisoner.setVisibility(View.VISIBLE);
                     }
                     else
                     {
@@ -2034,6 +2077,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     final String[] reason = {""};
 
                     if (avatar != null) {
+                        Log.e("kkk", avatar);
                         IV_avatar.setImageBitmap(fromBase64(avatar));
                     }
 
@@ -2046,7 +2090,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
                         Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
 
-                        IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
+                        if (finalAvatar != null) {
+                            IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
+                        }
 
                         AlertDialog alert2 = builder2.create();
 
@@ -2334,6 +2380,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     }
                 }
                 playersAdapter.notifyDataSetChanged();
+                TV_playersCount.setText("Игроки: " + list_users.size());
             }
         });
     };
@@ -2527,6 +2574,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 int role_count = 0;
                 mafia_max = 0;
                 peaceful_max = 0;
+                list_roles.clear();
                 try {
                     for (Iterator iterator = data.keys(); iterator.hasNext();)
                     {
@@ -2536,39 +2584,51 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         switch (role)
                         {
                             case "citizen":
+                                list_roles.add(new RoleModel(Role.CITIZEN, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "mafia":
+                                list_roles.add(new RoleModel(Role.MAFIA, role_count));
                                 mafia_max += role_count;
                                 break;
                             case "sheriff":
+                                list_roles.add(new RoleModel(Role.SHERIFF, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "doctor":
+                                list_roles.add(new RoleModel(Role.DOCTOR, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "lover":
+                                list_roles.add(new RoleModel(Role.LOVER, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "mafia_don":
+                                list_roles.add(new RoleModel(Role.MAFIA_DON, role_count));
                                 mafia_max += role_count;
                                 break;
                             case "maniac":
+                                list_roles.add(new RoleModel(Role.MANIAC, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "terrorist":
+                                list_roles.add(new RoleModel(Role.TERRORIST, role_count));
                                 mafia_max += role_count;
                                 break;
                             case "bodyguard":
+                                list_roles.add(new RoleModel(Role.BODYGUARD, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "poisoner":
+                                list_roles.add(new RoleModel(Role.POISONER, role_count));
                                 mafia_max += role_count;
                                 break;
                             case "journalist":
+                                list_roles.add(new RoleModel(Role.JOURNALIST, role_count));
                                 peaceful_max += role_count;
                                 break;
                             case "doctor_of_easy_virtue":
+                                list_roles.add(new RoleModel(Role.DOCTOR_OF_EASY_VIRTUE, role_count));
                                 peaceful_max += role_count;
                                 break;
                         }
@@ -2576,8 +2636,20 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                mafia_now = mafia_now + mafia_max;
-                peaceful_now = peaceful_now + peaceful_max;
+                if (mafia_now < 0) {
+                    mafia_now = mafia_now + mafia_max;
+                }
+                else
+                {
+                    mafia_now = mafia_max;
+                }
+                if (peaceful_now < 0) {
+                    peaceful_now = peaceful_now + peaceful_max;
+                }
+                else
+                {
+                    peaceful_now = peaceful_max;
+                }
                 TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
                 TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);
                 TV_mafia_count.setVisibility(View.VISIBLE);

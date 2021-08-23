@@ -595,6 +595,7 @@ public class GameChatFragment extends Fragment {
                             TV_BI.setVisibility(View.VISIBLE);
                             RL_send.setVisibility(View.VISIBLE);
                             ET_message.setVisibility(View.VISIBLE);
+                            ET_message.setText("");
                         }
                         if (status.equals("dead"))
                         {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/fon_main"
+    android:background="?attr/background"
     tools:context="com.mafiago.fragments.PrivateChatsFragment">
 
     <ImageView
@@ -63,7 +63,6 @@
         android:id="@+id/fragmentPrivateChat_list_friends"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_below="@+id/fragmentPrivateChat_btn_exit"
         android:layout_margin="15dp"
         android:divider="@null"
         app:layout_constraintBottom_toBottomOf="parent"

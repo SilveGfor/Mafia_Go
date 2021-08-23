@@ -181,48 +181,6 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 
-    private final Emitter.Listener OnGetFriend = args -> {
-        if(getActivity() == null)
-            return;
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                PB_loading.setVisibility(View.GONE);
-                if (args.length != 0) {
-                    TV_no_friends.setVisibility(View.GONE);
-                    JSONObject data = (JSONObject) args[0];
-                    Log.d("kkk", "принял - get_friend - " + data);
-                    String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "", playing_room_name = "";
-                    int playing_room_num = 0;
-                    boolean online = false;
-                    try {
-                        nick = data.getString("nick");
-                        avatar = data.getString("avatar");
-                        user_id_2 = data.getString("user_id");
-                        online = data.getBoolean("is_online");
-                        playing_room_num = data.getInt("playing_room_num");
-                        if (playing_room_num != -1)
-                        {
-                            playing_room_name = data.getString("playing_room_name");
-                            list_friends.add(new FriendModel(nick, user_id_2, online, avatar, playing_room_name, playing_room_num));
-                        }
-                        else
-                        {
-                            list_friends.add(new FriendModel(nick, user_id_2, online, avatar));
-                        }
-                        friendsAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-                else
-                {
-                    TV_no_friends.setVisibility(View.VISIBLE);
-                }
-            }
-        });
-    };
-
     private final Emitter.Listener OnGetFriendRequest = args -> {
         if(getActivity() == null)
             return;
