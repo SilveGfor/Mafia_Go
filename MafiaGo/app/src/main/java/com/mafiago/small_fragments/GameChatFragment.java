@@ -170,9 +170,7 @@ public class GameChatFragment extends Fragment {
                     flag = 0;
                 }
             }
-            Log.e("kkk", String.valueOf(poisoner));
-            Log.e("kkk", String.valueOf(messages_can_write));
-            if (player.getStatus().equals("alive")) {
+            if (player.getStatus().equals("alive") || player.getTime() == Time.LOBBY) {
                 if (player.Can_write()) {
                     if (!input.equals("") && !input.equals("/n")) {
                         if (player.getTime() == Time.DAY) {
@@ -773,6 +771,8 @@ public class GameChatFragment extends Fragment {
                                     RL_send.setVisibility(View.INVISIBLE);
                                     TV_BI.setVisibility(View.INVISIBLE);
                                     num = -1;
+                                    answer_id = -1;
+                                    TV_answerMes.setVisibility(View.GONE);
                                     socket.off("get_in_room");
                                     socket.off("user_message");
                                     socket.off("leave_room");
@@ -1022,6 +1022,8 @@ public class GameChatFragment extends Fragment {
                             break;
                     }
 
+                    player.setCan_write(false);
+                    Log.e("kkk", String.valueOf(player.can_write));
                     if (player.getStatus().equals("alive")) {
                         switch (player.getTime()) {
                             case NIGHT_LOVE:

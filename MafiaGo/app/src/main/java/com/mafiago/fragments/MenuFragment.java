@@ -43,6 +43,7 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
+import com.mafiago.classes.OnBackPressedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -55,7 +56,7 @@ import io.socket.emitter.Emitter;
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
 
-public class MenuFragment extends Fragment{
+public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     Button btnRules;
     Button btnGames;
@@ -336,6 +337,11 @@ public class MenuFragment extends Fragment{
             }
         });
         return view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().finishAffinity();
     }
 
     @Override

@@ -59,6 +59,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     GridView gridView;
 
     String name;
+    int minPlayers = 0;
+    int maxPlayers = 0;
 
     ArrayList<RoleModel> list_roles = new ArrayList<>();
 
@@ -112,6 +114,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         //TV_max_people.setText(String.valueOf(max_people));
         RSB_num_users.setSelectedMaxValue(max_people);
         RSB_num_users.setSelectedMinValue(min_people);
+        maxPlayers = max_people;
+        minPlayers = min_people;
         SetRoles(max_people);
 
         Set<String> set = mSettings.getStringSet(APP_PREFERENCES_ROLES, new HashSet<String>());
@@ -211,6 +215,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putInt(APP_PREFERENCES_MAX_PEOPLE, (int) maxValue);
                 editor.putInt(APP_PREFERENCES_MIN_PEOPLE, (int) minValue);
+                minPlayers = (int) minValue;
+                maxPlayers = (int) maxValue;
                 editor.apply();
             }
         });
@@ -388,6 +394,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                     try {
                         MainActivity.Game_id = data.getInt("room_num");
                         MainActivity.RoomName = name;
+                        MainActivity.PlayersMinMaxInfo = "от " + minPlayers + " до " + maxPlayers;
                         Log.d("kkk", "Принял - create_room: " + MainActivity.Game_id);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                     } catch (JSONException e) {

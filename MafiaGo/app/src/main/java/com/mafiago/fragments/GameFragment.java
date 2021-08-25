@@ -19,6 +19,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -936,7 +937,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 TV_peaceful_count.setVisibility(View.VISIBLE);
                             }
                              */
+                            IV_influence_poisoner.clearAnimation();
                             IV_influence_poisoner.setVisibility(View.GONE);
+                            IV_influence_lover.clearAnimation();
                             IV_influence_lover.setVisibility(View.GONE);
                             switch (player.getRole())
                             {
@@ -987,6 +990,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             }
                             break;
                         case DAY:
+                            IV_influence_doctor.clearAnimation();
                             IV_influence_doctor.setVisibility(View.GONE);
                             player.setCan_write(true);
                             IV_influence_bodyguard.setVisibility(View.GONE);
@@ -1168,23 +1172,29 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     try {
                         role = data.getString("role");
                         Log.d("kkk", "Socket_принять - role_action " + args[0]);
+                        animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
                         switch (role)
                         {
                             case "doctor":
                                 IV_influence_doctor.setVisibility(View.VISIBLE);
+                                IV_influence_doctor.startAnimation(animation);
                                 break;
                             case "lover":
                                 StopAnimation();
                                 IV_influence_lover.setVisibility(View.VISIBLE);
+                                IV_influence_lover.startAnimation(animation);
                                 break;
                             case "sheriff":
                                 IV_influence_sheriff.setVisibility(View.VISIBLE);
+                                IV_influence_sheriff.startAnimation(animation);
                                 break;
                             case "bodyguard":
                                 IV_influence_bodyguard.setVisibility(View.VISIBLE);
+                                IV_influence_bodyguard.startAnimation(animation);
                                 break;
                             case "poisoner":
                                 IV_influence_poisoner.setVisibility(View.VISIBLE);
+                                IV_influence_poisoner.startAnimation(animation);
                                 break;
                         }
                     } catch (JSONException e) {
@@ -2077,7 +2087,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     final String[] reason = {""};
 
                     if (avatar != null) {
-                        Log.e("kkk", avatar);
                         IV_avatar.setImageBitmap(fromBase64(avatar));
                     }
 

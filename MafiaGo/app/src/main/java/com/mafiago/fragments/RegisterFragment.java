@@ -573,7 +573,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                             });
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } else if (!ETnick.getText().toString().contains(".")) {
+                        } else if (ETnick.getText().toString().contains(".")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Ник не должен содержать точку!")
                                     .setMessage("")
@@ -587,9 +587,9 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                             });
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } else if (ETnick.getText().toString().trim().equals("")) {
+                        } else if (ETpassword1.getText().toString().trim().equals("")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ваш ник не может быть пустым!")
+                            builder.setTitle("Ваш пароль не может быть пустым!")
                                     .setMessage("")
                                     .setIcon(R.drawable.ic_error)
                                     .setCancelable(false)

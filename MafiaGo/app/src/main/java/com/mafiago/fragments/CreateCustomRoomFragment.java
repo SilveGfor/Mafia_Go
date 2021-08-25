@@ -573,6 +573,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                     try {
                         MainActivity.Game_id = data.getInt("room_num");
                         MainActivity.RoomName = name;
+                        MainActivity.PlayersMinMaxInfo = "от " + min_people + " до " + max_people;
                         Log.d("kkk", "Принял - create_room: " + MainActivity.Game_id);
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                     } catch (JSONException e) {

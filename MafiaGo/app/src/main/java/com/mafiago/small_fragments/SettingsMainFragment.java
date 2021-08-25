@@ -1,5 +1,6 @@
 package com.mafiago.small_fragments;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -67,6 +70,7 @@ public class SettingsMainFragment extends Fragment {
     Button btn_addScreen;
     EditText ET_message;
     Button btm_sendError;
+    RelativeLayout RL_copy;
 
     ////////////////
 
@@ -357,12 +361,30 @@ public class SettingsMainFragment extends Fragment {
             TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
             TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
             TV_inviteCode = view.findViewById(R.id.fragmentSettingsMain_TV_inviteCode);
+            RL_copy = view.findViewById(R.id.fragmentSettingsMain_RL_copy);
 
             socket.off("send_problem");
 
             socket.on("send_problem", onSendProblem);
 
             TV_inviteCode.setText("Пригласительный код для друзей: " + MainActivity.MyInviteCode + "\nВаш друг может указать его при регистрации и сыграть 50 игр - тогда вы оба получите по 100 золота");
+
+            RL_copy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    copyText(String.valueOf(MainActivity.MyInviteCode));
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                    builder.setView(viewDang);
+                    TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                    TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                    TV_title.setText("Код скопирован!");
+                    TV_text.setText("Пригласительный код успешно скопирован в буфер обмена");
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                }
+            });
 
             String theme = mSettings.getString(APP_PREFERENCES_THEME, "dark");
             Log.e("kkk", theme);
@@ -567,20 +589,6 @@ public class SettingsMainFragment extends Fragment {
                     Uri uri = imageReturnedIntent.getData();
                     if (mPage == 1)
                     {
-                        try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                            byte[] bytes = stream.toByteArray();
-
-                            base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
-
-                            IV_screen.setImageBitmap(fromBase64(base64_screenshot));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    else {
 
                         try {
                         /*
@@ -666,6 +674,21 @@ public class SettingsMainFragment extends Fragment {
                             e.printStackTrace();
                         }
                     }
+                    else
+                    {
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                            byte[] bytes = stream.toByteArray();
+
+                            base64_screenshot = Base64.encodeToString(bytes, Base64.DEFAULT);
+
+                            IV_screen.setImageBitmap(fromBase64(base64_screenshot));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
                 }
         }
     }
@@ -680,6 +703,19 @@ public class SettingsMainFragment extends Fragment {
         byte[] downsizedImageBytes = baos.toByteArray();
 
         return downsizedImageBytes;
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    private void copyText(String copiedText) {
+        int sdk = android.os.Build.VERSION.SDK_INT;
+        if(sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
+            android.text.ClipboardManager clipboard = (android.text.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setText(copiedText);
+        } else {
+            android.content.ClipboardManager clipboard = (android.content.ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            android.content.ClipData clip = android.content.ClipData.newPlainText("TAG",copiedText);
+            clipboard.setPrimaryClip(clip);
+        }
     }
 
     public Bitmap fromBase64(String image) {

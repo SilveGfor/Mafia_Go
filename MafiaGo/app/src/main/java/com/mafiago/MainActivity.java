@@ -19,6 +19,7 @@ import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.example.mafiago.R;
 
@@ -164,6 +165,8 @@ public static Socket socket;
         this.startService(new Intent(this, BackgroundTask.class));
 
         socket.connect();
+
+        getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LOW_PROFILE);
 
         /*
         try {
