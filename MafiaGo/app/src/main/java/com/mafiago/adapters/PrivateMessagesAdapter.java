@@ -68,10 +68,10 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                     ImageView IV_readed = view.findViewById(R.id.itemMyPrivateMessageUsual_IV_readed);
 
                     if (list_mess.get(position).is_read) {
-                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_readed));
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.two_tips));
                     }
                     else {
-                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_not_readed));
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.one_tip));
                     }
 
                     txt_time.setText(list_mess.get(position).time);
@@ -112,10 +112,10 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                     ImageView IV_readed = view.findViewById(R.id.itemMyPrivateMessageAnswer_IV_readed);
 
                     if (list_mess.get(position).is_read) {
-                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_readed));
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.two_tips));
                     }
                     else {
-                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_not_readed));
+                        IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.one_tip));
                     }
 
                     txt_time.setText(list_mess.get(position).time);

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/frgmChat"
-    android:background="@drawable/fon_menu">
+    android:background="?attr/background">
 
     <Button
         android:id="@+id/btnExitChat"

@@ -9,7 +9,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/fragmentRulesSmall_CV"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="24dp"
@@ -52,15 +52,13 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/mafia_alive"
-                app:civ_border_color="#FF0000"
-                app:civ_border_width="1dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <ScrollView
                 android:id="@+id/scrollView2"
                 android:layout_width="0dp"
-                android:layout_height="300dp"
+                android:layout_height="0dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="16dp"
                 android:layout_marginRight="16dp"

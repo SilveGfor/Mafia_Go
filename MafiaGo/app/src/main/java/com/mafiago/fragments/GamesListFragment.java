@@ -51,7 +51,7 @@ import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class GamesListFragment extends Fragment implements OnBackPressedListener {
 
-    public ListView listView;
+    public ListView LV_games;
 
     public TextView TV_no_games;
 
@@ -64,6 +64,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     View view_report;
     ImageView IV_screen;
+    GamesAdapter gamesAdapter;
 
     String base64_screenshot = "", report_nick = "", report_id = "";
 
@@ -81,7 +82,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
         USERS = new JSONObject();
 
-        listView = view.findViewById(R.id.fragmentGamesList_LV_games);
+        LV_games = view.findViewById(R.id.fragmentGamesList_LV_games);
         btnCreateRoom = view.findViewById(R.id.fragmentGamesList_btn_create_room);
         //btnExit = view.findViewById(R.id.btnExitGamesList);
         TV_no_games = view.findViewById(R.id.fragmentGamesList_TV_no_games);
@@ -91,6 +92,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_games.setVisibility(View.GONE);
+
+        gamesAdapter = new GamesAdapter(list_room, getContext());
+        LV_games.setAdapter(gamesAdapter);
 
         //socket.off("connect");
         //socket.off("disconnect");
@@ -134,13 +138,30 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         });
  */
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        LV_games.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MainActivity.Game_id = list_room.get(position).id;
-                MainActivity.RoomName = list_room.get(position).name;
-                Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                if (MainActivity.Rang >= 2 || !list_room.get(position).is_custom) {
+                    Log.e("kkk", MainActivity.Rang + " - " + list_room.get(position).is_custom);
+                    MainActivity.Game_id = list_room.get(position).id;
+                    MainActivity.RoomName = list_room.get(position).name;
+                    Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewDang);
+                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Вход до 2 ранга запрещён!");
+                    TV_error.setText("Создавать и играть в кастомных комнатах можно только после достижения 2 ранга");
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                }
+
             }
         });
 
@@ -244,8 +265,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             if (list_room.get(i).id == num)
                             {
                                 list_room.remove(i);
-                                GamesAdapter customList = new GamesAdapter(list_room, getContext());
-                                listView.setAdapter(customList);
+                                gamesAdapter.notifyDataSetChanged();
                                 if (list_room.size() == 0)
                                 {
                                     TV_no_games.setVisibility(View.VISIBLE);
@@ -277,7 +297,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         String name = "", nick = "";
                         ArrayList<UserModel> list_users = new ArrayList<>();
                         ArrayList<String> list_roles = new ArrayList<>();
-                        Boolean alive = true, is_on = false;
+                        Boolean alive = true, is_on = false, is_custom = false;
                         int id = 0;
                         int min_people = 0;
                         int max_people = 0;
@@ -290,6 +310,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             name = data.getString("name");
                             id = data.getInt("num");
                             is_on = data.getBoolean("is_on");
+                            is_custom = data.getBoolean("is_custom");
                             min_people = data.getInt("min_people_num");
                             max_people = data.getInt("max_people_num");
                             num_people = data.getInt("people_num");
@@ -319,10 +340,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             }
                         }
                         if (not_doable) {
-                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles);
+                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom);
                             list_room.add(model);
-                            GamesAdapter customList = new GamesAdapter(list_room, getContext());
-                            listView.setAdapter(customList);
+                            gamesAdapter.notifyDataSetChanged();
                         }
                     }
                     else
@@ -347,7 +367,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     String nick = "";
                     ArrayList<UserModel> list_users = new ArrayList<>();
                     ArrayList<String> list_roles = new ArrayList<>();
-                    Boolean alive = true, is_on = false;
+                    Boolean alive = true, is_on = false, is_custom = false;
                     JSONObject users = new JSONObject();
                     JSONArray roles = new JSONArray();
                     int num;
@@ -359,6 +379,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     try {
                         name = data.getString("name");
                         is_on = data.getBoolean("is_on");
+                        is_custom = data.getBoolean("is_custom");
                         min_people = data.getInt("min_people_num");
                         max_people = data.getInt("max_people_num");
                         num_people = data.getInt("people_num");
@@ -379,10 +400,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         for(int i = 0; i< list_room.size(); i++) {
                             if (list_room.get(i).id == id)
                             {
-                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles);
+                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom);
                                 list_room.set(i, model);
-                                GamesAdapter customList = new GamesAdapter(list_room, getContext());
-                                listView.setAdapter(customList);
+                                gamesAdapter.notifyDataSetChanged();
                             }
                         }
                     } catch (JSONException e) {
@@ -437,11 +457,11 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     builder.setView(view_profile);
                     AlertDialog alert = builder.create();
 
-                    Button btn_add_friend = view_profile.findViewById(R.id.itemProfile_btn_addFriend);
+                    Button btn_add_friend = view_profile.findViewById(R.id.dialogOkNo_btn_no);
                     Button btn_kick = view_profile.findViewById(R.id.itemProfile_btn_kickFromRoom);
                     btn_kick.setVisibility(View.GONE);
                     Button btn_send_message = view_profile.findViewById(R.id.itemProfile_btn_sendMessage);
-                    Button btn_report = view_profile.findViewById(R.id.itemProfile_btn_report);
+                    Button btn_report = view_profile.findViewById(R.id.dialogOkNo_btn_yes);
                     ImageView IV_avatar = view_profile.findViewById(R.id.itemProfile_IV_avatar);
                     TextView TV_nick = view_profile.findViewById(R.id.itemProfile_TV_nick);
 

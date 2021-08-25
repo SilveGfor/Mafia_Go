@@ -1,5 +1,6 @@
 package com.mafiago.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,13 +27,23 @@ import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.R;
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
+import com.mafiago.classes.OnBackPressedListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,7 +56,7 @@ import io.socket.emitter.Emitter;
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
 
-public class MenuFragment extends Fragment{
+public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     Button btnRules;
     Button btnGames;
@@ -89,6 +100,8 @@ public class MenuFragment extends Fragment{
 
     private SharedPreferences mSettings;
 
+    public static RewardedAd mRewardedAd;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -117,6 +130,71 @@ public class MenuFragment extends Fragment{
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+
+/*
+
+        RewardedAd mRewardedAd;
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error.
+                        Log.d("kkk", loadAdError.getMessage());
+                        mRewardedAd = null;
+                    }
+
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                        mRewardedAd = rewardedAd;
+                        Log.d("kkk", "Ad was loaded.");
+                    }
+                });
+
+        mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+            @Override
+            public void onAdShowedFullScreenContent() {
+                // Called when ad is shown.
+                Log.d("kkk", "Ad was shown.");
+            }
+
+            @Override
+            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                // Called when ad fails to show.
+                Log.d("kkk", "Ad failed to show.");
+            }
+
+            @Override
+            public void onAdDismissedFullScreenContent() {
+                // Called when ad is dismissed.
+                // Set the ad reference to null so you don't show the ad a second time.
+                Log.d("kkk", "Ad was dismissed.");
+                mRewardedAd = null;
+            }
+        });
+
+        if (mRewardedAd != null) {
+            Activity activityContext = getActivity();
+            mRewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    // Handle the reward.
+                    Log.d("kkk", "The user earned the reward.");
+                    int rewardAmount = rewardItem.getAmount();
+                    String rewardType = rewardItem.getType();
+                }
+            });
+        } else {
+            Log.d("kkk", "The rewarded ad wasn't ready yet.");
+        }
+
+ */
+
+
+
 
         //TODO: Сделать что-то про последнюю роль
         //SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
@@ -182,6 +260,7 @@ public class MenuFragment extends Fragment{
         Friends.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                /*
                 AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
                 builder2.setTitle("В разработке...")
                         .setMessage("")
@@ -195,7 +274,8 @@ public class MenuFragment extends Fragment{
                                 });
                 AlertDialog alert2 = builder2.create();
                 alert2.show();
-                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                 */
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
             }
         });
 
@@ -257,6 +337,11 @@ public class MenuFragment extends Fragment{
             }
         });
         return view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        getActivity().finishAffinity();
     }
 
     @Override

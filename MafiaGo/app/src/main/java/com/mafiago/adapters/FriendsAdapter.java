@@ -2,14 +2,19 @@ package com.mafiago.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,6 +26,7 @@ import com.example.mafiago.R;
 import com.mafiago.MainActivity;
 import com.mafiago.fragments.GameFragment;
 import com.mafiago.fragments.MenuFragment;
+import com.mafiago.fragments.PrivateMessagesFragment;
 import com.mafiago.models.FriendModel;
 import com.mafiago.models.PrivateChatModel;
 
@@ -28,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.mafiago.MainActivity.socket;
 
@@ -49,36 +57,55 @@ public class FriendsAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         View view = layout.inflate(R.layout.item_friend, null);
 
-        TextView txt_nick = view.findViewById(R.id.itemFriend_nick);
-        ImageView IV_avatar = view.findViewById(R.id.itemFriend_avatar);
-
-        ImageView online = view.findViewById(R.id.itemFriend_IV_on_off);
-        ImageView IV_delete = view.findViewById(R.id.itemFriend_IV_delete);
-
-        CardView CV_room = view.findViewById(R.id.itemFriend_CV_room);
-        CardView CV_accept = view.findViewById(R.id.itemFriend_CV_accept);
-        CardView CV_cancel = view.findViewById(R.id.itemFriend_CV_cancel);
-
-        TextView TV_room_name = view.findViewById(R.id.itemFriend_TV_room_name);
+        CircleImageView IV_avatar = view.findViewById(R.id.itemFriend_avatar);
+        TextView TV_nick = view.findViewById(R.id.itemFriend_nick);
+        TextView TV_room = view.findViewById(R.id.itemFriend_TV_room);
+        TextView TV_onlineOffline = view.findViewById(R.id.itemFriend_TV_room);
+        ImageView IV_online = view.findViewById(R.id.itemFriend_IV_online);
+        Button btn_delete = view.findViewById(R.id.itemFriend_btn_delete);
+        Button btn_chat = view.findViewById(R.id.itemFriend_btn_chat);
 
         if (list_friends.get(position).avatar != null) {
             IV_avatar.setImageBitmap(fromBase64(list_friends.get(position).avatar));
         }
 
-        txt_nick.setText(list_friends.get(position).nick);
+        IV_avatar.setOnClickListener(v -> {
+            final JSONObject json = new JSONObject();
+            try {
+                json.put("nick", MainActivity.NickName);
+                json.put("session_id", MainActivity.Session_id);
+                json.put("info_nick", list_friends.get(position).nick);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            socket.emit("get_profile", json);
+            Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
+        });
+
+        TV_nick.setText(list_friends.get(position).nick);
 
         if (list_friends.get(position).online) {
-            online.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_online));
-        }
-        else
-        {
-            online.setBackground(ContextCompat.getDrawable(context, R.drawable.ic_offline));
+            IV_online.setVisibility(View.VISIBLE);
         }
 
-        if (!list_friends.get(position).is_friend_request)
-        {
-            IV_delete.setVisibility(View.VISIBLE);
-            IV_delete.setOnClickListener(v -> {
+        btn_chat.setOnClickListener(v -> {
+            MainActivity.User_id_2 = list_friends.get(position).user_id_2;
+            MainActivity.NickName_2 = list_friends.get(position).nick;
+            MainActivity.bitmap_avatar_2 = fromBase64(list_friends.get(position).avatar);
+            AppCompatActivity activity = (AppCompatActivity) view.getContext();
+            activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
+        });
+
+        btn_delete.setOnClickListener(v -> {
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+            builder.setView(viewQuestion);
+            AlertDialog alert = builder.create();
+            TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+            Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+            Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+            TV_text.setText("Вы уверены, что хотите удалить пользователя из списка друзей?");
+            btn_yes.setOnClickListener(v1 -> {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("nick", MainActivity.NickName);
@@ -90,19 +117,32 @@ public class FriendsAdapter extends BaseAdapter {
                 socket.emit("delete_friend", json);
                 Log.d("kkk", "Socket_отправка - delete_friend - "+ json.toString());
                 list_friends.remove(position);
+                alert.cancel();
                 this.notifyDataSetChanged();
             });
-            if (list_friends.get(position).room_num != -1)
-            {
-                CV_room.setVisibility(View.VISIBLE);
-                TV_room_name.setText(list_friends.get(position).room);
-                CV_room.setOnClickListener(v -> {
-                    MainActivity.Game_id = list_friends.get(position).room_num;
-                    MainActivity.RoomName = list_friends.get(position).room;
-                    AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
-                });
-            }
+            btn_no.setOnClickListener(v12 -> {
+                alert.cancel();
+            });
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert.show();
+        });
+
+        if (list_friends.get(position).room_num != -1)
+        {
+            TV_room.setVisibility(View.VISIBLE);
+            TV_room.setText(list_friends.get(position).room);
+            TV_room.setOnClickListener(v -> {
+                MainActivity.Game_id = list_friends.get(position).room_num;
+                MainActivity.RoomName = list_friends.get(position).room;
+                MainActivity.PlayersMinMaxInfo = "от " + list_friends.get(position).min_people + " до " + list_friends.get(position).max_people;
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+            });
+        }
+
+        /*
+        if (!list_friends.get(position).is_friend_request)
+        {
         }
         else
         {
@@ -139,6 +179,7 @@ public class FriendsAdapter extends BaseAdapter {
                 this.notifyDataSetChanged();
             });
         }
+         */
 
         return view;
     }

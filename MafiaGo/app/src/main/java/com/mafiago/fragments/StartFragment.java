@@ -50,6 +50,7 @@ import okhttp3.Response;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.mafiago.MainActivity.client;
+import static com.mafiago.MainActivity.socket;
 
 public class StartFragment extends Fragment {
 
@@ -227,9 +228,6 @@ public class StartFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
 
                     Log.d("kkk", "Failure: " + e.getMessage());
-                    ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                        PB_loading.setVisibility(View.INVISIBLE);
-                    });
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -302,9 +300,22 @@ public class StartFragment extends Fragment {
                                     MainActivity.User_id = data.get("user_id").toString();
                                     MainActivity.Sid = data.get("sid").toString();
                                     MainActivity.Role = data.get("role").toString();
+                                    MainActivity.Rang = data.getInt("rang");
+                                    MainActivity.MyInviteCode = data.getInt("my_invite_code");
 
                                     MainActivity.NickName = NickName;
                                     MainActivity.Session_id = Session_id;
+                                    MainActivity.onResume = true;
+                                    final JSONObject json2 = new JSONObject();
+                                    try {
+                                        json2.put("nick", NickName);
+                                        json2.put("session_id", Session_id);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    socket.emit("connection", json2);
+                                    Log.d("kkk", "CONNECTION after Login");
+
                                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
                                 }
                                 else {

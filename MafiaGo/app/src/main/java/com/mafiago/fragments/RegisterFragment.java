@@ -53,6 +53,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
     EditText ETpassword1;
     EditText ETpassword2;
     EditText ETcode;
+    EditText ET_inviteCode;
     TextView text_reg;
 
     ProgressBar loading;
@@ -80,6 +81,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
         ETnick = view.findViewById(R.id.fragmentRegister_ET_nick);
         ETemail = view.findViewById(R.id.fragmentRegister_ET_email);
         ETcode = view.findViewById(R.id.fragmentChangePassword_ET_code);
+        ET_inviteCode = view.findViewById(R.id.fragmentRegister_ET_inviteCode);
         ETpassword1 = view.findViewById(R.id.fragmentRegister_ET_password1);
         ETpassword2 = view.findViewById(R.id.fragmentRegister_ET_password2);
         text_reg = view.findViewById(R.id.fragmentChangePassword_TV_infoChange);
@@ -146,6 +148,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
             try {
                 json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
                 json.put("nick", mSettings.getString(APP_PREFERENCES_NICKNAME, ""));
+                json.put("invite_code", ET_inviteCode.getText());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -221,6 +224,23 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             editor.apply();
 
 
+                            break;
+                        case "incorrect_invite_code":
+                            ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                builder.setTitle("Некорректный код друга!")
+                                        .setMessage("Проверьте правильность написания")
+                                        .setIcon(R.drawable.ic_error)
+                                        .setCancelable(false)
+                                        .setNegativeButton("Ок",
+                                                new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int id) {
+                                                        dialog.cancel();
+                                                    }
+                                                });
+                                AlertDialog alert = builder.create();
+                                alert.show();
+                            });
                             break;
                         case "bad_email":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
@@ -303,6 +323,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                     if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) &&
                             !ETpassword1.getText().toString().trim().equals("") &&
                             !ETnick.getText().toString().trim().equals("") &&
+                            !ETnick.getText().toString().contains(".") &&
                             ETpassword1.length() >= 7 &&
                             ETpassword1.length() <= 20) {
 
@@ -334,6 +355,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 try {
                                     json.put("email", email);
                                     json.put("nick", nick);
+                                    json.put("invite_code", ET_inviteCode.getText());
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -419,6 +441,23 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                                     builder.setTitle("Вы ввели некорректную почту!")
                                                             .setMessage("")
+                                                            .setIcon(R.drawable.ic_error)
+                                                            .setCancelable(false)
+                                                            .setNegativeButton("Ок",
+                                                                    new DialogInterface.OnClickListener() {
+                                                                        public void onClick(DialogInterface dialog, int id) {
+                                                                            dialog.cancel();
+                                                                        }
+                                                                    });
+                                                    AlertDialog alert = builder.create();
+                                                    alert.show();
+                                                });
+                                                break;
+                                            case "incorrect_invite_code":
+                                                ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                                    builder.setTitle("Некорректный код друга!")
+                                                            .setMessage("Проверьте правильность написания")
                                                             .setIcon(R.drawable.ic_error)
                                                             .setCancelable(false)
                                                             .setNegativeButton("Ок",
@@ -523,6 +562,20 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                         if (!ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Ваши пароли не совпадают!")
+                                    .setMessage("")
+                                    .setIcon(R.drawable.ic_error)
+                                    .setCancelable(false)
+                                    .setNegativeButton("Ок",
+                                            new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    dialog.cancel();
+                                                }
+                                            });
+                            AlertDialog alert = builder.create();
+                            alert.show();
+                        } else if (ETnick.getText().toString().contains(".")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                            builder.setTitle("Ник не должен содержать точку!")
                                     .setMessage("")
                                     .setIcon(R.drawable.ic_error)
                                     .setCancelable(false)

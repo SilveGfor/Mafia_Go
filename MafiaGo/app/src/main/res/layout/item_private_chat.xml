@@ -1,61 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/Item_friend_avatar"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginLeft="10dp"
         android:layout_centerVertical="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:src="@drawable/lover_alive"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#FF0000"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/Item_friend_nick"
-        android:layout_toRightOf="@+id/Item_friend_avatar"
-        android:text="SilveGfor"
-        android:textSize="20sp"
-        android:textColor="@color/colorWhite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_toEndOf="@+id/Item_friend_avatar"
+        android:layout_toRightOf="@+id/Item_friend_avatar"
+        android:text="SilveGfor"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_toEndOf="@+id/Item_friend_avatar" />
-
-    <ImageView
-        android:id="@+id/Item_friend_IV_on_off"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_online"
-        android:layout_toRightOf="@id/Item_friend_nick"
-        android:layout_margin="5dp"/>
+        app:layout_constraintStart_toEndOf="@+id/Item_friend_avatar"
+        app:layout_constraintTop_toTopOf="@+id/Item_friend_avatar" />
 
     <TextView
         android:id="@+id/Item_friend_messages"
-        android:gravity="right"
-        android:text="1 сообщение"
-        android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:singleLine="true"
         android:layout_below="@id/Item_friend_nick"
-        android:layout_marginRight="5dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="4dp"
         android:layout_toLeftOf="@id/itemPrivateChat_IV_ban_chat"
         android:layout_toRightOf="@id/Item_friend_avatar"
-        android:layout_alignParentBottom="true"
+        android:ellipsize="end"
+        android:gravity="left"
+        android:singleLine="true"
+        android:text="1 сообщение"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/notActiveText"
         android:textSize="16sp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/itemPrivateChat_IV_ban_chat"
+        app:layout_constraintHorizontal_bias="0.52"
+        app:layout_constraintStart_toStartOf="@+id/Item_friend_nick"
+        app:layout_constraintTop_toBottomOf="@+id/Item_friend_nick" />
 
     <ImageView
         android:id="@+id/itemPrivateChat_IV_ban_chat"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/itemPrivateChat_IV_online"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true" />
-</RelativeLayout>
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/Item_friend_nick"
+        app:layout_constraintTop_toTopOf="@+id/Item_friend_nick"
+        app:srcCompat="@drawable/orange_point" />
+</androidx.constraintlayout.widget.ConstraintLayout>

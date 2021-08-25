@@ -9,6 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
+        android:layout_marginLeft="30dp"
         android:layout_weight="6"
         android:background="@drawable/rounded_corner">
 
@@ -73,8 +74,8 @@
             android:id="@+id/itemMyPrivateMessageAnswer_IV_readed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ic_readed"
-            android:layout_margin="5dp"
+            android:background="@drawable/two_tips"
+            android:layout_margin="10dp"
             android:layout_below="@+id/item_my_private_message_answer_CV"
             android:layout_alignParentRight="true"/>
 
@@ -94,15 +95,6 @@
         android:layout_height="30dp"
         android:layout_marginLeft="-15dp"
         android:layout_marginTop="6.5dp"
-        android:layout_weight="1"
-        android:src="@drawable/arrow_bg1" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginTop="0dp"
         android:layout_weight="3"
-        android:src="@drawable/ic_snow" />
-
+        android:src="@drawable/arrow_bg1" />
 </LinearLayout>

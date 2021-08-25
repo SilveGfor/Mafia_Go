@@ -1,105 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="50dp">
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/itemFriend_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="5dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="4dp"
         android:src="@drawable/lover_alive"
-        app:civ_border_width="1dp"
-        app:civ_border_color="#FF0000"/>
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/itemFriend_nick"
-        android:layout_toRightOf="@+id/itemFriend_avatar"
-        android:text="SilveGfor"
-        android:textSize="20sp"
-        android:textColor="@color/colorWhite"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:textStyle="bold" />
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_toRightOf="@+id/itemFriend_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="SilveGfor"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/itemFriend_btn_chat"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/itemFriend_IV_online"
+        app:layout_constraintTop_toTopOf="@+id/itemFriend_avatar" />
 
-    <ImageView
-        android:id="@+id/itemFriend_IV_on_off"
+    <Button
+        android:id="@+id/itemFriend_btn_delete"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@drawable/ic_online"
-        android:layout_toRightOf="@id/itemFriend_nick"
-        android:layout_margin="5dp"/>
+        android:layout_height="25dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@drawable/grey_button"
+        android:text="удалить"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/itemFriend_CV_room"
+    <Button
+        android:id="@+id/itemFriend_btn_chat"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/color_maniac"
-        app:cardCornerRadius="8dp"
-        android:layout_marginLeft="15dp"
-        android:visibility="gone"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/itemFriend_IV_on_off">
+        android:layout_height="25dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginRight="4dp"
+        android:background="@drawable/green_button"
+        android:text="написать"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/itemFriend_btn_delete"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-            android:id="@+id/itemFriend_TV_room_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="Комната 1"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp"/>
-    </androidx.cardview.widget.CardView>
+        android:id="@+id/itemFriend_TV_room"
+        android:layout_width="0dp"
+        android:layout_height="25dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/orange_button"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="King's road"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/itemFriend_nick"
+        app:layout_constraintStart_toStartOf="@+id/itemFriend_nick"
+        app:layout_constraintTop_toBottomOf="@+id/itemFriend_nick" />
+
+    <TextView
+        android:id="@+id/itemFriend_onlineOffline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:text="был в сети 8 часов назад"
+        android:textSize="10sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/itemFriend_nick"
+        app:layout_constraintTop_toBottomOf="@+id/itemFriend_nick" />
 
     <ImageView
-        android:id="@+id/itemFriend_IV_delete"
+        android:id="@+id/itemFriend_IV_online"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_ban"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="15dp"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/itemFriend_CV_accept"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginLeft="4dp"
         android:visibility="gone"
-        app:cardBackgroundColor="@color/color_doctor"
-        app:cardCornerRadius="8dp"
-        android:layout_marginLeft="15dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/itemFriend_IV_on_off">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="принять"
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp"/>
-    </androidx.cardview.widget.CardView>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/itemFriend_CV_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:cardBackgroundColor="@color/color_mafia_don"
-        app:cardCornerRadius="8dp"
-        android:layout_marginLeft="15dp"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/itemFriend_CV_accept">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            android:text="отклонить"
-            android:textColor="@color/colorWhite"
-            android:textSize="16sp"/>
-    </androidx.cardview.widget.CardView>
-</RelativeLayout>
+        app:layout_constraintStart_toEndOf="@+id/itemFriend_avatar"
+        app:layout_constraintTop_toTopOf="@+id/itemFriend_avatar"
+        app:srcCompat="@drawable/orange_point" />
+</androidx.constraintlayout.widget.ConstraintLayout>

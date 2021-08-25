@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/round_black_dialog">
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Выберите роль!"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_citizen"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_sheriff"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        app:srcCompat="@drawable/citizen_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_journalist"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_bodyguard"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogCustomRoles_citizen"
+        app:srcCompat="@drawable/journalist_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_sheriff"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_doctor"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_citizen"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_citizen"
+        app:srcCompat="@drawable/sheriff_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_mafia"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_mafia_don"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialogCustomRoles_journalist"
+        app:srcCompat="@drawable/mafia_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_mafia_don"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_terrorist"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_mafia"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_mafia"
+        app:srcCompat="@drawable/mafia_don_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_terrorist"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_poisoner"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_mafia_don"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_mafia"
+        app:srcCompat="@drawable/terrorist_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_poisoner"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_terrorist"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_mafia"
+        app:srcCompat="@drawable/poisoner_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_bodyguard"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_maniac"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_journalist"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_journalist"
+        app:srcCompat="@drawable/bodyguard_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_maniac"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_doctor_of_easy_virtue"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_bodyguard"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_journalist"
+        app:srcCompat="@drawable/maniac_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_doctor_of_easy_virtue"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_maniac"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_journalist"
+        app:srcCompat="@drawable/doctor_of_easy_virtue_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_doctor"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toStartOf="@+id/dialogCustomRoles_lover"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_sheriff"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_citizen"
+        app:srcCompat="@drawable/doctor_alive" />
+
+    <ImageView
+        android:id="@+id/dialogCustomRoles_lover"
+        android:layout_width="70dp"
+        android:layout_height="90dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/dialogCustomRoles_doctor"
+        app:layout_constraintTop_toTopOf="@+id/dialogCustomRoles_citizen"
+        app:srcCompat="@drawable/lover_alive" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

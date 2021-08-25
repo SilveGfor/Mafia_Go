@@ -47,10 +47,16 @@ public class DailyTasksAdapter extends BaseAdapter {
         TextView TV_title = view.findViewById(R.id.itemDailyTask_TV_title);
         TextView TV_description = view.findViewById(R.id.itemDailyTask_TV_description);
         ImageView IV_prize = view.findViewById(R.id.itemDailyTask_IV_prize);
+        ImageView IV_taskImage = view.findViewById(R.id.itemDailyTask_IV_taskImage);
         TextView TV_prize = view.findViewById(R.id.itemDailyTask_TV_prize);
         ProgressBar PB = view.findViewById(R.id.itemDailyTask_PB_horizontal);
         TextView TV_progress = view.findViewById(R.id.dialogCompleteDailyTask_TV_progress);
         Button btn_change = view.findViewById(R.id.itemDailyTask_btn_changeTask);
+
+        if (!MainActivity.Theme.equals("dark"))
+        {
+            IV_taskImage.setImageResource(R.drawable.game_goal_round_light);
+        }
 
         if (!list_tasks.get(position).completed)
         {

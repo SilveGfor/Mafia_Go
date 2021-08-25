@@ -21,6 +21,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:adjustViewBounds="true"
+            android:background="@drawable/sheriff_round"
             android:scaleType="centerCrop"
             android:layout_marginTop="15dp"
             android:layout_centerHorizontal="true"/>

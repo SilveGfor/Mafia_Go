@@ -48,11 +48,11 @@
                 android:textColor="@color/white"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toStartOf="@+id/itemDailyTask_IV_prize"
-                app:layout_constraintStart_toEndOf="@+id/itemProfile_IV_avatar"
-                app:layout_constraintTop_toTopOf="@+id/itemProfile_IV_avatar" />
+                app:layout_constraintStart_toEndOf="@+id/itemDailyTask_IV_taskImage"
+                app:layout_constraintTop_toTopOf="@+id/itemDailyTask_IV_taskImage" />
 
             <ImageView
-                android:id="@+id/itemProfile_IV_avatar"
+                android:id="@+id/itemDailyTask_IV_taskImage"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:layout_marginStart="8dp"

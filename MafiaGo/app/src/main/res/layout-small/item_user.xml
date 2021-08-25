@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ImageView
+        android:id="@+id/Item_user_IV_role"
+        android:layout_width="50dp"
+        android:layout_height="70dp"
+        android:layout_centerHorizontal="true"
+
+        android:scaleType="centerCrop"
+        android:src="@drawable/sheriff_alive" />
+
+    <ImageView
+        android:id="@+id/Item_user_IV_Animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/ItemUser_voting_number"
+        android:background="@drawable/ic_mafia"
+        android:scaleType="centerCrop"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/ItemUser_voting_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="3"
+        android:textColor="@color/colorWhite"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="invisible"/>
+
+    <TextView
+        android:id="@+id/Item_user_TV_nick"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/Item_user_IV_role"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:singleLine="true"
+        android:text="SilveGfor"
+        android:textColor="#FFFFFF"
+        android:textSize="9sp"
+        android:textStyle="normal" />
+</RelativeLayout>

@@ -1,136 +1,199 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/fon_menu"
+    android:background="?attr/background"
     tools:context="com.mafiago.fragments.PrivateChatsFragment">
 
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/fragmentPrivateChat_IV_avatar"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginRight="5dp"
-        android:layout_toRightOf="@id/fragmentPrivateChat_btn_exit"
-        android:src="@drawable/lover_alive"
-        app:civ_border_width="1dp"
-        android:layout_marginTop="10dp"
-        app:civ_border_color="#FF0000"/>
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/fragmentPrivateChat_CV_nick"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardCornerRadius="15dp"
-        android:layout_margin="10dp"
-        android:layout_toRightOf="@id/fragmentPrivateChat_IV_avatar"
-        app:cardBackgroundColor="@color/colorPrimaryDark">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:id="@+id/fragmentPrivateChat_TV_nick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:singleLine="true"
-                android:layout_centerHorizontal="true"
-                android:text="SilveGfor"
-                android:textSize="25sp" />
-        </RelativeLayout>
-    </androidx.cardview.widget.CardView>
-
-    <Button
-        android:id="@+id/fragmentPrivateChat_btn_exit"
-        android:layout_width="70dp"
-        android:layout_height="wrap_content"
-        android:text="Назад"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:textColor="@color/colorWhite"
-        android:background="@drawable/round_button" />
-
-    <ListView
-        android:id="@+id/fragmentPrivateChat_list_messages"
-        android:layout_marginTop="10dp"
+    <TextView
+        android:id="@+id/fragmentGame_TV_roomName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/fragmentPrivateChat_RL_answer"
-        android:layout_below="@+id/fragmentPrivateChat_btn_exit"
-        android:dividerHeight="10dp"
-        android:layout_margin="15dp"/>
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Чаты"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:id="@+id/fragmentPrivateChat_RL_answer"
-            android:layout_width="match_parent"
-            android:layout_above="@id/fragmentPrivateChat_LL_bottom"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
-            android:background="@drawable/rounded_corner"
-            android:layout_marginTop="5sp"
-            android:layout_marginRight="5sp"
-            android:layout_marginBottom="5sp">
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/fragmentPrivateChat_answer_nick"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:text="Vova_Vor" />
-            <TextView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/fragmentPrivateChat_answer_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/fragmentPrivateChat_answer_nick"
-                android:textColor="#000000"
-                android:text="Кто ты?" />
-            <Button
-                android:id="@+id/fragmentPrivateChat_btn_delete_answer"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="закрыть"
-                android:textSize="12sp"
-                android:background="@drawable/rounded_corner1"
-                android:layout_alignParentRight="true"
-                android:textColor="#000000"/>
-        </RelativeLayout>
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="42dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/three_lines" />
 
-
-    <RelativeLayout
-        android:id="@+id/fragmentPrivateChat_LL_bottom"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@color/colorPrimaryDark">
+        android:layout_marginTop="16dp"
+        android:background="#80000000"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_roomName">
 
-        <EditText
-            android:id="@+id/fragmentPrivateChat_ET_input"
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/fragmentPrivateChat_IV_back"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/fragmentPrivateChat_btn_send_mes"
-            android:textColorHint="#CFD8DC"
-            android:textColor="#CFD8DC"
-            android:hint="Напишите сообщение" />
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:padding="8dp"
+            android:src="@drawable/arrow_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/fragmentPrivateChat_btn_send_mes"
-            android:layout_alignParentRight="true"
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/fragmentPrivateChat_IV_avatar"
             android:layout_width="50dp"
-            android:layout_height="45dp"
-            android:padding="4dp"
-            android:src="@android:drawable/ic_menu_send" />
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:src="@drawable/lover_alive"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fragmentPrivateChat_IV_back"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <TextView
+            android:id="@+id/fragmentPrivateChat_TV_nick"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="SilveGfor"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/fragmentPrivateChat_IV_avatar"
+            app:layout_constraintTop_toTopOf="@+id/fragmentPrivateChat_IV_avatar" />
+
+        <TextView
+            android:id="@+id/fragmentPrivateChat_TV_onlineOffline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="не в сети"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/fragmentPrivateChat_TV_nick"
+            app:layout_constraintTop_toBottomOf="@+id/fragmentPrivateChat_TV_nick" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ListView
+        android:id="@+id/fragmentPrivateChat_LV_chat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginBottom="8dp"
+        android:divider="@null"
+        android:dividerHeight="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentPrivateChat_TV_answerMes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+    </ListView>
+
+    <TextView
+        android:id="@+id/itemChat_TV_BI"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:text="Вы:"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentPrivateChat_ET_message"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragmentPrivateChat_ET_message" />
+
+    <EditText
+        android:id="@+id/fragmentPrivateChat_ET_message"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/shape_black"
+        android:ems="10"
+        android:hint="Введите сообщение"
+        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+        android:lines="5"
+        android:padding="5dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentPrivateChat_RL_send"
+        app:layout_constraintStart_toEndOf="@+id/itemChat_TV_BI" />
+
+    <RelativeLayout
+        android:id="@+id/fragmentPrivateChat_RL_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/fragmentPrivateChat_btn_send"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
             android:id="@+id/fragmentPrivateChat_btn_edit"
-            android:layout_alignParentRight="true"
-            android:layout_width="50dp"
-            android:layout_height="45dp"
-            android:visibility="invisible"
-            android:padding="4dp"
-            android:src="@android:drawable/ic_menu_edit" />
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@android:drawable/ic_menu_edit"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
     </RelativeLayout>
-</RelativeLayout>
+
+    <TextView
+        android:id="@+id/fragmentPrivateChat_TV_answerMes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/shape_transparent_black"
+        android:padding="5dp"
+        android:text="SilveGfor: Что-то пошло не так"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentPrivateChat_ET_message"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentPrivateChat_ET_message"
+        app:layout_constraintStart_toStartOf="@+id/fragmentPrivateChat_ET_message" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

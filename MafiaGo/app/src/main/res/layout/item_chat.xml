@@ -100,8 +100,7 @@
             android:background="@drawable/shape_transparent_black"
             android:padding="5dp"
             android:text="SilveGfor: Что-то пошло не так"
-            android:textColor="#848484"
-            android:visibility="gone"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toTopOf="@+id/itemChat_ET_message"
             app:layout_constraintEnd_toEndOf="@+id/itemChat_ET_message"
             app:layout_constraintStart_toStartOf="@+id/itemChat_ET_message" />

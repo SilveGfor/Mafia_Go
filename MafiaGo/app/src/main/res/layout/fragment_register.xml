@@ -6,7 +6,7 @@
     android:id="@+id/FragmentRegistration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/fon_main"
+    android:background="?attr/background"
     android:orientation="vertical">
 
     <ProgressBar
@@ -22,17 +22,28 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="РЕГИСТРАЦИЯ"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName" />
 
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Если вас позвал друг, вы можете ввести его пригласительный код, что даст вам дополнительные бонусы. Узнать свой пригласительный код можно в настройках приложения"
+        android:textSize="10sp"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentRegister_ET_inviteCode"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRegister_ET_inviteCode"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRegister_ET_inviteCode" />
+
     <ImageView
         android:id="@+id/fragmentGame_roomName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -44,7 +55,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="70dp"
         android:layout_marginLeft="70dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="70dp"
         android:layout_marginRight="70dp"
         android:background="@drawable/shape_black"
@@ -56,7 +67,7 @@
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentRegister_ET_inviteCode" />
 
     <EditText
         android:id="@+id/fragmentRegister_ET_nick"
@@ -71,9 +82,26 @@
         android:textColorHint="@color/white"
         android:textSize="16sp"
         app:layout_constraintEnd_toEndOf="@+id/fragmentRegister_ET_email"
-        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/fragmentRegister_ET_email"
         app:layout_constraintTop_toBottomOf="@+id/fragmentRegister_ET_email" />
+
+    <EditText
+        android:id="@+id/fragmentRegister_ET_inviteCode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="70dp"
+        android:background="@drawable/shape_black"
+        android:ems="10"
+        android:hint="Введите код друга"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColorHint="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentRegister_ET_email"
+        app:layout_constraintHorizontal_bias="0.502"
+        app:layout_constraintStart_toStartOf="@+id/fragmentRegister_ET_email"
+        app:layout_constraintTop_toTopOf="@+id/fragmentChangePassword_PB" />
 
     <EditText
         android:id="@+id/fragmentRegister_ET_password1"
@@ -130,6 +158,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
         android:text="Мы отправили код подтверждения регистрации на вашу почту. Если сообщение не пришло, пожалуйста, проверьте папку спам"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/fragmentChangePassword_ET_code"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/fragmentChangePassword_ET_code"
@@ -151,6 +180,7 @@
         android:padding="10dp"
         android:textColorHint="@color/white"
         android:textSize="16sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -163,6 +193,7 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/orange_button"
         android:text="Отправить"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/fragmentChangePassword_ET_code"
         app:layout_constraintStart_toStartOf="@+id/fragmentChangePassword_ET_code"
         app:layout_constraintTop_toBottomOf="@+id/fragmentChangePassword_ET_code" />
@@ -173,6 +204,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Повторить регистрацию"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentChangePassword_TV_sendOneMoreTime" />
@@ -183,6 +215,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Отправить код ещё раз"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentChangePassword_btn_sendCode" />

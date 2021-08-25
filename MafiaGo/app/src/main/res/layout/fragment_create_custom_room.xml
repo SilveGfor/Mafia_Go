@@ -1,0 +1,127 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/background"
+    tools:context="com.mafiago.fragments.CreateCustomRoomFragment">
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="42dp"
+        android:layout_height="23dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/three_lines" />
+
+    <TextView
+        android:id="@+id/fragmentGame_TV_roomName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Кастомная комната"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/fragmentCreateCustomRoom_ET_roomName"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/shape_black"
+        android:ems="10"
+        android:hint="Название комнаты"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColorHint="@color/white"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentCreateCustomRoom_PSB_playerNum"
+        app:layout_constraintStart_toStartOf="@+id/fragmentCreateCustomRoom_PSB_playerNum"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_roomName" />
+
+    <org.florescu.android.rangeseekbar.RangeSeekBar
+        android:id="@+id/fragmentCreateCustomRoom_PSB_playerNum"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="8dp"
+
+        android:layout_marginEnd="32dp"
+        android:layout_marginRight="32dp"
+        app:absoluteMaxValue="5"
+        app:absoluteMinValue="20"
+        app:alwaysActive="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:showLabels="false" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Количество игроков"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateCustomRoom_ET_roomName" />
+
+    <GridView
+        android:id="@+id/fragmentCreateCustomRoom_GV_roles"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="8dp"
+        android:horizontalSpacing="5dp"
+        android:numColumns="4"
+        android:verticalSpacing="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentCreateCustomRoom_btn_createRoom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateCustomRoom_PSB_playerNum" />
+
+    <TextView
+        android:id="@+id/fragmentCreateCustomRoom_TV_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        android:text="?"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_roomName"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGame_TV_roomName"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_roomName" />
+
+    <Button
+        android:id="@+id/fragmentCreateCustomRoom_btn_createRoom"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        android:text="Создать комнату"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentCreateCustomRoom_GV_roles"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/fragmentCreateCustomRoom_GV_roles" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

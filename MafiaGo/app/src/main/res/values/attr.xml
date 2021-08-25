@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="attr_style">
+        <attr name="main_color" format="color" />
+        <attr name="help_color" format="color" />
+        <attr name="background" format="reference" />
+        <attr name="card_background" format="color" />
+        <attr name="item_game_text_green" format="color" />
+        <attr name="item_game_text_grey" format="color" />
+        <attr name="ic_shop" format="reference" />
+        <attr name="ic_competitions" format="reference" />
+        <attr name="ic_chats" format="reference" />
+        <attr name="ic_friends" format="reference" />
+    </declare-styleable>
+</resources>

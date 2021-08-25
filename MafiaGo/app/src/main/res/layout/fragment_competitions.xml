@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context="com.mafiago.fragments.CompetitionsFragment"
-    android:background="@drawable/fon_main">
+    android:background="?attr/background">
 
     <ImageView
         android:id="@+id/imageView5"
