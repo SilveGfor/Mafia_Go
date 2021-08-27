@@ -11,5 +11,7 @@
         <attr name="ic_competitions" format="reference" />
         <attr name="ic_chats" format="reference" />
         <attr name="ic_friends" format="reference" />
+        <attr name="ic_vk" format="reference" />
+        <attr name="ic_telegram" format="reference" />
     </declare-styleable>
 </resources>

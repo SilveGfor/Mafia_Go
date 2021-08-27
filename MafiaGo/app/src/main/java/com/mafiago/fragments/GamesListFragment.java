@@ -297,7 +297,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         String name = "", nick = "";
                         ArrayList<UserModel> list_users = new ArrayList<>();
                         ArrayList<String> list_roles = new ArrayList<>();
-                        Boolean alive = true, is_on = false, is_custom = false;
+                        Boolean alive = true, is_on = false, is_custom = false, has_password = false;
                         int id = 0;
                         int min_people = 0;
                         int max_people = 0;
@@ -311,6 +311,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             id = data.getInt("num");
                             is_on = data.getBoolean("is_on");
                             is_custom = data.getBoolean("is_custom");
+                            has_password = data.getBoolean("has_password");
                             min_people = data.getInt("min_people_num");
                             max_people = data.getInt("max_people_num");
                             num_people = data.getInt("people_num");
@@ -340,7 +341,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             }
                         }
                         if (not_doable) {
-                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom);
+                            RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom, has_password);
                             list_room.add(model);
                             gamesAdapter.notifyDataSetChanged();
                         }
@@ -367,7 +368,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     String nick = "";
                     ArrayList<UserModel> list_users = new ArrayList<>();
                     ArrayList<String> list_roles = new ArrayList<>();
-                    Boolean alive = true, is_on = false, is_custom = false;
+                    Boolean alive = true, is_on = false, is_custom = false, has_password = false;
                     JSONObject users = new JSONObject();
                     JSONArray roles = new JSONArray();
                     int num;
@@ -380,6 +381,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         name = data.getString("name");
                         is_on = data.getBoolean("is_on");
                         is_custom = data.getBoolean("is_custom");
+                        has_password = data.getBoolean("has_password");
                         min_people = data.getInt("min_people_num");
                         max_people = data.getInt("max_people_num");
                         num_people = data.getInt("people_num");
@@ -400,7 +402,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         for(int i = 0; i< list_room.size(); i++) {
                             if (list_room.get(i).id == id)
                             {
-                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom);
+                                RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom, has_password);
                                 list_room.set(i, model);
                                 gamesAdapter.notifyDataSetChanged();
                             }
@@ -491,7 +493,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
                     final String[] reason = {""};
 
-                    if (avatar != null) {
+                    if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
                         IV_avatar.setImageBitmap(fromBase64(avatar));
                     }
 
@@ -665,7 +667,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentMafiaWins);
                     TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentPeacefulWins);
 
-                    if (avatar != null) {
+                    if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
                         IV_avatar.setImageBitmap(fromBase64(avatar));
                     }
 
@@ -678,7 +680,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
                         Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
 
-                        IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar1));
+                        if (finalAvatar1 != null && !finalAvatar1.equals("") && !finalAvatar1.equals("null")) {
+                            IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar1));
+                        }
 
                         AlertDialog alert2 = builder2.create();
 

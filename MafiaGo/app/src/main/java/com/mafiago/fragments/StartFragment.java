@@ -303,6 +303,23 @@ public class StartFragment extends Fragment {
                                     MainActivity.Rang = data.getInt("rang");
                                     MainActivity.MyInviteCode = data.getInt("my_invite_code");
 
+                                    if (data.getString("avatar") == null || data.getString("avatar").equals("") || data.getString("avatar").equals("null"))
+                                    {
+                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                            builder.setView(viewDang);
+                                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                            TV_title.setText("Ух ты!");
+                                            TV_error.setText("Вы не поставили аватарку. Её можно установить в настройках");
+                                            AlertDialog alert = builder.create();
+                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            alert.show();
+                                        });
+                                    }
+
+
                                     MainActivity.NickName = NickName;
                                     MainActivity.Session_id = Session_id;
                                     MainActivity.onResume = true;

@@ -11,6 +11,8 @@
         <item name="ic_competitions">@drawable/ic_competitions_light</item>
         <item name="ic_chats">@drawable/ic_chats_light</item>
         <item name="ic_friends">@drawable/ic_friends_light</item>
+        <item name="ic_vk">@drawable/ic_vk_light</item>
+        <item name="ic_telegram">@drawable/ic_telegram_light</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
@@ -24,5 +26,7 @@
         <item name="ic_competitions">@drawable/competitions</item>
         <item name="ic_chats">@drawable/chats</item>
         <item name="ic_friends">@drawable/friends</item>
+        <item name="ic_vk">@drawable/ic_vk</item>
+        <item name="ic_telegram">@drawable/ic_telegram</item>
     </style>
 </resources>

@@ -1022,7 +1022,7 @@ public class GameChatFragment extends Fragment {
                             break;
                     }
 
-                    player.setCan_write(false);
+                    player.setCan_write(false); 
                     Log.e("kkk", String.valueOf(player.can_write));
                     if (player.getStatus().equals("alive")) {
                         switch (player.getTime()) {

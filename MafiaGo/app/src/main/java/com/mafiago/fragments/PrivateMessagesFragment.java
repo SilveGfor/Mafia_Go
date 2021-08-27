@@ -1,6 +1,7 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -117,6 +118,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.off("delete_message");
         socket.off("edit_message");
         socket.off("get_profile");
+        socket.off("my_friend_request");
 
         socket.on("connect", OnConnect);
         socket.on("disconnect", OnDisconnect);
@@ -125,6 +127,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.on("delete_message", OnDeleteMessage);
         socket.on("edit_message", OnEditMessage);
         socket.on("get_profile", OnGetProfile);
+        socket.on("my_friend_request", onMySendRequest);
 
         IV_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -579,7 +582,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
                 final String[] reason = {""};
 
-                if (avatar != null) {
+                if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
                     IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
 
@@ -592,7 +595,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
                     Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
 
-                    if (finalAvatar != null) {
+                    if (finalAvatar != null && !finalAvatar.equals("") && !finalAvatar.equals("null")) {
                         IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
                     }
 
@@ -625,6 +628,40 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
+            }
+        });
+    };
+
+    private final Emitter.Listener onMySendRequest = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - my_send_request - " + data);
+                String status = "";
+                try {
+                    status = data.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (status.equals("OK"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Запрос отправлен!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ok)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
             }
         });
     };

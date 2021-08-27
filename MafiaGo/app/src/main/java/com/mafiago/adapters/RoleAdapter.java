@@ -59,36 +59,38 @@ public class RoleAdapter extends BaseAdapter {
 
         ImageView IV_role = view.findViewById(R.id.ItemRole_IV_role);
         TextView TV_role = view.findViewById(R.id.itemRole_TV_role);
-        if (list_roles.get(position).visible) {
-            switch (list_roles.get(position).role) {
-                case DOCTOR:
-                    IV_role.setImageResource(R.drawable.doctor_alive);
-                    break;
-                case LOVER:
-                    IV_role.setImageResource(R.drawable.lover_alive);
-                    break;
-                case MAFIA_DON:
-                    IV_role.setImageResource(R.drawable.mafia_don_alive);
-                    break;
-                case JOURNALIST:
-                    IV_role.setImageResource(R.drawable.journalist_alive);
-                    break;
-                case MANIAC:
-                    IV_role.setImageResource(R.drawable.maniac_alive);
-                    break;
-                case TERRORIST:
-                    IV_role.setImageResource(R.drawable.terrorist_alive);
-                    break;
-                case BODYGUARD:
-                    IV_role.setImageResource(R.drawable.bodyguard_alive);
-                    break;
-                case POISONER:
-                    IV_role.setImageResource(R.drawable.poisoner_alive);
-                    break;
-                case DOCTOR_OF_EASY_VIRTUE:
-                    IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_alive);
-                    break;
-            }
+
+        switch (list_roles.get(position).role) {
+            case DOCTOR:
+                IV_role.setImageResource(R.drawable.doctor_alive);
+                break;
+            case LOVER:
+                IV_role.setImageResource(R.drawable.lover_alive);
+                break;
+            case MAFIA_DON:
+                IV_role.setImageResource(R.drawable.mafia_don_alive);
+                break;
+            case JOURNALIST:
+                IV_role.setImageResource(R.drawable.journalist_alive);
+                break;
+            case MANIAC:
+                IV_role.setImageResource(R.drawable.maniac_alive);
+                break;
+            case TERRORIST:
+                IV_role.setImageResource(R.drawable.terrorist_alive);
+                break;
+            case BODYGUARD:
+                IV_role.setImageResource(R.drawable.bodyguard_alive);
+                break;
+            case POISONER:
+                IV_role.setImageResource(R.drawable.poisoner_alive);
+                break;
+            case DOCTOR_OF_EASY_VIRTUE:
+                IV_role.setImageResource(R.drawable.doctor_of_easy_virtue_alive);
+                break;
+        }
+        if (!list_roles.get(position).visible) {
+            IV_role.setAlpha((float) 0.3);
         }
 
         String role = String.valueOf(list_roles.get(position).role).toLowerCase();

@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -65,7 +66,6 @@ public class GamesAdapter extends BaseAdapter {
 
         ArrayList<String> list_roles = list_room.get(position).list_roles;
 
-
         ImageView IV_maniac = view.findViewById(R.id.itemGame_maniac);
         ImageView IV_doctor = view.findViewById(R.id.itemGame_doctor);
         ImageView IV_lover = view.findViewById(R.id.itemGame_lover);
@@ -75,8 +75,7 @@ public class GamesAdapter extends BaseAdapter {
         ImageView IV_terrorist = view.findViewById(R.id.itemGame_terrorist);
         ImageView IV_doctor_of_easy_virtue = view.findViewById(R.id.itemGame_doctor_of_easy_virtue);
         ImageView IV_bodyguard = view.findViewById(R.id.itemGame_bodyguard);
-
-
+        ImageView IV_lock = view.findViewById(R.id.itemGame_lock);
 
         //PB_users.setMax(list_room.get(position).max_people);
         //PB_users.setProgress(list_room.get(position).num_people);
@@ -108,11 +107,37 @@ public class GamesAdapter extends BaseAdapter {
             AppCompatActivity activity = (AppCompatActivity) finalView.getContext();
 
             if (MainActivity.Rang >= 2 || !list_room.get(position).is_custom) {
-                MainActivity.Game_id = list_room.get(position).id;
-                MainActivity.RoomName = list_room.get(position).name;
-                MainActivity.PlayersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;
-                Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                if (!list_room.get(position).has_password) {
+                    MainActivity.Game_id = list_room.get(position).id;
+                    MainActivity.RoomName = list_room.get(position).name;
+                    MainActivity.PlayersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;
+                    Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                }
+                else
+                {
+                    int game_id = list_room.get(position).id;
+                    String room_name = list_room.get(position).name;
+                    String playersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    View viewDang = layout.inflate(R.layout.dialog_room_password, null);
+                    builder.setView(viewDang);
+                    EditText ET_password = viewDang.findViewById(R.id.dialogRoomPassword_ET_password);
+                    Button btn_join = viewDang.findViewById(R.id.dialogRoomPassword_btn_join);
+                    AlertDialog alert = builder.create();
+                    btn_join.setOnClickListener(v1 -> {
+                        MainActivity.Game_id = game_id;
+                        MainActivity.RoomName = room_name;
+                        MainActivity.PlayersMinMaxInfo = playersMinMaxInfo;
+                        MainActivity.Password = ET_password.getText().toString();
+                        Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+                        alert.cancel();
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                    });
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+
+                }
             }
             else
             {
@@ -128,7 +153,6 @@ public class GamesAdapter extends BaseAdapter {
                 alert.show();
             }
         });
-
 
         for (int i = 0; i < list_roles.size(); i++)
         {
@@ -162,6 +186,11 @@ public class GamesAdapter extends BaseAdapter {
                     IV_doctor_of_easy_virtue.setVisibility(View.VISIBLE);
                     break;
             }
+        }
+
+        if (list_room.get(position).has_password)
+        {
+            IV_lock.setVisibility(View.VISIBLE);
         }
 
         if (list_room.get(position).is_custom)

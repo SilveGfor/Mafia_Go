@@ -764,7 +764,7 @@ public class SettingsMainFragment extends Fragment {
                     e.printStackTrace();
                 }
 
-                if (avatar != null) {
+                if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
                     IV_avatar.setImageBitmap(fromBase64(avatar));
                 }
 

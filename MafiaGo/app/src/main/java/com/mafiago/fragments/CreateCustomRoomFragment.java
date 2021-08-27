@@ -10,6 +10,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -54,12 +55,16 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
 
     Button btnCreateRoom;
     TextView TV_question;
+    SwitchCompat swith_password;
+    EditText ET_password;
 
     public android.widget.GridView gridView;
 
     String name;
     int max_people;
     int min_people;
+    String password = "";
+    boolean has_password = false;
 
     ArrayList<RoleModel> list_roles = new ArrayList<>();
 
@@ -67,6 +72,8 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
 
     public static final String APP_PREFERENCES = "create_custom_room";
     public static final String APP_PREFERENCES_ROOM_NAME = "room_name";
+    public static final String APP_PREFERENCES_HAS_PASSWORD = "has_password";
+    public static final String APP_PREFERENCES_ROOM_PASSWORD = "password";
     public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
     public static final String APP_PREFERENCES_MIN_PEOPLE = "min_people";
     public static final String APP_PREFERENCES_ROLES = "roles";
@@ -83,6 +90,8 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
 
         ET_RoomName = view.findViewById(R.id.fragmentCreateCustomRoom_ET_roomName);
         TV_question = view.findViewById(R.id.fragmentCreateCustomRoom_TV_question);
+        swith_password = view.findViewById(R.id.fragmentCreateCustomRoom_Swith_password);
+        ET_password = view.findViewById(R.id.fragmentCreateCustomRoom_ET_password);
 
         RSB_num_users = view.findViewById(R.id.fragmentCreateCustomRoom_PSB_playerNum);
 
@@ -108,11 +117,31 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
         name = "";
         max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
+        has_password = mSettings.getBoolean(APP_PREFERENCES_HAS_PASSWORD, false);
+        if (has_password)
+        {
+            swith_password.setChecked(true);
+            ET_password.setVisibility(View.VISIBLE);
+            password = mSettings.getString(APP_PREFERENCES_ROOM_PASSWORD, "");
+            ET_password.setText(password);
+        }
         ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "King's road"));
         //TV_max_people.setText(String.valueOf(max_people));
         RSB_num_users.setSelectedMaxValue(max_people);
         RSB_num_users.setSelectedMinValue(min_people);
         SetRoles(min_people, max_people);
+
+        swith_password.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                has_password = true;
+                password = mSettings.getString(APP_PREFERENCES_ROOM_PASSWORD, "");
+                ET_password.setText(password);
+                ET_password.setVisibility(View.VISIBLE);
+            } else {
+                has_password = false;
+                ET_password.setVisibility(View.GONE);
+            }
+        });
 
         for(int i = 0; i < list_roles.size(); i++) {
             String role = mSettings.getString("role_" + i ,"");
@@ -202,6 +231,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                         else if (i < min_people && !list_roles.get(i).peaceful) have_mafia_in_start = true;
                     }
                     name = ET_RoomName.getText().toString();
+                    password = ET_password.getText().toString();
 
                     if (all_roles) {
                         if (have_citizen) {
@@ -210,85 +240,105 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                                     if (have_mafia_in_start) {
                                         if (name.length() >= 1) {
                                             if (name.length() <= 25) {
+                                                if (password.length() >= 1 || !has_password) {
+                                                    int flag = 0;
+                                                    for (int i = 0; i < name.length(); i++) {
+                                                        if (Character.isLetter(name.charAt(i))) {
+                                                            for (int j = 0; j < f.length; j++) {
+                                                                if (name.charAt(i) == f[j]) {
+                                                                    flag = 1;
+                                                                }
+                                                            }
 
-                                                int flag = 0;
-                                                for (int i = 0; i < name.length(); i++) {
-                                                    if (Character.isLetter(name.charAt(i))) {
-                                                        for (int j = 0; j < f.length; j++) {
-                                                            if (name.charAt(i) == f[j]) {
-                                                                flag = 1;
+                                                            if (flag != 1) {
+                                                                name = name.replace(String.valueOf(name.charAt(i)), "");
+                                                            }
+                                                            flag = 0;
+                                                        }
+                                                    }
+
+                                                    JSONArray peaceful = new JSONArray();
+                                                    JSONArray mafia = new JSONArray();
+                                                    Set<String> custom_roles = new HashSet<String>();
+                                                    JSONArray roles = new JSONArray();
+                                                    try {
+                                                        for (int i = 0; i < list_roles.size(); i++) {
+                                                            custom_roles.add(list_roles.get(i).role.toString().toLowerCase());
+                                                            roles.put(list_roles.get(i).role.toString().toLowerCase());
+                                                            if (list_roles.get(i).role != Role.SHERIFF && list_roles.get(i).role != Role.CITIZEN && list_roles.get(i).role != Role.MAFIA) {
+                                                                boolean flak = true;
+                                                                if (list_roles.get(i).peaceful) {
+                                                                    for (int j = 0; j < peaceful.length(); j++) {
+                                                                        if (peaceful.get(j).equals(list_roles.get(i).role.toString().toLowerCase())) {
+                                                                            flak = false;
+                                                                        }
+                                                                    }
+                                                                    if (flak) {
+                                                                        peaceful.put(list_roles.get(i).role.toString().toLowerCase());
+                                                                    }
+                                                                } else {
+                                                                    for (int j = 0; j < mafia.length(); j++) {
+                                                                        if (mafia.get(j).equals(list_roles.get(i).role.toString().toLowerCase())) {
+                                                                            flak = false;
+                                                                        }
+                                                                    }
+                                                                    if (flak) {
+                                                                        mafia.put(list_roles.get(i).role.toString().toLowerCase());
+                                                                    }
+
+                                                                }
                                                             }
                                                         }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    final JSONObject json = new JSONObject();
+                                                    final JSONObject json_roles = new JSONObject();
+                                                    try {
+                                                        json_roles.put("peaceful", peaceful);
+                                                        json_roles.put("mafia", mafia);
+                                                        json.put("nick", MainActivity.NickName);
+                                                        json.put("session_id", MainActivity.Session_id);
+                                                        json.put("name", name);
+                                                        json.put("min_people_num", RSB_num_users.getSelectedMinValue());
+                                                        json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
+                                                        json.put("roles", json_roles);
+                                                        json.put("custom_roles_list", roles);
+                                                        json.put("is_custom", true);
+                                                        json.put("has_password", has_password);
+                                                        json.put("password", password);
 
-                                                        if (flag != 1) {
-                                                            name = name.replace(String.valueOf(name.charAt(i)), "");
+                                                        SharedPreferences.Editor editor = mSettings.edit();
+                                                        editor.putString(APP_PREFERENCES_ROOM_NAME, name);
+                                                        for (int i = 0; i < roles.length(); i++) {
+                                                            editor.putString("role_" + i, roles.getString(i));
                                                         }
-                                                        flag = 0;
-                                                    }
-                                                }
-
-                                                JSONArray peaceful = new JSONArray();
-                                                JSONArray mafia = new JSONArray();
-                                                Set<String> custom_roles = new HashSet<String>();
-                                                JSONArray roles = new JSONArray();
-                                                try {
-                                                    for (int i = 0; i < list_roles.size(); i++) {
-                                                        custom_roles.add(list_roles.get(i).role.toString().toLowerCase());
-                                                        roles.put(list_roles.get(i).role.toString().toLowerCase());
-                                                        if (list_roles.get(i).role != Role.SHERIFF && list_roles.get(i).role != Role.CITIZEN && list_roles.get(i).role != Role.MAFIA) {
-                                                            boolean flak = true;
-                                                            if (list_roles.get(i).peaceful) {
-                                                                for (int j = 0; j < peaceful.length(); j++) {
-                                                                    if (peaceful.get(j).equals(list_roles.get(i).role.toString().toLowerCase())) {
-                                                                        flak = false;
-                                                                    }
-                                                                }
-                                                                if (flak) {
-                                                                    peaceful.put(list_roles.get(i).role.toString().toLowerCase());
-                                                                }
-                                                            } else {
-                                                                for (int j = 0; j < mafia.length(); j++) {
-                                                                    if (mafia.get(j).equals(list_roles.get(i).role.toString().toLowerCase())) {
-                                                                        flak = false;
-                                                                    }
-                                                                }
-                                                                if (flak) {
-                                                                    mafia.put(list_roles.get(i).role.toString().toLowerCase());
-                                                                }
-
-                                                            }
+                                                        editor.putString(APP_PREFERENCES_ROLES, roles.toString());
+                                                        editor.putBoolean(APP_PREFERENCES_HAS_PASSWORD, has_password);
+                                                        if (!password.equals("")) {
+                                                            editor.putString(APP_PREFERENCES_ROOM_PASSWORD, password);
                                                         }
+                                                        editor.apply();
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
                                                     }
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
-                                                }
-                                                final JSONObject json = new JSONObject();
-                                                final JSONObject json_roles = new JSONObject();
-                                                try {
-                                                    json_roles.put("peaceful", peaceful);
-                                                    json_roles.put("mafia", mafia);
-                                                    json.put("nick", MainActivity.NickName);
-                                                    json.put("session_id", MainActivity.Session_id);
-                                                    json.put("name", name);
-                                                    json.put("min_people_num", RSB_num_users.getSelectedMinValue());
-                                                    json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
-                                                    json.put("roles", json_roles);
-                                                    json.put("custom_roles_list", roles);
-                                                    json.put("is_custom", true);
 
-                                                    SharedPreferences.Editor editor = mSettings.edit();
-                                                    editor.putString(APP_PREFERENCES_ROOM_NAME, name);
-                                                    for (int i = 0; i < roles.length(); i++) {
-                                                        editor.putString("role_" + i, roles.getString(i));
-                                                    }
-                                                    editor.putString(APP_PREFERENCES_ROLES, roles.toString());
-                                                    editor.apply();
-                                                } catch (JSONException e) {
-                                                    e.printStackTrace();
+                                                    socket.emit("create_room", json);
+                                                    Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
                                                 }
-
-                                                socket.emit("create_room", json);
-                                                Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
+                                                else
+                                                {
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("Короткий пароль!");
+                                                    TV_error.setText("Пароль должен содержать как минимум 1 символ");
+                                                    AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                    alert.show();
+                                                }
                                             }
                                             else
                                             {

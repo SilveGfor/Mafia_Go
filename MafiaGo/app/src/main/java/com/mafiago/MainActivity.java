@@ -12,6 +12,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -68,9 +69,15 @@ import okhttp3.TlsVersion;
     public static String User_id_2 = "";
     public static String Sid = "";
     public static String Role = "";
+    public static String Theme = "";
+    public static String PlayersMinMaxInfo = "";
+    public static String Password = "";
+    public static boolean onResume = false;
     public static int Game_id;
+    public static int Rang;
+    public static int MyInviteCode;
     public static Bitmap bitmap_avatar_2;
-    public static String CURRENT_GAME_VERSION = "0.0.2";
+    public static String CURRENT_GAME_VERSION = "0.1.0";
     public static JSONObject USERS = new JSONObject();
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
@@ -81,14 +88,19 @@ import okhttp3.TlsVersion;
 
     ArrayList<NotificationModel> notifications = new ArrayList<>();
 
-    // Идентификатор уведомления
+    // Идентификатор уведомления да
     //private static final int NOTIFY_ID = 101;
 
     // Идентификатор канала
     private static String CHANNEL_ID = "Notifications channel";
 
+    public static final String APP_PREFERENCES = "user";
+    public static final String APP_PREFERENCES_THEME = "theme";
+
     NotificationCompat.Builder builder;
     NotificationManager manager;
+
+    private SharedPreferences mSettings;
 
     public void onUserSelected(String nick2) {
         FragmentManager fm = getSupportFragmentManager();
@@ -132,21 +144,75 @@ public static Socket socket;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        String theme = mSettings.getString(APP_PREFERENCES_THEME, "dark");
+        Theme = theme;
+        if (theme.equals("dark")) {
+            setTheme(R.style.DarkTheme);
+        } else
+        {
+            setTheme(R.style.LightTheme);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         socket.connect();
 
         /*
-        try {
-            ProviderInstaller.installIfNeeded(this);
-        } catch (GooglePlayServicesRepairableException e) {
-            // Thrown when Google Play Services is not installed, up-to-date, or enabled
-            // Show dialog to allow users to install, update, or otherwise enable Google Play services.
-            GooglePlayServicesUtil.getErrorDialog(e.getConnectionStatusCode(), this, 0);
-        } catch (GooglePlayServicesNotAvailableException e) {
-            Log.e("SecurityException", "Google Play Services not available.");
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+        builder.setView(viewDang);
+        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+        TV_title.setText("Опасная зона!");
+        TV_error.setText("Личные сообщения все еще разрабатываются, ими можно пользоваться, но некоторые функции и внешний вид могут не соответствовать ожиданиям");
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+        builder.setView(viewDang);
+        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+        TV_title.setText("Заголовок!");
+        TV_text.setText("текст");
+        AlertDialog alert = builder.create();
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
+
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+        builder.setView(viewQuestion);
+        AlertDialog alert = builder.create();
+        TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+        Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+        Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+        TV_text.setText("Вы уверены, что хотите удалить пользователя из списка друзей?");
+        btn_yes.setOnClickListener(v1 -> {
+            JSONObject json = new JSONObject();
+            try {
+                json.put("nick", MainActivity.NickName);
+                json.put("session_id", MainActivity.Session_id);
+                json.put("user_id_2", list_friends.get(position).user_id_2);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
+            socket.emit("delete_friend", json);
+            Log.d("kkk", "Socket_отправка - delete_friend - "+ json.toString());
+            list_friends.remove(position);
+            alert.cancel();
+            this.notifyDataSetChanged();
+        });
+        btn_no.setOnClickListener(v12 -> {
+            alert.cancel();
+        });
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
          */
 
         ConnectionSpec spec = new ConnectionSpec.Builder(ConnectionSpec.COMPATIBLE_TLS)
@@ -194,6 +260,8 @@ public static Socket socket;
 
     @Override
     protected void onResume() {
+        //socket.close();
+        socket.connect();
         final JSONObject json2 = new JSONObject();
         try {
             json2.put("nick", NickName);

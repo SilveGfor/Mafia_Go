@@ -55,6 +55,7 @@ import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
+import static com.mafiago.MainActivity.url;
 
 public class MenuFragment extends Fragment implements OnBackPressedListener {
 
@@ -527,9 +528,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     e.printStackTrace();
                 }
 
-                if (avatar != null) {
+                if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
                     IV_avatar.setImageBitmap(fromBase64(avatar));
-                    IV_avatar.setVisibility(View.VISIBLE);
                 }
 
                 TV_money.setText(String.valueOf(money));
@@ -582,7 +582,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentMafiaWins);
                     TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentPeacefulWins);
 
-                    if (finalAvatar != null) {
+                    if (finalAvatar != null && !finalAvatar.equals("") && !finalAvatar.equals("null")) {
                         IV_avatar.setImageBitmap(fromBase64(finalAvatar));
                     }
 

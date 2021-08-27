@@ -62,10 +62,23 @@
         app:layout_constraintEnd_toStartOf="@+id/itemFriend_btn_delete"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/itemFriend_lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/itemFriend_nick"
+        app:layout_constraintTop_toBottomOf="@+id/itemFriend_nick"
+        app:srcCompat="@drawable/ic_lock_light" />
+
     <TextView
         android:id="@+id/itemFriend_TV_room"
         android:layout_width="0dp"
-        android:layout_height="25dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:background="@drawable/orange_button"
@@ -78,7 +91,7 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/itemFriend_nick"
-        app:layout_constraintStart_toStartOf="@+id/itemFriend_nick"
+        app:layout_constraintStart_toEndOf="@+id/itemFriend_lock"
         app:layout_constraintTop_toBottomOf="@+id/itemFriend_nick" />
 
     <TextView
@@ -99,7 +112,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
         android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/itemFriend_avatar"
         app:layout_constraintTop_toTopOf="@+id/itemFriend_avatar"

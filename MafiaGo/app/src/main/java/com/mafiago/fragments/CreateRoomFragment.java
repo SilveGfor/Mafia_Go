@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.opengl.Visibility;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,12 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.VisibleForTesting;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.mafiago.MainActivity;
@@ -57,8 +61,12 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     Button btnCustomRoom;
 
     GridView gridView;
+    SwitchCompat swith_password;
+    EditText ET_password;
 
     String name;
+    String password = "";
+    boolean has_password = false;
     int minPlayers = 0;
     int maxPlayers = 0;
 
@@ -71,6 +79,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
     public static final String APP_PREFERENCES = "create_room";
     public static final String APP_PREFERENCES_ROOM_NAME = "room_name";
+    public static final String APP_PREFERENCES_HAS_PASSWORD = "has_password";
+    public static final String APP_PREFERENCES_ROOM_PASSWORD = "password";
     public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
     public static final String APP_PREFERENCES_MIN_PEOPLE = "min_people";
     public static final String APP_PREFERENCES_ROLES = "roles";
@@ -88,6 +98,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         ET_RoomName = view.findViewById(R.id.fragmentRegister_ET_email);
 
         RSB_num_users = view.findViewById(R.id.fragmentCreateRoom_PSB_playerNum);
+        swith_password = view.findViewById(R.id.fragmentCreateRoom_Swith_password);
+        ET_password = view.findViewById(R.id.fragmentCreateRoom_ET_password);
 
         btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_btn_createRoom);
         btnCustomRoom = view.findViewById(R.id.fragmentCreateRoom_btn_customRoom);
@@ -110,6 +122,14 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         name = "";
         int max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
         int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
+        has_password = mSettings.getBoolean(APP_PREFERENCES_HAS_PASSWORD, false);
+        if (has_password)
+        {
+            swith_password.setChecked(true);
+            ET_password.setVisibility(View.VISIBLE);
+            password = mSettings.getString(APP_PREFERENCES_ROOM_PASSWORD, "");
+            ET_password.setText(password);
+        }
         ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "King's road"));
         //TV_max_people.setText(String.valueOf(max_people));
         RSB_num_users.setSelectedMaxValue(max_people);
@@ -117,6 +137,18 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         maxPlayers = max_people;
         minPlayers = min_people;
         SetRoles(max_people);
+
+        swith_password.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                has_password = true;
+                password = mSettings.getString(APP_PREFERENCES_ROOM_PASSWORD, "");
+                ET_password.setText(password);
+                ET_password.setVisibility(View.VISIBLE);
+            } else {
+                has_password = false;
+                ET_password.setVisibility(View.GONE);
+            }
+        });
 
         Set<String> set = mSettings.getStringSet(APP_PREFERENCES_ROLES, new HashSet<String>());
         for(String r : set) {
@@ -226,6 +258,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
                     name = ET_RoomName.getText().toString();
+                    password = ET_password.getText().toString();
                     int flag = 0;
                     for (int i = 0; i < name.length(); i ++)
                     {
@@ -244,34 +277,55 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                     }
                     if (name.length() >= 1) {
                         if (name.length() <= 25) {
-                            Set<String> roles = new HashSet<String>();
-                            final JSONObject json = new JSONObject();
-                            final JSONObject json_roles = new JSONObject();
-                            try {
-                                json_roles.put("peaceful", peaceful);
-                                json_roles.put("mafia", mafia);
-                                json.put("nick", MainActivity.NickName);
-                                json.put("session_id", MainActivity.Session_id);
-                                json.put("name", name);
-                                json.put("min_people_num", RSB_num_users.getSelectedMinValue());
-                                json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
-                                json.put("roles", json_roles);
+                            if (password.length() >= 1 || !has_password) {
+                                Set<String> roles = new HashSet<String>();
+                                final JSONObject json = new JSONObject();
+                                final JSONObject json_roles = new JSONObject();
+                                try {
+                                    json_roles.put("peaceful", peaceful);
+                                    json_roles.put("mafia", mafia);
+                                    json.put("nick", MainActivity.NickName);
+                                    json.put("session_id", MainActivity.Session_id);
+                                    json.put("name", name);
+                                    json.put("min_people_num", RSB_num_users.getSelectedMinValue());
+                                    json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
+                                    json.put("roles", json_roles);
+                                    json.put("has_password", has_password);
+                                    json.put("password", password);
 
-                                for (int i = 0; i < peaceful.length(); i++) {
-                                    roles.add(peaceful.getString(i));
+                                    for (int i = 0; i < peaceful.length(); i++) {
+                                        roles.add(peaceful.getString(i));
+                                    }
+                                    for (int i = 0; i < mafia.length(); i++) {
+                                        roles.add(mafia.getString(i));
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                                for (int i = 0; i < mafia.length(); i++) {
-                                    roles.add(mafia.getString(i));
+                                SharedPreferences.Editor editor = mSettings.edit();
+                                editor.putStringSet(APP_PREFERENCES_ROLES, roles);
+                                editor.putString(APP_PREFERENCES_ROOM_NAME, name);
+                                editor.putBoolean(APP_PREFERENCES_HAS_PASSWORD, has_password);
+                                if (!password.equals("")) {
+                                    editor.putString(APP_PREFERENCES_ROOM_PASSWORD, password);
                                 }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                editor.apply();
+                                socket.emit("create_room", json);
+                                Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
                             }
-                            SharedPreferences.Editor editor = mSettings.edit();
-                            editor.putStringSet(APP_PREFERENCES_ROLES, roles);
-                            editor.putString(APP_PREFERENCES_ROOM_NAME, name);
-                            editor.apply();
-                            socket.emit("create_room", json);
-                            Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
+                            else
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                builder.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Слишком Короткий пароль!");
+                                TV_error.setText("Пароль должен содержать как минимум 1 символ");
+                                AlertDialog alert = builder.create();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                            }
                         }
                         else
                         {

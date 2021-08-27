@@ -11,9 +11,10 @@ public class FriendModel {
     public int max_people; //Это про комнату, в которой друг
     public boolean is_friend_request;
     public boolean is_my_request;
+    public boolean has_password;
 
     //Друг в комнате
-    public FriendModel(String nick, String user_id_2, boolean online, String avatar, String room, int room_num, int min_people, int max_people) {
+    public FriendModel(String nick, String user_id_2, boolean online, String avatar, String room, int room_num, int min_people, int max_people, boolean has_password) {
         this.nick = nick;
         this.online = online;
         this.user_id_2 = user_id_2;
@@ -22,6 +23,7 @@ public class FriendModel {
         this.room_num = room_num;
         this.min_people = min_people;
         this.max_people = max_people;
+        this.has_password = has_password;
     }
     //Друг не в комнате
     public FriendModel(String nick, String user_id_2, boolean online, String avatar) {

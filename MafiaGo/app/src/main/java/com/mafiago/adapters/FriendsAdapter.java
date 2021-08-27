@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -62,6 +63,7 @@ public class FriendsAdapter extends BaseAdapter {
         TextView TV_room = view.findViewById(R.id.itemFriend_TV_room);
         TextView TV_onlineOffline = view.findViewById(R.id.itemFriend_TV_room);
         ImageView IV_online = view.findViewById(R.id.itemFriend_IV_online);
+        ImageView IV_lock = view.findViewById(R.id.itemFriend_lock);
         Button btn_delete = view.findViewById(R.id.itemFriend_btn_delete);
         Button btn_chat = view.findViewById(R.id.itemFriend_btn_chat);
 
@@ -86,6 +88,10 @@ public class FriendsAdapter extends BaseAdapter {
 
         if (list_friends.get(position).online) {
             IV_online.setVisibility(View.VISIBLE);
+        }
+
+        if (list_friends.get(position).has_password) {
+            IV_lock.setVisibility(View.VISIBLE);
         }
 
         btn_chat.setOnClickListener(v -> {
@@ -131,12 +137,35 @@ public class FriendsAdapter extends BaseAdapter {
         {
             TV_room.setVisibility(View.VISIBLE);
             TV_room.setText(list_friends.get(position).room);
+            AppCompatActivity activity = (AppCompatActivity) view.getContext();
             TV_room.setOnClickListener(v -> {
-                MainActivity.Game_id = list_friends.get(position).room_num;
-                MainActivity.RoomName = list_friends.get(position).room;
-                MainActivity.PlayersMinMaxInfo = "от " + list_friends.get(position).min_people + " до " + list_friends.get(position).max_people;
-                AppCompatActivity activity = (AppCompatActivity) view.getContext();
-                activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                if (!list_friends.get(position).has_password) {
+                    MainActivity.Game_id = list_friends.get(position).room_num;
+                    MainActivity.RoomName = list_friends.get(position).room;
+                    MainActivity.PlayersMinMaxInfo = "от " + list_friends.get(position).min_people + " до " + list_friends.get(position).max_people;
+
+                    activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                }
+                else
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    View viewDang = layout.inflate(R.layout.dialog_room_password, null);
+                    builder.setView(viewDang);
+                    EditText ET_password = viewDang.findViewById(R.id.dialogRoomPassword_ET_password);
+                    Button btn_join = viewDang.findViewById(R.id.dialogRoomPassword_btn_join);
+                    AlertDialog alert = builder.create();
+                    btn_join.setOnClickListener(v1 -> {
+                        MainActivity.Game_id = list_friends.get(position).room_num;
+                        MainActivity.RoomName = list_friends.get(position).room;
+                        MainActivity.PlayersMinMaxInfo = "от " + list_friends.get(position).min_people + " до " + list_friends.get(position).max_people;
+                        MainActivity.Password = ET_password.getText().toString();
+                        Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
+                        alert.cancel();
+                        activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
+                    });
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                }
             });
         }
 

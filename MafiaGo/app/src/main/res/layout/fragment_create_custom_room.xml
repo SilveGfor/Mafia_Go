@@ -47,6 +47,36 @@
         app:layout_constraintStart_toStartOf="@+id/fragmentCreateCustomRoom_PSB_playerNum"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_roomName" />
 
+    <EditText
+        android:id="@+id/fragmentCreateCustomRoom_ET_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/shape_black"
+        android:ems="10"
+        android:hint="Введите пароль"
+        android:inputType="textPersonName"
+        android:padding="10dp"
+        android:textColorHint="@color/white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentCreateCustomRoom_ET_roomName"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/fragmentCreateCustomRoom_ET_roomName"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateCustomRoom_Swith_password" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/fragmentCreateCustomRoom_Swith_password"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:text="Пароль"
+        android:textOff="Нет"
+        android:textOn="Да"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateCustomRoom_ET_roomName" />
+
     <org.florescu.android.rangeseekbar.RangeSeekBar
         android:id="@+id/fragmentCreateCustomRoom_PSB_playerNum"
         android:layout_width="match_parent"
@@ -70,13 +100,13 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Количество игроков"
         android:textColor="@color/white"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateCustomRoom_ET_roomName" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentCreateCustomRoom_ET_password" />
 
     <GridView
         android:id="@+id/fragmentCreateCustomRoom_GV_roles"

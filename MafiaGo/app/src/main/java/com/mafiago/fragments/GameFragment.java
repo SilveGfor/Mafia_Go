@@ -257,6 +257,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             json.put("nick", player.getNick());
             json.put("session_id", player.getSession_id());
             json.put("room", player.getRoom_num());
+            json.put("password", MainActivity.Password);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -563,6 +564,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 json.put("nick", player.getNick());
                 json.put("session_id", player.getSession_id());
                 json.put("room", player.getRoom_num());
+                json.put("password", MainActivity.Password);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -797,6 +799,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         json.put("nick", player.getNick());
                         json.put("session_id", player.getSession_id());
                         json.put("room", player.getRoom_num());
+                        json.put("password", MainActivity.Password);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -1499,6 +1502,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         json.put("nick", player.getNick());
                                         json.put("session_id", player.getSession_id());
                                         json.put("room", player.getRoom_num());
+                                        json.put("password", MainActivity.Password);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
                                     }
@@ -1515,6 +1519,18 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 break;
                             case "max_people_in_room":
                                 TV_error.setText("В комнате нет мест");
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
+                            case "no_room":
+                                TV_error.setText("Этой комнаты не существует!");
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
+                            case "incorrect_password":
+                                TV_error.setText("Вы ввели неправильный пароль!");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
@@ -2273,7 +2289,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentMafiaWins);
                     TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentPeacefulWins);
 
-                    if (avatar != null) {
+                    if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
                         IV_avatar.setImageBitmap(fromBase64(avatar));
                     }
 
@@ -2286,7 +2302,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
                         Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
 
-                        IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar1));
+                        if (finalAvatar1 != null && !finalAvatar1.equals("") && !finalAvatar1.equals("null")) {
+                            IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar1));
+                        }
+
 
                         AlertDialog alert2 = builder2.create();
 
