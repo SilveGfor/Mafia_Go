@@ -30,7 +30,11 @@ import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
+import com.mafiago.enums.Role;
+import com.mafiago.fragments.GameFragment;
 import com.mafiago.fragments.StartFragment;
+import com.mafiago.fragments.StudyFragment;
+import com.mafiago.models.RoleModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,6 +95,7 @@ public class SettingsMainFragment extends Fragment {
     Button btnChangeAvatar;
     Button btnChangeNick;
     Button btnChangePassword;
+    Button btnStudy;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
@@ -355,7 +360,8 @@ public class SettingsMainFragment extends Fragment {
             btnReportError = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
             btnExitAccount = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
             btnShowRole = view.findViewById(R.id.fragmentSettingsMain_btn_showRole);
-            btnSelectTheme = view.findViewById(R.id.fragmentSettingsProfile_btn_changePassword);
+            btnSelectTheme = view.findViewById(R.id.fragmentSettingsMain_chooseTheme);
+            btnStudy = view.findViewById(R.id.fragmentSettingsProfile_btn_study);
             TV_role = view.findViewById(R.id.fragmentSettingsMain_TV_role);
             TV_message = view.findViewById(R.id.fragmentSettingsMain_TV_message);
             TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
@@ -368,6 +374,104 @@ public class SettingsMainFragment extends Fragment {
             socket.on("send_problem", onSendProblem);
 
             TV_inviteCode.setText("Пригласительный код для друзей: " + MainActivity.MyInviteCode + "\nВаш друг может указать его при регистрации и сыграть 50 игр - тогда вы оба получите по 100 золота");
+
+            btnStudy.setOnClickListener(v -> {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewDang = getLayoutInflater().inflate(R.layout.dialog_custom_roles, null);
+                builder.setView(viewDang);
+                ImageView citizen = viewDang.findViewById(R.id.dialogCustomRoles_citizen);
+                ImageView sheriff = viewDang.findViewById(R.id.dialogCustomRoles_sheriff);
+                ImageView doctor = viewDang.findViewById(R.id.dialogCustomRoles_doctor);
+                ImageView lover = viewDang.findViewById(R.id.dialogCustomRoles_lover);
+                ImageView journalist = viewDang.findViewById(R.id.dialogCustomRoles_journalist);
+                ImageView bodyguard = viewDang.findViewById(R.id.dialogCustomRoles_bodyguard);
+                ImageView maniac = viewDang.findViewById(R.id.dialogCustomRoles_maniac);
+                ImageView doctor_of_easy_virtue = viewDang.findViewById(R.id.dialogCustomRoles_doctor_of_easy_virtue);
+                ImageView IV_mafia = viewDang.findViewById(R.id.dialogCustomRoles_mafia);
+                ImageView mafia_don = viewDang.findViewById(R.id.dialogCustomRoles_mafia_don);
+                ImageView terrorist = viewDang.findViewById(R.id.dialogCustomRoles_terrorist);
+                ImageView poisoner = viewDang.findViewById(R.id.dialogCustomRoles_poisoner);
+                TextView TV_choose = viewDang.findViewById(R.id.dialogCustomRoles_TV_choose);
+
+                TV_choose.setText("Выберите роль для обучения");
+
+                AlertDialog alert = builder.create();
+
+                citizen.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("citizen");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                sheriff.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("sheriff");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                doctor.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("doctor");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                lover.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("lover");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                journalist.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("journalist");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                bodyguard.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("bodyguard");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                maniac.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("maniac");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                doctor_of_easy_virtue.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("doctor_of_easy_virtue");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                IV_mafia.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("mafia");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                mafia_don.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("mafia_don");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                terrorist.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("terrorist");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                poisoner.setOnClickListener(v1 -> {
+                    StudyFragment studyFragment = StudyFragment.newInstance("poisoner");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                });
+
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            });
 
             RL_copy.setOnClickListener(new View.OnClickListener() {
                 @Override

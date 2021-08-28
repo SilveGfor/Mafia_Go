@@ -1,8 +1,11 @@
 package com.mafiago.small_fragments;
 
 import android.app.AlertDialog;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
@@ -118,6 +121,7 @@ public class GameChatFragment extends Fragment {
             socket.on("role_action", onRoleAction);
             socket.on("success_get_in_room_observer", onSuccessGetInRoomObserver);
             socket.on("time", onTime);
+            socket.on("role", onRole);
             socket.on("get_my_game_info", onGetMyGameInfo);
         }
         else
@@ -1014,7 +1018,6 @@ public class GameChatFragment extends Fragment {
                         case "day":
                             player.setTime(Time.DAY);
                             messages_can_write = 10;
-                            Log.e("kkk", messages_can_write + "from on_time");
                             break;
                         case "voting":
                             messages_can_write = 10;
@@ -1022,8 +1025,7 @@ public class GameChatFragment extends Fragment {
                             break;
                     }
 
-                    player.setCan_write(false); 
-                    Log.e("kkk", String.valueOf(player.can_write));
+                    player.setCan_write(false);
                     if (player.getStatus().equals("alive")) {
                         switch (player.getTime()) {
                             case NIGHT_LOVE:
@@ -1084,6 +1086,28 @@ public class GameChatFragment extends Fragment {
         }
     };
 
+    //принимает роль
+    private Emitter.Listener onRole = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    String role;
+                    try {
+                        role = data.getString("role");
+                        player.setRole(ConvertToRole(role));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
+
     /*******************************
      *                             *
      *       SOCKETS end           *
@@ -1106,5 +1130,40 @@ public class GameChatFragment extends Fragment {
             ourDate = "00:00";
         }
         return ourDate;
+    }
+
+    //конвертировать String в Role
+    public Role ConvertToRole(String role) {
+        switch (role)
+        {
+            case "none":
+                return Role.NONE;
+            case "citizen":
+                return Role.CITIZEN;
+            case "mafia":
+                return Role.MAFIA;
+            case "sheriff":
+                return Role.SHERIFF;
+            case "doctor":
+                return Role.DOCTOR;
+            case "lover":
+                return Role.LOVER;
+            case "mafia_don":
+                return Role.MAFIA_DON;
+            case "maniac":
+                return Role.MANIAC;
+            case "terrorist":
+                return Role.TERRORIST;
+            case "bodyguard":
+                return Role.BODYGUARD;
+            case "poisoner":
+                return Role.POISONER;
+            case "journalist":
+                return Role.JOURNALIST;
+            case "doctor_of_easy_virtue":
+                return Role.DOCTOR_OF_EASY_VIRTUE;
+            default:
+                return Role.NONE;
+        }
     }
 }

@@ -53,7 +53,19 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/fragmentSettingsProfile_btn_changePassword"
+        android:id="@+id/fragmentSettingsProfile_btn_study"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/grey_button"
+        android:text="Обучение"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsMain_chooseTheme"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />
+
+    <Button
+        android:id="@+id/fragmentSettingsMain_chooseTheme"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
@@ -84,7 +96,7 @@
         android:background="@drawable/grey_button"
         android:padding="15dp"
         android:text="показывать роль"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_changePassword"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_study"
         app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
         app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />
 

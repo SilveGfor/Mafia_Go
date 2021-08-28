@@ -550,27 +550,42 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onResume() {
-        if (has_paused && player.getTime() == Time.LOBBY)
+        if (has_paused)
         {
-            for (int i = 0; i < list_users.size(); i++)
-            {
-                if (list_users.get(i).getNick().equals(player.getNick()))
-                {
-                    list_users.remove(i);
+            if (player.getTime() == Time.LOBBY) {
+                for (int i = 0; i < list_users.size(); i++) {
+                    if (list_users.get(i).getNick().equals(player.getNick())) {
+                        list_users.remove(i);
+                    }
                 }
+                json = new JSONObject();
+                try {
+                    json.put("nick", player.getNick());
+                    json.put("session_id", player.getSession_id());
+                    json.put("room", player.getRoom_num());
+                    json.put("password", MainActivity.Password);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.emit("get_in_room", json);
+                Log.d("kkk", "Socket_отправка - get_in_room onResume" + json.toString());
+                has_paused = false;
             }
-            json = new JSONObject();
-            try {
-                json.put("nick", player.getNick());
-                json.put("session_id", player.getSession_id());
-                json.put("room", player.getRoom_num());
-                json.put("password", MainActivity.Password);
-            } catch (JSONException e) {
-                e.printStackTrace();
+            else
+            {
+                json = new JSONObject();
+                try {
+                    json.put("nick", player.getNick());
+                    json.put("room", player.getRoom_num());
+                    json.put("last_message_num", num);
+                    json.put("last_dead_message_num", -1);
+                    json.put("session_id", player.getSession_id());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.emit("connect_to_room", json);
+                Log.d("kkk", "connect_to_room - " + json);
             }
-            socket.emit("get_in_room", json);
-            Log.d("kkk", "Socket_отправка - get_in_room onResume"+ json.toString());
-            has_paused = false;
         }
 
         super.onResume();
@@ -1930,7 +1945,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    final JSONObject json = new JSONObject();
+                    json = new JSONObject();
                     try {
                         json.put("nick", player.getNick());
                         json.put("room", player.getRoom_num());
