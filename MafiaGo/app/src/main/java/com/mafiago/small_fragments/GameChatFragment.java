@@ -152,8 +152,7 @@ public class GameChatFragment extends Fragment {
         messageAdapter = new MessageAdapter(list_chat, getContext());
         LV_chat.setAdapter(messageAdapter);
 
-
-        btnSend.setOnClickListener(v -> {
+        RL_send.setOnClickListener(v -> {
             String input = String.valueOf(ET_message.getText());
             if (input.length() > 300) {
                 input = input.substring(0, 301);
@@ -790,6 +789,19 @@ public class GameChatFragment extends Fragment {
                                     data2 = data.getJSONObject("message");
                                     message = data2.getString("message");
                                     nick = data2.getString("nick");
+                                    if (nick.equals(player.getNick()))
+                                    {
+                                        player.setCan_write(true);
+                                        player.setStatus("dead");
+                                    }
+                                    if (data2.has("nick_2"))
+                                    {
+                                        if (data2.getString("nick_2").equals(player.getNick()))
+                                        {
+                                            player.setCan_write(true);
+                                            player.setStatus("dead");
+                                        }
+                                    }
                                     messageModel = new MessageModel(test_num, message, time, "Server", "KillMes");
                                     break;
                                 case "role_action_mafia":
@@ -1075,10 +1087,49 @@ public class GameChatFragment extends Fragment {
                         try {
                             if (data.has("messages_counter")) {
                                 messages_can_write = data.getInt("messages_counter");
-                                Log.e("kkk", messages_can_write + "from Get_info");
                             }
+                            can_skip_day = data.getBoolean("can_skip_day");
+                            messages_can_write = data.getInt("messages_counter");
+                            role = data.getString("role");
+                            status = data.getString("status");
+                            time = data.getString("time");
+                            can_vote = data.getBoolean("can_vote");
+                            can_act = data.getBoolean("can_act");
+                            influences = data.getJSONObject("influences");
+                            sheriff = influences.getBoolean("sheriff");
+                            doctor = influences.getBoolean("doctor");
+                            lover = influences.getBoolean("lover");
+                            bodyguard = influences.getBoolean("bodyguard");
+                            poisoner = influences.getBoolean("poisoner");
+                            player.healed_yourself = data.getBoolean("heal_yourself");
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }
+
+                        player.setRole(ConvertToRole(role));
+                        player.setStatus(status);
+
+                        if (player.getStatus().equals("alive")) {
+                            player.setCan_write(false);
+                            switch (player.getTime()) {
+                                case NIGHT_LOVE:
+                                    switch (player.getRole()) {
+                                        case MAFIA:
+                                            player.setCan_write(true);
+                                            break;
+                                        case MAFIA_DON:
+                                            player.setCan_write(true);
+                                            break;
+                                    }
+                                    break;
+                                case NIGHT_OTHER:
+                                    break;
+                                case DAY:
+                                    player.setCan_write(true);
+                                case VOTING:
+                            }
+                        } else {
+                            player.setCan_write(true);
                         }
                     }
                 }

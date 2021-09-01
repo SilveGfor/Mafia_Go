@@ -393,6 +393,17 @@ public class SettingsMainFragment extends Fragment {
                 ImageView poisoner = viewDang.findViewById(R.id.dialogCustomRoles_poisoner);
                 TextView TV_choose = viewDang.findViewById(R.id.dialogCustomRoles_TV_choose);
 
+                citizen.setImageResource(R.drawable.citizen_dead);
+                sheriff.setImageResource(R.drawable.sheriff_dead);
+                doctor.setImageResource(R.drawable.doctor_dead);
+                lover.setImageResource(R.drawable.lover_dead);
+                journalist.setImageResource(R.drawable.journalist_dead);
+                bodyguard.setImageResource(R.drawable.bodyguard_dead);
+                maniac.setImageResource(R.drawable.maniac_dead);
+                doctor_of_easy_virtue.setImageResource(R.drawable.doctor_of_easy_virtue_dead);mafia_don.setImageResource(R.drawable.mafia_don_dead);
+                terrorist.setImageResource(R.drawable.terrorist_dead);
+                poisoner.setImageResource(R.drawable.poisoner_dead);
+
                 TV_choose.setText("Выберите роль для обучения");
 
                 AlertDialog alert = builder.create();

@@ -124,7 +124,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     MessageAdapter messageAdapter;
 
-    public int FirstVisibleItem = 0, VisibleItemsCount = 0,TotalItemsCount = 0;
+    public int FirstVisibleItem = 0, VisibleItemsCount = 0, TotalItemsCount = 0;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
