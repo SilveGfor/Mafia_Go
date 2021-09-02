@@ -72,11 +72,13 @@ public class StartFragment extends Fragment {
     String Session_id = "";
 
     Boolean AutoRun = false;
+    Boolean was_study = false;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
     public static final String APP_PREFERENCES_NICKNAME = "nickname";
+    public static final String APP_PREFERENCES_STUDY = "study";
 
     private SharedPreferences mSettings;
 
@@ -114,6 +116,7 @@ public class StartFragment extends Fragment {
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        was_study = mSettings.getBoolean(APP_PREFERENCES_STUDY, false);
         //if (mSettings.contains(APP_PREFERENCES_EMAIL) && mSettings.contains(APP_PREFERENCES_PASSWORD)) {
         if (!mSettings.getString(APP_PREFERENCES_EMAIL, "").equals("")) {
             // Получаем значение из настроек
@@ -302,9 +305,7 @@ public class StartFragment extends Fragment {
                                     MainActivity.Role = data.get("role").toString();
                                     MainActivity.Rang = data.getInt("rang");
                                     MainActivity.MyInviteCode = data.getInt("my_invite_code");
-
-                                    if (data.getString("avatar") == null || data.getString("avatar").equals("") || data.getString("avatar").equals("null"))
-                                    {
+                                    if (data.getString("avatar") == null || data.getString("avatar").equals("") || data.getString("avatar").equals("null")) {
                                         ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
@@ -319,7 +320,6 @@ public class StartFragment extends Fragment {
                                         });
                                     }
 
-
                                     MainActivity.NickName = NickName;
                                     MainActivity.Session_id = Session_id;
                                     MainActivity.onResume = true;
@@ -332,8 +332,17 @@ public class StartFragment extends Fragment {
                                     }
                                     socket.emit("connection", json2);
                                     Log.d("kkk", "CONNECTION after Login");
-
-                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                                    if (!was_study)
+                                    {
+                                        SharedPreferences.Editor editor = mSettings.edit();
+                                        editor.putBoolean(APP_PREFERENCES_STUDY, true);
+                                        editor.apply();
+                                        StudyFragment studyFragment = StudyFragment.newInstance("mafia");
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                                    }
+                                    else {
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                                    }
                                 }
                                 else {
                                     if (!data.getString("ban_time").equals("forever")) {

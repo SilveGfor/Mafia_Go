@@ -181,13 +181,13 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
         switch (role)
         {
             case "mafia":
-                list_chat.add(new MessageModel(0, "Приветствую тебя, ты попал на ускоренные курсы по подготовке юных мафиози! Я один из разработчиков Mafia Go и сейчас расскажу тебе основы. Нажми 'Далее' для продолжения", "19-00", dev, "UsersMes", "alive", "user", null));
+                list_chat.add(new MessageModel(0, "Приветствую тебя, ты попал на ускоренные курсы по подготовке юных мафиози! Я один из разработчиков Mafia Go и сейчас расскажу тебе основы. Нажми \"Далее\" для продолжения", "19-00", dev, "UsersMes", "alive", "user", null));
                 messageAdapter.notifyDataSetChanged();
                 TV_continue.setOnClickListener(v -> {
                     switch (continue_num)
                     {
                         case 0:
-                            list_chat.add(new MessageModel(0, "Каждому новичку необходимо пройти обучение по программе 'Мафия', остальные роли можно освоить по желанию", "19-00", dev, "UsersMes", "alive", "user", null));
+                            list_chat.add(new MessageModel(0, "Каждому новичку необходимо пройти обучение по программе \"Мафия\", остальные роли можно освоить по желанию", "19-00", dev, "UsersMes", "alive", "user", null));
                             messageAdapter.notifyDataSetChanged();
                             continue_num++;
                             break;

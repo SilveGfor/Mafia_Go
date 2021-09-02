@@ -18,14 +18,17 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -229,10 +232,48 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         //CV_info.startAnimation(animation);
 
         Telegram.setOnClickListener(v -> {
+            PopupMenu popup_menu = new PopupMenu(getActivity(), view);
+            popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.item1:
+                            Toast.makeText(getActivity(), "Выбран пункт 1", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.item2:
+                            Toast.makeText(getActivity(), "Выбран пункт 2", Toast.LENGTH_SHORT).show();
+                            return true;
+                        case R.id.item3:
+                            Toast.makeText(getActivity(), "Выбран пункт 3", Toast.LENGTH_SHORT).show();
+                            return true;
+                    }
+                    return true;
+                }
+            });
+            popup_menu.inflate(R.menu.main_menu);
+            popup_menu.show();
+
+            /*
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.item1:
+                        Toast.makeText(this, "Выбран пункт 1", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.item2:
+                        Toast.makeText(this, "Выбран пункт 2", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.item3:
+                        Toast.makeText(this, "Выбран пункт 3", Toast.LENGTH_SHORT).show();
+                        return true;
+                }
+                return true;
+            }
+
             Intent mIntent = new Intent();
             mIntent.setAction(Intent.ACTION_VIEW);
             mIntent.setData(Uri.parse("https://t.me/mafia_go_game"));
             startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
+             */
         });
 
         btnDailyTasks.setOnClickListener(v -> {
