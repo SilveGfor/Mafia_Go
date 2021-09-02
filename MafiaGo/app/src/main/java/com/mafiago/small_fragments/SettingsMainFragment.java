@@ -409,51 +409,136 @@ public class SettingsMainFragment extends Fragment {
                 AlertDialog alert = builder.create();
 
                 citizen.setOnClickListener(v1 -> {
+                    /*
                     StudyFragment studyFragment = StudyFragment.newInstance("citizen");
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
                     alert.cancel();
+                     */
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 sheriff.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("sheriff");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 doctor.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("doctor");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 lover.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("lover");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();;
                 });
 
                 journalist.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("journalist");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 bodyguard.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("bodyguard");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 maniac.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("maniac");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 doctor_of_easy_virtue.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("doctor_of_easy_virtue");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 IV_mafia.setOnClickListener(v1 -> {
@@ -463,21 +548,51 @@ public class SettingsMainFragment extends Fragment {
                 });
 
                 mafia_don.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("mafia_don");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 terrorist.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("terrorist");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 poisoner.setOnClickListener(v1 -> {
-                    StudyFragment studyFragment = StudyFragment.newInstance("poisoner");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                    alert.cancel();
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
+                    builder2.setTitle("В разработке...")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_razrabotka)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert2 = builder2.create();
+                    alert2.show();
                 });
 
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

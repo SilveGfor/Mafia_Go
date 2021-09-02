@@ -180,13 +180,7 @@ public class GameChatFragment extends Fragment {
                             if (!poisoner) {
                                 if (messages_can_write > 0) {
                                     messages_can_write--;
-                                    final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
 
-                                    // amplitude 0.2 and frequency 20
-                                    android.view.animation.BounceInterpolator interpolator = new android.view.animation.BounceInterpolator();
-                                    animation.setInterpolator(interpolator);
-
-                                    btnSend.startAnimation(animation);
                                     final JSONObject json2 = new JSONObject();
                                     try {
                                         json2.put("nick", player.getNick());
@@ -218,13 +212,7 @@ public class GameChatFragment extends Fragment {
                             } else {
                                 if (messages_can_write == 10) {
                                     messages_can_write--;
-                                    final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
 
-                                    // amplitude 0.2 and frequency 20
-                                    android.view.animation.BounceInterpolator interpolator = new android.view.animation.BounceInterpolator();
-                                    animation.setInterpolator(interpolator);
-
-                                    btnSend.startAnimation(animation);
                                     final JSONObject json2 = new JSONObject();
                                     try {
                                         json2.put("nick", player.getNick());
@@ -255,13 +243,6 @@ public class GameChatFragment extends Fragment {
                             }
 
                         } else {
-                            final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);
-
-                            // amplitude 0.2 and frequency 20
-                            android.view.animation.BounceInterpolator interpolator = new BounceInterpolator();
-                            animation.setInterpolator(interpolator);
-
-                            btnSend.startAnimation(animation);
                             final JSONObject json2 = new JSONObject();
                             try {
                                 json2.put("nick", player.getNick());
@@ -1126,6 +1107,7 @@ public class GameChatFragment extends Fragment {
                                     break;
                                 case DAY:
                                     player.setCan_write(true);
+                                    break;
                                 case VOTING:
                             }
                         } else {
