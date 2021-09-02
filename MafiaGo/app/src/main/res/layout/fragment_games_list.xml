@@ -8,7 +8,7 @@
     android:background="?attr/background">
 
     <ImageView
-        android:id="@+id/imageView5"
+        android:id="@+id/fragmentMenu_IV_menu"
         android:layout_width="42dp"
         android:layout_height="23dp"
         android:layout_marginStart="16dp"
@@ -24,9 +24,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
-        app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_menu"
+        app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_menu"
+        app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_menu"
         app:srcCompat="@drawable/mafia_go_text" />
 
     <androidx.cardview.widget.CardView

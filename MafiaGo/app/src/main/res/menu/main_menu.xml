@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/item1"
-        android:title="Пункт 1"
+        android:id="@+id/mainMenu_play"
+        android:title="Играть"
         android:visible="true"/>
     <item
-        android:id="@+id/item2"
-        android:title="Пункт 2"
+        android:id="@+id/mainMenu_shop"
+        android:title="Магазин"
         android:visible="true"/>
     <item
-        android:id="@+id/item3"
-        android:title="Пункт 3"
+        android:id="@+id/mainMenu_friends"
+        android:title="Друзья"
+        android:visible="true"/>
+    <item
+        android:id="@+id/mainMenu_chats"
+        android:title="Сообщения"
+        android:visible="true"/>
+    <item
+        android:id="@+id/mainMenu_settings"
+        android:title="Настройки"
         android:visible="true"/>
 </menu>

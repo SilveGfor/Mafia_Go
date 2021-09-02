@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -86,6 +87,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     ImageView Competitions;
     ImageView VK;
     ImageView Telegram;
+    ImageView Menu;
 
     ProgressBar PB_loading;
 
@@ -130,6 +132,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         TV_onlineOffline = view.findViewById(R.id.fragmentSettingsProfile_TV_onlineOffline);
         PB_loading = view.findViewById(R.id.fragmentMenu_PB);
         btnDailyTasks = view.findViewById(R.id.fragmentMenu_btn_dailyTasks);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
 
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
@@ -231,49 +234,43 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         //animation.setInterpolator(interpolator);
         //CV_info.startAnimation(animation);
 
-        Telegram.setOnClickListener(v -> {
-            PopupMenu popup_menu = new PopupMenu(getActivity(), view);
-            popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    switch (item.getItemId()) {
-                        case R.id.item1:
-                            Toast.makeText(getActivity(), "Выбран пункт 1", Toast.LENGTH_SHORT).show();
-                            return true;
-                        case R.id.item2:
-                            Toast.makeText(getActivity(), "Выбран пункт 2", Toast.LENGTH_SHORT).show();
-                            return true;
-                        case R.id.item3:
-                            Toast.makeText(getActivity(), "Выбран пункт 3", Toast.LENGTH_SHORT).show();
-                            return true;
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_shop:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_friends:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_chats:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_settings:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                return true;
+                        }
+                        return true;
                     }
-                    return true;
-                }
-            });
-            popup_menu.inflate(R.menu.main_menu);
-            popup_menu.show();
-
-            /*
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.item1:
-                        Toast.makeText(this, "Выбран пункт 1", Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.item2:
-                        Toast.makeText(this, "Выбран пункт 2", Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.item3:
-                        Toast.makeText(this, "Выбран пункт 3", Toast.LENGTH_SHORT).show();
-                        return true;
-                }
-                return true;
+                });
+                popup_menu.show();
             }
+        });
 
+        Telegram.setOnClickListener(v -> {
             Intent mIntent = new Intent();
             mIntent.setAction(Intent.ACTION_VIEW);
             mIntent.setData(Uri.parse("https://t.me/mafia_go_game"));
             startActivity(Intent.createChooser( mIntent, "Выберите браузер"));
-             */
         });
 
         btnDailyTasks.setOnClickListener(v -> {

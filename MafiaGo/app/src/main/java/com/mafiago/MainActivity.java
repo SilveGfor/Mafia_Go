@@ -146,6 +146,7 @@ public static Socket socket;
 
       private int currentApiVersion;
 
+      /*
       @SuppressLint("NewApi")
       @Override
       public void onWindowFocusChanged(boolean hasFocus)
@@ -162,6 +163,7 @@ public static Socket socket;
                               | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
           }
       }
+       */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -189,6 +191,7 @@ public static Socket socket;
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
 
         // This work only for android 4.4+
+        /*
         if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
 
@@ -212,6 +215,7 @@ public static Socket socket;
                         }
                     });
         }
+         */
 
         /*
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
