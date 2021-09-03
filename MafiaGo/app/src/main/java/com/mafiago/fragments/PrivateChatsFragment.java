@@ -13,11 +13,14 @@ import androidx.fragment.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -47,6 +50,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
     public TextView TV_no_chats;
 
     public ProgressBar PB_loading;
+    public ImageView Menu;
 
     public PrivateChatsAdapter privateChatsAdapter;
 
@@ -61,6 +65,39 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         SC_blocked_chats = view.findViewById(R.id.fragmentPrivateChats_SC_blocked_chats);
         TV_no_chats = view.findViewById(R.id.fragmentPrivateChat_TV_no_chats);
         PB_loading = view.findViewById(R.id.fragmentPrivateChat_PB_loading);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_shop:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_friends:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_chats:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_settings:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         privateChatsAdapter = new PrivateChatsAdapter(list_friends, getContext());
         friendsView.setAdapter(privateChatsAdapter);

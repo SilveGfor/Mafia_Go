@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -61,6 +63,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     public ProgressBar PB_loading;
 
     ImageView IV_screenshot;
+    ImageView Menu;
 
     View view_report;
     ImageView IV_screen;
@@ -89,6 +92,49 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         PB_loading = view.findViewById(R.id.fragmentGamesList_PB_loading);
 
         IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                if ( getActivity() != null) {
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                }
+                                return true;
+                            case R.id.mainMenu_shop:
+                                if ( getActivity() != null) {
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                }
+                                return true;
+                            case R.id.mainMenu_friends:
+                                if ( getActivity() != null) {
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                }
+                                return true;
+                            case R.id.mainMenu_chats:
+                                if ( getActivity() != null) {
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                }
+                                return true;
+                            case R.id.mainMenu_settings:
+                                if ( getActivity() != null) {
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                    return true;
+                                }
+                        }
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_games.setVisibility(View.GONE);

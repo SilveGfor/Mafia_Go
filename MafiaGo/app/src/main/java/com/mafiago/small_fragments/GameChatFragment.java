@@ -1,5 +1,6 @@
 package com.mafiago.small_fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -12,9 +13,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -197,6 +200,15 @@ public class GameChatFragment extends Fragment {
                                     answer_id = -1;
                                     TV_answerMes.setVisibility(View.GONE);
                                     ET_message.setText("");
+
+                                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                    //Find the currently focused view, so we can grab the correct window token from it.
+                                    View view2 = getActivity().getCurrentFocus();
+                                    //If no view currently has focus, create a new one, just so we can grab a window token from it
+                                    if (view2 == null) {
+                                        view2 = new View(getActivity());
+                                    }
+                                    imm.hideSoftInputFromWindow(view2.getWindowToken(), 0);
                                 } else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Вы не имеете права!")
@@ -229,6 +241,15 @@ public class GameChatFragment extends Fragment {
                                     answer_id = -1;
                                     TV_answerMes.setVisibility(View.GONE);
                                     ET_message.setText("");
+
+                                    InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                                    //Find the currently focused view, so we can grab the correct window token from it.
+                                    View view2 = getActivity().getCurrentFocus();
+                                    //If no view currently has focus, create a new one, just so we can grab a window token from it
+                                    if (view2 == null) {
+                                        view2 = new View(getActivity());
+                                    }
+                                    imm.hideSoftInputFromWindow(view2.getWindowToken(), 0);
                                 } else {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Вас отравили!")
@@ -259,6 +280,15 @@ public class GameChatFragment extends Fragment {
                             answer_id = -1;
                             TV_answerMes.setVisibility(View.GONE);
                             ET_message.setText("");
+
+                            InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+                            //Find the currently focused view, so we can grab the correct window token from it.
+                            View view2 = getActivity().getCurrentFocus();
+                            //If no view currently has focus, create a new one, just so we can grab a window token from it
+                            if (view2 == null) {
+                                view2 = new View(getActivity());
+                            }
+                            imm.hideSoftInputFromWindow(view2.getWindowToken(), 0);
                         }
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -300,6 +330,7 @@ public class GameChatFragment extends Fragment {
                 answer_id = -1;
                 TV_answerMes.setVisibility(View.GONE);
                 ET_message.setText("");
+                getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
             }
         });
 
@@ -1085,6 +1116,24 @@ public class GameChatFragment extends Fragment {
                             player.healed_yourself = data.getBoolean("heal_yourself");
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }
+
+                        switch (time) {
+                            case "lobby":
+                                player.setTime(Time.LOBBY);
+                                break;
+                            case "night_love":
+                                player.setTime(Time.NIGHT_LOVE);
+                                break;
+                            case "night_other":
+                                player.setTime(Time.NIGHT_OTHER);
+                                break;
+                            case "day":
+                                player.setTime(Time.DAY);
+                                break;
+                            case "voting":
+                                player.setTime(Time.VOTING);
+                                break;
                         }
 
                         player.setRole(ConvertToRole(role));

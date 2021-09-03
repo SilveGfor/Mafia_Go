@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -21,6 +22,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -63,6 +65,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     GridView gridView;
     SwitchCompat swith_password;
     EditText ET_password;
+    ImageView Menu;
 
     String name;
     String password = "";
@@ -105,6 +108,39 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         btnCustomRoom = view.findViewById(R.id.fragmentCreateRoom_btn_customRoom);
 
         gridView = view.findViewById(R.id.fragmentCreateRoom_GV_roles);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_shop:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_friends:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_chats:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_settings:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         //socket.off("connect");
         //socket.off("disconnect");

@@ -19,11 +19,13 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -49,6 +51,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
     TabLayout tab;
     ViewPager viewPager;
+    ImageView Menu;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,6 +61,39 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
 
         tab = view.findViewById(R.id.fragmentSettings_TabLayout);
         viewPager = view.findViewById(R.id.fragmentSettings_ViewPager);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_shop:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_friends:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_chats:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_settings:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         // Получаем ViewPager и устанавливаем в него адаптер
         viewPager.setAdapter(

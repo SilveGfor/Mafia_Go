@@ -16,6 +16,7 @@ import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -25,6 +26,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -83,6 +85,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public ImageView IV_influence_sheriff;
     public ImageView IV_influence_bodyguard;
     public ImageView IV_influence_poisoner;
+    public ImageView Menu;
 
     public ConstraintLayout Constrain;
 
@@ -181,6 +184,150 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         IV_influence_poisoner = view.findViewById(R.id.fragmentGame_ic_poisoner);
 
         IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        if (player.getTime() == Time.LOBBY) {
+                            if (!timer.getText().equals("\u221e")) {
+                                if (Integer.parseInt(String.valueOf(timer.getText())) > 5) {
+                                    final JSONObject json2 = new JSONObject();
+                                    try {
+                                        json2.put("nick", MainActivity.NickName);
+                                        json2.put("session_id", MainActivity.Session_id);
+                                        json2.put("room", player.getRoom_num());
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                    Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
+                                    socket.emit("leave_room", json2);
+                                    switch (item.getItemId()) {
+                                        case R.id.mainMenu_play:
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                            return true;
+                                        case R.id.mainMenu_shop:
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                            return true;
+                                        case R.id.mainMenu_friends:
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                            return true;
+                                        case R.id.mainMenu_chats:
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                            return true;
+                                        case R.id.mainMenu_settings:
+                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                            return true;
+                                    }
+                                }
+                                else
+                                {
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewError);
+                                    AlertDialog alert;
+                                    TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_error.setText("Нельзя выходить за несколько секунд до начала игры!");
+                                    alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    alert.show();
+                                }
+                            }
+                            else
+                            {
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", MainActivity.NickName);
+                                    json2.put("session_id", MainActivity.Session_id);
+                                    json2.put("room", player.getRoom_num());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
+                                socket.emit("leave_room", json2);
+                                switch (item.getItemId()) {
+                                    case R.id.mainMenu_play:
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                        return true;
+                                    case R.id.mainMenu_shop:
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                        return true;
+                                    case R.id.mainMenu_friends:
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                        return true;
+                                    case R.id.mainMenu_chats:
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                        return true;
+                                    case R.id.mainMenu_settings:
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                        return true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            socket.off("get_in_room");
+                            socket.off("user_message");
+                            socket.off("leave_room");
+                            socket.off("system_message");
+                            socket.off("ban_user_in_room");
+                            socket.off("host_info");
+                            socket.off("role_action");
+                            if (!player.is_observer) {
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", MainActivity.NickName);
+                                    json2.put("session_id", MainActivity.Session_id);
+                                    json2.put("room", player.getRoom_num());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
+                                socket.emit("leave_room", json2);
+                            }
+                            else
+                            {
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", MainActivity.NickName);
+                                    json2.put("session_id", MainActivity.Session_id);
+                                    json2.put("room", player.getRoom_num());
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("kkk", "Socket_отправка leave_room_observer - " + json2.toString());
+                                socket.emit("leave_room_observer", json2);
+                            }
+                            switch (item.getItemId()) {
+                                case R.id.mainMenu_play:
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                    return true;
+                                case R.id.mainMenu_shop:
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                    return true;
+                                case R.id.mainMenu_friends:
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                    return true;
+                                case R.id.mainMenu_chats:
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                    return true;
+                                case R.id.mainMenu_settings:
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                    return true;
+                            }
+                        }
+
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         // Получаем ViewPager и устанавливаем в него адаптер
         viewPager = view.findViewById(R.id.fragmentGame_VP_chat);

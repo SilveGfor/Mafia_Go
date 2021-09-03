@@ -13,6 +13,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -22,6 +23,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -69,6 +71,7 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
     public ImageView IV_influence_sheriff;
     public ImageView IV_influence_bodyguard;
     public ImageView IV_influence_poisoner;
+    public ImageView Menu;
 
     public ListView LV_chat;
 
@@ -144,6 +147,39 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
         IV_influence_sheriff = view.findViewById(R.id.fragmentStudy_ic_sheriff);
         IV_influence_bodyguard = view.findViewById(R.id.fragmentStudy_ic_bodyguard);
         IV_influence_poisoner = view.findViewById(R.id.fragmentStudy_ic_poisoner);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_shop:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_friends:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_chats:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_settings:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         player = new Player(MainActivity.NickName, MainActivity.Session_id, MainActivity.Game_id, MainActivity.Role);
 

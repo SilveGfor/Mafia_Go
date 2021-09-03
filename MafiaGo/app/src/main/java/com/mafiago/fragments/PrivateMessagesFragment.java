@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -24,6 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -60,6 +62,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
     public ImageView IV_avatar;
     public ImageView IV_back;
+    public ImageView Menu;
 
     public EditText ET_input;
 
@@ -90,6 +93,39 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         TV_nick = view.findViewById(R.id.fragmentPrivateChat_TV_nick);
         TV_answer = view.findViewById(R.id.fragmentPrivateChat_TV_answerMes);
         IV_avatar = view.findViewById(R.id.fragmentPrivateChat_IV_avatar);
+        Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        Menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                popup_menu.inflate(R.menu.main_menu);
+                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        switch (item.getItemId()) {
+                            case R.id.mainMenu_play:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_shop:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_friends:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_chats:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                                return true;
+                            case R.id.mainMenu_settings:
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                                return true;
+                        }
+                        return true;
+                    }
+                });
+                popup_menu.show();
+            }
+        });
 
         TV_nick.setText(MainActivity.NickName_2);
         IV_avatar.setImageBitmap(MainActivity.bitmap_avatar_2);
