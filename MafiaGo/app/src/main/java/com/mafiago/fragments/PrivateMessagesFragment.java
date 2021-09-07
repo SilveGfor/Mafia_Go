@@ -2,7 +2,6 @@ package com.mafiago.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -26,7 +25,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,7 +33,6 @@ import com.example.mafiago.R;
 
 import com.mafiago.adapters.PrivateMessagesAdapter;
 import com.mafiago.classes.OnBackPressedListener;
-import com.mafiago.enums.Time;
 import com.mafiago.models.PrivateMessageModel;
 
 import org.json.JSONException;
@@ -49,7 +46,6 @@ import java.util.TimeZone;
 import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
-import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class PrivateMessagesFragment extends Fragment implements OnBackPressedListener {
 
@@ -577,7 +573,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
                 Button btn_add_friend = view_profile.findViewById(R.id.dialogOkNo_btn_no);
                 Button btn_kick = view_profile.findViewById(R.id.itemProfile_btn_kickFromRoom);
-                Button btn_send_message = view_profile.findViewById(R.id.itemProfile_btn_sendMessage);
+                Button btn_send_message = view_profile.findViewById(R.id.itemGold_btn_buy);
                 Button btn_report = view_profile.findViewById(R.id.dialogOkNo_btn_yes);
                 ImageView IV_avatar = view_profile.findViewById(R.id.itemProfile_IV_avatar);
                 TextView TV_nick = view_profile.findViewById(R.id.itemProfile_TV_nick);

@@ -62,7 +62,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.TimeZone;
 
-import de.hdodenhof.circleimageview.CircleImageView;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
@@ -2180,7 +2179,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
                     Button btn_add_friend = view_profile.findViewById(R.id.dialogOkNo_btn_no);
                     Button btn_kick = view_profile.findViewById(R.id.itemProfile_btn_kickFromRoom);
-                    Button btn_send_message = view_profile.findViewById(R.id.itemProfile_btn_sendMessage);
+                    Button btn_send_message = view_profile.findViewById(R.id.itemGold_btn_buy);
                     Button btn_report = view_profile.findViewById(R.id.dialogOkNo_btn_yes);
                     ImageView IV_avatar = view_profile.findViewById(R.id.itemProfile_IV_avatar);
                     TextView TV_nick = view_profile.findViewById(R.id.itemProfile_TV_nick);

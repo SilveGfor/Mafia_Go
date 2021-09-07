@@ -2,14 +2,12 @@ package com.mafiago.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
-import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -20,28 +18,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.google.android.material.tabs.TabLayout;
 import com.mafiago.MainActivity;
 import com.mafiago.adapters.FriendsAdapter;
-import com.mafiago.adapters.PrivateChatsAdapter;
 import com.mafiago.classes.OnBackPressedListener;
-import com.mafiago.enums.Time;
 import com.mafiago.models.FriendModel;
-import com.mafiago.models.PrivateChatModel;
 import com.mafiago.pager_adapters.FriendsPagerAdapter;
-import com.mafiago.pager_adapters.SettingsPagerAdapter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -50,7 +40,6 @@ import java.util.ArrayList;
 import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
-import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
@@ -436,7 +425,7 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
                     Button btn_add_friend = view_profile.findViewById(R.id.dialogOkNo_btn_no);
                     Button btn_kick = view_profile.findViewById(R.id.itemProfile_btn_kickFromRoom);
                     btn_kick.setVisibility(View.GONE);
-                    Button btn_send_message = view_profile.findViewById(R.id.itemProfile_btn_sendMessage);
+                    Button btn_send_message = view_profile.findViewById(R.id.itemGold_btn_buy);
                     Button btn_report = view_profile.findViewById(R.id.dialogOkNo_btn_yes);
                     ImageView IV_avatar = view_profile.findViewById(R.id.itemProfile_IV_avatar);
                     TextView TV_nick = view_profile.findViewById(R.id.itemProfile_TV_nick);

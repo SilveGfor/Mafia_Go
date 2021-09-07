@@ -21,7 +21,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/itemProfile_btn_sendMessage"
+                android:id="@+id/itemGold_btn_buy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

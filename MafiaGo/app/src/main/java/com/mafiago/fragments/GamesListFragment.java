@@ -508,7 +508,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     Button btn_add_friend = view_profile.findViewById(R.id.dialogOkNo_btn_no);
                     Button btn_kick = view_profile.findViewById(R.id.itemProfile_btn_kickFromRoom);
                     btn_kick.setVisibility(View.GONE);
-                    Button btn_send_message = view_profile.findViewById(R.id.itemProfile_btn_sendMessage);
+                    Button btn_send_message = view_profile.findViewById(R.id.itemGold_btn_buy);
                     Button btn_report = view_profile.findViewById(R.id.dialogOkNo_btn_yes);
                     ImageView IV_avatar = view_profile.findViewById(R.id.itemProfile_IV_avatar);
                     TextView TV_nick = view_profile.findViewById(R.id.itemProfile_TV_nick);

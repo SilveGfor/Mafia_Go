@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragmentSettingsProfile_CV"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/cards"
+        app:cardCornerRadius="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:id="@+id/itemShopping_btn_buy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/profile_button"
+                android:text="Купить"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemShopping_TV_description" />
+
+            <TextView
+                android:id="@+id/itemShopping_TV_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Выключить рекламу"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/itemShopping_IV"
+                app:layout_constraintTop_toBottomOf="@+id/itemShopping_TV_sale" />
+
+            <TextView
+                android:id="@+id/itemShopping_TV_description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="стоимость 70р"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemShopping_TV_title"
+                app:layout_constraintStart_toStartOf="@+id/itemShopping_TV_title"
+                app:layout_constraintTop_toBottomOf="@+id/itemShopping_TV_title" />
+
+
+            <ImageView
+                android:id="@+id/itemShopping_IV"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/no_ads_light" />
+
+            <TextView
+                android:id="@+id/itemShopping_TV_sale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-30%"
+                android:textColor="@color/red"
+                android:textStyle="bold"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="@+id/itemShopping_TV_title"
+                app:layout_constraintTop_toTopOf="@+id/itemShopping_IV" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager.widget.ViewPager;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,20 +15,35 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 
 import com.example.mafiago.R;
+import com.google.android.material.tabs.TabLayout;
 import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.pager_adapters.SettingsPagerAdapter;
+import com.mafiago.pager_adapters.ShopPagerAdapter;
 
 import static com.mafiago.MainActivity.socket;
 
 public class ShopFragment extends Fragment implements OnBackPressedListener {
 
     ImageView Menu;
+    TabLayout tab;
+    ViewPager viewPager;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_shop, container, false);
+
+        tab = view.findViewById(R.id.fragmentShop_TabLayout);
+        viewPager = view.findViewById(R.id.fragmentShop_ViewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        // Получаем ViewPager и устанавливаем в него адаптер
+        viewPager.setAdapter(
+                new ShopPagerAdapter(getActivity().getSupportFragmentManager(), getActivity()));
+
+        // Передаём ViewPager в TabLayout
+        tab.setupWithViewPager(viewPager);
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
