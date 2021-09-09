@@ -7,42 +7,59 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/itemMessage_main_role"
-        android:layout_width="wrap_content"
+        android:id="@+id/itemMessage_status"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
         android:layout_toRightOf="@id/itemMessage_avatar"
-        android:text="разработчик"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="{разработчик}"
         android:textColor="#FF0000"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:visibility="gone"
-        app:layout_constraintStart_toStartOf="@+id/itemMessage_text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/itemMessage_nick"
         app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/itemMessage_avatar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_below="@id/itemMessage_main_role"
+        android:layout_below="@id/itemMessage_status"
         android:src="@drawable/sheriff_alive"
         app:civ_border_color="#FF0000"
         app:civ_border_width="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemMessage_main_role" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/itemMessage_text"
+        android:id="@+id/itemMessage_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_toRightOf="@id/itemMessage_avatar"
-        android:text="SilveGfor: Однако здравствуйте"
+        android:text="Однако здравствуйте"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/itemMessage_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/itemMessage_main_role" />
+        app:layout_constraintStart_toStartOf="@+id/itemMessage_nick"
+        app:layout_constraintTop_toBottomOf="@+id/itemMessage_nick" />
 
+    <TextView
+        android:id="@+id/itemMessage_nick"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_toRightOf="@id/itemMessage_avatar"
+        android:text="SilveGfor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorWhite"
+        android:textSize="14sp"
+        android:singleLine="true"
+        android:ellipsize="end"
+        app:layout_constraintStart_toEndOf="@+id/itemMessage_avatar"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

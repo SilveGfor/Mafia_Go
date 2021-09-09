@@ -7,57 +7,111 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/itemAnswerMessage_main_role"
-        android:layout_width="wrap_content"
+        android:id="@+id/itemAnswerMessage_status"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/itemAnswerMessage_avatar"
-        android:text="разработчик"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="{разработчик}"
         android:textColor="#FF0000"
-        android:textSize="12sp"
+        android:textSize="14sp"
         android:visibility="gone"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="74dp" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_nick"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/itemAnswerMessage_avatar"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_below="@id/itemAnswerMessage_main_role"
         android:src="@drawable/sheriff_alive"
         app:civ_border_color="#FF0000"
         app:civ_border_width="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_main_role" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/itemAnswerMessage_text"
+        android:id="@+id/itemAnswerMessage_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginLeft="4dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginRight="4dp"
-        android:text="SilveGfor: Однако здравствуйте"
+        android:layout_toRightOf="@id/itemAnswerMessage_avatar"
+        android:text="Однако здравствуйте"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_main_role" />
+        app:layout_constraintStart_toStartOf="@+id/constraintLayout2"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout2" />
 
     <TextView
-        android:id="@+id/itemAnswerMessage_answerText"
+        android:id="@+id/itemAnswerMessage_nick"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/shape_transparent_black"
-        android:padding="5dp"
-        android:text="Ошибка вывода сообщения"
-        android:textColor="#FFFFFF"
+        android:layout_marginStart="4dp"
+        android:layout_toRightOf="@id/itemAnswerMessage_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="SilveGfor"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:textColor="@color/colorWhite"
         android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/itemAnswerMessage_text"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/itemAnswerMessage_text"
-        app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_text" />
+        app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_avatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:padding="10dp"
+        android:background="@drawable/shape_transparent_black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/itemAnswerMessage_nick"
+        app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_nick">
+
+        <TextView
+            android:id="@+id/itemAnswerMessage_answerStatus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="{разработчик}"
+            android:textColor="#FF0000"
+            android:textSize="14sp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_answerNick"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/itemAnswerMessage_answerMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="Однако здравствуйте"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/itemAnswerMessage_answerNick"
+            app:layout_constraintTop_toBottomOf="@+id/itemAnswerMessage_answerNick" />
+
+        <TextView
+            android:id="@+id/itemAnswerMessage_answerNick"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:text="Vlan_Vor"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

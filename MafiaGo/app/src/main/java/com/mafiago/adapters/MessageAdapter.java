@@ -17,7 +17,6 @@
  import com.example.mafiago.R;
  import com.mafiago.models.MessageModel;
  import com.romainpiel.shimmer.Shimmer;
- import com.romainpiel.shimmer.ShimmerTextView;
 
  import org.json.JSONException;
  import org.json.JSONObject;
@@ -98,8 +97,9 @@
                 });
 
                 //TextView txt_time = view.findViewById(R.id.itemMessage_time);
-                TextView txt_mess = view.findViewById(R.id.itemMessage_text);
-                TextView TV_main_role = view.findViewById(R.id.itemMessage_main_role);
+                TextView TV_message = view.findViewById(R.id.itemMessage_message);
+                TextView TV_nick = view.findViewById(R.id.itemMessage_nick);
+                TextView TV_status = view.findViewById(R.id.itemMessage_status);
 
                 String color= "#FFFFFF";
                 switch (list_mess.get(position).textType)
@@ -128,38 +128,40 @@
                         case "user":
                             break;
                         case "moderator":
-                            TV_main_role.setVisibility(View.VISIBLE);
-                            TV_main_role.setText("модератор");
-                            TV_main_role.setTextColor(Color.parseColor("#C71585"));
+                            TV_status.setVisibility(View.VISIBLE);
+                            TV_status.setText("модератор");
+                            TV_status.setTextColor(Color.parseColor("#C71585"));
                             break;
                         case "admin":
-                            TV_main_role.setVisibility(View.VISIBLE);
-                            TV_main_role.setText("админ");
-                            TV_main_role.setTextColor(Color.parseColor("#FF0000"));
+                            TV_status.setVisibility(View.VISIBLE);
+                            TV_status.setText("админ");
+                            TV_status.setTextColor(Color.parseColor("#FF0000"));
                             break;
                         case "head_admin":
-                            TV_main_role.setVisibility(View.VISIBLE);
-                            TV_main_role.setText("глав. админ");
-                            TV_main_role.setTextColor(Color.parseColor("#008B8B"));
+                            TV_status.setVisibility(View.VISIBLE);
+                            TV_status.setText("глав. админ");
+                            TV_status.setTextColor(Color.parseColor("#008B8B"));
                             break;
                         case "designer":
-                            TV_main_role.setVisibility(View.VISIBLE);
-                            TV_main_role.setText("дизайнер");
-                            TV_main_role.setTextColor(Color.parseColor("#8A2BE2"));
+                            TV_status.setVisibility(View.VISIBLE);
+                            TV_status.setText("дизайнер");
+                            TV_status.setTextColor(Color.parseColor("#8A2BE2"));
                             break;
                         case "developer":
-                            TV_main_role.setVisibility(View.VISIBLE);
-                            TV_main_role.setText("разработчик");
-                            TV_main_role.setTextColor(Color.parseColor("#8B0000"));
+                            TV_status.setVisibility(View.VISIBLE);
+                            TV_status.setText("разработчик");
+                            TV_status.setTextColor(Color.parseColor("#8B0000"));
                             break;
                     }
                 }
 
                 //txt_time.setTextColor(Color.parseColor(color));
-                txt_mess.setTextColor(Color.parseColor(color));
+                TV_message.setTextColor(Color.parseColor(color));
 
                 //txt_time.setText(list_mess.get(position).time);
-                txt_mess.setText(list_mess.get(position).nickName + ": " + list_mess.get(position).message);
+                TV_nick.setText(list_mess.get(position).nickName);
+                TV_message.setText(list_mess.get(position).message);
+
                 break;
 
             case "DisconnectMes":
@@ -216,7 +218,9 @@
                 view = layout.inflate(R.layout.item_message, null);
 
                 //txt_time = view.findViewById(R.id.itemMessage_time);
-                txt_mess = view.findViewById(R.id.itemMessage_text);
+                TV_message = view.findViewById(R.id.itemMessage_message);
+                TV_nick = view.findViewById(R.id.itemMessage_nick);
+                TV_status = view.findViewById(R.id.itemMessage_status);
 
                 IV_avatar = view.findViewById(R.id.itemMessage_avatar);
 
@@ -244,18 +248,22 @@
                 }
 
                 //txt_time.setText(list_mess.get(position).time);
-                txt_mess.setText(list_mess.get(position).message);
+                TV_message.setText(list_mess.get(position).message);
+                TV_nick.setText(list_mess.get(position).nickName);
 
-                txt_mess.setTextColor(Color.parseColor("#AFFFFF"));
+                TV_message.setTextColor(Color.parseColor("#AFFFFF"));
+                TV_nick.setTextColor(Color.parseColor("#AFFFFF"));
                 break;
             case "AnswerMes":
                 view = layout.inflate(R.layout.item_answer_message, null);
                 //txt_time = view.findViewById(R.id.itemAnswerMessage_time);
-                txt_mess = view.findViewById(R.id.itemAnswerMessage_text);
-                TV_main_role = view.findViewById(R.id.itemAnswerMessage_main_role);
+                TV_message = view.findViewById(R.id.itemAnswerMessage_message);
+                TV_status = view.findViewById(R.id.itemAnswerMessage_status);
+                TV_nick= view.findViewById(R.id.itemAnswerMessage_nick);
 
-                TextView txt_answer_mes = view.findViewById(R.id.itemAnswerMessage_answerText);
-                TextView TV_answer_main_role = view.findViewById(R.id.itemAnswerMessage_main_role);
+                TextView TV_answer_message = view.findViewById(R.id.itemAnswerMessage_answerMessage);
+                TextView TV_answer_status = view.findViewById(R.id.itemAnswerMessage_answerStatus);
+                TextView TV_answer_nick = view.findViewById(R.id.itemAnswerMessage_answerNick);
 
                 int id = list_mess.get(position).answerId;
 
@@ -282,45 +290,31 @@
                     case "user":
                         break;
                     case "moderator":
-                        TV_main_role.setText("модератор");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_answer_status.setText("модератор");
+                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                         break;
                     case "admin":
-                        TV_main_role.setText("админ");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_answer_status.setText("админ");
+                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                         break;
                     case "head_admin":
-                        TV_main_role.setText("глав. админ");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_answer_status.setText("глав. админ");
+                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                         break;
                     case "designer":
-                        TV_main_role.setText("дизайнер");
-                        TV_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                        TV_answer_status.setText("дизайнер");
+                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                         break;
                     case "developer":
-                        TV_main_role.setText("разработчик");
-                        TV_main_role.setTextColor(Color.parseColor("#FF0000"));
+                        TV_answer_status.setText("разработчик");
+                        TV_answer_status.setTextColor(Color.parseColor("#FF0000"));
                         break;
                 }
 
 
                 //txt_time.setText(list_mess.get(position).time);
-                txt_mess.setText(list_mess.get(position).nickName + ": " + list_mess.get(position).message);
-
-                color= "#FFFFFF";
-                switch (list_mess.get(position).textType)
-                {
-                    case "alive":
-                    case "dead":
-                        color = "#FFFFFF";
-                        break;
-                    //case "dead":
-                        //color = "#999999";
-                        //break;
-                    case "last_message":
-                        color = "#FFB7AC";
-                        break;
-                }
+                TV_message.setText(list_mess.get(position).message);
+                TV_nick.setText(list_mess.get(position).nickName);
 
                 if (list_mess.get(position).nickName.equals("SilveGfor"))
                 {
@@ -332,35 +326,66 @@
                 {
                     if (id == list_mess.get(i).num)
                     {
-                        txt_answer_mes.setText(list_mess.get(i).nickName + ": " + list_mess.get(i).message);
+                        TV_answer_nick.setText(list_mess.get(i).nickName);
+                        TV_answer_message.setText(list_mess.get(i).message);
+                        color= "#FFFFFF";
+                        switch (list_mess.get(i).textType)
+                        {
+                            case "alive":
+                            case "dead":
+                                color = "#FFFFFF";
+                                break;
+                            //case "dead":
+                            //color = "#999999";
+                            //break;
+                            case "last_message":
+                                color = "#FFB7AC";
+                                break;
+                        }
+                        TV_answer_message.setTextColor(Color.parseColor(color));
                         switch (list_mess.get(i).rang) {
                             case "user":
                                 break;
                             case "moderator":
-                                TV_answer_main_role.setText("модератор");
-                                TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                                TV_answer_status.setText("модератор");
+                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                                 break;
                             case "admin":
-                                TV_answer_main_role.setText("админ");
-                                TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                                TV_answer_status.setText("админ");
+                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                                 break;
                             case "head_admin":
-                                TV_answer_main_role.setText("глав. админ");
-                                TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                                TV_answer_status.setText("глав. админ");
+                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                                 break;
                             case "designer":
-                                TV_answer_main_role.setText("дизайнер");
-                                TV_answer_main_role.setTextColor(Color.parseColor("#9C27B0"));
+                                TV_answer_status.setText("дизайнер");
+                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
                                 break;
                             case "developer":
-                                TV_answer_main_role.setText("разработчик");
-                                TV_answer_main_role.setTextColor(Color.parseColor("#FF0000"));
+                                TV_answer_status.setText("разработчик");
+                                TV_answer_status.setTextColor(Color.parseColor("#FF0000"));
                                 break;
                         }
                     }
                 }
 
-                txt_mess.setTextColor(Color.parseColor(color));
+                color= "#FFFFFF";
+                switch (list_mess.get(position).textType)
+                {
+                    case "alive":
+                    case "dead":
+                        color = "#FFFFFF";
+                        break;
+                    //case "dead":
+                    //color = "#999999";
+                    //break;
+                    case "last_message":
+                        color = "#FFB7AC";
+                        break;
+                }
+
+                TV_message.setTextColor(Color.parseColor(color));
                 //txt_time.setTextColor(Color.parseColor(color));
                 //txt_answer_mes.setTextColor(Color.parseColor("#3E4A5A"));
                 break;

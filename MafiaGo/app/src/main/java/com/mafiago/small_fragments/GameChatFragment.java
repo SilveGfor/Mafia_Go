@@ -846,7 +846,7 @@ public class GameChatFragment extends Fragment {
                                             break;
                                         }
                                     }
-                                    messageModel = new MessageModel(test_num,voter + " голосует за " + user_nick, time, voter, "VotingMes", fromBase64(avatar2));
+                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes", fromBase64(avatar2));
                                     break;
                                 case "time_info":
                                     messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
