@@ -110,8 +110,8 @@ public class SmallShopFragment extends Fragment {
 
                 btn_busters.setVisibility(View.VISIBLE);
 
-                socket.on("get_store", OnGetMainStore);
-                socket.on("buy_item", OnBuyItem);
+                //socket.on("get_store", OnGetMainStore);
+                //socket.on("buy_item", OnBuyItem);
 
                 json = new JSONObject();
                 try {
@@ -120,9 +120,10 @@ public class SmallShopFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                socket.emit("get_store", json);
-                Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
+                //socket.emit("get_store", json);
+                //Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
 
+                list_shop.add(new ShopModel("status", 2, 3, false, "", "", 0));
                 shopAdapter.notifyDataSetChanged();
                 break;
             case 3:

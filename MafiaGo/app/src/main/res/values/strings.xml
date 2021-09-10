@@ -8,5 +8,12 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string-array name="statuses">
+        <item>{крутой}</item>
+        <item>{мафиози}</item>
+        <item>{лучший}</item>
+        <item>{первый}</item>
+    </string-array>
+
 
 </resources>

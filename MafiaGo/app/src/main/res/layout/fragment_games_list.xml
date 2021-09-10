@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -16,13 +15,23 @@
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_Swith_password">
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue">
+
+        <TextView
+            android:id="@+id/fragmentGamesList_TV_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Фильтр"
+            android:textStyle="bold"
+            android:layout_alignParentLeft="true"/>
 
         <Button
             android:id="@+id/smallFragmentFriendsList_btn_filtr"
             android:layout_width="20dp"
             android:layout_height="20dp"
+            android:layout_toRightOf="@+id/fragmentGamesList_TV_filter"
             android:background="@drawable/ic_arrow_top"
+            android:layout_marginLeft="10dp"
             android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
@@ -67,31 +76,38 @@
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_ET_search"
         app:showLabels="false" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/fragmentGamesList_Swith_customRoom"
+    <CheckBox
+        android:id="@+id/fragmentGamesList_CB_playingRoom"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:checked="false"
-        android:text="Кастомные комнаты"
-        android:textOff="Нет"
-        android:textOn="Да"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:text="Скрыть играющие комнаты"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RSB" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/fragmentGamesList_Swith_password"
+    <CheckBox
+        android:id="@+id/fragmentGamesList_CB_normalRoom"
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:checked="false"
-        android:text="Комнаты с паролем"
-        android:textOff="Нет"
-        android:textOn="Да"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_Swith_customRoom" />
+        android:layout_height="wrap_content"
+        android:text="Скрыть обычные комнаты"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_playingRoom" />
+
+    <CheckBox
+        android:id="@+id/fragmentGamesList_CB_customRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Скрыть кастомные комнаты"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_normalRoom" />
+
+    <CheckBox
+        android:id="@+id/fragmentGamesList_CB_passwordRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Скрыть комнаты с паролем"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_customRoom" />
 
     <EditText
         android:id="@+id/fragmentGamesList_ET_search"
@@ -175,17 +191,139 @@
         android:text="Нет активных игр"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_LV_games"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_LV_games" />
 
     <ProgressBar
         android:id="@+id/fragmentGamesList_PB_loading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_LV_games"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_LV_games" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_citizen"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_sheriff"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_passwordRoom"
+        app:srcCompat="@drawable/citizen_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_maniac"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_IV_citizen"
+        app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_maniac"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_mafia"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:srcCompat="@drawable/maniac_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_terrorist"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_poisoner"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_mafia_don"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:srcCompat="@drawable/terrorist_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_poisoner"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_terrorist"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:srcCompat="@drawable/poisoner_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_mafia"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_mafia_don"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_maniac"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:srcCompat="@drawable/mafia_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_mafia_don"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_terrorist"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_mafia"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:srcCompat="@drawable/mafia_don_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_sheriff"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_doctor"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_citizen"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:srcCompat="@drawable/sheriff_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_doctor"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_bodyguard"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_sheriff"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:srcCompat="@drawable/doctor_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_bodyguard"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_lover"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_doctor"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:srcCompat="@drawable/bodyguard_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_lover"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_journalist"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_bodyguard"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:srcCompat="@drawable/lover_round" />
+
+    <ImageView
+        android:id="@+id/fragmentGamesList_IV_journalist"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_lover"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:srcCompat="@drawable/journalist_round" />
 </androidx.constraintlayout.widget.ConstraintLayout>
