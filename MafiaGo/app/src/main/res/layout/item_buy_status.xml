@@ -79,6 +79,7 @@
                 android:text="стоимость 70р"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
+                android:visibility="invisible"
                 tools:layout_editor_absoluteX="83dp"
                 tools:layout_editor_absoluteY="294dp" />
 

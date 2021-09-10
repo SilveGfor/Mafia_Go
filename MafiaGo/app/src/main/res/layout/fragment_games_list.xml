@@ -7,6 +7,27 @@
     android:layout_height="match_parent"
     android:background="?attr/background">
 
+    <RelativeLayout
+        android:id="@+id/fragmentGamesList_RL_filtr"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_Swith_password">
+
+        <Button
+            android:id="@+id/smallFragmentFriendsList_btn_filtr"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_top"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/fragmentMenu_IV_menu"
         android:layout_width="42dp"
@@ -29,22 +50,90 @@
         app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_menu"
         app:srcCompat="@drawable/mafia_go_text" />
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardView"
-        android:layout_width="199dp"
-        android:layout_height="28dp"
-        android:layout_marginTop="16dp"
-        app:cardBackgroundColor="#80000000"
-        app:cardCornerRadius="8dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName">
+    <org.florescu.android.rangeseekbar.RangeSeekBar
+        android:id="@+id/fragmentGamesList_RSB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </androidx.cardview.widget.CardView>
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        app:absoluteMaxValue="5"
+        app:absoluteMinValue="20"
+        app:alwaysActive="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_ET_search"
+        app:showLabels="false" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/fragmentGamesList_Swith_customRoom"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:text="Кастомные комнаты"
+        android:textOff="Нет"
+        android:textOn="Да"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RSB" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/fragmentGamesList_Swith_password"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        android:checked="false"
+        android:text="Комнаты с паролем"
+        android:textOff="Нет"
+        android:textOn="Да"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_Swith_customRoom" />
+
+    <EditText
+        android:id="@+id/fragmentGamesList_ET_search"
+        android:layout_width="0dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/shape_black"
+        android:ems="10"
+        android:hint="Поиск"
+        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+        android:lines="5"
+        android:padding="5dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_RL_search"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName" />
+
+    <RelativeLayout
+        android:id="@+id/fragmentGamesList_RL_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_ET_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_ET_search">
+
+        <Button
+            android:id="@+id/smallFragmentFriendsList_btn_search"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_search"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/fragmentGamesList_btn_create_room"
@@ -65,16 +154,19 @@
         android:id="@+id/fragmentGamesList_LV_games"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:clickable="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="15dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
         android:divider="@null"
         android:dividerHeight="2dp"
         app:layout_constraintBottom_toTopOf="@+id/fragmentGamesList_btn_create_room"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RL_filtr" />
 
     <TextView
         android:id="@+id/fragmentGamesList_TV_no_games"
