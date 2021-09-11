@@ -7,7 +7,7 @@
     android:background="?attr/background">
 
     <RelativeLayout
-        android:id="@+id/fragmentGamesList_RL_filtr"
+        android:id="@+id/fragmentGamesList_RL_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -25,14 +25,13 @@
             android:textStyle="bold"
             android:layout_alignParentLeft="true"/>
 
-        <Button
-            android:id="@+id/smallFragmentFriendsList_btn_filtr"
+        <ImageView
+            android:id="@+id/fragmentGamesList_IV_filter"
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:layout_toRightOf="@+id/fragmentGamesList_TV_filter"
             android:background="@drawable/ic_arrow_top"
             android:layout_marginLeft="10dp"
-            android:clickable="false"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </RelativeLayout>
@@ -182,7 +181,7 @@
         app:layout_constraintBottom_toTopOf="@+id/fragmentGamesList_btn_create_room"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RL_filtr" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RL_filter" />
 
     <TextView
         android:id="@+id/fragmentGamesList_TV_no_games"

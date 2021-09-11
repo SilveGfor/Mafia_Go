@@ -1,8 +1,10 @@
 package com.mafiago.fragments;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,12 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -35,6 +40,7 @@ import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.RoomModel;
 import com.mafiago.models.UserModel;
 
+import org.florescu.android.rangeseekbar.RangeSeekBar;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,8 +68,32 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     public ProgressBar PB_loading;
 
+    CheckBox CB_deletePlayingRoom;
+    CheckBox CB_deleteNormalRoom;
+    CheckBox CB_deletePasswordRoom;
+    CheckBox CB_deleteCustomRoom;
+
     ImageView IV_screenshot;
     ImageView Menu;
+    ImageView IV_filter;
+
+    RelativeLayout RL_filter;
+    RelativeLayout RL_search;
+
+    ImageView IV_citizen;
+    ImageView IV_sheriff;
+    ImageView IV_doctor;
+    ImageView IV_lover;
+    ImageView IV_journalist;
+    ImageView IV_bodyguard;
+    ImageView IV_doctor_of_easy_virtue;
+    ImageView IV_maniac;
+    ImageView IV_mafia;
+    ImageView IV_mafia_don;
+    ImageView IV_terrorist;
+    ImageView IV_poisoner;
+
+    RangeSeekBar RSB_num_users;
 
     View view_report;
     ImageView IV_screen;
@@ -73,7 +103,20 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
 
+    Boolean deletePlayingRooms;
+    Boolean deleteNormalRooms;
+    Boolean deleteCustomRooms;
+    Boolean deletePasswordRooms;
+
     public JSONObject json;
+
+    public static final String APP_PREFERENCES = "filter";
+    public static final String APP_PREFERENCES_PLAYING_ROOM = "playing_room";
+    public static final String APP_PREFERENCES_NORMAL_ROOM = "normal_room";
+    public static final String APP_PREFERENCES_CUSTOM_ROOM = "custom_room";
+    public static final String APP_PREFERENCES_PASSWORD_ROOM = "password_room";
+
+    private SharedPreferences mSettings;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -83,7 +126,31 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         view_report = inflater.inflate(R.layout.dialog_report, container, false);
         IV_screen = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
+        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
         USERS = new JSONObject();
+
+        CB_deletePlayingRoom = view.findViewById(R.id.fragmentGamesList_CB_playingRoom);
+        CB_deleteNormalRoom = view.findViewById(R.id.fragmentGamesList_CB_normalRoom);
+        CB_deletePasswordRoom = view.findViewById(R.id.fragmentGamesList_CB_passwordRoom);
+        CB_deleteCustomRoom = view.findViewById(R.id.fragmentGamesList_CB_customRoom);
+        RL_filter = view.findViewById(R.id.fragmentGamesList_RL_filter);
+        RL_search = view.findViewById(R.id.fragmentGamesList_RL_search);
+        RSB_num_users = view.findViewById(R.id.fragmentGamesList_RSB);
+        IV_filter = view.findViewById(R.id.fragmentGamesList_IV_filter);
+
+        IV_citizen = view.findViewById(R.id.fragmentGamesList_IV_citizen);
+        IV_sheriff = view.findViewById(R.id.fragmentGamesList_IV_sheriff);
+        IV_doctor = view.findViewById(R.id.fragmentGamesList_IV_doctor);
+        IV_lover = view.findViewById(R.id.fragmentGamesList_IV_lover);
+        IV_journalist = view.findViewById(R.id.fragmentGamesList_IV_journalist);
+        IV_bodyguard = view.findViewById(R.id.fragmentGamesList_IV_bodyguard);
+        IV_doctor_of_easy_virtue = view.findViewById(R.id.fragmentGamesList_IV_doctor_of_easy_virtue);
+        IV_maniac = view.findViewById(R.id.fragmentGamesList_IV_maniac);
+        IV_mafia = view.findViewById(R.id.fragmentGamesList_IV_mafia);
+        IV_mafia_don = view.findViewById(R.id.fragmentGamesList_IV_mafia_don);
+        IV_terrorist = view.findViewById(R.id.fragmentGamesList_IV_terrorist);
+        IV_poisoner = view.findViewById(R.id.fragmentGamesList_IV_poisoner);
 
         LV_games = view.findViewById(R.id.fragmentGamesList_LV_games);
         btnCreateRoom = view.findViewById(R.id.fragmentGamesList_btn_create_room);
@@ -93,6 +160,88 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
         IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+
+        CB_deletePlayingRoom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked)
+                {
+                    for (int i = 0; i < list_room.size(); i++)
+                    {
+                        if (list_room.get(i).is_on)
+                        {
+                            list_room.get(i).is_visible = false;
+                        }
+                    }
+                }
+                else
+                {
+
+                }
+            }
+        });
+
+        deletePlayingRooms = mSettings.getBoolean(APP_PREFERENCES_PLAYING_ROOM, false);
+        deleteNormalRooms = mSettings.getBoolean(APP_PREFERENCES_NORMAL_ROOM, false);
+        deleteCustomRooms = mSettings.getBoolean(APP_PREFERENCES_CUSTOM_ROOM, false);
+        deletePasswordRooms = mSettings.getBoolean(APP_PREFERENCES_PASSWORD_ROOM, false);
+
+        max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
+        int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
+        has_password = mSettings.getBoolean(APP_PREFERENCES_HAS_PASSWORD, false);
+        if (has_password)
+        {
+            swith_password.setChecked(true);
+            ET_password.setVisibility(View.VISIBLE);
+            password = mSettings.getString(APP_PREFERENCES_ROOM_PASSWORD, "");
+            ET_password.setText(password);
+        }
+        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "King's road"));
+        //TV_max_people.setText(String.valueOf(max_people));
+        RSB_num_users.setSelectedMaxValue(max_people);
+        RSB_num_users.setSelectedMinValue(min_people);
+
+        RL_filter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                IV_filter.setImageResource(R.drawable.ic_arrow_top);
+
+                CB_playingRole.setVisibility(View.GONE);
+                CB_normalRoom.setVisibility(View.GONE);
+                CB_passwordRoom.setVisibility(View.GONE);
+                CB_customRoom.setVisibility(View.GONE);
+                RSB_num_users.setVisibility(View.GONE);
+                IV_filter.setVisibility(View.GONE);
+                IV_citizen.setVisibility(View.GONE);
+                IV_sheriff.setVisibility(View.GONE);
+                IV_doctor.setVisibility(View.GONE);
+                IV_lover.setVisibility(View.GONE);
+                IV_journalist.setVisibility(View.GONE);
+                IV_bodyguard.setVisibility(View.GONE);
+                IV_doctor_of_easy_virtue.setVisibility(View.GONE);
+                IV_maniac.setVisibility(View.GONE);
+                IV_mafia.setVisibility(View.GONE);
+                IV_mafia_don.setVisibility(View.GONE);
+                IV_terrorist.setVisibility(View.GONE);
+                IV_poisoner.setVisibility(View.GONE);
+            }
+        });
+
+        RSB_num_users.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
+                /*
+                SetRoles((int) maxValue);
+                //TODO: доделать сохранение ролей при выходе из фрагмента
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putInt(APP_PREFERENCES_MAX_PEOPLE, (int) maxValue);
+                editor.putInt(APP_PREFERENCES_MIN_PEOPLE, (int) minValue);
+                minPlayers = (int) minValue;
+                maxPlayers = (int) maxValue;
+                editor.apply();
+                 */
+            }
+        });
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -794,4 +943,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             }
         });
     };
+
+    public void setFilter(boolean deletePlaying, boolean deleteNormal, boolean deleteCustom)
+    {
+
+    }
 }

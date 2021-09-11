@@ -12,9 +12,10 @@ public class RoomModel {
     public boolean is_on;
     public boolean is_custom;
     public boolean has_password;
+    public boolean is_visible;
     public ArrayList<String> list_roles;
 
-    public RoomModel(String name, int min_people, int  max_people, int num_people, int id, ArrayList<UserModel> list_users, boolean is_on, ArrayList<String> list_roles, boolean is_custom, boolean has_password) {
+    public RoomModel(String name, int min_people, int  max_people, int num_people, int id, ArrayList<UserModel> list_users, boolean is_on, ArrayList<String> list_roles, boolean is_custom, boolean has_password, boolean is_visible) {
         this.name = name;
         this.min_people = min_people;
         this.max_people = max_people;
@@ -25,5 +26,6 @@ public class RoomModel {
         this.list_roles = list_roles;
         this.is_custom = is_custom;
         this.has_password = has_password;
+        this.is_visible = is_visible;
     }
 }
