@@ -19,6 +19,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
@@ -38,6 +39,7 @@ public class GamesAdapter extends BaseAdapter {
         this.list_room = list_room;
         this.context = context;
          layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Log.e("kkk", "GamesAdapter1");
     }
     @Override
     public int getCount()
@@ -59,6 +61,7 @@ public class GamesAdapter extends BaseAdapter {
         View view = convertView;
 
         view = layout.inflate(R.layout.item_game, null);
+        Log.e("kkk", "GamesAdapter2");
 
         //ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
 
@@ -113,12 +116,11 @@ public class GamesAdapter extends BaseAdapter {
                     MainActivity.PlayersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;
                     Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
                     activity.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
-                }
-                else
-                {
+                } else {
                     int game_id = list_room.get(position).id;
                     String room_name = list_room.get(position).name;
-                    String playersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;;
+                    String playersMinMaxInfo = "от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people;
+                    ;
                     AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                     View viewDang = layout.inflate(R.layout.dialog_room_password, null);
                     builder.setView(viewDang);
@@ -138,9 +140,7 @@ public class GamesAdapter extends BaseAdapter {
                     alert.show();
 
                 }
-            }
-            else
-            {
+            } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 View viewDang = layout.inflate(R.layout.dialog_error, null);
                 builder.setView(viewDang);
@@ -154,10 +154,8 @@ public class GamesAdapter extends BaseAdapter {
             }
         });
 
-        for (int i = 0; i < list_roles.size(); i++)
-        {
-            switch (list_roles.get(i))
-            {
+        for (int i = 0; i < list_roles.size(); i++) {
+            switch (list_roles.get(i)) {
                 case "doctor":
                     IV_doctor.setVisibility(View.VISIBLE);
                     break;
@@ -188,23 +186,18 @@ public class GamesAdapter extends BaseAdapter {
             }
         }
 
-        if (list_room.get(position).has_password)
-        {
+        if (list_room.get(position).has_password) {
             IV_lock.setVisibility(View.VISIBLE);
         }
 
-        if (list_room.get(position).is_custom)
-        {
+        if (list_room.get(position).is_custom) {
             TV_customRoom.setVisibility(View.VISIBLE);
         }
 
-        if (list_room.get(position).is_on)
-        {
+        if (list_room.get(position).is_on) {
             TV_roomState.setText("Игра идёт");
             TV_roomState.setTextColor(Color.parseColor("#F44336"));
-        }
-        else
-        {
+        } else {
             TV_roomState.setText("Набор в комнату");
             //TV_roomState.setTextColor(Color.parseColor("#4CAF50"));
         }
@@ -212,6 +205,7 @@ public class GamesAdapter extends BaseAdapter {
         txt_room_name.setText(list_room.get(position).name);
         txt_min_max_people.setText("от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people);
         txt_num_people.setText("Игроков: " + list_room.get(position).num_people);
+        Log.e("kkk", "GamesAdapter3");
         return view;
     }
 }

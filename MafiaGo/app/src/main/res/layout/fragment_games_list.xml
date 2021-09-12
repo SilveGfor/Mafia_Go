@@ -10,7 +10,7 @@
         android:id="@+id/fragmentGamesList_RL_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="10dp"
         android:background="@drawable/orange_button"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,17 +21,17 @@
             android:id="@+id/fragmentGamesList_TV_filter"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
             android:text="Фильтр"
-            android:textStyle="bold"
-            android:layout_alignParentLeft="true"/>
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
         <ImageView
             android:id="@+id/fragmentGamesList_IV_filter"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_toRightOf="@+id/fragmentGamesList_TV_filter"
-            android:background="@drawable/ic_arrow_top"
             android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@+id/fragmentGamesList_TV_filter"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
     </RelativeLayout>
@@ -58,21 +58,32 @@
         app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_menu"
         app:srcCompat="@drawable/mafia_go_text" />
 
+    <TextView
+        android:id="@+id/fragmentGamesList_playersCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Количество игроков"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RL_search" />
+
     <org.florescu.android.rangeseekbar.RangeSeekBar
         android:id="@+id/fragmentGamesList_RSB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
 
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
+        android:visibility="gone"
         app:absoluteMaxValue="5"
         app:absoluteMinValue="20"
         app:alwaysActive="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_ET_search"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_playersCount"
         app:showLabels="false" />
 
     <CheckBox
@@ -81,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="Скрыть играющие комнаты"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RSB" />
 
@@ -89,6 +101,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Скрыть обычные комнаты"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_playingRoom" />
 
@@ -97,6 +110,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Скрыть кастомные комнаты"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_normalRoom" />
 
@@ -105,6 +119,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Скрыть комнаты с паролем"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_customRoom" />
 
@@ -209,6 +224,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_sheriff"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
@@ -220,6 +236,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="16dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_maniac"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
@@ -230,6 +247,7 @@
         android:id="@+id/fragmentGamesList_IV_maniac"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_mafia"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
@@ -240,6 +258,7 @@
         android:id="@+id/fragmentGamesList_IV_terrorist"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_poisoner"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_mafia_don"
@@ -250,6 +269,7 @@
         android:id="@+id/fragmentGamesList_IV_poisoner"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_terrorist"
@@ -260,6 +280,7 @@
         android:id="@+id/fragmentGamesList_IV_mafia"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_mafia_don"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_maniac"
@@ -270,6 +291,7 @@
         android:id="@+id/fragmentGamesList_IV_mafia_don"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_terrorist"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_mafia"
@@ -280,6 +302,7 @@
         android:id="@+id/fragmentGamesList_IV_sheriff"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_doctor"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_citizen"
@@ -290,6 +313,7 @@
         android:id="@+id/fragmentGamesList_IV_doctor"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_bodyguard"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_sheriff"
@@ -300,6 +324,7 @@
         android:id="@+id/fragmentGamesList_IV_bodyguard"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_lover"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_doctor"
@@ -310,6 +335,7 @@
         android:id="@+id/fragmentGamesList_IV_lover"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_journalist"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_bodyguard"
@@ -320,6 +346,7 @@
         android:id="@+id/fragmentGamesList_IV_journalist"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RSB"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_lover"

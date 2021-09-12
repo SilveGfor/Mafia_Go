@@ -1004,12 +1004,12 @@ public class SettingsMainFragment extends Fragment {
                 TV_rang.setText(String.valueOf(rang));
                 TV_nick.setText(nick);
 
-                TV_game_counter.setText("Сыграно игр " + String.valueOf(game_counter));
-                TV_max_money_score.setText("Макс число монет " + String.valueOf(max_money_score));
-                TV_max_exp_score.setText("Макс число опыта " + String.valueOf(max_exp_score));
-                TV_general_pers_of_wins.setText("Процент побед " + general_pers_of_wins);
-                TV_mafia_pers_of_wins.setText("Побед мафии " + mafia_pers_of_wins);
-                TV_peaceful_pers_of_wins.setText("Побед мирных " + peaceful_pers_of_wins);
+                TV_game_counter.setText("Сыграно игр: " + String.valueOf(game_counter));
+                TV_max_money_score.setText("Макс число монет: " + String.valueOf(max_money_score));
+                TV_max_exp_score.setText("Макс число опыта: " + String.valueOf(max_exp_score));
+                TV_general_pers_of_wins.setText("Процент побед: " + general_pers_of_wins);
+                TV_mafia_pers_of_wins.setText("Побед мафии: " + mafia_pers_of_wins);
+                TV_peaceful_pers_of_wins.setText("Побед мирных: " + peaceful_pers_of_wins);
             }
         });
     };

@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -61,7 +62,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     public ListView LV_games;
 
-    public TextView TV_no_games;
+    TextView TV_no_games;
+    TextView TV_playersCount;
 
     //public Button btnExit;
     public Button btnCreateRoom;
@@ -102,11 +104,15 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     String base64_screenshot = "", report_nick = "", report_id = "";
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
+    ArrayList<RoomModel> list_room_copy = new ArrayList<>();
 
     Boolean deletePlayingRooms;
     Boolean deleteNormalRooms;
     Boolean deleteCustomRooms;
     Boolean deletePasswordRooms;
+
+    int min_people;
+    int max_people;
 
     public JSONObject json;
 
@@ -115,6 +121,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     public static final String APP_PREFERENCES_NORMAL_ROOM = "normal_room";
     public static final String APP_PREFERENCES_CUSTOM_ROOM = "custom_room";
     public static final String APP_PREFERENCES_PASSWORD_ROOM = "password_room";
+    public static final String APP_PREFERENCES_MIN_PEOPLE = "min_people";
+    public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
 
     private SharedPreferences mSettings;
 
@@ -157,89 +165,123 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         //btnExit = view.findViewById(R.id.btnExitGamesList);
         TV_no_games = view.findViewById(R.id.fragmentGamesList_TV_no_games);
         PB_loading = view.findViewById(R.id.fragmentGamesList_PB_loading);
+        TV_playersCount = view.findViewById(R.id.fragmentGamesList_playersCount);
 
         IV_screenshot = view_report.findViewById(R.id.dialogReport_IV_screenshot);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
 
-        CB_deletePlayingRoom.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
-                {
-                    for (int i = 0; i < list_room.size(); i++)
-                    {
-                        if (list_room.get(i).is_on)
-                        {
-                            list_room.get(i).is_visible = false;
-                        }
-                    }
-                }
-                else
-                {
+        gamesAdapter = new GamesAdapter(list_room_copy, getContext());
+        LV_games.setAdapter(gamesAdapter);
 
-                }
-            }
+        CB_deletePlayingRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            deletePlayingRooms = isChecked;
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_PLAYING_ROOM, deletePlayingRooms);
+            editor.apply();
+            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
+        });
+        CB_deleteNormalRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            deleteNormalRooms = isChecked;
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_NORMAL_ROOM, deleteNormalRooms);
+            editor.apply();
+            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
+        });
+        CB_deleteCustomRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            deleteCustomRooms = isChecked;
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_CUSTOM_ROOM, deleteCustomRooms);
+            editor.apply();
+            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
+        });
+        CB_deletePasswordRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            deletePasswordRooms = isChecked;
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_PASSWORD_ROOM, deletePasswordRooms);
+            editor.apply();
+            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
         });
 
         deletePlayingRooms = mSettings.getBoolean(APP_PREFERENCES_PLAYING_ROOM, false);
         deleteNormalRooms = mSettings.getBoolean(APP_PREFERENCES_NORMAL_ROOM, false);
         deleteCustomRooms = mSettings.getBoolean(APP_PREFERENCES_CUSTOM_ROOM, false);
         deletePasswordRooms = mSettings.getBoolean(APP_PREFERENCES_PASSWORD_ROOM, false);
+        max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 20);
+        min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
+        IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
 
-        max_people = mSettings.getInt(APP_PREFERENCES_MAX_PEOPLE, 8);
-        int min_people = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
-        has_password = mSettings.getBoolean(APP_PREFERENCES_HAS_PASSWORD, false);
-        if (has_password)
-        {
-            swith_password.setChecked(true);
-            ET_password.setVisibility(View.VISIBLE);
-            password = mSettings.getString(APP_PREFERENCES_ROOM_PASSWORD, "");
-            ET_password.setText(password);
-        }
-        ET_RoomName.setText(mSettings.getString(APP_PREFERENCES_ROOM_NAME, "King's road"));
-        //TV_max_people.setText(String.valueOf(max_people));
+        setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
+
         RSB_num_users.setSelectedMaxValue(max_people);
         RSB_num_users.setSelectedMinValue(min_people);
+        CB_deletePlayingRoom.setChecked(deletePlayingRooms);
+        CB_deleteNormalRoom.setChecked(deleteNormalRooms);
+        CB_deleteCustomRoom.setChecked(deleteCustomRooms);
+        CB_deletePasswordRoom.setChecked(deletePasswordRooms);
 
         RL_filter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                IV_filter.setImageResource(R.drawable.ic_arrow_top);
+                if (CB_deleteCustomRoom.getVisibility() != View.VISIBLE) {
+                    IV_filter.setImageResource(R.drawable.ic_arrow_top);
 
-                CB_playingRole.setVisibility(View.GONE);
-                CB_normalRoom.setVisibility(View.GONE);
-                CB_passwordRoom.setVisibility(View.GONE);
-                CB_customRoom.setVisibility(View.GONE);
-                RSB_num_users.setVisibility(View.GONE);
-                IV_filter.setVisibility(View.GONE);
-                IV_citizen.setVisibility(View.GONE);
-                IV_sheriff.setVisibility(View.GONE);
-                IV_doctor.setVisibility(View.GONE);
-                IV_lover.setVisibility(View.GONE);
-                IV_journalist.setVisibility(View.GONE);
-                IV_bodyguard.setVisibility(View.GONE);
-                IV_doctor_of_easy_virtue.setVisibility(View.GONE);
-                IV_maniac.setVisibility(View.GONE);
-                IV_mafia.setVisibility(View.GONE);
-                IV_mafia_don.setVisibility(View.GONE);
-                IV_terrorist.setVisibility(View.GONE);
-                IV_poisoner.setVisibility(View.GONE);
+                    TV_playersCount.setVisibility(View.VISIBLE);
+                    CB_deletePlayingRoom.setVisibility(View.VISIBLE);
+                    CB_deleteNormalRoom.setVisibility(View.VISIBLE);
+                    CB_deletePasswordRoom.setVisibility(View.VISIBLE);
+                    CB_deleteCustomRoom.setVisibility(View.VISIBLE);
+                    RSB_num_users.setVisibility(View.VISIBLE);
+                    IV_citizen.setVisibility(View.VISIBLE);
+                    IV_sheriff.setVisibility(View.VISIBLE);
+                    IV_doctor.setVisibility(View.VISIBLE);
+                    IV_lover.setVisibility(View.VISIBLE);
+                    IV_journalist.setVisibility(View.VISIBLE);
+                    IV_bodyguard.setVisibility(View.VISIBLE);
+                    IV_doctor_of_easy_virtue.setVisibility(View.VISIBLE);
+                    IV_maniac.setVisibility(View.VISIBLE);
+                    IV_mafia.setVisibility(View.VISIBLE);
+                    IV_mafia_don.setVisibility(View.VISIBLE);
+                    IV_terrorist.setVisibility(View.VISIBLE);
+                    IV_poisoner.setVisibility(View.VISIBLE);
+                }
+                else
+                {
+                    IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
+
+                    TV_playersCount.setVisibility(View.GONE);
+                    CB_deletePlayingRoom.setVisibility(View.GONE);
+                    CB_deleteNormalRoom.setVisibility(View.GONE);
+                    CB_deletePasswordRoom.setVisibility(View.GONE);
+                    CB_deleteCustomRoom.setVisibility(View.GONE);
+                    RSB_num_users.setVisibility(View.GONE);
+                    IV_citizen.setVisibility(View.GONE);
+                    IV_sheriff.setVisibility(View.GONE);
+                    IV_doctor.setVisibility(View.GONE);
+                    IV_lover.setVisibility(View.GONE);
+                    IV_journalist.setVisibility(View.GONE);
+                    IV_bodyguard.setVisibility(View.GONE);
+                    IV_doctor_of_easy_virtue.setVisibility(View.GONE);
+                    IV_maniac.setVisibility(View.GONE);
+                    IV_mafia.setVisibility(View.GONE);
+                    IV_mafia_don.setVisibility(View.GONE);
+                    IV_terrorist.setVisibility(View.GONE);
+                    IV_poisoner.setVisibility(View.GONE);
+                }
             }
         });
 
         RSB_num_users.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener() {
             @Override
             public void onRangeSeekBarValuesChanged(RangeSeekBar bar, Object minValue, Object maxValue) {
-                /*
-                SetRoles((int) maxValue);
-                //TODO: доделать сохранение ролей при выходе из фрагмента
+                max_people = (int) maxValue;
+                min_people = (int) minValue;
+
                 SharedPreferences.Editor editor = mSettings.edit();
                 editor.putInt(APP_PREFERENCES_MAX_PEOPLE, (int) maxValue);
                 editor.putInt(APP_PREFERENCES_MIN_PEOPLE, (int) minValue);
-                minPlayers = (int) minValue;
-                maxPlayers = (int) maxValue;
                 editor.apply();
-                 */
+
+                setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
             }
         });
 
@@ -288,9 +330,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_games.setVisibility(View.GONE);
 
-        gamesAdapter = new GamesAdapter(list_room, getContext());
-        LV_games.setAdapter(gamesAdapter);
-
         //socket.off("connect");
         //socket.off("disconnect");
         socket.off("add_room_to_list_of_rooms");
@@ -336,10 +375,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         LV_games.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (MainActivity.Rang >= 2 || !list_room.get(position).is_custom) {
-                    Log.e("kkk", MainActivity.Rang + " - " + list_room.get(position).is_custom);
-                    MainActivity.Game_id = list_room.get(position).id;
-                    MainActivity.RoomName = list_room.get(position).name;
+                if (MainActivity.Rang >= 2 || !list_room_copy.get(position).is_custom) {
+                    MainActivity.Game_id = list_room_copy.get(position).id;
+                    MainActivity.RoomName = list_room_copy.get(position).name;
                     Log.d("kkk", "Переход в игру - " + MainActivity.Game_id);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                 }
@@ -365,7 +403,31 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     @Override
     public void onBackPressed() {
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+        if (CB_deleteCustomRoom.getVisibility() == View.VISIBLE) {
+            IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
+
+            TV_playersCount.setVisibility(View.GONE);
+            CB_deletePlayingRoom.setVisibility(View.GONE);
+            CB_deleteNormalRoom.setVisibility(View.GONE);
+            CB_deletePasswordRoom.setVisibility(View.GONE);
+            CB_deleteCustomRoom.setVisibility(View.GONE);
+            RSB_num_users.setVisibility(View.GONE);
+            IV_citizen.setVisibility(View.GONE);
+            IV_sheriff.setVisibility(View.GONE);
+            IV_doctor.setVisibility(View.GONE);
+            IV_lover.setVisibility(View.GONE);
+            IV_journalist.setVisibility(View.GONE);
+            IV_bodyguard.setVisibility(View.GONE);
+            IV_doctor_of_easy_virtue.setVisibility(View.GONE);
+            IV_maniac.setVisibility(View.GONE);
+            IV_mafia.setVisibility(View.GONE);
+            IV_mafia_don.setVisibility(View.GONE);
+            IV_terrorist.setVisibility(View.GONE);
+            IV_poisoner.setVisibility(View.GONE);
+        }
+        else {
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+        }
     }
 
     @Override
@@ -460,7 +522,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             if (list_room.get(i).id == num)
                             {
                                 list_room.remove(i);
-                                gamesAdapter.notifyDataSetChanged();
+                                setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
                                 if (list_room.size() == 0)
                                 {
                                     TV_no_games.setVisibility(View.VISIBLE);
@@ -538,7 +600,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         if (not_doable) {
                             RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom, has_password);
                             list_room.add(model);
-                            gamesAdapter.notifyDataSetChanged();
+                            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
                         }
                     }
                     else
@@ -599,7 +661,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             {
                                 RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom, has_password);
                                 list_room.set(i, model);
-                                gamesAdapter.notifyDataSetChanged();
+                                setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people, max_people);
                             }
                         }
                     } catch (JSONException e) {
@@ -944,8 +1006,36 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         });
     };
 
-    public void setFilter(boolean deletePlaying, boolean deleteNormal, boolean deleteCustom)
+    public void setFilter(boolean deletePlaying, boolean deleteNormal, boolean deleteCustom, boolean deletePassword, int min, int max)
     {
+        list_room_copy.clear();
+        list_room_copy.addAll(0, list_room);
 
+        for (int i = 0; i < list_room_copy.size(); i++)
+        {
+            if (deletePlaying && list_room_copy.get(i).is_on)
+            {
+                list_room_copy.remove(i);
+            }
+            else if (deleteNormal && !list_room_copy.get(i).is_custom)
+            {
+                list_room_copy.remove(i);
+            }
+            else if (deleteCustom && list_room_copy.get(i).is_custom)
+            {
+                list_room_copy.remove(i);
+            }
+            else if (deletePassword && list_room_copy.get(i).has_password)
+            {
+                list_room_copy.remove(i);
+            }
+            else if (min > list_room_copy.get(i).min_people || max < list_room_copy.get(i).max_people)
+            {
+                list_room_copy.remove(i);
+            }
+        }
+        if (list_room_copy.size() != 0) TV_no_games.setVisibility(View.GONE);
+        else TV_no_games.setVisibility(View.VISIBLE);
+        gamesAdapter.notifyDataSetChanged();
     }
 }

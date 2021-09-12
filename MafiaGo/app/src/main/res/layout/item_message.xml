@@ -57,9 +57,10 @@
         android:text="SilveGfor"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorWhite"
-        android:textSize="14sp"
+        android:textSize="16sp"
         android:singleLine="true"
         android:ellipsize="end"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/itemMessage_avatar"
         app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
