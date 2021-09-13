@@ -71,9 +71,7 @@
                     android:id="@+id/itemBuyStatus_Switch_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
-
             </LinearLayout>
-
 
             <TextView
                 android:id="@+id/itemBuyStatus_TV_price"
@@ -83,7 +81,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:text="Стоимость 7000 монет\nВы можете купить премиум аккаунт - тогда вы сможете бесплатно поставить себе премиум статус"
+                android:text="Стоимость 7000 монет\nВы можете купить премиум-аккаунт - тогда вы сможете бесплатно поставить себе премиум-статус"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"

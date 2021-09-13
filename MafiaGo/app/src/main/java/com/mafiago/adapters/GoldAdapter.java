@@ -53,21 +53,21 @@ public class GoldAdapter extends BaseAdapter {
         TV_goldCount.setText(list_gold.get(position).amount + " золота");
         TV_cost.setText("Стоимость: " + list_gold.get(position).price + "₽");
 
-        switch (list_gold.get(position).amount)
+        switch (list_gold.get(position).num)
         {
-            case 100:
+            case 0:
                 IV_gold.setImageResource(R.drawable.gold_1);
                 break;
-            case 200:
+            case 1:
                 IV_gold.setImageResource(R.drawable.gold_2);
                 break;
-            case 300:
+            case 2:
                 IV_gold.setImageResource(R.drawable.gold_3);
                 break;
-            case 400:
+            case 3:
                 IV_gold.setImageResource(R.drawable.gold_4);
                 break;
-            case 500:
+            case 4:
                 IV_gold.setImageResource(R.drawable.gold_5);
                 break;
         }

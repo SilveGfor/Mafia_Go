@@ -169,14 +169,14 @@ public class ShopAdapter extends BaseAdapter {
                 switch_status.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked) {
                         TV_desc.setText("Статус за золото можно придумать самому");
-                        TV_price.setText("Стоимость 100 золота\nВы можете купить премиум аккаунт - тогда вы сможете бесплатно поставить себе премиум статус");
+                        TV_price.setText("Стоимость 100 золота\nВы можете купить премиум-аккаунт - тогда вы сможете бесплатно поставить себе премиум-статус");
                         ET_premiumStatus.setVisibility(View.VISIBLE);
                         spinner.setVisibility(View.INVISIBLE);
                         TV_status.setText("{" + ET_premiumStatus.getText() + "}");
                         TV_statusText.setTextColor(Color.parseColor("#F0BF41"));
                     } else {
                         TV_desc.setText("Статус за монеты можно выбрать из предложенного списка");
-                        TV_price.setText("Стоимость 7000 монет\nВы можете купить премиум аккаунт - тогда вы сможете бесплатно поставить себе премиум статус");
+                        TV_price.setText("Стоимость 7000 монет\nВы можете купить премиум-аккаунт - тогда вы сможете бесплатно поставить себе премиум-статус");
                         ET_premiumStatus.setVisibility(View.INVISIBLE);
                         spinner.setVisibility(View.VISIBLE);
                         String[] choose = context.getResources().getStringArray(R.array.statuses);

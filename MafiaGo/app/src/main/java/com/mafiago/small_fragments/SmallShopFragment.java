@@ -20,6 +20,7 @@ import com.mafiago.MainActivity;
 import com.mafiago.adapters.FriendRequestsAdapter;
 import com.mafiago.adapters.FriendsAdapter;
 import com.mafiago.adapters.GoldAdapter;
+import com.mafiago.adapters.PremiumAdapter;
 import com.mafiago.adapters.ShopAdapter;
 import com.mafiago.models.FriendModel;
 import com.mafiago.models.GoldModel;
@@ -53,6 +54,12 @@ public class SmallShopFragment extends Fragment {
     ArrayList<ShopModel> list_shop = new ArrayList();
     ShopAdapter shopAdapter;
     Button btn_busters;
+
+    /////////////////
+
+    ListView LV_premium;
+    ArrayList<GoldModel> list_premium = new ArrayList();
+    PremiumAdapter premiumAdapter;
 
     public static SmallShopFragment newInstance(int page) {
         SmallShopFragment fragment = new SmallShopFragment();
@@ -127,7 +134,27 @@ public class SmallShopFragment extends Fragment {
                 shopAdapter.notifyDataSetChanged();
                 break;
             case 3:
-                view = inflater.inflate(R.layout.fragment_settings_main, container, false);
+                view = inflater.inflate(R.layout.small_fragment_shop, container, false);
+
+                btn_busters = view.findViewById(R.id.smallFragmentShop_btn_busters);
+                LV_premium = view.findViewById(R.id.smallFragmentShop_LV_shop);
+                premiumAdapter = new PremiumAdapter(list_premium, getContext());
+                LV_premium.setAdapter(premiumAdapter);
+
+                socket.on("get_store", OnGetPremiumStore);
+                socket.on("buy_item", OnBuyItem);
+
+                json = new JSONObject();
+                try {
+                    json.put("nick", MainActivity.NickName);
+                    json.put("session_id", MainActivity.Session_id);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.emit("get_store", json);
+                Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
+
+                premiumAdapter.notifyDataSetChanged();
                 break;
         }
         return view;
@@ -144,8 +171,8 @@ public class SmallShopFragment extends Fragment {
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONArray gold_array;
                     JSONObject gold_data;
-                    String description = "", transaction_description = "", sale_amount = "";
-                    int amount = 0, price = 0;
+                    String description = "", transaction_description = "", sale_amount = "", amount = "";
+                    int price = 0;
                     boolean is_sale = false;
                     try {
                         gold_array = data.getJSONArray("gold");
@@ -154,14 +181,50 @@ public class SmallShopFragment extends Fragment {
                             gold_data = gold_array.getJSONObject(i);
                             description = gold_data.getString("description");
                             transaction_description = gold_data.getString("transaction_description");
-                            amount = gold_data.getInt("amount");
+                            amount = gold_data.getString("amount");
                             price = gold_data.getInt("price");
                             is_sale = gold_data.getBoolean("is_sale");
                             sale_amount = gold_data.getString("sale_amount");
-                            list_gold.add(new GoldModel(description, amount, price, is_sale, transaction_description, sale_amount, list_gold.size()));
+                            list_gold.add(new GoldModel(description, amount, price, is_sale, transaction_description, sale_amount, list_gold.size(), "gold"));
                         }
 
                         goldAdapter.notifyDataSetChanged();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+    };
+
+    private final Emitter.Listener OnGetPremiumStore = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (args.length != 0) {
+                    JSONObject data = (JSONObject) args[0];
+                    Log.d("kkk", "принял - get_store - " + data);
+                    JSONArray gold_array;
+                    JSONObject gold_data;
+                    String description = "", transaction_description = "", sale_amount = "", amount = "";
+                    int price = 0, hours = 0;
+                    boolean is_sale = false;
+                    try {
+                        gold_array = data.getJSONArray("premium");
+                        for (int i = 0; i < gold_array.length(); i++)
+                        {
+                            gold_data = gold_array.getJSONObject(i);
+                            description = gold_data.getString("description");
+                            amount = gold_data.getString("amount");
+                            price = gold_data.getInt("price");
+                            hours = gold_data.getInt("hours");
+                            is_sale = gold_data.getBoolean("is_sale");
+                            sale_amount = gold_data.getString("sale_amount");
+                            list_premium.add(new GoldModel(description, amount, price, is_sale, transaction_description, sale_amount, list_premium.size(), "premium"));
+                        }
+                        premiumAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
