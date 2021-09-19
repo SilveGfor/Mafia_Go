@@ -55,26 +55,25 @@ public class PremiumAdapter extends BaseAdapter {
         {
             case 0:
                 TV_title.setText("Премиум-мини");
-                IV_premium.setImageResource(R.drawable.gold_1);
+                IV_premium.setImageResource(R.drawable.crown_blue_circle);
                 break;
             case 1:
                 TV_title.setText("Премиум стандарт");
-                IV_premium.setImageResource(R.drawable.gold_2);
+                IV_premium.setImageResource(R.drawable.crown_green_circle);
                 break;
             case 2:
                 TV_title.setText("Премиум");
-                IV_premium.setImageResource(R.drawable.gold_3);
+                IV_premium.setImageResource(R.drawable.crown_grey_circle);
                 break;
             case 3:
                 TV_title.setText("Премиум+");
-                IV_premium.setImageResource(R.drawable.gold_4);
+                IV_premium.setImageResource(R.drawable.crown_cian_circle);
                 break;
             case 4:
                 TV_title.setText("Премиум-супер");
-                IV_premium.setImageResource(R.drawable.gold_5);
+                IV_premium.setImageResource(R.drawable.crown_gold_circle);
                 break;
         }
-
 
         btnBuy.setOnClickListener(v -> {
             final JSONObject json = new JSONObject();

@@ -320,7 +320,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                     return true;
                             }
                         }
-
                         return true;
                     }
                 });
@@ -749,17 +748,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         if (player.getTime() == Time.LOBBY) {
             if (!timer.getText().equals("\u221e")) {
                 if (Integer.parseInt(String.valueOf(timer.getText())) > 5) {
-                    final JSONObject json2 = new JSONObject();
-                    try {
-                        json2.put("nick", MainActivity.NickName);
-                        json2.put("session_id", MainActivity.Session_id);
-                        json2.put("room", player.getRoom_num());
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
-                    socket.emit("leave_room", json2);
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                    askToLeave();
                 }
                 else
                 {
@@ -776,39 +765,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             }
             else
             {
-                final JSONObject json2 = new JSONObject();
-                try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id", MainActivity.Session_id);
-                    json2.put("room", player.getRoom_num());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
-                socket.emit("leave_room", json2);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                askToLeave();
             }
         }
         else
         {
-            socket.off("get_in_room");
-            socket.off("user_message");
-            socket.off("leave_room");
-            socket.off("system_message");
-            socket.off("ban_user_in_room");
-            socket.off("host_info");
-            socket.off("role_action");
             if (!player.is_observer) {
-                final JSONObject json2 = new JSONObject();
-                try {
-                    json2.put("nick", MainActivity.NickName);
-                    json2.put("session_id", MainActivity.Session_id);
-                    json2.put("room", player.getRoom_num());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
-                socket.emit("leave_room", json2);
+                askToLeave();
             }
             else
             {
@@ -3005,5 +2968,35 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             ourDate = "00:00";
         }
         return ourDate;
+    }
+
+    public void askToLeave() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View viewQuestion = getLayoutInflater().inflate(R.layout.dialog_ok_no, null);
+        builder.setView(viewQuestion);
+        AlertDialog alert = builder.create();
+        TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+        Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+        Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+        TV_text.setText("Вы уверены, что хотите выйти из комнаты?");
+        btn_yes.setOnClickListener(v1 -> {
+            final JSONObject json2 = new JSONObject();
+            try {
+                json2.put("nick", MainActivity.NickName);
+                json2.put("session_id", MainActivity.Session_id);
+                json2.put("room", player.getRoom_num());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            Log.d("kkk", "Socket_отправка leave_room - " + json2.toString());
+            socket.emit("leave_room", json2);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+            alert.cancel();
+        });
+        btn_no.setOnClickListener(v12 -> {
+            alert.cancel();
+        });
+        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alert.show();
     }
 }

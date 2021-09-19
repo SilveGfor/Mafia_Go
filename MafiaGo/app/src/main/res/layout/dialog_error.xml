@@ -20,7 +20,7 @@
         android:textColor="@color/white"
         android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/dialogNewRole_IV_role"
+        app:layout_constraintStart_toEndOf="@+id/dialogError_IV"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -38,11 +38,10 @@
         app:layout_constraintTop_toBottomOf="@+id/dialogError_TV_errorTitle" />
 
     <ImageView
-        android:id="@+id/dialogNewRole_IV_role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:id="@+id/dialogError_IV"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

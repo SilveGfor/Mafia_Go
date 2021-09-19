@@ -1,7 +1,6 @@
 package com.mafiago.adapters;
 
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -15,15 +14,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
-import com.mafiago.enums.Role;
 import com.mafiago.fragments.GameFragment;
 import com.mafiago.models.RoomModel;
 
@@ -39,7 +35,6 @@ public class GamesAdapter extends BaseAdapter {
         this.list_room = list_room;
         this.context = context;
          layout=(LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Log.e("kkk", "GamesAdapter1");
     }
     @Override
     public int getCount()
@@ -61,11 +56,10 @@ public class GamesAdapter extends BaseAdapter {
         View view = convertView;
 
         view = layout.inflate(R.layout.item_game, null);
-        Log.e("kkk", "GamesAdapter2");
 
         //ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
 
-        Button btn_players = view.findViewById(R.id.itemGame_btn_players);
+        Button btn_players = view.findViewById(R.id.ItemFriend_btn_block);
 
         ArrayList<String> list_roles = list_room.get(position).list_roles;
 
@@ -205,7 +199,6 @@ public class GamesAdapter extends BaseAdapter {
         txt_room_name.setText(list_room.get(position).name);
         txt_min_max_people.setText("от " + list_room.get(position).min_people + " до " + list_room.get(position).max_people);
         txt_num_people.setText("Игроков: " + list_room.get(position).num_people);
-        Log.e("kkk", "GamesAdapter3");
         return view;
     }
 }

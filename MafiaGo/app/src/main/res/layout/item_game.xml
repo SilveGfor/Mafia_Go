@@ -71,11 +71,11 @@
         android:text="кастомная"
         android:textColor="@color/red"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/itemGame_btn_players"
+        app:layout_constraintEnd_toStartOf="@+id/ItemFriend_btn_block"
         app:layout_constraintTop_toTopOf="@+id/itemGame_TV_playersInRoom" />
 
     <Button
-        android:id="@+id/itemGame_btn_players"
+        android:id="@+id/ItemFriend_btn_block"
         android:layout_width="wrap_content"
         android:layout_height="35dp"
         android:background="@drawable/grey_button"

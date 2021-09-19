@@ -45,8 +45,6 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
     public ListView friendsView;
 
-    public SwitchCompat SC_blocked_chats;
-
     public TextView TV_no_chats;
 
     public ProgressBar PB_loading;
@@ -62,7 +60,6 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_private_chats, container, false);
         friendsView = view.findViewById(R.id.fragmentPrivateChat_list_friends);
-        SC_blocked_chats = view.findViewById(R.id.fragmentPrivateChats_SC_blocked_chats);
         TV_no_chats = view.findViewById(R.id.fragmentPrivateChat_TV_no_chats);
         PB_loading = view.findViewById(R.id.fragmentPrivateChat_PB_loading);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
@@ -105,6 +102,12 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         PB_loading.setVisibility(View.VISIBLE);
         TV_no_chats.setVisibility(View.GONE);
 
+        socket.off("add_chat_to_list_of_chats");
+        socket.off("add_chat_to_list_of_blocked_chats");
+
+        socket.on("add_chat_to_list_of_chats", OnAddChatToListOfChats);
+        socket.on("add_chat_to_list_of_blocked_chats", OnAddChatToListOfBlockedChats);
+
         JSONObject json = new JSONObject();
         try {
             json.put("nick", MainActivity.NickName);
@@ -117,35 +120,18 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         socket.emit("get_list_of_chats", json);
         Log.d("kkk", "Socket_отправка - get_list_of_chats - "+ json.toString());
 
-        socket.off("add_chat_to_list_of_chats");
-        socket.off("add_chat_to_list_of_blocked_chats");
-
-        socket.on("add_chat_to_list_of_chats", OnAddChatToListOfChats);
-        socket.on("add_chat_to_list_of_blocked_chats", OnAddChatToListOfBlockedChats);
-
-        SC_blocked_chats.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                JSONObject json = new JSONObject();
-                list_friends.clear();
-                privateChatsAdapter.notifyDataSetChanged();
-                try {
-                    if (isChecked) {
-                        json.put("chat_type", "blocked");
-                    } else {
-                        json.put("chat_type", "active");
-                    }
-                    json.put("nick", MainActivity.NickName);
-                    json.put("session_id", MainActivity.Session_id);
-                    json.put("user_id", MainActivity.User_id);
-                }
-                 catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("get_list_of_chats", json);
-                Log.d("kkk", "Socket_отправка - get_list_of_chats - "+ json.toString());
-            }
-        });
+        JSONObject json2 = new JSONObject();
+        try {
+            json2.put("chat_type", "blocked");
+            json2.put("nick", MainActivity.NickName);
+            json2.put("session_id", MainActivity.Session_id);
+            json2.put("user_id", MainActivity.User_id);
+        }
+        catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_list_of_chats", json2);
+        Log.d("kkk", "Socket_отправка - get_list_of_chats - "+ json2.toString());
 
         friendsView.setOnItemClickListener((parent, view1, position, id) -> {
             MainActivity.User_id_2 = list_friends.get(position).getUser_id_2();
@@ -206,7 +192,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -232,7 +218,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_list_of_chats - " + data);
                     String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "";
-                    boolean online = false;
+                    boolean online = false, i_blocked = false;
                     try {
                         JSONArray user_ids = data.getJSONArray("user_ids");
                         user_id_1 = user_ids.getString(0);
@@ -246,21 +232,23 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                         }
                         nick = user_nicks.getString(user_id_2);
                         avatar = data.getString("avatar");
+                        online = data.getBoolean("is_online");
 
                         JSONObject last_message = data.getJSONObject("last_message");
                         message = last_message.getString("message");
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
+                        if (blocked.getBoolean(user_id_1))
+                        {
+                            i_blocked = true;
+                            Log.e("kkk", "1");
+                        }
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, true, true, avatar));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, true, avatar, i_blocked));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }
-                else
-                {
-                    TV_no_chats.setVisibility(View.VISIBLE);
                 }
             }
         });

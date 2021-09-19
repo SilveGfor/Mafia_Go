@@ -59,6 +59,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
     public ImageView IV_avatar;
     public ImageView IV_back;
     public ImageView Menu;
+    public ImageView IV_ban;
 
     public EditText ET_input;
 
@@ -90,6 +91,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         TV_answer = view.findViewById(R.id.fragmentPrivateChat_TV_answerMes);
         IV_avatar = view.findViewById(R.id.fragmentPrivateChat_IV_avatar);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+        IV_ban = view.findViewById(R.id.fragmentPrivateChat_IV_ban);
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,6 +162,39 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.on("edit_message", OnEditMessage);
         socket.on("get_profile", OnGetProfile);
         socket.on("my_friend_request", onMySendRequest);
+
+        IV_ban.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View viewQuestion = getLayoutInflater().inflate(R.layout.dialog_ok_no, null);
+                builder.setView(viewQuestion);
+                AlertDialog alert = builder.create();
+                TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                TV_text.setText("Вы точно хотите заблокировать чат с игроком " + MainActivity.NickName_2 + "?");
+                btn_yes.setOnClickListener(v1 -> {
+                    alert.cancel();
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("user_id", MainActivity.User_id);
+                        json.put("user_id_2", MainActivity.User_id_2);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("block_chat", json);
+                    Log.d("kkk", "Socket_отправка - block_chat - " + json.toString());
+                });
+                btn_no.setOnClickListener(v12 -> {
+                    alert.cancel();
+                });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
+        });
 
         IV_avatar.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -73,15 +73,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
             android:ellipsize="end"
             android:singleLine="true"
             android:text="SilveGfor"
             android:textColor="@color/white"
             android:textSize="18sp"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/fragmentPrivateChat_IV_ban"
             app:layout_constraintStart_toEndOf="@+id/fragmentPrivateChat_IV_avatar"
             app:layout_constraintTop_toTopOf="@+id/fragmentPrivateChat_IV_avatar" />
 
@@ -94,6 +92,16 @@
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="@+id/fragmentPrivateChat_TV_nick"
             app:layout_constraintTop_toBottomOf="@+id/fragmentPrivateChat_TV_nick" />
+
+        <ImageView
+            android:id="@+id/fragmentPrivateChat_IV_ban"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/ic_ban"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ListView

@@ -82,15 +82,12 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     RelativeLayout RL_filter;
     RelativeLayout RL_search;
 
-    ImageView IV_citizen;
-    ImageView IV_sheriff;
     ImageView IV_doctor;
     ImageView IV_lover;
     ImageView IV_journalist;
     ImageView IV_bodyguard;
     ImageView IV_doctor_of_easy_virtue;
     ImageView IV_maniac;
-    ImageView IV_mafia;
     ImageView IV_mafia_don;
     ImageView IV_terrorist;
     ImageView IV_poisoner;
@@ -147,15 +144,12 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         RSB_num_users = view.findViewById(R.id.fragmentGamesList_RSB);
         IV_filter = view.findViewById(R.id.fragmentGamesList_IV_filter);
 
-        IV_citizen = view.findViewById(R.id.fragmentGamesList_IV_citizen);
-        IV_sheriff = view.findViewById(R.id.fragmentGamesList_IV_sheriff);
         IV_doctor = view.findViewById(R.id.fragmentGamesList_IV_doctor);
         IV_lover = view.findViewById(R.id.fragmentGamesList_IV_lover);
         IV_journalist = view.findViewById(R.id.fragmentGamesList_IV_journalist);
         IV_bodyguard = view.findViewById(R.id.fragmentGamesList_IV_bodyguard);
         IV_doctor_of_easy_virtue = view.findViewById(R.id.fragmentGamesList_IV_doctor_of_easy_virtue);
         IV_maniac = view.findViewById(R.id.fragmentGamesList_IV_maniac);
-        IV_mafia = view.findViewById(R.id.fragmentGamesList_IV_mafia);
         IV_mafia_don = view.findViewById(R.id.fragmentGamesList_IV_mafia_don);
         IV_terrorist = view.findViewById(R.id.fragmentGamesList_IV_terrorist);
         IV_poisoner = view.findViewById(R.id.fragmentGamesList_IV_poisoner);
@@ -231,18 +225,17 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     CB_deletePasswordRoom.setVisibility(View.VISIBLE);
                     CB_deleteCustomRoom.setVisibility(View.VISIBLE);
                     RSB_num_users.setVisibility(View.VISIBLE);
-                    IV_citizen.setVisibility(View.VISIBLE);
-                    IV_sheriff.setVisibility(View.VISIBLE);
+                    /*
                     IV_doctor.setVisibility(View.VISIBLE);
                     IV_lover.setVisibility(View.VISIBLE);
                     IV_journalist.setVisibility(View.VISIBLE);
                     IV_bodyguard.setVisibility(View.VISIBLE);
                     IV_doctor_of_easy_virtue.setVisibility(View.VISIBLE);
                     IV_maniac.setVisibility(View.VISIBLE);
-                    IV_mafia.setVisibility(View.VISIBLE);
                     IV_mafia_don.setVisibility(View.VISIBLE);
                     IV_terrorist.setVisibility(View.VISIBLE);
                     IV_poisoner.setVisibility(View.VISIBLE);
+                     */
                 }
                 else
                 {
@@ -254,18 +247,17 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     CB_deletePasswordRoom.setVisibility(View.GONE);
                     CB_deleteCustomRoom.setVisibility(View.GONE);
                     RSB_num_users.setVisibility(View.GONE);
-                    IV_citizen.setVisibility(View.GONE);
-                    IV_sheriff.setVisibility(View.GONE);
+                    /*
                     IV_doctor.setVisibility(View.GONE);
                     IV_lover.setVisibility(View.GONE);
                     IV_journalist.setVisibility(View.GONE);
                     IV_bodyguard.setVisibility(View.GONE);
                     IV_doctor_of_easy_virtue.setVisibility(View.GONE);
                     IV_maniac.setVisibility(View.GONE);
-                    IV_mafia.setVisibility(View.GONE);
                     IV_mafia_don.setVisibility(View.GONE);
                     IV_terrorist.setVisibility(View.GONE);
                     IV_poisoner.setVisibility(View.GONE);
+                     */
                 }
             }
         });
@@ -412,18 +404,17 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             CB_deletePasswordRoom.setVisibility(View.GONE);
             CB_deleteCustomRoom.setVisibility(View.GONE);
             RSB_num_users.setVisibility(View.GONE);
-            IV_citizen.setVisibility(View.GONE);
-            IV_sheriff.setVisibility(View.GONE);
+            /*
             IV_doctor.setVisibility(View.GONE);
             IV_lover.setVisibility(View.GONE);
             IV_journalist.setVisibility(View.GONE);
             IV_bodyguard.setVisibility(View.GONE);
             IV_doctor_of_easy_virtue.setVisibility(View.GONE);
             IV_maniac.setVisibility(View.GONE);
-            IV_mafia.setVisibility(View.GONE);
             IV_mafia_don.setVisibility(View.GONE);
             IV_terrorist.setVisibility(View.GONE);
             IV_poisoner.setVisibility(View.GONE);
+             */
         }
         else {
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();

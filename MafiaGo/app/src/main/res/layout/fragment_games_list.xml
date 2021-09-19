@@ -10,12 +10,12 @@
         android:id="@+id/fragmentGamesList_RL_filter"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:background="@drawable/orange_button"
         android:padding="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue">
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_IV_mafia_don">
 
         <TextView
             android:id="@+id/fragmentGamesList_TV_filter"
@@ -75,6 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
 
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:visibility="gone"
         app:absoluteMaxValue="5"
@@ -220,27 +221,14 @@
         app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_LV_games" />
 
     <ImageView
-        android:id="@+id/fragmentGamesList_IV_citizen"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="16dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_sheriff"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_passwordRoom"
-        app:srcCompat="@drawable/citizen_round" />
-
-    <ImageView
         android:id="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_marginTop="16dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_maniac"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RL_search"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_RSB"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_IV_citizen"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_journalist"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor"
         app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
 
     <ImageView
@@ -248,10 +236,10 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_mafia"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RL_search"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_poisoner"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_mafia_don"
         app:srcCompat="@drawable/maniac_round" />
 
     <ImageView
@@ -262,7 +250,7 @@
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_poisoner"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_mafia_don"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_mafia_don"
         app:srcCompat="@drawable/terrorist_round" />
 
     <ImageView
@@ -270,44 +258,23 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_maniac"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_terrorist"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_mafia_don"
         app:srcCompat="@drawable/poisoner_round" />
-
-    <ImageView
-        android:id="@+id/fragmentGamesList_IV_mafia"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_mafia_don"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_maniac"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
-        app:srcCompat="@drawable/mafia_round" />
 
     <ImageView
         android:id="@+id/fragmentGamesList_IV_mafia_don"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginTop="8dp"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_terrorist"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_mafia"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_ET_search"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_IV_doctor"
         app:srcCompat="@drawable/mafia_don_round" />
-
-    <ImageView
-        android:id="@+id/fragmentGamesList_IV_sheriff"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_doctor"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_citizen"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
-        app:srcCompat="@drawable/sheriff_round" />
 
     <ImageView
         android:id="@+id/fragmentGamesList_IV_doctor"
@@ -316,8 +283,8 @@
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_bodyguard"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_sheriff"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGamesList_ET_search"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_CB_passwordRoom"
         app:srcCompat="@drawable/doctor_round" />
 
     <ImageView
@@ -328,7 +295,7 @@
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_lover"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_doctor"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor"
         app:srcCompat="@drawable/bodyguard_round" />
 
     <ImageView
@@ -339,7 +306,7 @@
         app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_journalist"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_bodyguard"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor"
         app:srcCompat="@drawable/lover_round" />
 
     <ImageView
@@ -347,9 +314,9 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RSB"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_IV_doctor_of_easy_virtue"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_lover"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_citizen"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor"
         app:srcCompat="@drawable/journalist_round" />
 </androidx.constraintlayout.widget.ConstraintLayout>

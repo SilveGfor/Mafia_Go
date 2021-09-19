@@ -3,6 +3,8 @@ package com.mafiago.small_fragments;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -13,7 +15,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
@@ -22,6 +26,7 @@ import com.mafiago.adapters.FriendsAdapter;
 import com.mafiago.adapters.GoldAdapter;
 import com.mafiago.adapters.PremiumAdapter;
 import com.mafiago.adapters.ShopAdapter;
+import com.mafiago.fragments.GamesListFragment;
 import com.mafiago.models.FriendModel;
 import com.mafiago.models.GoldModel;
 import com.mafiago.models.ShopModel;
@@ -142,7 +147,8 @@ public class SmallShopFragment extends Fragment {
                 LV_premium.setAdapter(premiumAdapter);
 
                 socket.on("get_store", OnGetPremiumStore);
-                socket.on("buy_item", OnBuyItem);
+                socket.on("buy_item", OnBuyPremiumItem);
+                socket.on("user_error", onUserError);
 
                 json = new JSONObject();
                 try {
@@ -284,5 +290,77 @@ public class SmallShopFragment extends Fragment {
                 }
             }
         });
+    };
+
+    private final Emitter.Listener OnBuyPremiumItem = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (args.length != 0) {
+                    String status = (String) args[0];
+                    if (status.equals("OK"))
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder.setView(viewError);
+                        AlertDialog alert;
+                        alert = builder.create();
+
+                        TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                        ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                        IV.setImageResource(R.drawable.crown_gold_dark);
+                        TV.setText("Вы успешно купили премиум-статус! Он активируется в течение минуты");
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
+                }
+            }
+        });
+    };
+
+    private final Emitter.Listener onUserError = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if (getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Log.d("kkk", "Socket_принять - user_error " + args[0]);
+                    JSONObject data = (JSONObject) args[0];
+                    String error;
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewError);
+                    TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                    try {
+                        error = data.getString("error");
+                        AlertDialog alert;
+                        alert = builder.create();
+                        switch (error) {
+                            case "you_dont_have_enough_gold":
+                                TV_error.setText("У вас не хватает золота для покупки!");
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
+                            default:
+                                TV_error.setText("Что-то пошло не так");
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
+                        }
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
     };
 }

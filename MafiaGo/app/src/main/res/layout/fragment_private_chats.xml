@@ -46,19 +46,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.appcompat.widget.SwitchCompat
-        android:id="@+id/fragmentPrivateChats_SC_blocked_chats"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="15dp"
-        android:layout_marginTop="8dp"
-        android:checked="false"
-        android:text="Показывать заблокированные чаты"
-        android:textOff="Нет"
-        android:textOn="Да"
-        app:layout_constraintStart_toStartOf="@+id/fragmentGame_TV_roomName"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGame_TV_roomName" />
-
     <ListView
         android:id="@+id/fragmentPrivateChat_list_friends"
         android:layout_width="0dp"
@@ -68,7 +55,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentPrivateChats_SC_blocked_chats" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentMenu_IV_menu" />
 
     <ProgressBar
         android:id="@+id/fragmentPrivateChat_PB_loading"
