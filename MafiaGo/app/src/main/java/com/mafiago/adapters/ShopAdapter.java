@@ -132,7 +132,7 @@ public class ShopAdapter extends BaseAdapter {
                 });
                 break;
 
-            case "status":
+            case "buy_status":
                 view = layout.inflate(R.layout.item_buy_status, null);
 
                 Spinner spinner = view.findViewById(R.id.itemBuyStatus_Spinner);
@@ -144,12 +144,9 @@ public class ShopAdapter extends BaseAdapter {
                 EditText ET_premiumStatus = view.findViewById(R.id.itemBuyStatus_ET_premiumStatus);
                 Switch switch_status = view.findViewById(R.id.itemBuyStatus_Switch_status);
 
-                // Настраиваем адаптер
-                ArrayAdapter<?> adapter =
-                        ArrayAdapter.createFromResource(context, R.array.statuses, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).);
                 // Вызываем адаптер
-                spinner.setAdapter(adapter);
+                spinner.setAdapter(spinnerArrayAdapter);
 
                 TV_nick.setText(MainActivity.NickName);
 

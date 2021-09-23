@@ -122,7 +122,7 @@ public class SmallShopFragment extends Fragment {
 
                 btn_busters.setVisibility(View.VISIBLE);
 
-                //socket.on("get_store", OnGetMainStore);
+                socket.on("get_store", OnGetMainStore);
                 //socket.on("buy_item", OnBuyItem);
 
                 json = new JSONObject();
@@ -132,10 +132,9 @@ public class SmallShopFragment extends Fragment {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                //socket.emit("get_store", json);
-                //Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
+                socket.emit("get_store", json);
+                Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
 
-                list_shop.add(new ShopModel("status", 2, 3, false, "", "", 0));
                 shopAdapter.notifyDataSetChanged();
                 break;
             case 3:
@@ -245,27 +244,49 @@ public class SmallShopFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (args.length != 0) {
+                if (args.length != 0 && list_shop.size() == 0) {
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
-                    JSONArray shop_array;
-                    JSONObject shop_data;
-                    String description = "", transaction_description = "", sale_amount = "";
-                    int amount = 0, price = 0;
+                    JSONObject JO_price;
+                    JSONObject JO_general_data;
+                    JSONObject JO_statuses_common_data;
+                    JSONObject JO_statuses_usual_data;
+                    JSONArray JA_usual_statuses;
+                    JSONArray JA_usual_statuses_prices;
+                    ArrayList<String> list_usual_statuses = new ArrayList();
+                    String[] list_statuces;
+                    ArrayList<ShopModel> list_prices = new ArrayList();
+
+                    String description = "", transaction_description = "", sale_amount = "", amount = "";
+                    int price = 0;
                     boolean is_sale = false;
                     try {
-                        shop_array = data.getJSONArray("gold");
-                        for (int i = 0; i < shop_array.length(); i++)
+                        JO_general_data = data.getJSONObject("general");
+                        JO_statuses_common_data = JO_general_data.getJSONObject("statuses");
+                        JO_statuses_usual_data = JO_statuses_common_data.getJSONObject("usual");
+                        JA_usual_statuses = JO_statuses_usual_data.getJSONArray("statuses");
+
+                        list_statuces = new String[JA_usual_statuses.length()];
+                        for (int i = 0; i < JA_usual_statuses.length(); i++)
                         {
-                            shop_data = shop_array.getJSONObject(i);
-                            description = shop_data.getString("description");
-                            transaction_description = shop_data.getString("transaction_description");
-                            amount = shop_data.getInt("amount");
-                            price = shop_data.getInt("price");
-                            is_sale = shop_data.getBoolean("is_sale");
-                            sale_amount = shop_data.getString("sale_amount");
-                            list_shop.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_gold.size()));
+                            list_usual_statuses.add(JA_usual_statuses.getString(i));
+                            list_statuces[i] = JA_usual_statuses.getString(i);
                         }
+
+                        JA_usual_statuses_prices = JO_statuses_usual_data.getJSONArray("prices");
+                        for (int i = 0; i < JA_usual_statuses_prices.length(); i++)
+                        {
+                            JO_price = JA_usual_statuses_prices.getJSONObject(i);
+                            description = JO_price.getString("description");
+                            amount = JO_price.getString("amount");
+                            price = JO_price.getInt("price");
+                            is_sale = JO_price.getBoolean("is_sale");
+                            sale_amount = JO_price.getString("sale_amount");
+                            list_prices.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices.size()));
+                        }
+
+                        list_shop.add(new ShopModel("buy_status", list_prices, list_usual_statuses, list_shop.size()));
+
                         shopAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
