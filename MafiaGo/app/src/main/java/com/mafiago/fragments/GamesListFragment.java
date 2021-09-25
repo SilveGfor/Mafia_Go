@@ -82,6 +82,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     RelativeLayout RL_filter;
     RelativeLayout RL_search;
 
+    EditText ET_search;
+
     ImageView IV_doctor;
     ImageView IV_lover;
     ImageView IV_journalist;
@@ -166,6 +168,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
         gamesAdapter = new GamesAdapter(list_room_copy, getContext());
         LV_games.setAdapter(gamesAdapter);
+
+
 
         CB_deletePlayingRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
             deletePlayingRooms = isChecked;
