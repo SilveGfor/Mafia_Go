@@ -10,19 +10,19 @@
         android:id="@+id/smallFragmentShop_btn_busters"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:background="@drawable/orange_button"
         android:padding="15dp"
         android:text="Активные бустеры"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentMenu_CV" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ListView
         android:id="@+id/smallFragmentShop_LV_shop"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:divider="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

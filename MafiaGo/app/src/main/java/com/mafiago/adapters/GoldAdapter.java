@@ -1,7 +1,9 @@
 package com.mafiago.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,17 +76,33 @@ public class GoldAdapter extends BaseAdapter {
 
 
         btnBuy.setOnClickListener(v -> {
-            final JSONObject json = new JSONObject();
-            try {
-                json.put("nick", MainActivity.NickName);
-                json.put("session_id", MainActivity.Session_id);
-                json.put("store_type", "gold");
-                json.put("item", list_gold.get(position).num);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            socket.emit("buy_item", json);
-            Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+            View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+            builder.setView(viewQuestion);
+            AlertDialog alert = builder.create();
+            TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+            Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+            Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+            TV_text.setText("Вы уверены, что хотите совершить покупку?");
+            btn_yes.setOnClickListener(v1 -> {
+                final JSONObject json = new JSONObject();
+                try {
+                    json.put("nick", MainActivity.NickName);
+                    json.put("session_id", MainActivity.Session_id);
+                    json.put("store_type", "gold");
+                    json.put("item", list_gold.get(position).num);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.emit("buy_item", json);
+                Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                alert.cancel();
+            });
+            btn_no.setOnClickListener(v12 -> {
+                alert.cancel();
+            });
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert.show();
         });
         return view;
     }

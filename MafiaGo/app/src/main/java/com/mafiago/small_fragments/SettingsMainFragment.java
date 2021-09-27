@@ -22,10 +22,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -41,6 +44,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Iterator;
 
 import io.socket.emitter.Emitter;
 
@@ -84,6 +88,9 @@ public class SettingsMainFragment extends Fragment {
     TextView TV_exp;
     TextView TV_gold;
     ImageView IV_avatar;
+
+    Spinner spinner;
+    Spinner spinner2;
 
     TextView TV_game_counter;
     TextView TV_max_money_score;
@@ -139,6 +146,8 @@ public class SettingsMainFragment extends Fragment {
             TV_exp = view.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
             TV_gold = view.findViewById(R.id.fragmentSettingsProfile_TV_gold);
             IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
+            spinner = view.findViewById(R.id.fragmentSettingsProfile_Spinner_statuce);
+            spinner2 = view.findViewById(R.id.fragmentSettingsProfile_Spinner_color);
 
             TV_game_counter = view.findViewById(R.id.fragmentSettingsProfile_TV_gamesCount);
             TV_max_money_score = view.findViewById(R.id.fragmentSettingsProfile_TV_maxMoney);
@@ -970,12 +979,18 @@ public class SettingsMainFragment extends Fragment {
                 boolean online = false;
                 int money = 0, exp = 0, gold = 0, rang = 0;
                 JSONObject statistic = new JSONObject();
+                JSONObject statuses = new JSONObject();
+                JSONObject JO_colors = new JSONObject();
+                String[] list_statuces;
+                String[] list_colors;
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
-                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "";
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "", main_personal_color = "";
                 Log.d("kkk", "принял - get_profile - " + data);
 
                 try {
                     statistic = data.getJSONObject("statistics");
+                    statuses = data.getJSONObject("statuses");
+                    JO_colors = data.getJSONObject("personal_colors");
                     game_counter = statistic.getInt("game_counter");
                     max_money_score = statistic.getInt("max_money_score");
                     max_exp_score = statistic.getInt("max_exp_score");
@@ -990,6 +1005,8 @@ public class SettingsMainFragment extends Fragment {
                     money = data.getInt("money");
                     exp = data.getInt("exp");
                     rang = data.getInt("rang");
+                    main_status = data.getString("main_status");
+                    main_personal_color = data.getString("main_personal_color");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1010,6 +1027,156 @@ public class SettingsMainFragment extends Fragment {
                 TV_general_pers_of_wins.setText("Процент побед: " + general_pers_of_wins);
                 TV_mafia_pers_of_wins.setText("Побед мафии: " + mafia_pers_of_wins);
                 TV_peaceful_pers_of_wins.setText("Побед мирных: " + peaceful_pers_of_wins);
+
+                list_statuces = new String[statuses.length() + 1];
+                list_statuces[0] = "нет";
+                int i;
+                Iterator iterator;
+                String status;
+
+                for (iterator = statuses.keys(), i = 1; iterator.hasNext(); i++)
+                {
+                    status = (String) iterator.next();
+                    list_statuces[i] = status;
+                }
+
+                if (list_statuces.length != 0) {
+                    final boolean[] need_to_send = {false};
+                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_statuces);
+                    // Вызываем адаптер
+                    spinner.setAdapter(spinnerArrayAdapter);
+
+                    for (int k = 0; k < list_statuces.length; k++) {
+                        if (list_statuces[k].equals(main_status)) {
+                            spinner.setSelection(k);
+                        }
+                    }
+
+                    TV_nick.setText(MainActivity.NickName);
+
+                    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (need_to_send[0]) {
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", MainActivity.NickName);
+                                    json2.put("session_id", MainActivity.Session_id);
+                                    if (position == 0) {
+                                        json2.put("main_status", "");
+                                    }
+                                    else
+                                    {
+                                        json2.put("main_status", list_statuces[position]);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
+                                socket.emit("edit_profile", json2);
+                            }
+                            else
+                            {
+                                need_to_send[0] = true;
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                }
+                else
+                {
+                    spinner.setVisibility(View.INVISIBLE);
+                }
+
+                String[] list_colors_words = new String[JO_colors.length() + 1];
+                list_colors = new String[JO_colors.length() + 1];
+                list_colors[0] = "нет";
+                list_colors_words[0] = "нет";
+                int j;
+                String color;
+
+                for (iterator = JO_colors.keys(), j = 1; iterator.hasNext(); j++)
+                {
+                    color = (String) iterator.next();
+                    list_colors[j] = color;
+                    switch (color)
+                    {
+                        case "#8DD3B6":
+                            list_colors_words[j] = "мятный цвет";
+                            break;
+                        case "#AFCAFF":
+                            list_colors_words[j] = "светло-синий цвет";
+                            break;
+                        case "#CBFFA1":
+                            list_colors_words[j] = "салатовый цвет";
+                            break;
+                        default:
+                            list_colors_words[j] = color;
+                            break;
+                    }
+                }
+
+                if (list_colors.length != 0) {
+                    final boolean[] need_to_send = {false};
+                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_colors_words);
+                    // Вызываем адаптер
+                    spinner2.setAdapter(spinnerArrayAdapter);
+
+                    for (int k = 0; k < list_colors.length; k++) {
+                        if (list_colors[k].equals(main_personal_color)) {
+                            spinner2.setSelection(k);
+                        }
+                    }
+
+                    TV_nick.setText(MainActivity.NickName);
+
+                    spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (need_to_send[0]) {
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", MainActivity.NickName);
+                                    json2.put("session_id", MainActivity.Session_id);
+                                    if (position == 0) {
+                                        json2.put("main_personal_color", "");
+                                    }
+                                    else
+                                    {
+                                        json2.put("main_personal_color", list_colors[position]);
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
+                                socket.emit("edit_profile", json2);
+
+                            }
+                            else
+                            {
+                                need_to_send[0] = true;
+                            }
+                            if (!list_colors[position].equals("") && !list_colors[position].equals("нет"))
+                            {
+                                TV_nick.setTextColor(Color.parseColor(list_colors[position]));
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {
+
+                        }
+                    });
+                }
+                else
+                {
+                    spinner2.setVisibility(View.GONE);
+                }
+
             }
         });
     };
@@ -1103,6 +1270,26 @@ public class SettingsMainFragment extends Fragment {
                 case "cant_change_nick_because_you_are_observer":
                     builder = new AlertDialog.Builder(getContext());
                     builder.setTitle("Нельзя менять ник, если вы наблюдаете за другой игрой!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "invalid_personal_color":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Время действия этого цвета истекло!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    (dialog, id) -> dialog.cancel());
+                    alert = builder.create();
+                    break;
+                case "invalid_status":
+                    builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Время действия этого статуса истекло!")
                             .setMessage("")
                             .setIcon(R.drawable.ic_error)
                             .setCancelable(false)

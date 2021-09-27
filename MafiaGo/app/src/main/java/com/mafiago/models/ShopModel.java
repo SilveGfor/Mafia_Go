@@ -10,8 +10,9 @@ public class ShopModel {
     public boolean is_sale;
     public String transaction_description;
     public String sale_amount;
-    public ArrayList<ShopModel> list_prices;
-    public String[] list_statuses;
+    public ArrayList<ShopModel> list_usual_prices;
+    public ArrayList<ShopModel> list_premium_prices;
+    public String[] list_meaning;
     
     public ShopModel(String type, String amount, int price, boolean is_sale, String transaction_description, String sale_amount, int num) {
         this.type = type;
@@ -23,10 +24,10 @@ public class ShopModel {
         this.num = num;
     }
 
-    public ShopModel(String type, ArrayList<ShopModel> list_prices, String[] list_statuses, int num) {
+    public ShopModel(String type, ArrayList<ShopModel> list_usual_prices, String[] list_meaning, ArrayList<ShopModel> list_premium_prices) {
         this.type = type;
-        this.list_prices = list_prices;
-        this.list_statuses = list_statuses;
-        this.num = num;
+        this.list_usual_prices = list_usual_prices;
+        this.list_premium_prices = list_premium_prices;
+        this.list_meaning = list_meaning;
     }
 }

@@ -37,6 +37,7 @@ import com.mafiago.enums.Role;
 import com.mafiago.enums.Time;
 import com.mafiago.models.MessageModel;
 import com.mafiago.models.Player;
+import com.mafiago.models.UserModel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,7 +51,6 @@ import java.util.TimeZone;
 
 import io.socket.emitter.Emitter;
 
-import static com.mafiago.MainActivity.USERS;
 import static com.mafiago.MainActivity.f;
 import static com.mafiago.MainActivity.socket;
 
@@ -59,6 +59,7 @@ public class GameChatFragment extends Fragment {
 
     private int mPage;
     ArrayList<MessageModel> list_chat = new ArrayList<>();
+    ArrayList<UserModel> list_users = new ArrayList<>();
 
     public int num = -1;
     public boolean Once = true;
@@ -141,6 +142,7 @@ public class GameChatFragment extends Fragment {
             IV_toDeadChatArrow = view.findViewById(R.id.itemChat_TV_toDeadChatArrow);
 
             num = -1;
+            Log.e("kkk", "2");
             socket.on("get_in_room", onGetInDeadRoom);
             socket.on("user_message", onNewDiedMessage);
             TV_deadChat.setVisibility(View.VISIBLE);
@@ -397,14 +399,18 @@ public class GameChatFragment extends Fragment {
                     String nick;
                     String time;
                     String avatar;
+                    String status;
+                    String user_color;
                     int test_num;
                     try {
                         test_num = data.getInt("num");
+                        status = data.getString("user_status");
                         time = data.getString("time");
                         time = getDate(time);
                         nick = data.getString("nick");
                         avatar = data.getString("avatar");
-                        USERS.put(nick, avatar);
+                        user_color = data.getString("user_color");
+                        list_users.add(new UserModel(nick, avatar, status, user_color));
                         MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes", fromBase64(avatar));
                         Log.e("kkk", num + "get_in_room GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                         boolean good = true;
@@ -444,7 +450,7 @@ public class GameChatFragment extends Fragment {
                             }
                         }
                     } catch (JSONException e) {
-                        return;
+                        e.printStackTrace();
                     }
                 }
             });
@@ -462,14 +468,18 @@ public class GameChatFragment extends Fragment {
                     JSONObject data = (JSONObject) args[0];
                     String nick;
                     String avatar;
+                    String status;
+                    String user_color;
                     try {
 
                         nick = data.getString("nick");
                         avatar = data.getString("avatar");
-                        USERS.put(nick, avatar);
-                        Log.e("kkk", "getInDeadRoom GameChatFragment " + USERS.length() + args[0]);
+                        status = data.getString("user_status");
+                        user_color = data.getString("user_color");
+                        list_users.add(new UserModel(nick, avatar, status, user_color));
+                        Log.e("kkk", "getInDeadRoom GameChatFragment " + args[0]);
                     } catch (JSONException e) {
-                        return;
+                        e.printStackTrace();
                     }
                 }
             });
@@ -489,12 +499,13 @@ public class GameChatFragment extends Fragment {
                     String message;
                     String time;
                     String status;
-                    String main_role;
+                    String status_text = "";
+                    String user_color = "";
                     String nick_from_iterator;
                     int test_num;
                     int link;
                     try {
-                        main_role = data.getString("role");
+                        //status_text = data.getString("role");
                         nick = data.getString("nick");
                         status = data.getString("status");
                         if (status.equals("last_message") && nick.equals(player.getNick()))
@@ -511,10 +522,11 @@ public class GameChatFragment extends Fragment {
                         if (!status.equals("dead"))
                         {
                             String avatar = "";
-                            for (Iterator iterator = USERS.keys(); iterator.hasNext(); ) {
-                                nick_from_iterator = (String) iterator.next();
-                                if (nick.equals(nick_from_iterator)) {
-                                    avatar = USERS.getString(nick);
+                            for (int i = 0; i < list_users.size(); i++) {
+                                if (nick.equals(list_users.get(i).getNick())) {
+                                    avatar = list_users.get(i).getAvatar();
+                                    status_text = list_users.get(i).status;
+                                    user_color = list_users.get(i).user_color;
                                     break;
                                 }
                             }
@@ -538,9 +550,9 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, status_text, fromBase64(avatar), user_color);
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, status_text, fromBase64(avatar), user_color);
                                     }
                                     list_chat.add(messageModel);
                                 } else {
@@ -551,9 +563,9 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, status_text, fromBase64(avatar), user_color);
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, status_text, fromBase64(avatar), user_color);
                                     }
                                     for (int i = 0; i < list_chat.size(); i++) {
                                         if (test_num < list_chat.get(i).num) {
@@ -592,12 +604,13 @@ public class GameChatFragment extends Fragment {
                     String message;
                     String time;
                     String status;
-                    String main_role;
+                    String status_text = "";
+                    String user_color = "";
                     String nick_from_iterator;
                     int test_num;
                     int link;
                     try {
-                        main_role = data.getString("role");
+                        //status_text = data.getString("role");
                         nick = data.getString("nick");
                         status = data.getString("status");
                         test_num = data.getInt("num");
@@ -613,10 +626,11 @@ public class GameChatFragment extends Fragment {
                         if (status.equals("dead"))
                         {
                             String avatar = "";
-                            for (Iterator iterator = USERS.keys(); iterator.hasNext(); ) {
-                                nick_from_iterator = (String) iterator.next();
-                                if (nick.equals(nick_from_iterator)) {
-                                    avatar = USERS.getString(nick);
+                            for (int i = 0; i < list_users.size(); i++) {
+                                if (nick.equals(list_users.get(i).getNick())) {
+                                    avatar = list_users.get(i).getAvatar();
+                                    status_text = list_users.get(i).status;
+                                    user_color = list_users.get(i).user_color;
                                     break;
                                 }
                             }
@@ -629,9 +643,9 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, status_text, fromBase64(avatar), user_color);
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, status_text, fromBase64(avatar), user_color);
                                     }
                                     list_chat.add(messageModel);
                                 } else {
@@ -642,9 +656,9 @@ public class GameChatFragment extends Fragment {
                                     link = data.getInt("link");
                                     MessageModel messageModel;
                                     if (link == -1) {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "UsersMes", status, status_text, fromBase64(avatar), user_color);
                                     } else {
-                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, main_role, fromBase64(avatar));
+                                        messageModel = new MessageModel(test_num, message, time, nick, "AnswerMes", status, link, status_text, fromBase64(avatar), user_color);
                                     }
                                     for (int i = 0; i < list_chat.size(); i++) {
                                         if (test_num < list_chat.get(i).num) {
@@ -688,25 +702,11 @@ public class GameChatFragment extends Fragment {
                         nick = data.getString("nick");
                         time = data.getString("time");
                         time = getDate(time);
-                        USERS.remove(nick);
                         Log.d("kkk", "leave_user GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                     } catch (JSONException e) {
                         return;
                     }
                     String avatar = "";
-                    for (Iterator iterator = USERS.keys(); iterator.hasNext();)
-                    {
-                        nick_from_iterator = (String) iterator.next();
-                        if (nick.equals(nick_from_iterator))
-                        {
-                            try {
-                                avatar = USERS.getString(nick);
-                            } catch (JSONException e) {
-
-                            }
-                            break;
-                        }
-                    }
 
                     MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes", fromBase64(avatar));
 
@@ -821,32 +821,31 @@ public class GameChatFragment extends Fragment {
                                     mafia_nick = data2.getString("mafia_nick");
                                     user_nick = data2.getString("user_nick");
                                     String avatar = "";
-                                    String nick_from_iterator = "";
-                                    for (Iterator iterator = USERS.keys(); iterator.hasNext(); ) {
-                                        nick_from_iterator = (String) iterator.next();
-                                        if (mafia_nick.equals(nick_from_iterator)) {
-                                            avatar = USERS.getString(mafia_nick);
+
+                                    String status_text = "";
+                                    for (int i = 0; i < list_users.size(); i++) {
+                                        if (mafia_nick.equals(list_users.get(i).getNick())) {
+                                            avatar = list_users.get(i).getAvatar();
+                                            status_text = list_users.get(i).status;
                                             break;
                                         }
                                     }
-                                    messageModel = new MessageModel(test_num, mafia_nick + " голосует за " + user_nick, time, mafia_nick, "VotingMes", fromBase64(avatar));
+                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, mafia_nick, "VotingMes", fromBase64(avatar));
                                     break;
                                 case "voting":
                                     data2 = data.getJSONObject("message");
                                     voter = data2.getString("voter");
                                     user_nick = data2.getString("user_nick");
-                                    String nick_from_iterator2;
-                                    String avatar2 = "";
-                                    for (Iterator iterator = USERS.keys(); iterator.hasNext();)
-                                    {
-                                        nick_from_iterator2 = (String) iterator.next();
-                                        if (voter.equals(nick_from_iterator2))
-                                        {
-                                            avatar2 = USERS.getString(voter);
+                                    avatar = "";
+                                    status_text = "";
+                                    for (int i = 0; i < list_users.size(); i++) {
+                                        if (voter.equals(list_users.get(i).getNick())) {
+                                            avatar = list_users.get(i).getAvatar();
+                                            status_text = list_users.get(i).status;
                                             break;
                                         }
                                     }
-                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes", fromBase64(avatar2));
+                                    messageModel = new MessageModel(test_num,"Голосует за " + user_nick, time, voter, "VotingMes", fromBase64(avatar));
                                     break;
                                 case "time_info":
                                     messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");

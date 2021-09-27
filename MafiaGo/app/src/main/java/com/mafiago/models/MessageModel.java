@@ -9,20 +9,22 @@ public class MessageModel {
     public  String nickName;
     public String mesType;
     public String textType;
-    public String rang;
+    public String status_text;
+    public String user_color;
     public int answerId;
     public Bitmap avatar;
 
     //сообщения пользователей
-    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, String rang, Bitmap avatar) {
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, String status_text, Bitmap avatar, String user_color) {
         this.num = num;
         this.message = message;
         this.time = time;
         this.nickName = nickName;
         this.mesType = mesType;
         this.textType = textType;
-        this.rang = rang;
+        this.status_text = status_text;
         this.avatar = avatar;
+        this.user_color = user_color;
     }
     //connect/disconnect сообщения
     public MessageModel(int num, String message, String time, String nickName, String mesType, Bitmap avatar) {
@@ -32,6 +34,8 @@ public class MessageModel {
         this.nickName = nickName;
         this.mesType = mesType;
         this.avatar = avatar;
+        status_text = "";
+        user_color = "";
     }
     //системные сообщения
     public MessageModel(int num, String message, String time, String nickName, String mesType) {
@@ -40,9 +44,11 @@ public class MessageModel {
         this.time = time;
         this.nickName = nickName;
         this.mesType = mesType;
+        status_text = "";
+        user_color = "";
     }
     //ответы на сообщения
-    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, int answerId, String rang, Bitmap avatar) {
+    public MessageModel(int num, String message, String time, String nickName, String mesType, String textType, int answerId, String status_text, Bitmap avatar, String user_color) {
         this.num = num;
         this.message = message;
         this.time = time;
@@ -50,7 +56,8 @@ public class MessageModel {
         this.mesType = mesType;
         this.textType = textType;
         this.answerId = answerId;
-        this.rang = rang;
+        this.status_text = status_text;
         this.avatar = avatar;
+        this.user_color = user_color;
     }
 }

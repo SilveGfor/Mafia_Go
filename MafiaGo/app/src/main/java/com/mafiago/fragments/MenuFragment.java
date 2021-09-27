@@ -73,13 +73,13 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     TextView TV_rang;
     TextView TV_gold;
     TextView TV_nick;
+    TextView TV_status;
 
     CardView CV_info;
 
     static final int GALLERY_REQUEST = 1;
 
     ImageView IV_avatar;
-    TextView TV_onlineOffline;
 
     ImageView Chats;
     ImageView Friends;
@@ -129,7 +129,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         TV_gold = view.findViewById(R.id.fragmentMenu_TV_gold);
         TV_rang = view.findViewById(R.id.fragmentSettingsProfile_TV_rang);
         TV_nick = view.findViewById(R.id.fragmentSettingsProfile_TV_nick);
-        TV_onlineOffline = view.findViewById(R.id.fragmentSettingsProfile_TV_onlineOffline);
+        TV_status = view.findViewById(R.id.fragmentMenu_TV_status);
         PB_loading = view.findViewById(R.id.fragmentMenu_PB);
         btnDailyTasks = view.findViewById(R.id.fragmentMenu_btn_dailyTasks);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
@@ -543,7 +543,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 int money = 0, exp = 0, gold = 0, rang = 0;
                 JSONObject statistic = new JSONObject();
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
-                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "";
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "";
+                //data.remove("avatar");
                 Log.d("kkk", "принял - get_profile - " + data);
 
                 try {
@@ -555,6 +556,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
                     peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     avatar = data.getString("avatar");
+                    //"main_status":"альфа-тестер","main_personal_color" personal_colors
+                    main_status = data.getString("main_status");
                     user_id_2 = data.getString("user_id");
                     online = data.getBoolean("is_online");
                     gold = data.getInt("gold");
@@ -574,16 +577,20 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 TV_exp.setText(String.valueOf(exp));
                 TV_gold.setText(String.valueOf(gold));
                 TV_rang.setText(String.valueOf(rang));
+
                 TV_nick.setText(nick);
+                if (!main_status.equals("")) {
+                    TV_status.setText("{" + main_status + "}");
+                }
 
                 PB_loading.setVisibility(View.GONE);
 
-                TV_onlineOffline.setVisibility(View.VISIBLE);
                 TV_money.setVisibility(View.VISIBLE);
                 TV_exp.setVisibility(View.VISIBLE);
                 TV_gold.setVisibility(View.VISIBLE);
                 TV_rang.setVisibility(View.VISIBLE);
                 TV_nick.setVisibility(View.VISIBLE);
+                TV_status.setVisibility(View.VISIBLE);
 
                 int finalMoney = money;
                 int finalExp = exp;

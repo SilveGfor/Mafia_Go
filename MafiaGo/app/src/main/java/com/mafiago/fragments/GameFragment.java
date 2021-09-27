@@ -785,8 +785,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 }
                 Log.d("kkk", "Socket_отправка leave_room_observer - " + json2.toString());
                 socket.emit("leave_room_observer", json2);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
             }
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
         }
     }
 

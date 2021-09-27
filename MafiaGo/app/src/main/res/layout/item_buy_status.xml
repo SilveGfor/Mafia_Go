@@ -22,7 +22,7 @@
             android:layout_height="match_parent">
 
             <Button
-                android:id="@+id/itemShopping_btn_buy"
+                android:id="@+id/itemBuyStatus_btn_buy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
@@ -78,7 +78,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
                 android:text="Стоимость 7000 монет\nВы можете купить премиум-аккаунт - тогда вы сможете бесплатно поставить себе премиум-статус"
@@ -86,7 +86,7 @@
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemBuyStatus_ET_premiumStatus" />
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyStatus_Spinner2" />
 
             <TextView
                 android:id="@+id/itemBuyStatus_TV_desc"
@@ -178,6 +178,15 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+            <Spinner
+                android:id="@+id/itemBuyStatus_Spinner2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyStatus_ET_premiumStatus" />
 
             <ImageView
                 android:id="@+id/itemShopping_IV"

@@ -88,8 +88,19 @@ public class SmallShopFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = null;
 
+        json = new JSONObject();
+        try {
+            json.put("nick", MainActivity.NickName);
+            json.put("session_id", MainActivity.Session_id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_store", json);
+        Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
+
         switch (mPage)
         {
+
             case 1:
                 view = inflater.inflate(R.layout.small_fragment_shop, container, false);
 
@@ -99,16 +110,6 @@ public class SmallShopFragment extends Fragment {
 
                 socket.on("get_store", OnGetGoldStore);
                 socket.on("buy_item", OnBuyItem);
-
-                json = new JSONObject();
-                try {
-                    json.put("nick", MainActivity.NickName);
-                    json.put("session_id", MainActivity.Session_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("get_store", json);
-                Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
 
                 goldAdapter.notifyDataSetChanged();
                 break;
@@ -120,20 +121,10 @@ public class SmallShopFragment extends Fragment {
                 shopAdapter = new ShopAdapter(list_shop, getContext());
                 LV_shop.setAdapter(shopAdapter);
 
-                btn_busters.setVisibility(View.VISIBLE);
+                //btn_busters.setVisibility(View.VISIBLE);
 
                 socket.on("get_store", OnGetMainStore);
-                //socket.on("buy_item", OnBuyItem);
-
-                json = new JSONObject();
-                try {
-                    json.put("nick", MainActivity.NickName);
-                    json.put("session_id", MainActivity.Session_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("get_store", json);
-                Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
+                socket.on("buy_item", OnBuyItem);
 
                 shopAdapter.notifyDataSetChanged();
                 break;
@@ -145,19 +136,9 @@ public class SmallShopFragment extends Fragment {
                 premiumAdapter = new PremiumAdapter(list_premium, getContext());
                 LV_premium.setAdapter(premiumAdapter);
 
-                socket.on("get_store", OnGetPremiumStore);
+                //socket.on("get_store", OnGetPremiumStore);
                 socket.on("buy_item", OnBuyPremiumItem);
-                socket.on("user_error", onUserError);
-
-                json = new JSONObject();
-                try {
-                    json.put("nick", MainActivity.NickName);
-                    json.put("session_id", MainActivity.Session_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("get_store", json);
-                Log.d("kkk", "Socket_отправка - get_store - "+ json.toString());
+                //socket.on("user_error", onUserError);
 
                 premiumAdapter.notifyDataSetChanged();
                 break;
@@ -171,7 +152,8 @@ public class SmallShopFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (args.length != 0) {
+                if (args.length != 0 && list_gold.size() == 0) {
+                    socket.off("get_store", OnGetGoldStore);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONArray gold_array;
@@ -208,7 +190,8 @@ public class SmallShopFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (args.length != 0) {
+                if (args.length != 0 && list_premium.size() == 0) {
+                    socket.off("get_store", OnGetPremiumStore);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONArray gold_array;
@@ -245,17 +228,29 @@ public class SmallShopFragment extends Fragment {
             @Override
             public void run() {
                 if (args.length != 0 && list_shop.size() == 0) {
+                    socket.off("get_store", OnGetMainStore);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONObject JO_price;
+
                     JSONObject JO_general_data;
                     JSONObject JO_statuses_common_data;
                     JSONObject JO_statuses_usual_data;
                     JSONArray JA_usual_statuses;
                     JSONArray JA_usual_statuses_prices;
-                    ArrayList<String> list_usual_statuses = new ArrayList();
+                    JSONArray JA_premium_statuses_prices;
                     String[] list_statuces;
-                    ArrayList<ShopModel> list_prices = new ArrayList();
+                    ArrayList<ShopModel> list_usual_prices = new ArrayList();
+                    ArrayList<ShopModel> list_premium_prices = new ArrayList();
+
+                    //
+
+                    JSONObject JO_colors_common_data;
+                    JSONObject JO_colors_usual_data;
+                    JSONArray JA_usual_colors;
+                    JSONArray JA_usual_colors_prices;
+                    String[] list_colors;
+                    ArrayList<ShopModel> list_prices_colors = new ArrayList();
 
                     String description = "", transaction_description = "", sale_amount = "", amount = "";
                     int price = 0;
@@ -269,7 +264,6 @@ public class SmallShopFragment extends Fragment {
                         list_statuces = new String[JA_usual_statuses.length()];
                         for (int i = 0; i < JA_usual_statuses.length(); i++)
                         {
-                            list_usual_statuses.add(JA_usual_statuses.getString(i));
                             list_statuces[i] = JA_usual_statuses.getString(i);
                         }
 
@@ -282,10 +276,48 @@ public class SmallShopFragment extends Fragment {
                             price = JO_price.getInt("price");
                             is_sale = JO_price.getBoolean("is_sale");
                             sale_amount = JO_price.getString("sale_amount");
-                            list_prices.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices.size()));
+                            list_usual_prices.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_usual_prices.size()));
                         }
 
-                        list_shop.add(new ShopModel("buy_status", list_prices, list_usual_statuses, list_shop.size()));
+                        JA_premium_statuses_prices = JO_statuses_common_data.getJSONArray("premium");
+                        for (int i = 0; i < JA_premium_statuses_prices.length(); i++)
+                        {
+                            JO_price = JA_premium_statuses_prices.getJSONObject(i);
+                            description = JO_price.getString("description");
+                            amount = JO_price.getString("amount");
+                            price = JO_price.getInt("price");
+                            is_sale = JO_price.getBoolean("is_sale");
+                            sale_amount = JO_price.getString("sale_amount");
+                            list_premium_prices.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_premium_prices.size()));
+                        }
+
+                        list_shop.add(new ShopModel("buy_status", list_usual_prices, list_statuces, list_premium_prices));
+
+                        //////////////////////
+
+                        JO_colors_common_data = JO_general_data.getJSONObject("personal_colors");
+                        JO_colors_usual_data = JO_colors_common_data.getJSONObject("usual");
+                        JA_usual_colors = JO_colors_usual_data.getJSONArray("colors");
+
+                        list_colors = new String[JA_usual_colors.length()];
+                        for (int i = 0; i < JA_usual_colors.length(); i++)
+                        {
+                            list_colors[i] = JA_usual_colors.getString(i);
+                        }
+
+                        JA_usual_colors_prices = JO_colors_usual_data.getJSONArray("prices");
+                        for (int i = 0; i < JA_usual_colors_prices.length(); i++)
+                        {
+                            JO_price = JA_usual_colors_prices.getJSONObject(i);
+                            description = JO_price.getString("description");
+                            amount = JO_price.getString("amount");
+                            price = JO_price.getInt("price");
+                            is_sale = JO_price.getBoolean("is_sale");
+                            sale_amount = JO_price.getString("sale_amount");
+                            list_prices_colors.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_colors.size()));
+                        }
+
+                        list_shop.add(new ShopModel("buy_color", list_prices_colors, list_colors, new ArrayList<ShopModel>()));
 
                         shopAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
@@ -302,8 +334,9 @@ public class SmallShopFragment extends Fragment {
         getActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (args.length != 0) {
-                    String url = (String) args[0];
+                String url = (String) args[0];
+                if (args.length != 0 && url.contains("http")) {
+                    Log.e("kkk", "1 " + args[0]);
                     Intent mIntent = new Intent();
                     mIntent.setAction(Intent.ACTION_VIEW);
                     mIntent.setData(Uri.parse(url));
@@ -321,6 +354,7 @@ public class SmallShopFragment extends Fragment {
             public void run() {
                 if (args.length != 0) {
                     String status = (String) args[0];
+                    Log.d("kkk", "buy_item " + status);
                     if (status.equals("OK"))
                     {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -330,11 +364,12 @@ public class SmallShopFragment extends Fragment {
                         alert = builder.create();
 
                         TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                        TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
                         ImageView IV = viewError.findViewById(R.id.dialogError_IV);
 
                         IV.setImageResource(R.drawable.crown_gold_dark);
-                        TV.setText("Вы успешно купили премиум-статус! Он активируется в течение минуты");
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                        TV.setText("Вы успешно завершили покупку!");
+                        TV_title.setText("Успешно!");
                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert.show();
                     }
@@ -365,13 +400,11 @@ public class SmallShopFragment extends Fragment {
                         switch (error) {
                             case "you_dont_have_enough_gold":
                                 TV_error.setText("У вас не хватает золота для покупки!");
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;
                             default:
                                 TV_error.setText("Что-то пошло не так");
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;

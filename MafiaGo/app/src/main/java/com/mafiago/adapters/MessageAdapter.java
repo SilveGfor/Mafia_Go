@@ -108,9 +108,6 @@
                     case "dead":
                         color = "#FFFFFF";
                         break;
-                    //case "dead":
-                        //color = "#999999";
-                        //break;
                     case "last_message":
                         color = "#FFB7AC";
                         break;
@@ -123,43 +120,64 @@
                     //shimmer.start(txt_nick);
                 }
 
-                if (showRole) {
-                    switch (list_mess.get(position).rang) {
-                        case "user":
-                            break;
-                        case "moderator":
-                            TV_status.setVisibility(View.VISIBLE);
-                            TV_status.setText("модератор");
-                            TV_status.setTextColor(Color.parseColor("#C71585"));
-                            break;
-                        case "admin":
-                            TV_status.setVisibility(View.VISIBLE);
-                            TV_status.setText("админ");
-                            TV_status.setTextColor(Color.parseColor("#FF0000"));
-                            break;
-                        case "head_admin":
-                            TV_status.setVisibility(View.VISIBLE);
-                            TV_status.setText("глав. админ");
-                            TV_status.setTextColor(Color.parseColor("#008B8B"));
-                            break;
-                        case "designer":
-                            TV_status.setVisibility(View.VISIBLE);
-                            TV_status.setText("дизайнер");
-                            TV_status.setTextColor(Color.parseColor("#8A2BE2"));
-                            break;
-                        case "developer":
-                            TV_status.setVisibility(View.VISIBLE);
-                            TV_status.setText("разработчик");
-                            TV_status.setTextColor(Color.parseColor("#8B0000"));
-                            break;
-                    }
+                /*
+                switch (list_mess.get(position).status_text) {
+                    case "user":
+                        break;
+                    case "moderator":
+                        TV_status.setVisibility(View.VISIBLE);
+                        TV_status.setText("модератор");
+                        TV_status.setTextColor(Color.parseColor("#C71585"));
+                        break;
+                    case "admin":
+                        TV_status.setVisibility(View.VISIBLE);
+                        TV_status.setText("админ");
+                        TV_status.setTextColor(Color.parseColor("#FF0000"));
+                        break;
+                    case "head_admin":
+                        TV_status.setVisibility(View.VISIBLE);
+                        TV_status.setText("глав. админ");
+                        TV_status.setTextColor(Color.parseColor("#008B8B"));
+                        break;
+                    case "designer":
+                        TV_status.setVisibility(View.VISIBLE);
+                        TV_status.setText("дизайнер");
+                        TV_status.setTextColor(Color.parseColor("#8A2BE2"));
+                        break;
+                    case "developer":
+                        TV_status.setVisibility(View.VISIBLE);
+                        TV_status.setText("разработчик");
+                        TV_status.setTextColor(Color.parseColor("#8B0000"));
+                        break;
+                    default:
+                }
+
+                 */
+
+                if (!list_mess.get(position).status_text.equals(""))
+                {
+                    TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
+                }
+                else
+                {
+                    TV_nick.setText(list_mess.get(position).nickName);
                 }
 
                 //txt_time.setTextColor(Color.parseColor(color));
                 TV_message.setTextColor(Color.parseColor(color));
+                TV_nick.setTextColor(Color.parseColor(color));
+
+                if (!list_mess.get(position).user_color.equals(""))
+                {
+                    TV_nick.setTextColor(Color.parseColor(list_mess.get(position).user_color));
+                }
+                else
+                {
+                    TV_nick.setTextColor(Color.parseColor(color));
+                }
 
                 //txt_time.setText(list_mess.get(position).time);
-                TV_nick.setText(list_mess.get(position).nickName);
+
                 TV_message.setText(list_mess.get(position).message);
 
                 break;
@@ -247,9 +265,17 @@
                     //shimmer.start(txt_nick);
                 }
 
+                if (!list_mess.get(position).status_text.equals(""))
+                {
+                    TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
+                }
+                else
+                {
+                    TV_nick.setText(list_mess.get(position).nickName);
+                }
+
                 //txt_time.setText(list_mess.get(position).time);
                 TV_message.setText(list_mess.get(position).message);
-                TV_nick.setText(list_mess.get(position).nickName);
 
                 TV_message.setTextColor(Color.parseColor("#AFFFFF"));
                 TV_nick.setTextColor(Color.parseColor("#AFFFFF"));
@@ -286,35 +312,18 @@
                     Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
                 });
 
-                switch (list_mess.get(position).rang) {
-                    case "user":
-                        break;
-                    case "moderator":
-                        TV_answer_status.setText("модератор");
-                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                        break;
-                    case "admin":
-                        TV_answer_status.setText("админ");
-                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                        break;
-                    case "head_admin":
-                        TV_answer_status.setText("глав. админ");
-                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                        break;
-                    case "designer":
-                        TV_answer_status.setText("дизайнер");
-                        TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                        break;
-                    case "developer":
-                        TV_answer_status.setText("разработчик");
-                        TV_answer_status.setTextColor(Color.parseColor("#FF0000"));
-                        break;
+                if (!list_mess.get(position).status_text.equals(""))
+                {
+                    TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
+                }
+                else
+                {
+                    TV_nick.setText(list_mess.get(position).nickName);
                 }
 
 
                 //txt_time.setText(list_mess.get(position).time);
                 TV_message.setText(list_mess.get(position).message);
-                TV_nick.setText(list_mess.get(position).nickName);
 
                 if (list_mess.get(position).nickName.equals("SilveGfor"))
                 {
@@ -326,7 +335,14 @@
                 {
                     if (id == list_mess.get(i).num)
                     {
-                        TV_answer_nick.setText(list_mess.get(i).nickName);
+                        if (!list_mess.get(i).status_text.equals(""))
+                        {
+                            TV_answer_nick.setText(list_mess.get(i).nickName + " {" + list_mess.get(i).status_text + "}");
+                        }
+                        else
+                        {
+                            TV_answer_nick.setText(list_mess.get(i).nickName);
+                        }
                         TV_answer_message.setText(list_mess.get(i).message);
                         color= "#FFFFFF";
                         switch (list_mess.get(i).textType)
@@ -342,31 +358,17 @@
                                 color = "#FFB7AC";
                                 break;
                         }
-                        TV_answer_message.setTextColor(Color.parseColor(color));
-                        switch (list_mess.get(i).rang) {
-                            case "user":
-                                break;
-                            case "moderator":
-                                TV_answer_status.setText("модератор");
-                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                                break;
-                            case "admin":
-                                TV_answer_status.setText("админ");
-                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                                break;
-                            case "head_admin":
-                                TV_answer_status.setText("глав. админ");
-                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                                break;
-                            case "designer":
-                                TV_answer_status.setText("дизайнер");
-                                TV_answer_status.setTextColor(Color.parseColor("#9C27B0"));
-                                break;
-                            case "developer":
-                                TV_answer_status.setText("разработчик");
-                                TV_answer_status.setTextColor(Color.parseColor("#FF0000"));
-                                break;
+
+                        if (!list_mess.get(i).user_color.equals(""))
+                        {
+                            TV_answer_nick.setTextColor(Color.parseColor(list_mess.get(i).user_color));
                         }
+                        else
+                        {
+                            TV_answer_nick.setTextColor(Color.parseColor(color));
+                        }
+
+                        TV_answer_message.setTextColor(Color.parseColor(color));
                     }
                 }
 
@@ -383,6 +385,15 @@
                     case "last_message":
                         color = "#FFB7AC";
                         break;
+                }
+
+                if (!list_mess.get(position).user_color.equals(""))
+                {
+                    TV_nick.setTextColor(Color.parseColor(list_mess.get(position).user_color));
+                }
+                else
+                {
+                    TV_nick.setTextColor(Color.parseColor(color));
                 }
 
                 TV_message.setTextColor(Color.parseColor(color));

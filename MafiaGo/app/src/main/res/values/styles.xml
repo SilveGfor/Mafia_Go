@@ -13,7 +13,7 @@
         <item name="ic_friends">@drawable/ic_friends_light</item>
         <item name="ic_vk">@drawable/ic_vk_light</item>
         <item name="ic_telegram">@drawable/ic_telegram_light</item>
-        <item name="color_black_edit_text">#424242</item>
+        <item name="color_black_edit_text">#80424242</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.AppCompat.NoActionBar">
@@ -29,6 +29,6 @@
         <item name="ic_friends">@drawable/friends</item>
         <item name="ic_vk">@drawable/ic_vk</item>
         <item name="ic_telegram">@drawable/ic_telegram</item>
-        <item name="color_black_edit_text">#000000</item>
+        <item name="color_black_edit_text">#80000000</item>
     </style>
 </resources>

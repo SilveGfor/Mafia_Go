@@ -5,6 +5,8 @@ import com.mafiago.enums.Role;
 public class UserModel {
     private String nick;
     private String avatar;
+    public String status;
+    public String user_color;
     Role animation_type;
     private boolean alive, checked;
     private Role role;
@@ -23,6 +25,14 @@ public class UserModel {
     public UserModel(String nick, Boolean alive) {
         this.nick = nick;
         this.alive = alive;
+    }
+
+    //для SmallChat
+    public UserModel(String nick, String avatar, String status, String user_color) {
+        this.nick = nick;
+        this.avatar = avatar;
+        this.status = status;
+        this.user_color = user_color;
     }
 
     public String getAvatar() {

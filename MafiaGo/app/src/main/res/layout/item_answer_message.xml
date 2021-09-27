@@ -17,6 +17,7 @@
         android:textColor="#FF0000"
         android:textSize="14sp"
         android:visibility="gone"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_nick"
@@ -58,6 +59,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/colorWhite"
         android:textSize="14sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/itemAnswerMessage_avatar"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -109,6 +111,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:text="Vlan_Vor"
+            android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/colorWhite"
             android:textSize="14sp"
