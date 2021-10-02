@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -49,12 +50,10 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
     public ListView friendsView;
 
-    public Button btnExit;
     public ImageView Menu;
-
     public TextView TV_no_friends;
-
     public ProgressBar PB_loading;
+    RelativeLayout btn_back;
 
     public FriendsAdapter friendsAdapter;
 
@@ -71,6 +70,13 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
         tabLayout = view.findViewById(R.id.fragmentFriends_tabLayout);
         viewPager = view.findViewById(R.id.fragmentFriends_viewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+
+        socket.off("get_friend");
+        socket.off("get_friend_request");
+        socket.off("accept_friend_request_to_me");
+        socket.off("user_error");
+        socket.off("get_my_friend_request");
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -112,75 +118,13 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
         // Передаём ViewPager в TabLayout
         tabLayout.setupWithViewPager(viewPager);
-/*
-        friendsView = view.findViewById(R.id.fragmentFriends_list_friends);
-        btnExit = view.findViewById(R.id.fragmentFriends_btn_exit);
-        TV_no_friends = view.findViewById(R.id.fragmentFriends_TV_no_friends);
-        PB_loading = view.findViewById(R.id.fragmentFriends_PB_loading);
 
-        friendsAdapter = new FriendsAdapter(list_friends, getContext());
-        friendsView.setAdapter(friendsAdapter);
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-        builder.setView(viewDang);
-        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-        TV_title.setText("Опасная зона!");
-        TV_error.setText("Друзья все еще разрабатываются, ими можно пользоваться, но некоторые функции и внешний вид могут не соответствовать ожиданиям");
-
-        AlertDialog alert = builder.create();
-        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        alert.show();
-
-        PB_loading.setVisibility(View.VISIBLE);
-        TV_no_friends.setVisibility(View.GONE);
-
-        json = new JSONObject();
-        try {
-            json.put("nick", MainActivity.NickName);
-            json.put("session_id", MainActivity.Session_id);
-            json.put("request_type", "other");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        socket.emit("get_list_of_friend_requests", json);
-        Log.d("kkk", "Socket_отправка - get_list_of_friend_requests - "+ json.toString());
-
-        json = new JSONObject();
-        try {
-            json.put("nick", MainActivity.NickName);
-            json.put("session_id", MainActivity.Session_id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        socket.emit("get_list_of_friends", json);
-        Log.d("kkk", "Socket_отправка - get_list_of_friends - "+ json.toString());
-
-        socket.off("get_friend");
-        socket.off("get_friend_request");
-        socket.off("accept_friend_request_to_me");
-        socket.off("user_error");
-        //socket.off("get_my_friend_request");
-
-        socket.on("get_friend", OnGetFriend);
-        socket.on("get_friend_request", OnGetFriendRequest);
-        socket.on("accept_friend_request_to_me", OnAcceptFriendRequestToMe);
-        socket.on("user_error", OnUserError);
-        //socket.on("get_my_friend_request", OnGetMyFriendRequest);
-
-        friendsView.setOnItemClickListener((parent, view1, position, id) -> {
-            MainActivity.User_id_2 = list_friends.get(position).user_id_2;
-            MainActivity.NickName_2 = list_friends.get(position).nick;
-            MainActivity.bitmap_avatar_2 = fromBase64(list_friends.get(position).avatar);
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            }
         });
-
-        btnExit.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-        });
-
- */
 
         return view;
     }
@@ -198,11 +142,6 @@ public class FriendsFragment extends Fragment implements OnBackPressedListener {
 
     @Override
     public void onBackPressed() {
-        socket.off("get_friend");
-        socket.off("get_friend_request");
-        socket.off("accept_friend_request_to_me");
-        socket.off("user_error");
-        socket.off("get_my_friend_request");
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
     }
 

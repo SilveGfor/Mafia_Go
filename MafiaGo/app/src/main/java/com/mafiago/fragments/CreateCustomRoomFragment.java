@@ -24,6 +24,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -60,6 +61,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
     SwitchCompat swith_password;
     EditText ET_password;
     ImageView Menu;
+    RelativeLayout btn_back;
 
     public android.widget.GridView gridView;
 
@@ -95,6 +97,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
         TV_question = view.findViewById(R.id.fragmentCreateCustomRoom_TV_question);
         swith_password = view.findViewById(R.id.fragmentCreateCustomRoom_Swith_password);
         ET_password = view.findViewById(R.id.fragmentCreateCustomRoom_ET_password);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         RSB_num_users = view.findViewById(R.id.fragmentCreateCustomRoom_PSB_playerNum);
 
@@ -582,6 +585,16 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
 
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+                editor.apply();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateRoomFragment()).commit();
+            }
         });
 
         return view;

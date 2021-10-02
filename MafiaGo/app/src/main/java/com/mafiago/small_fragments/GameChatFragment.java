@@ -477,7 +477,7 @@ public class GameChatFragment extends Fragment {
                         status = data.getString("user_status");
                         user_color = data.getString("user_color");
                         list_users.add(new UserModel(nick, avatar, status, user_color));
-                        Log.e("kkk", "getInDeadRoom GameChatFragment " + args[0]);
+                        Log.e("kkk", "getInDeadRoom GameChatFragment " + user_color + args[0]);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

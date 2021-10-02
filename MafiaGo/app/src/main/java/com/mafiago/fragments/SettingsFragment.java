@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -52,6 +53,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
     TabLayout tab;
     ViewPager viewPager;
     ImageView Menu;
+    RelativeLayout btn_back;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,6 +64,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         tab = view.findViewById(R.id.fragmentSettings_TabLayout);
         viewPager = view.findViewById(R.id.fragmentSettings_ViewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,8 +105,12 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         // Передаём ViewPager в TabLayout
         tab.setupWithViewPager(viewPager);
 
-
-
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            }
+        });
 
         return  view;
     }

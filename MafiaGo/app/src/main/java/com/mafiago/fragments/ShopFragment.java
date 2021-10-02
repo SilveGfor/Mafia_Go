@@ -1,5 +1,6 @@
 package com.mafiago.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -16,8 +17,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.example.mafiago.R;
 import com.google.android.material.tabs.TabLayout;
 import com.mafiago.classes.OnBackPressedListener;
@@ -26,6 +37,9 @@ import com.mafiago.pager_adapters.ShopPagerAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import io.socket.emitter.Emitter;
 
@@ -36,6 +50,20 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
     ImageView Menu;
     TabLayout tab;
     ViewPager viewPager;
+    RelativeLayout btn_back;
+
+    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
+        @Override
+        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+            // To be implemented in a later section.
+        }
+    };
+
+    private BillingClient billingClient = BillingClient.newBuilder(getActivity())
+            .setListener(purchasesUpdatedListener)
+            .enablePendingPurchases()
+            .build();
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -46,6 +74,7 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
         tab = view.findViewById(R.id.fragmentShop_TabLayout);
         viewPager = view.findViewById(R.id.fragmentShop_ViewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         // Получаем ViewPager и устанавливаем в него адаптер
         viewPager.setAdapter(
@@ -55,6 +84,35 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
         tab.setupWithViewPager(viewPager);
 
         viewPager.setCurrentItem(1);
+
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    List<String> skuList = new ArrayList<>();
+                    skuList.add("premium_upgrade");
+                    skuList.add("gas");
+                    SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                    params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+                    billingClient.querySkuDetailsAsync(params.build(),
+                            new SkuDetailsResponseListener() {
+                                @Override
+                                public void onSkuDetailsResponse(BillingResult billingResult,
+                                                                 List<SkuDetails> skuDetailsList) {
+                                    // Process the result.
+                                }
+                            });
+
+                }
+            }
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        });
+
 
         socket.off("user_error");
         socket.off("get_store");
@@ -91,6 +149,24 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
                     }
                 });
                 popup_menu.show();
+            }
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                // An activity reference from which the billing flow will be launched.
+                Activity activity = getActivity();
+
+                // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
+                SkuDetails skuDetails = SkuDetails
+                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                        .setSkuDetails(skuDetails)
+                        .build();
+                int responseCode = billingClient.launchBillingFlow(activity, billingFlowParams).getResponseCode();
+                // Handle the result.
+
             }
         });
 

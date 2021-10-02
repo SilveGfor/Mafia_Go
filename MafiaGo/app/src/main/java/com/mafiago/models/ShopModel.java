@@ -24,10 +24,17 @@ public class ShopModel {
         this.num = num;
     }
 
+    //для статусов
     public ShopModel(String type, ArrayList<ShopModel> list_usual_prices, String[] list_meaning, ArrayList<ShopModel> list_premium_prices) {
         this.type = type;
         this.list_usual_prices = list_usual_prices;
         this.list_premium_prices = list_premium_prices;
+        this.list_meaning = list_meaning;
+    }
+    //для цветов и конвертации, где не нужен list_premium_prices
+    public ShopModel(String type, ArrayList<ShopModel> list_usual_prices, String[] list_meaning) {
+        this.type = type;
+        this.list_usual_prices = list_usual_prices;
         this.list_meaning = list_meaning;
     }
 }

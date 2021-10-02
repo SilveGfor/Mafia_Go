@@ -57,7 +57,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
 
     public ImageView IV_avatar;
-    public ImageView IV_back;
+    RelativeLayout btn_back;
     public ImageView Menu;
     public ImageView IV_ban;
 
@@ -81,7 +81,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_private_chat, container, false);
         LV_chat = view.findViewById(R.id.fragmentPrivateChat_LV_chat);
-        IV_back = view.findViewById(R.id.fragmentPrivateChat_IV_back);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         ET_input = view.findViewById(R.id.fragmentPrivateChat_ET_message);
 
         btnEdit = view.findViewById(R.id.fragmentPrivateChat_btn_edit);
@@ -327,7 +327,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
             }
         });
 
-        IV_back.setOnClickListener(v -> {
+        btn_back.setOnClickListener(v -> {
             MainActivity.User_id_2 = "";
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
         });

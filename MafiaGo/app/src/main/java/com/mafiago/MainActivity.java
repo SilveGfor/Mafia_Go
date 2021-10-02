@@ -24,6 +24,7 @@ import android.view.View;
 
 import com.example.mafiago.R;
 
+import com.google.android.gms.ads.MobileAds;
 import com.mafiago.classes.BackgroundTask;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.fragments.GameFragment;
@@ -52,6 +53,11 @@ import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.TlsVersion;
+
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 
   public class MainActivity extends AppCompatActivity implements GameFragment.OnUserSelectedListener {
 
@@ -115,23 +121,19 @@ import okhttp3.TlsVersion;
         else {
             Log.e("kkk", "ok2");
             fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
-            //fragment.ET_message.append();
             fragment.ET_message.setSelection(fragment.ET_message.length());
         }
 
         fragment = mPageReferenceMap.get(1);
         if (fragment == null) {
-            Log.e("kkk", "ok1");
         }
         else {
-            Log.e("kkk", "ok2");
             fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
-            //fragment.ET_message.append();
             fragment.ET_message.setSelection(fragment.ET_message.length());
         }
       }
 
-public static Socket socket;
+    public static Socket socket;
     {
         IO.Options options = IO.Options.builder()
                 .setReconnection(true)
@@ -145,7 +147,6 @@ public static Socket socket;
     }
 
       private int currentApiVersion;
-
 
       /*
       @SuppressLint("NewApi")
@@ -166,7 +167,6 @@ public static Socket socket;
       }
        */
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -178,12 +178,17 @@ public static Socket socket;
         {
             setTheme(R.style.LightTheme);
         }
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        socket.connect();
+        super.onCreate(savedInstanceState);
 
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+            }
+        });
+
+        socket.connect();
 
         final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
@@ -191,18 +196,12 @@ public static Socket socket;
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+        currentApiVersion = android.os.Build.VERSION.SDK_INT;
 
-        // This work only for android 4.4+
 
-        /*
         if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
         {
-
             getWindow().getDecorView().setSystemUiVisibility(flags);
-
-            // Code below is to handle presses of Volume up or Volume down.
-            // Without this, after pressing volume buttons, the navigation bar will
-            // show up and won't hide
             final View decorView = getWindow().getDecorView();
             decorView
                     .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
@@ -218,8 +217,6 @@ public static Socket socket;
                         }
                     });
         }
-         */
-
 
         /*
         int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
@@ -318,6 +315,7 @@ public static Socket socket;
         createNotificationChannel();
 
         getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+
     }
 
     @Override
@@ -355,7 +353,7 @@ public static Socket socket;
         FragmentManager fm = getSupportFragmentManager();
         OnBackPressedListener backPressedListener = null;
         for (Fragment fragment: fm.getFragments()) {
-            if (fragment instanceof  OnBackPressedListener) {
+            if (fragment instanceof OnBackPressedListener) {
                 backPressedListener = (OnBackPressedListener) fragment;
                 break;
             }

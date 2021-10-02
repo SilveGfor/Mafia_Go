@@ -37,14 +37,12 @@ public class RulesSmallFragment extends Fragment {
 
     private int mPage;
 
-    Button btn_exitRules;
     ViewPager viewPager;
 
     ////////////////
 
     List<RuleModel> models;
     Integer[] colors = null;
-    ArgbEvaluator argbEvaluator = new ArgbEvaluator();
 
     RulesAdapter rules_adapter;
 
@@ -77,14 +75,10 @@ public class RulesSmallFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_rules_small, container, false);
 
-        btn_exitRules = view.findViewById(R.id.fragmentRulesSmall_btn_exitRules);
         viewPager = view.findViewById(R.id.fragmentRulesSmall_ViewPager);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        btn_exitRules.setOnClickListener(v -> {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-        });
 
         models = new ArrayList<>();
 

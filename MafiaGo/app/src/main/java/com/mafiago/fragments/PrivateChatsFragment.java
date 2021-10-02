@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.mafiago.MainActivity;
@@ -49,6 +50,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
     public ProgressBar PB_loading;
     public ImageView Menu;
+    RelativeLayout btn_back;
 
     public PrivateChatsAdapter privateChatsAdapter;
 
@@ -62,6 +64,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
         friendsView = view.findViewById(R.id.fragmentPrivateChat_list_friends);
         TV_no_chats = view.findViewById(R.id.fragmentPrivateChat_TV_no_chats);
         PB_loading = view.findViewById(R.id.fragmentPrivateChat_PB_loading);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
 
         Menu.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +141,13 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
             MainActivity.NickName_2 = list_friends.get(position).getNick();
             MainActivity.bitmap_avatar_2 = fromBase64(list_friends.get(position).getAvatar());
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateMessagesFragment()).commit();
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            }
         });
 
         return view;

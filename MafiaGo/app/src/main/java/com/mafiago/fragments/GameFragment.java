@@ -29,6 +29,7 @@ import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -85,6 +86,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public ImageView IV_influence_bodyguard;
     public ImageView IV_influence_poisoner;
     public ImageView Menu;
+    RelativeLayout btn_back;
 
     public ConstraintLayout Constrain;
 
@@ -137,7 +139,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     // Container Activity must implement this interface
     public interface OnUserSelectedListener {
-        public void onUserSelected(String nick);
+        void onUserSelected(String nick);
     }
 
     @Override
@@ -170,6 +172,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         TV_peaceful_count = view.findViewById(R.id.fragmentGame_TV_peacefulCount);
         TV_playersCount = view.findViewById(R.id.fragmentGame_TV_playersCount);
         TV_playersMinMaxInfo = view.findViewById(R.id.fragmentGame_TV_playersMinMaxInfo);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         timer = view.findViewById(R.id.fragmentGame_TV_timer);
         dayTime = view.findViewById(R.id.fragmentGame_TV_dayTime);
@@ -655,6 +658,55 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     break;
             }
         });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (player.getTime() == Time.LOBBY) {
+                    if (!timer.getText().equals("\u221e")) {
+                        if (Integer.parseInt(String.valueOf(timer.getText())) > 5) {
+                            askToLeave();
+                        }
+                        else
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewError);
+                            AlertDialog alert;
+                            TextView TV_error = viewError.findViewById(R.id.dialogError_TV_errorText);
+                            TV_error.setText("Нельзя выходить за несколько секунд до начала игры!");
+                            alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert.show();
+                        }
+                    }
+                    else
+                    {
+                        askToLeave();
+                    }
+                }
+                else
+                {
+                    if (!player.is_observer) {
+                        askToLeave();
+                    }
+                    else
+                    {
+                        final JSONObject json2 = new JSONObject();
+                        try {
+                            json2.put("nick", MainActivity.NickName);
+                            json2.put("session_id", MainActivity.Session_id);
+                            json2.put("room", player.getRoom_num());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        Log.d("kkk", "Socket_отправка leave_room_observer - " + json2.toString());
+                        socket.emit("leave_room_observer", json2);
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                    }
+                }
+            }
+        });
         return view;
     }
 
@@ -796,7 +848,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
      *                             *
      *******************************/
 
-    private Emitter.Listener onGetInRoom = new Emitter.Listener() {
+    private final Emitter.Listener onGetInRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -843,7 +895,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onLeaveUser = new Emitter.Listener() {
+    private final Emitter.Listener onLeaveUser = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -885,7 +937,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onNewMessage = new Emitter.Listener() {
+    private final Emitter.Listener onNewMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -910,7 +962,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onConnect = new Emitter.Listener() {
+    private final Emitter.Listener onConnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -935,7 +987,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onDisconnect = new Emitter.Listener() {
+    private final Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -950,7 +1002,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     };
 
     //принимает таймер
-    private Emitter.Listener onTimer = new Emitter.Listener() {
+    private final Emitter.Listener onTimer = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -986,7 +1038,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     };
 
     //принимает время дня
-    private Emitter.Listener onTime = new Emitter.Listener() {
+    private final Emitter.Listener onTime = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1143,7 +1195,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     };
 
     //принимает роль
-    private Emitter.Listener onRole = new Emitter.Listener() {
+    private final Emitter.Listener onRole = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1261,7 +1313,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     };
 
     //запускается при падении сервера, чтобы продолжать игру
-    private Emitter.Listener onRestart = new Emitter.Listener() {
+    private final Emitter.Listener onRestart = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1286,7 +1338,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onRoleAction = new Emitter.Listener() {
+    private final Emitter.Listener onRoleAction = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1332,7 +1384,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onKnowRole = new Emitter.Listener() {
+    private final Emitter.Listener onKnowRole = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1363,7 +1415,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onSystemMessage = new Emitter.Listener() {
+    private final Emitter.Listener onSystemMessage = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1717,7 +1769,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onMafias = new Emitter.Listener() {
+    private final Emitter.Listener onMafias = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -1739,10 +1791,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             {
                                 if (list_users.get(i).getNick().equals(nick))
                                 {
-                                    if (role == Role.MAFIA_DON)
-                                    {
-
-                                    }
                                     list_users.get(i).setRole(role);
                                 }
                             }
@@ -1756,7 +1804,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };  
 
-    private Emitter.Listener onGetMyGameInfo = new Emitter.Listener()  {
+    private final Emitter.Listener onGetMyGameInfo = new Emitter.Listener()  {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -2046,7 +2094,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onSuccessGetInRoom = new Emitter.Listener() {
+    private final Emitter.Listener onSuccessGetInRoom = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -2071,7 +2119,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         }
     };
 
-    private Emitter.Listener onSuccessGetInRoomObserver = new Emitter.Listener() {
+    private final Emitter.Listener onSuccessGetInRoomObserver = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)
@@ -2650,7 +2698,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         });
     };
 
-    private Emitter.Listener onDailyTaskCompleted = new Emitter.Listener() {
+    private final Emitter.Listener onDailyTaskCompleted = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
             if(getActivity() == null)

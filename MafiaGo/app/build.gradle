@@ -19,7 +19,7 @@ android {
         applicationId 'com.mafiago'
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 10
+        versionCode 12
         versionName '0.1.0'
 
         vectorDrawables.useSupportLibrary = true
@@ -59,14 +59,15 @@ dependencies {
     implementation 'com.android.support:support-v4:30.0.0'
     implementation 'com.android.support:design:30.0.0'
     implementation 'com.android.support:cardview-v7:30.0.0'
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-
+    implementation 'com.google.android.gms:play-services-auth:19.2.0'
 
     implementation 'com.romainpiel.shimmer:library:1.4.0@aar'
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     implementation 'com.google.android.gms:play-services-ads:20.2.0'
+    implementation "com.android.billingclient:billing:4.0.0"
+
 
     implementation ('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'

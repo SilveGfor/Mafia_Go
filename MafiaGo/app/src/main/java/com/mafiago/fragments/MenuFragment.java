@@ -28,6 +28,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,6 +68,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     Button btnGames;
     Button btnTools;
     Button btnDailyTasks;
+    RelativeLayout btn_back;
 
     TextView TV_money;
     TextView TV_exp;
@@ -133,14 +135,16 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         PB_loading = view.findViewById(R.id.fragmentMenu_PB);
         btnDailyTasks = view.findViewById(R.id.fragmentMenu_btn_dailyTasks);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        AdRequest adRequest = new AdRequest.Builder().build();
+
 
 /*
-
         RewardedAd mRewardedAd;
 
         AdRequest adRequest = new AdRequest.Builder().build();
@@ -199,9 +203,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         }
 
  */
-
-
-
 
         //TODO: Сделать что-то про последнюю роль
         //SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
@@ -375,6 +376,14 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
             }
         });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finishAffinity();
+            }
+        });
+
         return view;
     }
 

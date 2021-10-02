@@ -137,7 +137,7 @@ public class SmallShopFragment extends Fragment {
                 LV_premium.setAdapter(premiumAdapter);
 
                 //socket.on("get_store", OnGetPremiumStore);
-                socket.on("buy_item", OnBuyPremiumItem);
+                //socket.on("buy_item", OnBuyPremiumItem);
                 //socket.on("user_error", onUserError);
 
                 premiumAdapter.notifyDataSetChanged();
@@ -153,7 +153,6 @@ public class SmallShopFragment extends Fragment {
             @Override
             public void run() {
                 if (args.length != 0 && list_gold.size() == 0) {
-                    socket.off("get_store", OnGetGoldStore);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONArray gold_array;
@@ -191,7 +190,6 @@ public class SmallShopFragment extends Fragment {
             @Override
             public void run() {
                 if (args.length != 0 && list_premium.size() == 0) {
-                    socket.off("get_store", OnGetPremiumStore);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONArray gold_array;
@@ -228,7 +226,6 @@ public class SmallShopFragment extends Fragment {
             @Override
             public void run() {
                 if (args.length != 0 && list_shop.size() == 0) {
-                    socket.off("get_store", OnGetMainStore);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_store - " + data);
                     JSONObject JO_price;
@@ -251,6 +248,20 @@ public class SmallShopFragment extends Fragment {
                     JSONArray JA_usual_colors_prices;
                     String[] list_colors;
                     ArrayList<ShopModel> list_prices_colors = new ArrayList();
+
+                    //
+
+                    JSONObject JO_conversion_common_data;
+
+                    JSONArray JA_conversion_money_data;
+                    String[] list_money_conversion;
+                    ArrayList<ShopModel> list_prices_money = new ArrayList();
+
+                    //
+
+                    JSONArray JA_conversion_exp_data;
+                    String[] list_exp_conversion;
+                    ArrayList<ShopModel> list_prices_exp = new ArrayList();
 
                     String description = "", transaction_description = "", sale_amount = "", amount = "";
                     int price = 0;
@@ -317,7 +328,44 @@ public class SmallShopFragment extends Fragment {
                             list_prices_colors.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_colors.size()));
                         }
 
-                        list_shop.add(new ShopModel("buy_color", list_prices_colors, list_colors, new ArrayList<ShopModel>()));
+                        list_shop.add(new ShopModel("buy_color", list_prices_colors, list_colors));
+
+                        /////////////////
+
+                        JO_conversion_common_data = JO_general_data.getJSONObject("conversion");
+                        JA_conversion_money_data = JO_conversion_common_data.getJSONArray("money");
+
+                        list_money_conversion = new String[JA_conversion_money_data.length()];
+                        for (int i = 0; i < JA_conversion_money_data.length(); i++)
+                        {
+                            JO_price = JA_conversion_money_data.getJSONObject(i);
+                            description = JO_price.getString("description");
+                            price = JO_price.getInt("price");
+                            is_sale = JO_price.getBoolean("is_sale");
+                            sale_amount = JO_price.getString("sale_amount");
+                            list_money_conversion[i] = JO_price.getString("money");
+                            list_prices_money.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_money.size()));
+                        }
+
+                        list_shop.add(new ShopModel("convert_money", list_prices_money, list_money_conversion));
+
+                        /////////////////
+
+                        JA_conversion_exp_data = JO_conversion_common_data.getJSONArray("exp");
+
+                        list_exp_conversion = new String[JA_conversion_exp_data.length()];
+                        for (int i = 0; i < JA_conversion_exp_data.length(); i++)
+                        {
+                            JO_price = JA_conversion_exp_data.getJSONObject(i);
+                            description = JO_price.getString("description");
+                            price = JO_price.getInt("price");
+                            is_sale = JO_price.getBoolean("is_sale");
+                            sale_amount = JO_price.getString("sale_amount");
+                            list_exp_conversion[i] = JO_price.getString("exp");
+                            list_prices_exp.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_exp.size()));
+                        }
+
+                        list_shop.add(new ShopModel("convert_exp", list_prices_exp, list_exp_conversion));
 
                         shopAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {

@@ -142,7 +142,6 @@ public class StartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
-                    //final String[] userss = {ETemail.getText().toString(), ETpassword.getText().toString()};
                     MainActivity.nick = ETemail.getText().toString();
                     MainActivity.password = ETpassword.getText().toString();
                     SharedPreferences.Editor editor = mSettings.edit();
@@ -223,7 +222,6 @@ public class StartFragment extends Fragment {
             Request request = new Request.Builder()
                     .url(url).post(body)
                     .build();
-
 
             Call call = client.newCall(request);
             call.enqueue(new Callback() {

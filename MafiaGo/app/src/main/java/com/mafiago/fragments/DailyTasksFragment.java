@@ -2,6 +2,7 @@ package com.mafiago.fragments;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -44,6 +46,7 @@ public class DailyTasksFragment extends Fragment implements OnBackPressedListene
     ListView LV_tasks;
     ProgressBar PB_loading;
     ImageView Menu;
+    RelativeLayout btn_back;
 
     DailyTasksAdapter dailyTasksAdapter;
     ArrayList<DailyTaskModel> list_tasks = new ArrayList<>();
@@ -55,6 +58,7 @@ public class DailyTasksFragment extends Fragment implements OnBackPressedListene
 
         LV_tasks = view.findViewById(R.id.fragmentDailyTasks_LV_tasks);
         PB_loading = view.findViewById(R.id.fragmentDailyTasks_PB);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         dailyTasksAdapter = new DailyTasksAdapter(list_tasks, getContext());
         LV_tasks.setAdapter(dailyTasksAdapter);
@@ -104,6 +108,13 @@ public class DailyTasksFragment extends Fragment implements OnBackPressedListene
         }
         socket.emit("get_daily_tasks", json);
         Log.d("kkk", "Socket_отправка - get_daily_tasks - "+ json.toString());
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            }
+        });
 
         return view;
     }

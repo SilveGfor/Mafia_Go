@@ -1126,9 +1126,10 @@ public class SettingsMainFragment extends Fragment {
                     // Вызываем адаптер
                     spinner2.setAdapter(spinnerArrayAdapter);
 
-                    for (int k = 0; k < list_colors.length; k++) {
-                        if (list_colors[k].equals(main_personal_color)) {
+                    for (int k = 1; k < list_colors_words.length - 1; k++) {
+                        if (list_colors[k - 1].equals(main_personal_color)) {
                             spinner2.setSelection(k);
+                            break;
                         }
                     }
 
@@ -1164,6 +1165,11 @@ public class SettingsMainFragment extends Fragment {
                             {
                                 TV_nick.setTextColor(Color.parseColor(list_colors[position]));
                             }
+                            else
+                            {
+                                TV_nick.setTextColor(Color.parseColor("#FFFFFF"));
+                            }
+
                         }
 
                         @Override

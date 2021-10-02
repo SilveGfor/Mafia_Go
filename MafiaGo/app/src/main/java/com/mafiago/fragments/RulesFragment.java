@@ -13,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
@@ -36,6 +37,7 @@ public class RulesFragment extends Fragment implements OnBackPressedListener {
     TabLayout tab;
     NonSweepViewPager viewPager;
     ImageView Menu;
+    RelativeLayout btn_back;
 
     Button Back1;
 
@@ -48,6 +50,7 @@ public class RulesFragment extends Fragment implements OnBackPressedListener {
         tab = view.findViewById(R.id.fragmentRules_TabLayout);
         viewPager = view.findViewById(R.id.fragmentRules_ViewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +90,13 @@ public class RulesFragment extends Fragment implements OnBackPressedListener {
 
         // Передаём ViewPager в TabLayout
         tab.setupWithViewPager(viewPager);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            }
+        });
 
 
         return view;

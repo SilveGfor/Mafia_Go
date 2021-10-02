@@ -100,58 +100,124 @@ public class ShopAdapter extends BaseAdapter {
                 });
                 break;
             case "convert_money":
-                view = layout.inflate(R.layout.item_shopping, null);
-                btnBuy = view.findViewById(R.id.itemShopping_btn_buy);
-                TV_title = view.findViewById(R.id.itemShopping_TV_title);
-                TV_cost = view.findViewById(R.id.itemBuyStatus_TV_price);
-                IV = view.findViewById(R.id.itemShopping_IV);
+                view = layout.inflate(R.layout.item_convert_money, null);
+                btnBuy = view.findViewById(R.id.itemConvertMoney_btn_buy);
+                TV_title = view.findViewById(R.id.itemConvertMoney_TV_title);
+                TV_cost = view.findViewById(R.id.itemConvertMoney_TV_price);
+                Spinner spinner_convert = view.findViewById(R.id.itemConvertMoney_Spinner);
+                TextView TV_desc_convert = view.findViewById(R.id.itemConvertMoney_TV_desc);
+                IV = view.findViewById(R.id.itemConvertMoney_IV);
 
-                TV_cost.setText("Стоимость: " + list_shop.get(position).price + "₽");
+                ArrayAdapter<String> spinnerArrayAdapter_convert = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).list_meaning);
+                spinner_convert.setAdapter(spinnerArrayAdapter_convert);
 
-                IV.setImageResource(R.drawable.convert_money_light);
-                TV_title.setText("Конвертировать золото в монеты");
+                spinner_convert.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
+                        TV_cost.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " золота");
+                        num_item[0] = position2;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
                 btnBuy.setOnClickListener(v -> {
-                    final JSONObject json = new JSONObject();
-                    try {
-                        json.put("nick", MainActivity.NickName);
-                        json.put("session_id", MainActivity.Session_id);
-                        json.put("store_type", "gold");
-                        json.put("item", list_shop.get(position).num);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    socket.emit("buy_item", json);
-                    Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                    builder.setView(viewQuestion);
+                    AlertDialog alert = builder.create();
+                    TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                    Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                    Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                    TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                    btn_yes.setOnClickListener(v1 -> {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("store_type", "general");
+                            json.put("dop_type", "conversion");
+                            json.put("conversion_type", "money");
+                            json.put("item", num_item[0]);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("buy_item", json);
+                        Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                        alert.cancel();
+                    });
+                    btn_no.setOnClickListener(v12 -> {
+                        alert.cancel();
+                    });
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                 });
                 break;
-            case "convert_XP":
-                view = layout.inflate(R.layout.item_shopping, null);
-                btnBuy = view.findViewById(R.id.itemShopping_btn_buy);
-                TV_title = view.findViewById(R.id.itemShopping_TV_title);
-                TV_cost = view.findViewById(R.id.itemBuyStatus_TV_price);
-                IV = view.findViewById(R.id.itemShopping_IV);
+            case "convert_exp":
+                view = layout.inflate(R.layout.item_convert_money, null);
 
-                TV_cost.setText("Стоимость: " + list_shop.get(position).price + "₽");
+                btnBuy = view.findViewById(R.id.itemConvertMoney_btn_buy);
+                TV_title = view.findViewById(R.id.itemConvertMoney_TV_title);
+                TV_cost = view.findViewById(R.id.itemConvertMoney_TV_price);
+                spinner_convert = view.findViewById(R.id.itemConvertMoney_Spinner);
+                TV_desc_convert = view.findViewById(R.id.itemConvertMoney_TV_desc);
+                IV = view.findViewById(R.id.itemConvertMoney_IV);
 
-                IV.setImageResource(R.drawable.convert_money_light);
-                TV_title.setText("Конвертировать золото в опыт");
+                TV_desc_convert.setText("Вы можете конвертировать золото в опыт. Выберите количество опыта, которое вы хотите получить");
+                TV_title.setText("Конвертация золота в опыт");
+                IV.setImageResource(R.drawable.convert_xp_light);
+
+                spinnerArrayAdapter_convert = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).list_meaning);
+                spinner_convert.setAdapter(spinnerArrayAdapter_convert);
+
+                spinner_convert.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
+                        TV_cost.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " золота");
+                        num_item[0] = position2;
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
 
                 btnBuy.setOnClickListener(v -> {
-                    final JSONObject json = new JSONObject();
-                    try {
-                        json.put("nick", MainActivity.NickName);
-                        json.put("session_id", MainActivity.Session_id);
-                        json.put("store_type", "gold");
-                        json.put("item", list_shop.get(position).num);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    socket.emit("buy_item", json);
-                    Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                    builder.setView(viewQuestion);
+                    AlertDialog alert = builder.create();
+                    TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                    Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                    Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                    TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                    btn_yes.setOnClickListener(v1 -> {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("store_type", "general");
+                            json.put("dop_type", "conversion");
+                            json.put("conversion_type", "exp");
+                            json.put("item", num_item[0]);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("buy_item", json);
+                        Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                        alert.cancel();
+                    });
+                    btn_no.setOnClickListener(v12 -> {
+                        alert.cancel();
+                    });
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                 });
                 break;
-
             case "buy_status":
                 view = layout.inflate(R.layout.item_buy_status, null);
 

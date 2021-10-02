@@ -7,30 +7,50 @@
     tools:context="com.mafiago.fragments.ShopFragment"
     android:background="?attr/background">
 
+    <RelativeLayout
+        android:id="@+id/fragmentGamesList_RL_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/smallFragmentFriendsList_btn_back"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_back"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/fragmentMenu_IV_menu"
         android:layout_width="42dp"
         android:layout_height="23dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="24dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_roomName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_roomName"
         app:srcCompat="@drawable/three_lines" />
 
     <TextView
         android:id="@+id/fragmentGame_TV_roomName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Магазин"
         android:textColor="@color/white"
         android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_menu"
-        app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_menu"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_RL_back"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_menu"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_RL_back"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_RL_back" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/fragmentShop_TabLayout"
@@ -74,4 +94,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentShop_TabLayout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

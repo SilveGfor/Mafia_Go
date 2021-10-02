@@ -2,6 +2,7 @@ package com.mafiago.adapters;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -74,8 +75,21 @@ public class GoldAdapter extends BaseAdapter {
                 break;
         }
 
-
         btnBuy.setOnClickListener(v -> {
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
+            builder2.setTitle("В разработке...")
+                    .setMessage("")
+                    .setIcon(R.drawable.ic_razrabotka)
+                    .setCancelable(false)
+                    .setNegativeButton("Ок",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alert2 = builder2.create();
+            alert2.show();
+            /*
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
             builder.setView(viewQuestion);
@@ -103,6 +117,7 @@ public class GoldAdapter extends BaseAdapter {
             });
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
+             */
         });
         return view;
     }
