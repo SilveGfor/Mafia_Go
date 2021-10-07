@@ -48,7 +48,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/orange_button"
         android:text="сообщить об ошибке"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsMain_btn_showRole"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_study"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -88,18 +88,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />
 
-    <Button
-        android:id="@+id/fragmentSettingsMain_btn_showRole"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/grey_button"
-        android:padding="15dp"
-        android:text="показывать роль"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_study"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
-        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeAvatar" />
-
     <TextView
         android:id="@+id/fragmentSettingsMain_TV_privacyPolicy"
         android:layout_width="wrap_content"
@@ -117,25 +105,4 @@
         app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsMain_TV_privacyPolicy"
         app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeNick" />
 
-    <TextView
-        android:id="@+id/fragmentSettingsMain_TV_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="SilveGfor: Привет!"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsProfile_btn_changeAvatar"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/fragmentSettingsMain_TV_role"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Разработчик"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentSettingsMain_TV_message"
-        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsMain_TV_message" />
 </androidx.constraintlayout.widget.ConstraintLayout>

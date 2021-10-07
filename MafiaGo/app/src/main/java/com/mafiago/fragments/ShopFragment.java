@@ -7,6 +7,8 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
@@ -19,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
@@ -52,19 +55,6 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
     ViewPager viewPager;
     RelativeLayout btn_back;
 
-    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
-        @Override
-        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-            // To be implemented in a later section.
-        }
-    };
-
-    private BillingClient billingClient = BillingClient.newBuilder(getActivity())
-            .setListener(purchasesUpdatedListener)
-            .enablePendingPurchases()
-            .build();
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,39 +75,11 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
 
         viewPager.setCurrentItem(1);
 
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
-                if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
-                    // The BillingClient is ready. You can query purchases here.
-                    List<String> skuList = new ArrayList<>();
-                    skuList.add("premium_upgrade");
-                    skuList.add("gas");
-                    SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
-                    params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
-                    billingClient.querySkuDetailsAsync(params.build(),
-                            new SkuDetailsResponseListener() {
-                                @Override
-                                public void onSkuDetailsResponse(BillingResult billingResult,
-                                                                 List<SkuDetails> skuDetailsList) {
-                                    // Process the result.
-                                }
-                            });
-
-                }
-            }
-            @Override
-            public void onBillingServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-            }
-        });
-
-
         socket.off("user_error");
         socket.off("get_store");
         socket.off("buy_item");
 
+        socket.on("buy_item", OnBuyItem);
         socket.on("user_error", onUserError);
 
         Menu.setOnClickListener(new View.OnClickListener() {
@@ -155,23 +117,13 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-                // An activity reference from which the billing flow will be launched.
-                Activity activity = getActivity();
-
-                // Retrieve a value for "skuDetails" by calling querySkuDetailsAsync().
-                SkuDetails skuDetails = SkuDetails
-                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
-                        .setSkuDetails(skuDetails)
-                        .build();
-                int responseCode = billingClient.launchBillingFlow(activity, billingFlowParams).getResponseCode();
-                // Handle the result.
-
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
             }
         });
 
         return view;
     }
+
     @Override
     public void onBackPressed() {
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
@@ -239,5 +191,37 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
                 }
             });
         }
+    };
+
+    private final Emitter.Listener OnBuyItem = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (args.length != 0) {
+                    String status = (String) args[0];
+                    Log.d("kkk", "buy_item " + status);
+                    if (status.equals("OK"))
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder.setView(viewError);
+                        AlertDialog alert;
+                        alert = builder.create();
+
+                        TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                        TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                        ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                        IV.setImageResource(R.drawable.crown_gold_dark);
+                        TV.setText("Вы успешно завершили покупку!");
+                        TV_title.setText("Успешно!");
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
+                }
+            }
+        });
     };
 }

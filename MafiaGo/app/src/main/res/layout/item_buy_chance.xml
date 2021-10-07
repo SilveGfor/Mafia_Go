@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/fragmentSettingsProfile_CV"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/cards"
+        app:cardCornerRadius="8dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/itemBuyChance_TV_price"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:gravity="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_CIV_mafia" />
+
+            <Spinner
+                android:id="@+id/itemBuyChance_Spinner_usual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <Spinner
+                android:id="@+id/itemBuyChance_Spinner_premium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <ImageView
+                android:id="@+id/itemBuyChance_IV_shop"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/shop" />
+
+            <TextView
+                android:id="@+id/itemBuyChance_TV_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="Увеличить шанс выпадения роли"
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_IV_shop"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_IV_shop" />
+
+            <LinearLayout
+                android:id="@+id/linearLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="@+id/itemBuyChance_TV_title"
+                app:layout_constraintStart_toStartOf="@+id/itemBuyChance_TV_title"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_TV_title">
+
+                <TextView
+                    android:id="@+id/itemBuyChance_TV_switchText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Премиумный шанс"
+                    android:textColor="#848484" />
+
+                <Switch
+                    android:id="@+id/itemBuyChance_Switch"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/itemBuyChance_ShimerText_chance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="+25%"
+                android:textSize="30sp"
+                android:textColor="@color/white"
+                app:reflectionColor="@color/gold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_Spinner_usual" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_citizen"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="8dp"
+                android:src="@drawable/citizen_round"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_sheriff"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_ShimerText_chance" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_journalist"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/journalist_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_bodyguard"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_CIV_citizen"
+                app:srcCompat="@drawable/journalist_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_sheriff"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/sheriff_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_doctor"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_citizen"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_citizen"
+                app:srcCompat="@drawable/sheriff_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_mafia"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:layout_marginTop="16dp"
+                android:src="@drawable/mafia_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_mafia_don"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_CIV_journalist"
+                app:srcCompat="@drawable/mafia_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_mafia_don"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/mafia_don_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_terrorist"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_mafia"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_mafia"
+                app:srcCompat="@drawable/mafia_don_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_terrorist"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/terrorist_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_poisoner"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_mafia_don"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_mafia"
+                app:srcCompat="@drawable/terrorist_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_poisoner"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/poisoner_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_terrorist"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_mafia"
+                app:srcCompat="@drawable/poisoner_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_bodyguard"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/bodyguard_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_maniac"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_journalist"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_journalist"
+                app:srcCompat="@drawable/bodyguard_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_maniac"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/maniac_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_doctor_of_easy_virtue"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_bodyguard"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_journalist"
+                app:srcCompat="@drawable/maniac_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_doctor_of_easy_virtue"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/doctor_of_easy_virtue_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_maniac"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_journalist"
+                app:srcCompat="@drawable/doctor_of_easy_virtue_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_doctor"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/doctor_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toStartOf="@+id/itemBuyChance_CIV_lover"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_sheriff"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_citizen"
+                app:srcCompat="@drawable/doctor_alive" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/itemBuyChance_CIV_lover"
+                android:layout_width="60dp"
+                android:layout_height="70dp"
+                android:src="@drawable/lover_alive"
+                app:civ_border_color="@color/red"
+                app:civ_border_overlay="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyChance_CIV_doctor"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyChance_CIV_citizen"
+                app:srcCompat="@drawable/lover_alive" />
+
+            <Button
+                android:id="@+id/itemBuyChance_btn_buy"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/profile_button"
+                android:text="Купить"
+                android:textAppearance="@style/TextAppearance.AppCompat"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyChance_TV_price" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

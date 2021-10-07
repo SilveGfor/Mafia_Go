@@ -23,11 +23,15 @@ import android.widget.TextView;
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
 import com.mafiago.models.ShopModel;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.mafiago.MainActivity.socket;
 
@@ -498,8 +502,216 @@ public class ShopAdapter extends BaseAdapter {
                     }
                 });
                 break;
+            case "buy_chance":
+                view = layout.inflate(R.layout.item_buy_chance, null);
+
+                Spinner spinner_usual = view.findViewById(R.id.itemBuyChance_Spinner_usual);
+                Spinner spinner_premium = view.findViewById(R.id.itemBuyChance_Spinner_premium);
+                ShimmerTextView STV_percent = view.findViewById(R.id.itemBuyChance_ShimerText_chance);
+                TV_price = view.findViewById(R.id.itemBuyChance_TV_price);
+                TV_statusText = view.findViewById(R.id.itemBuyChance_TV_switchText);
+                Switch switch_chance = view.findViewById(R.id.itemBuyChance_Switch);
+                btn_buy = view.findViewById(R.id.itemBuyChance_btn_buy);
+
+                CircleImageView CIV_citizen = view.findViewById(R.id.itemBuyChance_CIV_citizen);
+                CircleImageView CIV_sheriff = view.findViewById(R.id.itemBuyChance_CIV_sheriff);
+                CircleImageView CIV_doctor = view.findViewById(R.id.itemBuyChance_CIV_doctor);
+                CircleImageView CIV_lover = view.findViewById(R.id.itemBuyChance_CIV_lover);
+                CircleImageView CIV_journalist = view.findViewById(R.id.itemBuyChance_CIV_journalist);
+                CircleImageView CIV_bodyguard = view.findViewById(R.id.itemBuyChance_CIV_bodyguard);
+                CircleImageView CIV_doctor_of_easy_virtue = view.findViewById(R.id.itemBuyChance_CIV_doctor_of_easy_virtue);
+                CircleImageView CIV_maniac = view.findViewById(R.id.itemBuyChance_CIV_maniac);
+                CircleImageView CIV_mafia = view.findViewById(R.id.itemBuyChance_CIV_mafia);
+                CircleImageView CIV_mafia_don = view.findViewById(R.id.itemBuyChance_CIV_mafia_don);
+                CircleImageView CIV_terrorist = view.findViewById(R.id.itemBuyChance_CIV_terrorist);
+                CircleImageView CIV_poisoner = view.findViewById(R.id.itemBuyChance_CIV_poisoner);
+
+                Shimmer shimmer = new Shimmer();
+
+                final String[] premium_chance = {"usual"};
+                final String[] role_chance = {""};
+
+                ArrayAdapter spinnerArrayAdapter3 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).mas_premium_time);
+                // Вызываем адаптер
+                spinner_premium.setAdapter(spinnerArrayAdapter3);
+
+                spinner_premium.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
+                        Log.e("kkk", "3");
+                        TV_price.setText("Стоимость: " + list_shop.get(position).list_premium_prices.get(position2).price + " золота");
+                        num_price[0] = position2;
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).mas_usual_time);
+                // Вызываем адаптер
+                spinner_usual.setAdapter(spinnerArrayAdapter);
+                Log.e("kkk", "0");
+                spinner_usual.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
+                        Log.e("kkk", "1");
+                        TV_price.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " монет");
+                        num_price[0] = position2;
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                switch_chance.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    Log.e("kkk", "2");
+                    if (isChecked) {
+                        premium_chance[0] = "premium";
+                        spinner_usual.setVisibility(View.INVISIBLE);
+                        spinner_premium.setVisibility(View.VISIBLE);
+                        TV_statusText.setTextColor(Color.parseColor("#F0BF41"));
+                        STV_percent.setText("+45%");
+                        shimmer.start(STV_percent);
+                        if (spinner_premium.getSelectedItemPosition() != 0)
+                        {
+                            spinner_premium.setSelection(0);
+                        }
+                        else {
+                            spinner_premium.setSelection(1);
+                        }
+                    } else {
+                        premium_chance[0] = "usual";
+                        spinner_usual.setVisibility(View.VISIBLE);
+                        spinner_premium.setVisibility(View.INVISIBLE);
+                        TV_statusText.setTextColor(Color.parseColor("#848484"));
+                        STV_percent.setText("+25%");
+                        shimmer.cancel();
+                        if (spinner_usual.getSelectedItemPosition() != 0)
+                        {
+                            spinner_usual.setSelection(0);
+                        }
+                        else {
+                            spinner_usual.setSelection(1);
+                        }
+                    }
+                });
+
+                CIV_citizen.setOnClickListener(v -> {
+                    role_chance[0] = "citizen";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_citizen.setBorderWidth(6);
+                });
+                CIV_sheriff.setOnClickListener(v -> {
+                    role_chance[0] = "sheriff";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_sheriff.setBorderWidth(6);
+                });
+                CIV_doctor.setOnClickListener(v -> {
+                    role_chance[0] = "doctor";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_doctor.setBorderWidth(6);
+                });
+                CIV_lover.setOnClickListener(v -> {
+                    role_chance[0] = "lover";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_lover.setBorderWidth(6);
+                });
+                CIV_journalist.setOnClickListener(v -> {
+                    role_chance[0] = "journalist";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_journalist.setBorderWidth(6);
+                });
+                CIV_bodyguard.setOnClickListener(v -> {
+                    role_chance[0] = "bodyguard";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_bodyguard.setBorderWidth(6);
+                });
+                CIV_doctor_of_easy_virtue.setOnClickListener(v -> {
+                    role_chance[0] = "doctor_of_easy_virtue";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_doctor_of_easy_virtue.setBorderWidth(6);
+                });
+                CIV_maniac.setOnClickListener(v -> {
+                    role_chance[0] = "maniac";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_maniac.setBorderWidth(6);
+                });
+                CIV_mafia.setOnClickListener(v -> {
+                    role_chance[0] = "mafia";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_mafia.setBorderWidth(6);
+                });
+                CIV_mafia_don.setOnClickListener(v -> {
+                    role_chance[0] = "mafia_don";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_mafia_don.setBorderWidth(6);
+                });
+                CIV_terrorist.setOnClickListener(v -> {
+                    role_chance[0] = "terrorist";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_terrorist.setBorderWidth(6);
+                });
+                CIV_poisoner.setOnClickListener(v -> {
+                    role_chance[0] = "poisoner";
+                    clear(CIV_citizen, CIV_sheriff, CIV_doctor, CIV_lover, CIV_journalist, CIV_bodyguard, CIV_doctor_of_easy_virtue, CIV_maniac, CIV_mafia, CIV_mafia_don, CIV_terrorist, CIV_poisoner);
+                    CIV_poisoner.setBorderWidth(6);
+                });
+
+                btn_buy.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                    builder.setView(viewQuestion);
+                    AlertDialog alert = builder.create();
+                    TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                    Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                    Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                    TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                    btn_yes.setOnClickListener(v1 -> {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("dop_type", "chance_of_role");
+                            json.put("status_type", premium_chance[0]);
+                            json.put("store_type", "general");
+                            json.put("role", role_chance[0]);
+                            json.put("item", num_price[0]);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("buy_item", json);
+                        Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                        alert.cancel();
+                    });
+                    btn_no.setOnClickListener(v12 -> {
+                        alert.cancel();
+                    });
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                });
+
+                break;
         }
         return view;
+    }
+
+    private void clear(CircleImageView CIV1, CircleImageView CIV2, CircleImageView CIV3, CircleImageView CIV4, CircleImageView CIV5, CircleImageView CIV6,
+                       CircleImageView CIV7, CircleImageView CIV8, CircleImageView CIV9, CircleImageView CIV10, CircleImageView CIV11, CircleImageView CIV12)
+    {
+        CIV1.setBorderWidth(0);
+        CIV2.setBorderWidth(0);
+        CIV3.setBorderWidth(0);
+        CIV4.setBorderWidth(0);
+        CIV5.setBorderWidth(0);
+        CIV6.setBorderWidth(0);
+        CIV7.setBorderWidth(0);
+        CIV8.setBorderWidth(0);
+        CIV9.setBorderWidth(0);
+        CIV10.setBorderWidth(0);
+        CIV11.setBorderWidth(0);
+        CIV12.setBorderWidth(0);
     }
 
     @Override

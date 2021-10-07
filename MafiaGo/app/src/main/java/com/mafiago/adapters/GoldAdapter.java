@@ -12,20 +12,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.mafiago.R;
-import com.mafiago.MainActivity;
-import com.mafiago.models.DailyTaskModel;
-import com.mafiago.models.GoldModel;
+import androidx.appcompat.app.AppCompatActivity;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.android.billingclient.api.BillingFlowParams;
+import com.example.mafiago.R;
+import com.mafiago.models.GoldModel;
+import com.mafiago.models.PremiumModel;
 
 import java.util.ArrayList;
-
-import static com.mafiago.MainActivity.socket;
 
 public class GoldAdapter extends BaseAdapter {
     public ArrayList<GoldModel> list_gold;
@@ -53,8 +49,8 @@ public class GoldAdapter extends BaseAdapter {
         TextView TV_cost = view.findViewById(R.id.itemGold_TV_cost);
         ImageView IV_gold = view.findViewById(R.id.itemGold_IV_gold);
 
-        TV_goldCount.setText(list_gold.get(position).amount + " золота");
-        TV_cost.setText("Стоимость: " + list_gold.get(position).price + "₽");
+        TV_goldCount.setText(list_gold.get(position).skuDetails.getTitle());
+        TV_cost.setText("Вы можете купить " + list_gold.get(position).skuDetails.getTitle() + " за " + list_gold.get(position).skuDetails.getPrice());
 
         switch (list_gold.get(position).num)
         {
@@ -71,25 +67,13 @@ public class GoldAdapter extends BaseAdapter {
                 IV_gold.setImageResource(R.drawable.gold_4);
                 break;
             case 4:
+            default:
                 IV_gold.setImageResource(R.drawable.gold_5);
                 break;
         }
 
         btnBuy.setOnClickListener(v -> {
-            AlertDialog.Builder builder2 = new AlertDialog.Builder(context);
-            builder2.setTitle("В разработке...")
-                    .setMessage("")
-                    .setIcon(R.drawable.ic_razrabotka)
-                    .setCancelable(false)
-                    .setNegativeButton("Ок",
-                            new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int id) {
-                                    dialog.cancel();
-                                }
-                            });
-            AlertDialog alert2 = builder2.create();
-            alert2.show();
-            /*
+
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
             builder.setView(viewQuestion);
@@ -99,17 +83,11 @@ public class GoldAdapter extends BaseAdapter {
             Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
             TV_text.setText("Вы уверены, что хотите совершить покупку?");
             btn_yes.setOnClickListener(v1 -> {
-                final JSONObject json = new JSONObject();
-                try {
-                    json.put("nick", MainActivity.NickName);
-                    json.put("session_id", MainActivity.Session_id);
-                    json.put("store_type", "gold");
-                    json.put("item", list_gold.get(position).num);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("buy_item", json);
-                Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                AppCompatActivity activity = (AppCompatActivity) view.getContext();
+                BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                        .setSkuDetails(list_gold.get(position).skuDetails)
+                        .build();
+                list_gold.get(position).billingClient.launchBillingFlow(activity, billingFlowParams);
                 alert.cancel();
             });
             btn_no.setOnClickListener(v12 -> {
@@ -117,7 +95,7 @@ public class GoldAdapter extends BaseAdapter {
             });
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
-             */
+
         });
         return view;
     }

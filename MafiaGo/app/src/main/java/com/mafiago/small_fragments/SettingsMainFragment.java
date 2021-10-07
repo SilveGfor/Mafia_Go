@@ -62,11 +62,8 @@ public class SettingsMainFragment extends Fragment {
 
     Button btnReportError;
     Button btnExitAccount;
-    Button btnShowRole;
     Button btnSelectTheme;
 
-    TextView TV_role;
-    TextView TV_message;
     TextView TV_usersAgreement;
     TextView TV_privacyPolicy;
     TextView TV_inviteCode;
@@ -368,11 +365,8 @@ public class SettingsMainFragment extends Fragment {
 
             btnReportError = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
             btnExitAccount = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
-            btnShowRole = view.findViewById(R.id.fragmentSettingsMain_btn_showRole);
             btnSelectTheme = view.findViewById(R.id.fragmentSettingsMain_chooseTheme);
             btnStudy = view.findViewById(R.id.fragmentSettingsProfile_btn_study);
-            TV_role = view.findViewById(R.id.fragmentSettingsMain_TV_role);
-            TV_message = view.findViewById(R.id.fragmentSettingsMain_TV_message);
             TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
             TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
             TV_inviteCode = view.findViewById(R.id.fragmentSettingsMain_TV_inviteCode);
@@ -743,51 +737,7 @@ public class SettingsMainFragment extends Fragment {
                 editor.putString(APP_PREFERENCES_PASSWORD, null);
                 editor.apply();
             });
-
-            btnShowRole.setVisibility(View.GONE);
-            btnShowRole.setOnClickListener(v -> {
-                boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
-                if (showRole)
-                {
-                    btnShowRole.setText("Показать роль");
-                    SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putBoolean(APP_PREFERENCES_SHOW_ROLE, false);
-                    editor.apply();
-                    TV_role.setVisibility(View.GONE);
-                }
-                else {
-                    btnShowRole.setText("Скрыть роль");
-                    SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putBoolean(APP_PREFERENCES_SHOW_ROLE, true);
-                    editor.apply();
-                    TV_role.setVisibility(View.VISIBLE);
-                    switch (MainActivity.Role) {
-                        case "moderator":
-                            TV_role.setText("модератор");
-                            TV_role.setTextColor(Color.parseColor("#C71585"));
-                            break;
-                        case "admin":
-                            TV_role.setText("админ");
-                            TV_role.setTextColor(Color.parseColor("#FF0000"));
-                            break;
-                        case "head_admin":
-                            TV_role.setText("глав. админ");
-                            TV_role.setTextColor(Color.parseColor("#008B8B"));
-                            break;
-                        case "designer":
-                            TV_role.setText("дизайнер");
-                            TV_role.setTextColor(Color.parseColor("#8A2BE2"));
-                            break;
-                        case "developer":
-                            TV_role.setText("разработчик");
-                            TV_role.setTextColor(Color.parseColor("#8B0000"));
-                            break;
-                    }
-                }
-                showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
-                Log.d("kkk", String.valueOf(showRole));
-            });
-
+            
             TV_usersAgreement.setOnClickListener(v -> {
                 Intent mIntent = new Intent();
                 mIntent.setAction(Intent.ACTION_VIEW);

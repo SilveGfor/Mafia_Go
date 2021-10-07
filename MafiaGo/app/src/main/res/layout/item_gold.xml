@@ -25,7 +25,7 @@
                 android:id="@+id/itemGold_btn_buy"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/profile_button"
                 android:text="Купить"
                 android:textAppearance="@style/TextAppearance.AppCompat"
@@ -34,28 +34,31 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+                app:layout_constraintTop_toBottomOf="@+id/itemGold_TV_cost" />
 
             <TextView
                 android:id="@+id/itemGold_TV_goldCount"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:text="100 золота"
                 android:textColor="@color/colorWhite"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cardView2"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/itemGold_TV_cost"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="стоимость 50р"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="@+id/itemGold_TV_goldCount"
                 app:layout_constraintStart_toStartOf="@+id/itemGold_TV_goldCount"
                 app:layout_constraintTop_toBottomOf="@+id/itemGold_TV_goldCount" />
 
@@ -63,12 +66,13 @@
                 android:id="@+id/cardView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
                 android:padding="15dp"
                 app:cardBackgroundColor="#000000"
                 app:cardCornerRadius="30dp"
-                app:layout_constraintEnd_toStartOf="@+id/itemGold_TV_goldCount"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/itemGold_TV_goldCount">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/itemGold_IV_gold"

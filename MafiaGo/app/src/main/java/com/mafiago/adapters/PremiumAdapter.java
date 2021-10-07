@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
-import com.mafiago.models.GoldModel;
+import com.mafiago.models.PremiumModel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,12 +25,12 @@ import java.util.ArrayList;
 import static com.mafiago.MainActivity.socket;
 
 public class PremiumAdapter extends BaseAdapter {
-    public ArrayList<GoldModel> list_gold;
+    public ArrayList<PremiumModel> list_gold;
     public Context context;
     public LayoutInflater layout;
 
     // Конструктор
-    public PremiumAdapter(ArrayList<GoldModel> list_gold, Context context) {
+    public PremiumAdapter(ArrayList<PremiumModel> list_gold, Context context) {
 
         this.list_gold = list_gold;
         this.context = context;

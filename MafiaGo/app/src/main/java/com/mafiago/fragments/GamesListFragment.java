@@ -1037,30 +1037,39 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     {
         list_room_copy.clear();
         list_room_copy.addAll(0, list_room);
+        Log.d("kkk", "setFilter - " + deletePlaying + " " + deleteNormal + " " + deleteCustom + " " + deletePassword + " " + min + " " + max);
+        Log.d("kkk", "0 - " + list_room_copy.size() + " " + list_room.size());
 
         for (int i = 0; i < list_room_copy.size(); i++)
         {
             if (deletePlaying && list_room_copy.get(i).is_on)
             {
                 list_room_copy.remove(i);
+                Log.d("kkk", "1" + i);
             }
-            else if (deleteNormal && !list_room_copy.get(i).is_custom)
+            else if (deleteNormal && (!list_room_copy.get(i).is_custom && !list_room_copy.get(i).has_password))
             {
                 list_room_copy.remove(i);
+                Log.d("kkk", "2" + i);
             }
             else if (deleteCustom && list_room_copy.get(i).is_custom)
             {
                 list_room_copy.remove(i);
+                Log.d("kkk", "3" + i);
             }
             else if (deletePassword && list_room_copy.get(i).has_password)
             {
                 list_room_copy.remove(i);
+                Log.d("kkk", "4" + i);
             }
             else if (min > list_room_copy.get(i).min_people || max < list_room_copy.get(i).max_people)
             {
                 list_room_copy.remove(i);
+                Log.d("kkk", "5" + i);
             }
+            Log.d("kkk", "0 - " + list_room_copy.size() + " " + list_room.size());
         }
+        Log.d("kkk", "finish - " + list_room_copy.size() + " " + list_room.size());
         if (list_room_copy.size() != 0) TV_no_games.setVisibility(View.GONE);
         else TV_no_games.setVisibility(View.VISIBLE);
         gamesAdapter.notifyDataSetChanged();
