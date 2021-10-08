@@ -245,7 +245,7 @@ public class SettingsMainFragment extends Fragment {
                             TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                             TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
                             TV_title.setText("Длинный ник!");
-                            TV_error.setText("Ваш ник должен быть меньше 21 символа");
+                            TV_error.setText("Ваш ник должен быть меньше 16 символов");
                             AlertDialog alert2 = builder2.create();
                             alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert2.show();

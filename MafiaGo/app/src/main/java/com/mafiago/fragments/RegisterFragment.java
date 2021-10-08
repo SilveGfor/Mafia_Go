@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -527,36 +529,30 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             }
                             else
                             {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("У вас длинный ник!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int id) {
-                                                        dialog.cancel();
-                                                    }
-                                                });
-                                AlertDialog alert = builder.create();
-                                alert.show();
+                                AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                builder2.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Длинный ник!");
+                                TV_error.setText("Ваш ник должен быть меньше 16 символов");
+                                AlertDialog alert2 = builder2.create();
+                                alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert2.show();
                             }
                         }
                         else
                         {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("У вас слишком короткий ник!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
-                            AlertDialog alert = builder.create();
-                            alert.show();
+                            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder2.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Короткий ник!");
+                            TV_error.setText("Ваш ник должен быть больше 2 символов");
+                            AlertDialog alert2 = builder2.create();
+                            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert2.show();
                         }
                     } else {
                         if (!ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
