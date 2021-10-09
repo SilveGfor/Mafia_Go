@@ -1097,6 +1097,15 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 Log.d("kkk", "1 MinMax i = " + i + " size() = " + list_room_copy.size() + " min = " + min + " " + max);
             }
             else if (!name.equals(""))
+            {
+                if (!list_room_copy.get(i).name.contains(name))
+                {
+                    Log.d("kkk", "1 Name i = " + i + " size() = " + list_room_copy.size());
+                    list_room_copy.remove(i);
+                    i--;
+                    Log.d("kkk", "2 Name i = " + i + " size() = " + list_room_copy.size());
+                }
+            }
             Log.d("kkk", "0 - " + list_room_copy.size() + " " + list_room.size());
         }
         Log.d("kkk", "finish - " + list_room_copy.size() + " " + list_room.size());

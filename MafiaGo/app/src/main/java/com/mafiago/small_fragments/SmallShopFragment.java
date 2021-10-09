@@ -270,7 +270,8 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                 premiumAdapter = new PremiumAdapter(list_premium, getContext());
                 LV_premium.setAdapter(premiumAdapter);
 
-                //socket.on("get_store", OnGetPremiumStore);
+                Log.e("kkk", "CHANCE!!!!!!!!!!!");
+                socket.on("get_store", OnGetPremiumStore);
                 //socket.on("buy_item", OnBuyPremiumItem);
                 //socket.on("user_error", onUserError);
 
@@ -288,7 +289,7 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
             public void run() {
                 if (args.length != 0 && list_premium.size() == 0) {
                     JSONObject data = (JSONObject) args[0];
-                    Log.d("kkk", "принял - get_store - " + data);
+                    Log.d("kkk", "принял - get_store_premium - " + data);
                     JSONArray gold_array;
                     JSONObject gold_data;
                     String description = "", transaction_description = "", sale_amount = "", amount = "";
@@ -506,7 +507,8 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                             list_premium_chance_prices.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_premium_prices.size()));
                         }
 
-                        list_shop.add(new ShopModel("buy_chance", list_usual_prices, mas_usual_chance_time, list_premium_prices, mas_premium_chance_time));
+                        Log.e("kkk", "CHANCE!!!");
+                        //list_shop.add(new ShopModel("buy_chance", list_usual_prices, mas_usual_chance_time, list_premium_prices, mas_premium_chance_time));
 
                         ////////////////
 

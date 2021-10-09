@@ -476,7 +476,7 @@ public class ShopAdapter extends BaseAdapter {
                         TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
                         Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
                         Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                        TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                        TV_text.setText("Вы уверены, что хотите совершить покупку?&&");
                         btn_yes.setOnClickListener(v1 -> {
                             final JSONObject json = new JSONObject();
                             try {
@@ -511,7 +511,7 @@ public class ShopAdapter extends BaseAdapter {
                 TV_price = view.findViewById(R.id.itemBuyChance_TV_price);
                 TV_statusText = view.findViewById(R.id.itemBuyChance_TV_switchText);
                 Switch switch_chance = view.findViewById(R.id.itemBuyChance_Switch);
-                btn_buy = view.findViewById(R.id.itemBuyChance_btn_buy);
+                Button btn_buy_chance = view.findViewById(R.id.itemBuyChance_btn_buy);
 
                 CircleImageView CIV_citizen = view.findViewById(R.id.itemBuyChance_CIV_citizen);
                 CircleImageView CIV_sheriff = view.findViewById(R.id.itemBuyChance_CIV_sheriff);
@@ -659,7 +659,7 @@ public class ShopAdapter extends BaseAdapter {
                     CIV_poisoner.setBorderWidth(6);
                 });
 
-                btn_buy.setOnClickListener(v -> {
+                btn_buy_chance.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
                     builder.setView(viewQuestion);
@@ -667,7 +667,7 @@ public class ShopAdapter extends BaseAdapter {
                     TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
                     Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
                     Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                    TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                    TV_text.setText("Вы уверены, что хотите совершить покупку??");
                     btn_yes.setOnClickListener(v1 -> {
                         final JSONObject json = new JSONObject();
                         try {
@@ -676,20 +676,20 @@ public class ShopAdapter extends BaseAdapter {
                             json.put("dop_type", "chance_of_role");
                             json.put("status_type", premium_chance[0]);
                             json.put("store_type", "general");
-                            json.put("role", role_chance[0]);
+                            json.put("chance_role", role_chance[0]);
                             json.put("item", num_price[0]);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
                         socket.emit("buy_item", json);
-                        Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
+                        Log.e("kkk", "Socket_отправка - buy_item1 - "+ json.toString());
                         alert.cancel();
                     });
                     btn_no.setOnClickListener(v12 -> {
                         alert.cancel();
                     });
                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    alert.show();
+                    //alert.show();
                 });
 
                 break;
