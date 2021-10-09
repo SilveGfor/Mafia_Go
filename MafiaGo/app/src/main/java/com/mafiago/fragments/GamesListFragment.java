@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.opengl.Visibility;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -101,7 +103,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     ImageView IV_screen;
     GamesAdapter gamesAdapter;
 
-    String base64_screenshot = "", report_nick = "", report_id = "";
+    String base64_screenshot = "", report_nick = "", report_id = "", room_name = "";
 
     ArrayList<RoomModel> list_room = new ArrayList<>();
     ArrayList<RoomModel> list_room_copy = new ArrayList<>();
@@ -147,6 +149,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         RSB_num_users = view.findViewById(R.id.fragmentGamesList_RSB);
         IV_filter = view.findViewById(R.id.fragmentGamesList_IV_filter);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        ET_search = view.findViewById(R.id.fragmentGamesList_ET_search);
 
         IV_doctor = view.findViewById(R.id.fragmentGamesList_IV_doctor);
         IV_lover = view.findViewById(R.id.fragmentGamesList_IV_lover);
@@ -171,35 +174,33 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         gamesAdapter = new GamesAdapter(list_room_copy, getContext());
         LV_games.setAdapter(gamesAdapter);
 
-
-
         CB_deletePlayingRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
             deletePlayingRooms = isChecked;
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putBoolean(APP_PREFERENCES_PLAYING_ROOM, deletePlayingRooms);
             editor.apply();
-            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+            setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
         });
         CB_deleteNormalRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
             deleteNormalRooms = isChecked;
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putBoolean(APP_PREFERENCES_NORMAL_ROOM, deleteNormalRooms);
             editor.apply();
-            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+            setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
         });
         CB_deleteCustomRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
             deleteCustomRooms = isChecked;
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putBoolean(APP_PREFERENCES_CUSTOM_ROOM, deleteCustomRooms);
             editor.apply();
-            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+            setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
         });
         CB_deletePasswordRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
             deletePasswordRooms = isChecked;
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putBoolean(APP_PREFERENCES_PASSWORD_ROOM, deletePasswordRooms);
             editor.apply();
-            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+            setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
         });
 
         deletePlayingRooms = mSettings.getBoolean(APP_PREFERENCES_PLAYING_ROOM, false);
@@ -210,7 +211,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         min_people_num = mSettings.getInt(APP_PREFERENCES_MIN_PEOPLE, 5);
         IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
 
-        setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+        setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
 
         RSB_num_users.setSelectedMaxValue(max_people_num);
         RSB_num_users.setSelectedMinValue(min_people_num);
@@ -279,7 +280,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 editor.putInt(APP_PREFERENCES_MIN_PEOPLE, (int) minValue);
                 editor.apply();
 
-                setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+                setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
             }
         });
 
@@ -426,6 +427,24 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             }
         });
 
+        ET_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                room_name = ET_search.getText().toString();
+                setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+            }
+        });
+
         return view;
     }
 
@@ -549,7 +568,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             if (list_room.get(i).id == num)
                             {
                                 list_room.remove(i);
-                                setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+                                setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
                                 if (list_room.size() == 0)
                                 {
                                     TV_no_games.setVisibility(View.VISIBLE);
@@ -627,7 +646,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         if (not_doable) {
                             RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom, has_password);
                             list_room.add(model);
-                            setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+                            setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
                         }
                     }
                     else
@@ -688,7 +707,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                             {
                                 RoomModel model = new RoomModel(name, min_people, max_people, num_people, id, list_users, is_on, list_roles, is_custom, has_password);
                                 list_room.set(i, model);
-                                setFilter(deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
+                                setFilter(room_name, deletePlayingRooms, deleteNormalRooms, deleteCustomRooms, deletePasswordRooms, min_people_num, max_people_num);
                             }
                         }
                     } catch (JSONException e) {
@@ -1033,7 +1052,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         });
     };
 
-    public void setFilter(boolean deletePlaying, boolean deleteNormal, boolean deleteCustom, boolean deletePassword, int min, int max)
+    public void setFilter(String name, boolean deletePlaying, boolean deleteNormal, boolean deleteCustom, boolean deletePassword, int min, int max)
     {
         list_room_copy.clear();
         list_room_copy.addAll(0, list_room);
@@ -1044,29 +1063,40 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         {
             if (deletePlaying && list_room_copy.get(i).is_on)
             {
+                Log.d("kkk", "1 deletePlaying i = " + i + " size() = " + list_room_copy.size());
                 list_room_copy.remove(i);
-                Log.d("kkk", "1" + i);
+                i--;
+                Log.d("kkk", "2 deletePlaying i = " + i + " size() = " + list_room_copy.size());
             }
             else if (deleteNormal && (!list_room_copy.get(i).is_custom && !list_room_copy.get(i).has_password))
             {
+                Log.d("kkk", "1 deleteNormal i = " + i + " size() = " + list_room_copy.size());
                 list_room_copy.remove(i);
-                Log.d("kkk", "2" + i);
+                i--;
+                Log.d("kkk", "2 deleteNormal i = " + i + " size() = " + list_room_copy.size());
             }
             else if (deleteCustom && list_room_copy.get(i).is_custom)
             {
+                Log.d("kkk", "1 deleteCustom i = " + i + " size() = " + list_room_copy.size());
                 list_room_copy.remove(i);
-                Log.d("kkk", "3" + i);
+                i--;
+                Log.d("kkk", "2 deleteCustom i = " + i + " size() = " + list_room_copy.size());
             }
             else if (deletePassword && list_room_copy.get(i).has_password)
             {
+                Log.d("kkk", "1 deletePassword i = " + i + " size() = " + list_room_copy.size());
                 list_room_copy.remove(i);
-                Log.d("kkk", "4" + i);
+                i--;
+                Log.d("kkk", "1 deletePassword i = " + i + " size() = " + list_room_copy.size());
             }
             else if (min > list_room_copy.get(i).min_people || max < list_room_copy.get(i).max_people)
             {
+                Log.d("kkk", "1 MinMax i = " + i + " size() = " + list_room_copy.size() + " min = " + min + " " + max);
                 list_room_copy.remove(i);
-                Log.d("kkk", "5" + i);
+                i--;
+                Log.d("kkk", "1 MinMax i = " + i + " size() = " + list_room_copy.size() + " min = " + min + " " + max);
             }
+            else if (!name.equals(""))
             Log.d("kkk", "0 - " + list_room_copy.size() + " " + list_room.size());
         }
         Log.d("kkk", "finish - " + list_room_copy.size() + " " + list_room.size());
