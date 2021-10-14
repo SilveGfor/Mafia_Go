@@ -28,6 +28,7 @@ import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -512,6 +513,7 @@ public class ShopAdapter extends BaseAdapter {
                 TV_statusText = view.findViewById(R.id.itemBuyChance_TV_switchText);
                 Switch switch_chance = view.findViewById(R.id.itemBuyChance_Switch);
                 Button btn_buy_chance = view.findViewById(R.id.itemBuyChance_btn_buy);
+                TextView TV_question = view.findViewById(R.id.ItemBuyChance_btn_question);
 
                 CircleImageView CIV_citizen = view.findViewById(R.id.itemBuyChance_CIV_citizen);
                 CircleImageView CIV_sheriff = view.findViewById(R.id.itemBuyChance_CIV_sheriff);
@@ -538,7 +540,6 @@ public class ShopAdapter extends BaseAdapter {
                 spinner_premium.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
-                        Log.e("kkk", "3");
                         TV_price.setText("Стоимость: " + list_shop.get(position).list_premium_prices.get(position2).price + " золота");
                         num_price[0] = position2;
                     }
@@ -551,11 +552,9 @@ public class ShopAdapter extends BaseAdapter {
                 spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).mas_usual_time);
                 // Вызываем адаптер
                 spinner_usual.setAdapter(spinnerArrayAdapter);
-                Log.e("kkk", "0");
                 spinner_usual.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
-                        Log.e("kkk", "1");
                         TV_price.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " монет");
                         num_price[0] = position2;
                     }
@@ -596,6 +595,19 @@ public class ShopAdapter extends BaseAdapter {
                             spinner_usual.setSelection(1);
                         }
                     }
+                });
+
+                TV_question.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    View viewDang = layout.inflate(R.layout.dialog_information, null);
+                    builder.setView(viewDang);
+                    TextView TV_title1 = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                    TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                    TV_title1.setText("Увеличение шанса");
+                    TV_text.setText("При действии бустера увеличения шанса роли, например, маньяка, роль маньяка будет выпадать с вероятностью 25 или 45 процентов в зависимости от типа бустера (обычный или премиум). Бустер не действует в кастомных комнатах, в комнатах с паролем или если в комнате нет роли, для которой куплен бустер.Если в комнате несколько человек с активным бустером увеличения шанса роли маньяка, то преимущество будет у первого вошедшего в комнату");
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                 });
 
                 CIV_citizen.setOnClickListener(v -> {

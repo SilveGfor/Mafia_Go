@@ -7,6 +7,27 @@
     android:layout_height="match_parent"
     android:background="@drawable/fon_day">
 
+    <RelativeLayout
+        android:id="@+id/fragmentGamesList_RL_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/smallFragmentFriendsList_btn_back"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_arrow_back"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
     <ListView
         android:id="@+id/fragmentStudy_LV_chat"
         android:layout_width="0dp"
@@ -31,41 +52,39 @@
         android:id="@+id/fragmentStudy_TV_roomName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginLeft="24dp"
+        android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="Обучение"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_menu"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentStudy_TV_timer"
-        app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_menu"
-        app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_menu" />
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_RL_back"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_menu"
+        app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_RL_back"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_RL_back" />
 
     <ImageView
         android:id="@+id/fragmentMenu_IV_menu"
         android:layout_width="42dp"
         android:layout_height="23dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_RL_back"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_RL_back"
         app:srcCompat="@drawable/three_lines" />
 
     <TextView
         android:id="@+id/fragmentStudy_TV_mafiaCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
         android:text="Мирных: 5"
         android:textColor="@color/red"
         android:textSize="12sp"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentStudy_TV_timer" />
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentStudy_TV_playersCount"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentStudy_TV_timer"
+        app:layout_constraintTop_toTopOf="@+id/fragmentStudy_TV_playersCount" />
 
     <TextView
         android:id="@+id/fragmentStudy_TV_peacefulCount"
@@ -77,14 +96,15 @@
         android:textSize="12sp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentStudy_TV_mafiaCount"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentStudy_TV_mafiaCount" />
+        app:layout_constraintEnd_toStartOf="@+id/fragmentStudy_TV_mafiaCount"
+        app:layout_constraintTop_toTopOf="@+id/fragmentStudy_TV_mafiaCount" />
 
     <TextView
         android:id="@+id/fragmentStudy_TV_playersCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
         android:text="Игроков: 6"
         android:textColor="@android:color/white"
         android:textSize="12sp"
@@ -99,6 +119,7 @@
         android:text="комната от 5 до 20"
         android:textColor="@android:color/white"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentStudy_TV_playersCount"
         app:layout_constraintEnd_toStartOf="@+id/fragmentStudy_TV_peacefulCount"
         app:layout_constraintStart_toEndOf="@+id/fragmentStudy_TV_playersCount"
         app:layout_constraintTop_toTopOf="@+id/fragmentStudy_TV_playersCount" />
@@ -107,14 +128,13 @@
         android:id="@+id/fragmentStudy_TV_timer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:text="\u221e"
         android:textColor="@color/white"
         android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentStudy_TV_playersCount"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/fragmentStudy_TV_playersCount" />
 
     <GridView
         android:id="@+id/fragmentStudy_listUsers"
@@ -122,17 +142,15 @@
         android:layout_height="240dp"
 
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:horizontalSpacing="5dp"
         android:numColumns="5"
         android:scrollbars=""
         android:verticalSpacing="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentStudy_TV_peacefulCount" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentStudy_TV_playersCount" />
 
     <TextView
         android:id="@+id/textView8"

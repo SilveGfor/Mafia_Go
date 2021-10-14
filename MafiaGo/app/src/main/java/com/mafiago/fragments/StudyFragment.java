@@ -24,6 +24,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
@@ -65,6 +66,8 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
     public TextView TV_playersCount;
     public TextView TV_playersMinMaxInfo;
     public TextView TV_continue;
+
+    public RelativeLayout btn_back;
 
     public ImageView IV_influence_doctor;
     public ImageView IV_influence_lover;
@@ -129,6 +132,7 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
         LV_chat = view.findViewById(R.id.fragmentStudy_LV_chat);
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         GV_users = view.findViewById(R.id.fragmentStudy_listUsers);
         room_name = view.findViewById(R.id.fragmentStudy_TV_roomName);
         TV_mafia_count = view.findViewById(R.id.fragmentStudy_TV_mafiaCount);
@@ -653,6 +657,13 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
                 FirstVisibleItem = firstVisibleItem;
                 VisibleItemsCount = visibleItemCount;
                 TotalItemsCount = totalItemCount;
+            }
+        });
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
             }
         });
 

@@ -90,7 +90,7 @@ public class RoleAdapter extends BaseAdapter {
                 break;
         }
         if (!list_roles.get(position).visible) {
-            IV_role.setAlpha((float) 0.3);
+            IV_role.setAlpha((float) 0.2);
         }
 
         String role = String.valueOf(list_roles.get(position).role).toLowerCase();
