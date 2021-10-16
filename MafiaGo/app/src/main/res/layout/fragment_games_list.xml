@@ -85,12 +85,13 @@
         android:id="@+id/fragmentGamesList_playersCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Количество игроков"
         android:textColor="@color/white"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RL_search" />
+        app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_ET_search" />
 
     <org.florescu.android.rangeseekbar.RangeSeekBar
         android:id="@+id/fragmentGamesList_RSB"
@@ -153,7 +154,7 @@
         android:layout_height="32dp"
         android:layout_marginStart="40dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="40dp"
         android:background="@drawable/shape_black"
         android:ems="10"
         android:hint="Поиск"
@@ -163,30 +164,9 @@
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         android:textSize="12sp"
-        app:layout_constraintEnd_toStartOf="@+id/fragmentGamesList_RL_search"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGamesList_RL_back" />
-
-    <RelativeLayout
-        android:id="@+id/fragmentGamesList_RL_search"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="30dp"
-        android:background="@drawable/orange_button"
-        android:padding="10dp"
-        app:layout_constraintBottom_toBottomOf="@+id/fragmentGamesList_ET_search"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_ET_search">
-
-        <Button
-            android:id="@+id/smallFragmentFriendsList_btn_search"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@drawable/ic_search"
-            android:clickable="false"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
-    </RelativeLayout>
 
     <Button
         android:id="@+id/fragmentGamesList_btn_create_room"
@@ -247,8 +227,6 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RL_search"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_journalist"
         app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_doctor"
         app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
@@ -258,8 +236,6 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentGamesList_RL_search"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentGamesList_IV_poisoner"
         app:layout_constraintTop_toTopOf="@+id/fragmentGamesList_IV_mafia_don"
         app:srcCompat="@drawable/maniac_round" />

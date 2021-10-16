@@ -931,7 +931,8 @@ public class SettingsMainFragment extends Fragment {
                 JSONObject statistic = new JSONObject();
                 JSONObject statuses = new JSONObject();
                 JSONObject JO_colors = new JSONObject();
-                String[] list_statuces;
+                String[] list_statuses;
+                String[] list_normal_statuses;
                 String[] list_colors;
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
                 String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "", main_personal_color = "";
@@ -978,8 +979,10 @@ public class SettingsMainFragment extends Fragment {
                 TV_mafia_pers_of_wins.setText("Побед мафии: " + mafia_pers_of_wins);
                 TV_peaceful_pers_of_wins.setText("Побед мирных: " + peaceful_pers_of_wins);
 
-                list_statuces = new String[statuses.length() + 1];
-                list_statuces[0] = "нет";
+                list_statuses = new String[statuses.length() + 1];
+                list_normal_statuses = new String[statuses.length() + 1];
+                list_statuses[0] = "нет";
+                list_normal_statuses[0] = "нет";
                 int i;
                 Iterator iterator;
                 String status;
@@ -987,17 +990,45 @@ public class SettingsMainFragment extends Fragment {
                 for (iterator = statuses.keys(), i = 1; iterator.hasNext(); i++)
                 {
                     status = (String) iterator.next();
-                    list_statuces[i] = status;
+                    list_normal_statuses[i] = status;
+                    try {
+                        if (!statuses.getString(status).equals("forever"))
+                        {
+                            JSONObject JO_status = statuses.getJSONObject(status);
+                            String time = "";
+                            if (JO_status.getInt("months") == 0) {
+                                if (JO_status.getInt("days") == 0) {
+                                    if (JO_status.getInt("hours") == 0) {
+                                        if (JO_status.getInt("minutes") == 0) {
+                                            time = " (" + JO_status.getInt("seconds") + " сек.)";
+                                        } else {
+                                            time = " (" + JO_status.getInt("minutes") + " мин.)";
+                                        }
+                                    } else {
+                                        time = " (" + JO_status.getInt("hours") + " ч.)";
+                                    }
+                                } else {
+                                    time = " (" + JO_status.getInt("days") + " д.)";
+                                }
+                            } else {
+                                time = " (" + JO_status.getInt("months") + " мес.)";
+                            }
+                            status = status + time;
+                        }
+                        list_statuses[i] = status;
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
-                if (list_statuces.length != 0) {
+                if (list_statuses.length != 0) {
                     final boolean[] need_to_send = {false};
-                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_statuces);
+                    ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, list_statuses);
                     // Вызываем адаптер
                     spinner.setAdapter(spinnerArrayAdapter);
 
-                    for (int k = 0; k < list_statuces.length; k++) {
-                        if (list_statuces[k].equals(main_status)) {
+                    for (int k = 0; k < list_normal_statuses.length; k++) {
+                        if (list_normal_statuses[k].equals(main_status)) {
                             spinner.setSelection(k);
                         }
                     }
@@ -1017,7 +1048,7 @@ public class SettingsMainFragment extends Fragment {
                                     }
                                     else
                                     {
-                                        json2.put("main_status", list_statuces[position]);
+                                        json2.put("main_status", list_normal_statuses[position]);
                                     }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
@@ -1051,21 +1082,48 @@ public class SettingsMainFragment extends Fragment {
 
                 for (iterator = JO_colors.keys(), j = 1; iterator.hasNext(); j++)
                 {
+                    String time = "";
                     color = (String) iterator.next();
                     list_colors[j] = color;
+                    try {
+                        if (!JO_colors.getString(color).equals("forever"))
+                        {
+                            JSONObject JO_color_time = JO_colors.getJSONObject(color);
+                            if (JO_color_time.getInt("months") == 0) {
+                                if (JO_color_time.getInt("days") == 0) {
+                                    if (JO_color_time.getInt("hours") == 0) {
+                                        if (JO_color_time.getInt("minutes") == 0) {
+                                            time = " (" + JO_color_time.getInt("seconds") + " сек.)";
+                                        } else {
+                                            time = " (" + JO_color_time.getInt("minutes") + " мин.)";
+                                        }
+                                    } else {
+                                        time = " (" + JO_color_time.getInt("hours") + " ч.)";
+                                    }
+                                } else {
+                                    time = " (" + JO_color_time.getInt("days") + " д.)";
+                                }
+                            } else {
+                                time = " (" + JO_color_time.getInt("months") + " мес.)";
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
                     switch (color)
                     {
                         case "#8DD3B6":
-                            list_colors_words[j] = "мятный цвет";
+                            list_colors_words[j] = "мятный цвет" + time;
                             break;
                         case "#AFCAFF":
-                            list_colors_words[j] = "светло-синий цвет";
+                            list_colors_words[j] = "светло-синий цвет" + time;
                             break;
                         case "#CBFFA1":
-                            list_colors_words[j] = "салатовый цвет";
+                            list_colors_words[j] = "салатовый цвет" + time;
                             break;
                         default:
-                            list_colors_words[j] = color;
+                            list_colors_words[j] = color + time;
                             break;
                     }
                 }
@@ -1076,8 +1134,8 @@ public class SettingsMainFragment extends Fragment {
                     // Вызываем адаптер
                     spinner2.setAdapter(spinnerArrayAdapter);
 
-                    for (int k = 1; k < list_colors_words.length - 1; k++) {
-                        if (list_colors[k - 1].equals(main_personal_color)) {
+                    for (int k = 1; k < list_colors.length; k++) {
+                        if (list_colors[k].equals(main_personal_color)) {
                             spinner2.setSelection(k);
                             break;
                         }

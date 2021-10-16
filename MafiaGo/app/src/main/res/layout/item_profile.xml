@@ -20,6 +20,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/itemProfile_IV_online"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintStart_toEndOf="@+id/itemProfile_IV_avatar"
+                app:layout_constraintTop_toTopOf="@+id/itemProfile_IV_avatar"
+                app:srcCompat="@drawable/orange_point" />
+
             <Button
                 android:id="@+id/itemGold_btn_buy"
                 android:layout_width="0dp"
@@ -59,11 +68,10 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/itemDailyTask_TV_description"
+                android:id="@+id/itemProfile_TV_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="в сети"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_nick"
@@ -132,99 +140,388 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <TextView
-                android:id="@+id/dialogOkNo_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Статистика"
-                android:textColor="@color/white"
+            <ScrollView
+                android:id="@+id/scrollView3"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_margin="10dp"
+                android:scrollbars="vertical"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent">
 
-            <TextView
-                android:id="@+id/itemProfile_TV_gamesCouner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Сыграно игр 5"
-                android:textSize="10sp"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="@+id/dialogOkNo_text"
-                app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text" />
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/itemProfile_TV_maxMoney"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Макс. монет за игру 78"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCouner"
-                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesCouner" />
+                    <TextView
+                        android:id="@+id/dialogOkNo_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Статистика"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/itemProfile_TV_maxExp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Макс. опыта за игру 90"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCouner"
-                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_maxMoney" />
+                    <TextView
+                        android:id="@+id/dialogOkNo_text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="8dp"
+                        android:text="Количество игр за роли"
+                        android:textColor="@color/white"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_maxExp" />
 
-            <TextView
-                android:id="@+id/itemProfile_TV_percentWins"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
-                android:text="Процент побед 45%"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:layout_constraintStart_toEndOf="@+id/itemProfile_TV_maxExp"
-                app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesCouner" />
+                    <TextView
+                        android:id="@+id/itemProfile_TV_maxMoney"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Макс. монет за игру 78"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCouner"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesCouner" />
 
-            <TextView
-                android:id="@+id/itemProfile_TV_percentMafiaWins"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Побед мафии 67%"
-                android:textSize="10sp"
-                android:textColor="@color/white"
-                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_percentWins"
-                app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_maxMoney" />
+                    <TextView
+                        android:id="@+id/itemProfile_TV_maxExp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Макс. опыта за игру 90"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCouner"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_maxMoney" />
 
-            <TextView
-                android:id="@+id/itemProfile_TV_percentPeacefulWins"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Побед мирных 45%"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_percentMafiaWins"
-                app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_maxExp" />
+                    <TextView
+                        android:id="@+id/itemProfile_TV_percentWins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="Процент побед 45%"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toEndOf="@+id/itemProfile_TV_maxExp"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesCouner" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_percentPeacefulWins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Побед мирных 45%"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_percentMafiaWins"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_maxExp" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_percentMafiaWins"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Побед мафии 67%"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_percentWins"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_maxMoney" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesCouner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Сыграно игр 5"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        app:layout_constraintStart_toStartOf="@+id/dialogOkNo_text"
+                        app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesCitizen"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Мирный житель: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text2" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesSheriff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Шериф: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesCitizen" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesDoctor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Доктор: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesSheriff" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesLover"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Любовница: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesDoctor" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesJournalist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Агент СМИ: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesLover" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesBodyguard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Телохранитель: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesJournalist" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesManiac"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Маньяк: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesBodyguard" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Доктор лёгкого поведения: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesManiac" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesMafia"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Мафия: 67"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesMafiaDon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Дон мафии: 45"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesMafia" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesTerrorist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Террорист: 65"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesMafiaDon" />
+
+                    <TextView
+                        android:id="@+id/itemProfile_TV_gamesPoisoner"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Отравитель: 34"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesTerrorist" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesCitizen"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesCitizen"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesCitizen"
+                        app:srcCompat="@drawable/citizen_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView3"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesSheriff"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesSheriff"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesSheriff"
+                        app:srcCompat="@drawable/sheriff_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesDoctor"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesDoctor"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesDoctor"
+                        app:srcCompat="@drawable/doctor_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesLover"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesLover"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesLover"
+                        app:srcCompat="@drawable/lover_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesJournalist"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesJournalist"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesJournalist"
+                        app:srcCompat="@drawable/journalist_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView10"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesBodyguard"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesBodyguard"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesBodyguard"
+                        app:srcCompat="@drawable/bodyguard_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView11"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesManiac"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesManiac"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesManiac"
+                        app:srcCompat="@drawable/maniac_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView12"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
+                        app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView13"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesMafia"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesMafia"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesMafia"
+                        app:srcCompat="@drawable/mafia_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView14"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesMafiaDon"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesMafiaDon"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesMafiaDon"
+                        app:srcCompat="@drawable/mafia_don_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView15"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesTerrorist"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesTerrorist"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesTerrorist"
+                        app:srcCompat="@drawable/terrorist_round" />
+
+                    <ImageView
+                        android:id="@+id/imageView16"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginEnd="8dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesTerrorist"
+                        app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesPoisoner"
+                        app:srcCompat="@drawable/poisoner_round" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </ScrollView>
 
             <Button
-                android:id="@+id/dialogOkNo_btn_no"
+                android:id="@+id/itemProfile_btn_kickFromRoom"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
                 android:background="@drawable/profile_button"
-                android:drawableLeft="@drawable/ic_add_friend"
+                android:drawableLeft="@drawable/ic_delete_user"
                 android:gravity="fill"
                 android:padding="5dp"
-                android:text="  Добавить в друзья"
+                android:text="  Удалить из комнаты"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_maxExp" />
+                app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_btn_yes" />
 
             <Button
                 android:id="@+id/dialogOkNo_btn_yes"
@@ -243,21 +540,22 @@
                 app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_btn_no" />
 
             <Button
-                android:id="@+id/itemProfile_btn_kickFromRoom"
+                android:id="@+id/dialogOkNo_btn_no"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/profile_button"
-                android:drawableLeft="@drawable/ic_delete_user"
+                android:drawableLeft="@drawable/ic_add_friend"
                 android:gravity="fill"
                 android:padding="5dp"
-                android:text="  Удалить из комнаты"
+                android:text="  Добавить в друзья"
                 android:textAppearance="@style/TextAppearance.AppCompat"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_btn_yes" />
+                app:layout_constraintTop_toBottomOf="@+id/scrollView3" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>

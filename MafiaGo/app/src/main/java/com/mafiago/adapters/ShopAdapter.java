@@ -694,14 +694,14 @@ public class ShopAdapter extends BaseAdapter {
                             e.printStackTrace();
                         }
                         socket.emit("buy_item", json);
-                        Log.e("kkk", "Socket_отправка - buy_item1 - "+ json.toString());
+                        Log.e("kkk", "Socket_отправка - buy_item - "+ json.toString());
                         alert.cancel();
                     });
                     btn_no.setOnClickListener(v12 -> {
                         alert.cancel();
                     });
                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    //alert.show();
+                    alert.show();
                 });
 
                 break;

@@ -552,7 +552,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 int money = 0, exp = 0, gold = 0, rang = 0;
                 JSONObject statistic = new JSONObject();
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
-                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "";
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "", main_personal_color = "";
+                int was_citizen = 0, was_sheriff = 0, was_doctor = 0, was_lover = 0, was_journalist = 0, was_bodyguard = 0, was_doctor_of_easy_virtue = 0, was_maniac = 0, was_mafia = 0, was_mafia_don = 0, was_terrorist = 0, was_poisoner = 0;
                 //data.remove("avatar");
                 Log.d("kkk", "принял - get_profile - " + data);
 
@@ -567,6 +568,21 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     avatar = data.getString("avatar");
                     //"main_status":"альфа-тестер","main_personal_color" personal_colors
                     main_status = data.getString("main_status");
+                    main_personal_color = data.getString("main_personal_color");
+
+                    was_citizen = statistic.getInt("was_citizen");
+                    was_sheriff = statistic.getInt("was_sheriff");
+                    was_doctor = statistic.getInt("was_doctor");
+                    was_lover = statistic.getInt("was_lover");
+                    was_journalist = statistic.getInt("was_journalist");
+                    was_bodyguard = statistic.getInt("was_bodyguard");
+                    was_doctor_of_easy_virtue = statistic.getInt("was_doctor_of_easy_virtue");
+                    was_maniac = statistic.getInt("was_maniac");
+                    was_mafia = statistic.getInt("was_mafia");
+                    was_mafia_don = statistic.getInt("was_mafia_don");
+                    was_terrorist = statistic.getInt("was_terrorist");
+                    was_poisoner = statistic.getInt("was_poisoner");
+
                     user_id_2 = data.getString("user_id");
                     online = data.getBoolean("is_online");
                     gold = data.getInt("gold");
@@ -587,9 +603,13 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 TV_gold.setText(String.valueOf(gold));
                 TV_rang.setText(String.valueOf(rang));
 
-                TV_nick.setText(nick);
+                TV_nick.setText(MainActivity.NickName);
                 if (!main_status.equals("")) {
-                    TV_status.setText("{" + main_status + "}");
+                    TV_status.setText("{" + main_status + "}");;
+                }
+                if (!main_personal_color.equals("")) {
+                    TV_nick.setTextColor(Color.parseColor(main_personal_color));
+                    TV_status.setTextColor(Color.parseColor(main_personal_color));
                 }
 
                 PB_loading.setVisibility(View.GONE);
@@ -601,22 +621,35 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 TV_nick.setVisibility(View.VISIBLE);
                 TV_status.setVisibility(View.VISIBLE);
 
-                int finalMoney = money;
-                int finalExp = exp;
-                boolean finalOnline = online;
+                report_nick = nick;
+                report_id = user_id_2;
                 String finalNick = nick;
-                int finalGold = gold;
+                String finalMain_status = main_status;
+                String finalMain_personal_color = main_personal_color;
+                boolean finalOnline = online;
+                String finalAvatar = avatar;
                 int finalGame_counter = game_counter;
                 int finalMax_money_score = max_money_score;
                 int finalMax_exp_score = max_exp_score;
-                String finalGeneral_pers_of_wins = general_pers_of_wins;
                 String finalMafia_pers_of_wins = mafia_pers_of_wins;
                 String finalPeaceful_pers_of_wins = peaceful_pers_of_wins;
-                String finalAvatar = avatar;
-                String finalUser_id_ = user_id_2;
-                report_nick = nick;
-                report_id = user_id_2;
+                String finalGeneral_pers_of_wins = general_pers_of_wins;
+                int finalGold = gold;
+                int finalMoney = money;
+                int finalExp = exp;
                 int finalRang = rang;
+                int finalWas_citizen = was_citizen;
+                int finalWas_sheriff = was_sheriff;
+                int finalWas_doctor = was_doctor;
+                int finalWas_lover = was_lover;
+                int finalWas_journalist = was_journalist;
+                int finalWas_bodyguard = was_bodyguard;
+                int finalWas_maniac = was_maniac;
+                int finalWas_doctor_of_easy_virtue = was_doctor_of_easy_virtue;
+                int finalWas_mafia = was_mafia;
+                int finalWas_mafia_don = was_mafia_don;
+                int finalWas_poisoner = was_poisoner;
+                int finalWas_terrorist = was_terrorist;
                 CV_info.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     View view_profile = getLayoutInflater().inflate(R.layout.dialog_my_profile, null);
@@ -627,7 +660,9 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TextView TV_gold = view_profile.findViewById(R.id.dialogMyProfile_TV_gold);
                     TextView TV_rang = view_profile.findViewById(R.id.dialogMyProfile_TV_rang);
                     ImageView IV_avatar = view_profile.findViewById(R.id.dialogMyProfile_IV_avatar);
+                    ImageView IV_online = view_profile.findViewById(R.id.dialogMyProfile_IV_online);
                     TextView TV_nick = view_profile.findViewById(R.id.dialogMyProfile_TV_nick);
+                    TextView TV_status = view_profile.findViewById(R.id.dialogMyProfile_TV_status);
 
                     TextView TV_game_counter = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesCouner);
                     TextView TV_max_money_score = view_profile.findViewById(R.id.dialogMyProfile_TV_maxMoney);
@@ -636,10 +671,50 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TextView TV_mafia_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentMafiaWins);
                     TextView TV_peaceful_pers_of_wins = view_profile.findViewById(R.id.dialogMyProfile_TV_percentPeacefulWins);
 
+                    TextView TV_gamesCitizen = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesCitizen);
+                    TextView TV_gamesSheriff = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesSheriff);
+                    TextView TV_gamesDoctor = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesDoctor);
+                    TextView TV_gamesLover = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesLover);
+                    TextView TV_gamesJournalist = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesJournalist);
+                    TextView TV_gamesBodyguard = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesBodyguard);
+                    TextView TV_gamesManiac = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesManiac);
+                    TextView TV_gamesDoctorOfEasyVirtue = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesDoctorOfEasyVirtue);
+                    TextView TV_gamesMafia = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesMafia);
+                    TextView TV_gamesMafiaDon = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesMafiaDon);
+                    TextView TV_gamesTerrorist = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesTerrorist);
+                    TextView TV_gamesPoisoner = view_profile.findViewById(R.id.dialogMyProfile_TV_gamesPoisoner);
+
+                    TV_gamesCitizen.setText("Мирный житель: " + finalWas_citizen);
+                    TV_gamesSheriff.setText("Шериф: " + finalWas_sheriff);
+                    TV_gamesDoctor.setText("Доктор: " + finalWas_doctor);
+                    TV_gamesLover.setText("Любовница: " + finalWas_lover);
+                    TV_gamesJournalist.setText("Агент СМИ: " + finalWas_journalist);
+                    TV_gamesBodyguard.setText("Телохранитель: " + finalWas_bodyguard);
+                    TV_gamesManiac.setText("Маньяк: " + finalWas_doctor_of_easy_virtue);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкоо поведения: " + finalWas_maniac);
+                    TV_gamesMafia.setText("Мафия: " + finalWas_mafia);
+                    TV_gamesMafiaDon.setText("Дон мафии: " + finalWas_mafia_don);
+                    TV_gamesTerrorist.setText("Террорист: " + finalWas_terrorist);
+                    TV_gamesPoisoner.setText("Отравитель: " + finalWas_poisoner);
+
+                    TV_nick.setText(finalNick);
+                    if (!finalMain_status.equals("")) {
+                        TV_status.setText("{" + finalMain_status + "}");
+                    }
+                    if (!finalMain_personal_color.equals("")) {
+                        TV_nick.setTextColor(Color.parseColor(finalMain_personal_color));
+                        TV_status.setTextColor(Color.parseColor(finalMain_personal_color));
+                    }
+                    if (finalOnline)
+                    {
+                        IV_online.setVisibility(View.VISIBLE);
+                    }
+
                     if (finalAvatar != null && !finalAvatar.equals("") && !finalAvatar.equals("null")) {
                         IV_avatar.setImageBitmap(fromBase64(finalAvatar));
                     }
 
+                    String finalAvatar1 = finalAvatar;
                     IV_avatar.setOnClickListener(v12 -> {
                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                         View view_avatar = getLayoutInflater().inflate(R.layout.dialog_avatar, null);
@@ -648,7 +723,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                         ImageView IV_dialog_avatar = view_avatar.findViewById(R.id.dialogAvatar_avatar);
                         Button btn_exit_avatar = view_avatar.findViewById(R.id.dialogAvatar_btn_exit);
 
-                        IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar));
+                        if (finalAvatar1 != null && !finalAvatar1.equals("") && !finalAvatar1.equals("null")) {
+                            IV_dialog_avatar.setImageBitmap(fromBase64(finalAvatar1));
+                        }
+
 
                         AlertDialog alert2 = builder2.create();
 
@@ -660,31 +738,17 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                         alert2.show();
                     });
 
-                    TV_game_counter.setText(String.valueOf(finalGame_counter));
-                    TV_max_money_score.setText(String.valueOf(finalMax_money_score));
-                    TV_max_exp_score.setText(String.valueOf(finalMax_exp_score));
-                    TV_general_pers_of_wins.setText(String.valueOf(finalGeneral_pers_of_wins));
-                    TV_mafia_pers_of_wins.setText(String.valueOf(finalMafia_pers_of_wins));
-                    TV_peaceful_pers_of_wins.setText(String.valueOf(finalPeaceful_pers_of_wins));
-
-                    TV_gold.setText(String.valueOf(finalGold));
-                    TV_money.setText(String.valueOf(finalMoney));
-                    TV_exp.setText(String.valueOf(finalExp));
-                    TV_rang.setText(String.valueOf(finalRang));
-                    TV_nick.setText(finalNick);
-
-                    TV_game_counter.setText("Сыграно игр " + finalGame_counter);
-                    TV_max_money_score.setText("Макс. монет за игру " + finalMax_money_score);
-                    TV_max_exp_score.setText("Макс. опыта за игру " + finalMax_exp_score);
-                    TV_general_pers_of_wins.setText("Процент побед " + finalGeneral_pers_of_wins);
-                    TV_mafia_pers_of_wins.setText("Побед за мафию " + finalMafia_pers_of_wins);
-                    TV_peaceful_pers_of_wins.setText("Побед за мирных " + finalPeaceful_pers_of_wins);
+                    TV_game_counter.setText("Сыграно игр: " + finalGame_counter);
+                    TV_max_money_score.setText("Макс. монет за игру: " + finalMax_money_score);
+                    TV_max_exp_score.setText("Макс. опыта за игру: " + finalMax_exp_score);
+                    TV_general_pers_of_wins.setText("Процент побед: " + finalGeneral_pers_of_wins);
+                    TV_mafia_pers_of_wins.setText("Побед за мафию: " + finalMafia_pers_of_wins);
+                    TV_peaceful_pers_of_wins.setText("Побед за мирных: " + finalPeaceful_pers_of_wins);
 
                     TV_gold.setText(finalGold + " золота");
                     TV_money.setText(finalMoney + " $");
                     TV_exp.setText(finalExp + " XP");
                     TV_rang.setText(finalRang + " ранг");
-                    TV_nick.setText(finalNick);
 
                     AlertDialog alert = builder.create();
                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

@@ -270,7 +270,6 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                 premiumAdapter = new PremiumAdapter(list_premium, getContext());
                 LV_premium.setAdapter(premiumAdapter);
 
-                Log.e("kkk", "CHANCE!!!!!!!!!!!");
                 socket.on("get_store", OnGetPremiumStore);
                 //socket.on("buy_item", OnBuyPremiumItem);
                 //socket.on("user_error", onUserError);
@@ -507,8 +506,7 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                             list_premium_chance_prices.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_premium_prices.size()));
                         }
 
-                        Log.e("kkk", "CHANCE!!!");
-                        //list_shop.add(new ShopModel("buy_chance", list_usual_prices, mas_usual_chance_time, list_premium_prices, mas_premium_chance_time));
+                        list_shop.add(new ShopModel("buy_chance", list_usual_prices, mas_usual_chance_time, list_premium_prices, mas_premium_chance_time));
 
                         ////////////////
 
