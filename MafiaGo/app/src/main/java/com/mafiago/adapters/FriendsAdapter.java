@@ -61,7 +61,6 @@ public class FriendsAdapter extends BaseAdapter {
         CircleImageView IV_avatar = view.findViewById(R.id.itemFriend_avatar);
         TextView TV_nick = view.findViewById(R.id.itemFriend_nick);
         TextView TV_room = view.findViewById(R.id.itemFriend_TV_room);
-        TextView TV_onlineOffline = view.findViewById(R.id.itemFriend_TV_room);
         ImageView IV_online = view.findViewById(R.id.itemFriend_IV_online);
         ImageView IV_lock = view.findViewById(R.id.itemFriend_lock);
         Button btn_delete = view.findViewById(R.id.itemFriend_btn_delete);

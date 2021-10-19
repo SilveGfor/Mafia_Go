@@ -335,6 +335,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         socket.off("update_list_of_rooms");
         socket.off("get_profile");
         socket.off("send_complaint");
+        socket.off("my_friend_request");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
@@ -343,6 +344,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         socket.on("update_list_of_rooms", onUpdateRoom);
         socket.on("get_profile", OnGetProfile);
         socket.on("send_complaint", onSendComplain);
+        socket.on("my_friend_request", onMySendRequest);
 
         final JSONObject json = new JSONObject();
         try {
@@ -816,7 +818,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
                     TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкоо поведения: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);
@@ -872,6 +874,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                         alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert2.show();
                     });
+
+                    btn_kick.setVisibility(View.GONE);
 
                     String finalNick = nick;
                     String finalUser_id_ = user_id_2;
@@ -1044,7 +1048,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
                     TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкоо поведения: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);
@@ -1131,6 +1135,40 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     builder.setTitle("Вы превысили лимит жалоб!")
                             .setMessage("")
                             .setIcon(R.drawable.ic_error)
+                            .setCancelable(false)
+                            .setNegativeButton("Ок",
+                                    new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            dialog.cancel();
+                                        }
+                                    });
+                    AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
+    };
+
+    private final Emitter.Listener onMySendRequest = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                Log.d("kkk", "принял - my_send_request - " + data);
+                String status = "";
+                try {
+                    status = data.getString("status");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                if (status.equals("OK"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                    builder.setTitle("Запрос отправлен!")
+                            .setMessage("")
+                            .setIcon(R.drawable.ic_ok)
                             .setCancelable(false)
                             .setNegativeButton("Ок",
                                     new DialogInterface.OnClickListener() {

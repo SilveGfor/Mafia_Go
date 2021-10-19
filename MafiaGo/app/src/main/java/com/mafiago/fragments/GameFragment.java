@@ -2243,7 +2243,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
                     TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкоо поведения: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);
@@ -2535,7 +2535,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
                     TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкоо поведения: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);

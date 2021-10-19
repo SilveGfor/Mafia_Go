@@ -181,7 +181,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_list_of_chats - " + data);
                     String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "";
-                    boolean online = false;
+                    boolean online = false, my_message = false, is_read = true;
                     try {
                         JSONArray user_ids = data.getJSONArray("user_ids");
                         user_id_1 = user_ids.getString(0);
@@ -199,10 +199,15 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject last_message = data.getJSONObject("last_message");
                         message = last_message.getString("message");
+                        if (last_message.has("is_read")) {
+                            is_read = last_message.getBoolean("is_read");
+                        }
+
+                        my_message = last_message.getString("nick").equals(MainActivity.NickName);
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false, my_message, is_read));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -228,7 +233,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_list_of_chats - " + data);
                     String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "";
-                    boolean online = false, i_blocked = false;
+                    boolean online = false, i_blocked = false, my_message = false, is_read = false;
                     try {
                         JSONArray user_ids = data.getJSONArray("user_ids");
                         user_id_1 = user_ids.getString(0);
@@ -246,15 +251,16 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject last_message = data.getJSONObject("last_message");
                         message = last_message.getString("message");
+                        my_message = last_message.getBoolean("message");
+                        is_read = last_message.getBoolean("is_read");
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
                         if (blocked.getBoolean(user_id_1))
                         {
                             i_blocked = true;
-                            Log.e("kkk", "1");
                         }
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, true, avatar, i_blocked));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false, my_message, is_read));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();

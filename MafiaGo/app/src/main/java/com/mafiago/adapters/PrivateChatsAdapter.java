@@ -51,9 +51,30 @@ public class PrivateChatsAdapter extends BaseAdapter {
         TextView TV_mesCount = view.findViewById(R.id.ItemFriend_TV_messagesCount);
         ImageView IV_avatar = view.findViewById(R.id.ItemFriend_IV_avatar);
         ImageView IV_online = view.findViewById(R.id.itemPrivateChat_IV_online);
+        ImageView IV_is_read = view.findViewById(R.id.itemPrivateChat_IV_readed);
 
         if (list_friends.get(position).getAvatar() != null) {
             IV_avatar.setImageBitmap(fromBase64(list_friends.get(position).getAvatar()));
+        }
+
+        if (list_friends.get(position).my_message) {
+            if (list_friends.get(position).is_read)
+            {
+                IV_is_read.setImageResource(R.drawable.two_tips);
+            }
+            else
+            {
+                IV_is_read.setImageResource(R.drawable.one_tip);
+            }
+        }
+        else
+        {
+            if (!list_friends.get(position).is_read)
+            {
+                TV_nick.setTextColor(Color.parseColor("#FFFFFF"));
+                TV_message.setTextColor(Color.parseColor("#FFFFFF"));
+            }
+            IV_is_read.setVisibility(View.INVISIBLE);
         }
 
         TV_nick.setText(list_friends.get(position).getNick());

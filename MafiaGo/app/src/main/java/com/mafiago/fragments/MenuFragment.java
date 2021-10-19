@@ -691,7 +691,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TV_gamesJournalist.setText("Агент СМИ: " + finalWas_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + finalWas_bodyguard);
                     TV_gamesManiac.setText("Маньяк: " + finalWas_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкоо поведения: " + finalWas_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + finalWas_maniac);
                     TV_gamesMafia.setText("Мафия: " + finalWas_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + finalWas_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + finalWas_terrorist);

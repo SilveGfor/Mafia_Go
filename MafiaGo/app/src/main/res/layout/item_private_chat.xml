@@ -26,11 +26,11 @@
         android:layout_toEndOf="@+id/ItemFriend_IV_avatar"
         android:layout_toRightOf="@+id/ItemFriend_IV_avatar"
         android:text="SilveGfor"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/notActiveText"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toStartOf="@+id/ItemFriend_IV_readed"
-        app:layout_constraintStart_toEndOf="@+id/ItemFriend_IV_avatar"
+        app:layout_constraintEnd_toStartOf="@+id/itemPrivateChat_IV_readed"
+        app:layout_constraintStart_toEndOf="@+id/itemPrivateChat_IV_online"
         app:layout_constraintTop_toTopOf="@+id/ItemFriend_IV_avatar" />
 
     <TextView
@@ -47,7 +47,7 @@
         android:singleLine="true"
         android:text="1 сообщение"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textColor="@color/colorWhite"
+        android:textColor="@color/notActiveText"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/ItemFriend_btn_block"
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/ItemFriend_TV_nick"
+        app:layout_constraintStart_toEndOf="@+id/ItemFriend_IV_avatar"
         app:layout_constraintTop_toTopOf="@+id/ItemFriend_TV_nick"
         app:srcCompat="@drawable/orange_point" />
 
@@ -108,13 +108,12 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/ItemFriend_IV_readed"
+        android:id="@+id/itemPrivateChat_IV_readed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="4dp"
-        android:background="@drawable/two_tips"
         app:layout_constraintBottom_toBottomOf="@+id/ItemFriend_TV_MessageTime"
         app:layout_constraintEnd_toStartOf="@+id/ItemFriend_TV_MessageTime"
         app:layout_constraintTop_toTopOf="@+id/ItemFriend_TV_MessageTime" />

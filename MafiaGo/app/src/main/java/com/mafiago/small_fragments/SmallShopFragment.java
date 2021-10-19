@@ -255,7 +255,7 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                 shopAdapter = new ShopAdapter(list_shop, getContext());
                 LV_shop.setAdapter(shopAdapter);
 
-                //btn_busters.setVisibility(View.VISIBLE);
+                btn_busters.setVisibility(View.VISIBLE);
 
                 socket.on("get_store", OnGetMainStore);
                 //socket.on("buy_item", OnBuyItem);

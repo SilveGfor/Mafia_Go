@@ -448,25 +448,6 @@ public class ShopAdapter extends BaseAdapter {
                     }
                 });
 
-                /*
-                switch_status.setOnCheckedChangeListener((buttonView, isChecked) -> {
-                    if (isChecked) {
-                        //premium[0] = "premium";
-                        TV_desc.setText("Статус за золото можно придумать самому");
-                        spinner.setVisibility(View.INVISIBLE);
-                        TV_status.setText("{" + ET_premiumStatus.getText() + "}");
-                        TV_statusText.setTextColor(Color.parseColor("#F0BF41"));
-                    } else {
-                        //premium[0] = "usual";
-                        TV_desc.setText("Статус за монеты можно выбрать из предложенного списка");
-                        spinner.setVisibility(View.VISIBLE);
-                        String[] choose = context.getResources().getStringArray(R.array.statuses);
-                        TV_status.setText(choose[spinner.getSelectedItemPosition()]);
-                        TV_statusText.setTextColor(Color.parseColor("#848484"));
-                    }
-                });
-                 */
-
                 btn_buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -477,7 +458,7 @@ public class ShopAdapter extends BaseAdapter {
                         TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
                         Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
                         Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                        TV_text.setText("Вы уверены, что хотите совершить покупку?&&");
+                        TV_text.setText("Вы уверены, что хотите совершить покупку?");
                         btn_yes.setOnClickListener(v1 -> {
                             final JSONObject json = new JSONObject();
                             try {
@@ -679,7 +660,7 @@ public class ShopAdapter extends BaseAdapter {
                     TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
                     Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
                     Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                    TV_text.setText("Вы уверены, что хотите совершить покупку??");
+                    TV_text.setText("Вы уверены, что хотите совершить покупку?");
                     btn_yes.setOnClickListener(v1 -> {
                         final JSONObject json = new JSONObject();
                         try {
