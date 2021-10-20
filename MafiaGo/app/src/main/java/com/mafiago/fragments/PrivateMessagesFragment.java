@@ -3,7 +3,6 @@ package com.mafiago.fragments;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,9 +17,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.BounceInterpolator;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.Button;
@@ -28,7 +24,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -37,7 +32,6 @@ import com.example.mafiago.R;
 
 import com.mafiago.adapters.PrivateMessagesAdapter;
 import com.mafiago.classes.OnBackPressedListener;
-import com.mafiago.enums.Time;
 import com.mafiago.models.PrivateMessageModel;
 
 import org.json.JSONException;
@@ -51,7 +45,6 @@ import java.util.TimeZone;
 import io.socket.emitter.Emitter;
 
 import static com.mafiago.MainActivity.socket;
-import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class PrivateMessagesFragment extends Fragment implements OnBackPressedListener {
 
@@ -222,18 +215,18 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
             if (list_messages.get(position).nickName.equals(MainActivity.NickName))
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                View view_menu = getLayoutInflater().inflate(R.layout.item_chat_menu, null);
+                View view_menu = getLayoutInflater().inflate(R.layout.dialog_chat_menu, null);
                 builder.setView(view_menu);
 
                 AlertDialog alert = builder.create();
 
-                Button btnAnswer = view_menu.findViewById(R.id.item_chat_menu_btn_answer);
-                Button btnEditMessage = view_menu.findViewById(R.id.item_chat_menu_btn_edit);
-                Button btnDelete = view_menu.findViewById(R.id.item_chat_menu_btn_delete);
+                Button btnAnswer = view_menu.findViewById(R.id.dialogChatMenu_btn_answer);
+                Button btnEditMessage = view_menu.findViewById(R.id.dialogChatMenu_btn_edit);
+                Button btnDelete = view_menu.findViewById(R.id.dialogChatMenu_btn_delete);
 
                 btnAnswer.setOnClickListener(v -> {
-                    alert.cancel();;
-                    answer_id = position;
+                    answer_id = list_messages.get(position).num;
+                    alert.cancel();
                     TV_answer.setText(list_messages.get(position).nickName + ": " + list_messages.get(position).message);
                     TV_answer.setVisibility(View.VISIBLE);
                 });
@@ -285,7 +278,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                 alert.show();
             }
             else {
-                answer_id = position;
+                answer_id = list_messages.get(position).num;
                 TV_answer.setText(list_messages.get(position).nickName + ": " + list_messages.get(position).message);
                 TV_answer.setVisibility(View.VISIBLE);
             }
@@ -461,7 +454,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             list_messages.add(new PrivateMessageModel(num, message, time, nick, "UserMes", status, is_read));
                         } else {
                             Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
-                            list_messages.add(new PrivateMessageModel(num, message, time, nick, "AnswerMes", status, list_messages.get(link).answerNick, list_messages.get(link).message, list_messages.get(link).answerTime, link, is_read));
+                            list_messages.add(new PrivateMessageModel(num, message, time, nick, "AnswerMes", link, is_read));
                         }
                         messageAdapter.notifyDataSetChanged();
                         if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 2) {

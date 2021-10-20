@@ -1,6 +1,7 @@
 package com.mafiago.adapters;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,9 +131,15 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     int id = list_mess.get(position).answerId;
 
-                    txt_answer_nick.setText(list_mess.get(id).nickName);
-                    txt_answer_mes.setText(list_mess.get(id).message);
-                    txt_answer_time.setText(list_mess.get(id).time);
+                    for (int i = 0; i < list_mess.size(); i++)
+                    {
+                        if (id == list_mess.get(i).num)
+                        {
+                            txt_answer_nick.setText(list_mess.get(i).nickName);
+                            txt_answer_mes.setText(list_mess.get(i).message);
+                            txt_answer_time.setText(list_mess.get(i).time);
+                        }
+                    }
                 }
                 else
                 {
@@ -168,9 +175,15 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     int id = list_mess.get(position).answerId;
 
-                    txt_answer_nick.setText(list_mess.get(id).nickName);
-                    txt_answer_mes.setText(list_mess.get(id).message);
-                    txt_answer_time.setText(list_mess.get(id).time);
+                    for (int i = 0; i < list_mess.size(); i++)
+                    {
+                        if (id == list_mess.get(i).num)
+                        {
+                            txt_answer_nick.setText(list_mess.get(i).nickName);
+                            txt_answer_mes.setText(list_mess.get(i).message);
+                            txt_answer_time.setText(list_mess.get(i).time);
+                        }
+                    }
                 }
                 break;
         }

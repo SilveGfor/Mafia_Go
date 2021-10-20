@@ -349,9 +349,6 @@ public class GameChatFragment extends Fragment {
         });
 
         LV_chat.setOnItemClickListener((parent, view12, position, id) -> {
-            Log.d("kkk", "----");
-            Log.d("kkk", "position - " + position + " ' " + list_chat.get(position).mesType);
-            Log.d("kkk", "----");
             if(list_chat.get(position).mesType.equals("UsersMes") || list_chat.get(position).mesType.equals("AnswerMes"))
             {
                 if (player.getStatus().equals("alive") || mPage == 2) {

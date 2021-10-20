@@ -35,7 +35,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.TimeZone;
 
 import io.socket.emitter.Emitter;
 
@@ -180,7 +183,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                     TV_no_chats.setVisibility(View.GONE);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_list_of_chats - " + data);
-                    String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "";
+                    String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "", time = "";
                     boolean online = false, my_message = false, is_read = true;
                     try {
                         JSONArray user_ids = data.getJSONArray("user_ids");
@@ -199,6 +202,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject last_message = data.getJSONObject("last_message");
                         message = last_message.getString("message");
+                        time = getDate(last_message.getString("time"));
                         if (last_message.has("is_read")) {
                             is_read = last_message.getBoolean("is_read");
                         }
@@ -207,7 +211,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false, my_message, is_read));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false, my_message, is_read, time));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -232,7 +236,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                     TV_no_chats.setVisibility(View.GONE);
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - get_list_of_chats - " + data);
-                    String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "";
+                    String nick = "", user_id_1 = "", user_id_2 = "", message = "", avatar = "", time = "";
                     boolean online = false, i_blocked = false, my_message = false, is_read = false;
                     try {
                         JSONArray user_ids = data.getJSONArray("user_ids");
@@ -252,7 +256,10 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                         JSONObject last_message = data.getJSONObject("last_message");
                         message = last_message.getString("message");
                         my_message = last_message.getBoolean("message");
-                        is_read = last_message.getBoolean("is_read");
+                        time = getDate(last_message.getString("time"));
+                        if (last_message.has("is_read")) {
+                            is_read = last_message.getBoolean("is_read");
+                        }
 
                         JSONObject blocked = data.getJSONObject("is_blocked");
                         if (blocked.getBoolean(user_id_1))
@@ -260,7 +267,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
                             i_blocked = true;
                         }
 
-                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false, my_message, is_read));
+                        list_friends.add(new PrivateChatModel(nick, message, user_id_2, online, false, avatar, false, my_message, is_read, time));
                         privateChatsAdapter.notifyDataSetChanged();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -269,4 +276,23 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
             }
         });
     };
+
+    //Привести дату к местному времени
+    public String getDate(String ourDate) {
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            Date value = formatter.parse(ourDate);
+
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm"); //this format changeable
+            dateFormatter.setTimeZone(TimeZone.getDefault());
+            ourDate = dateFormatter.format(value);
+        }
+        catch (Exception e)
+        {
+            ourDate = "00:00";
+        }
+        return ourDate;
+    }
 }

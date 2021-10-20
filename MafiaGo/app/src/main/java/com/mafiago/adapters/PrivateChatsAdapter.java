@@ -77,6 +77,7 @@ public class PrivateChatsAdapter extends BaseAdapter {
             IV_is_read.setVisibility(View.INVISIBLE);
         }
 
+        TV_time.setText(list_friends.get(position).time);
         TV_nick.setText(list_friends.get(position).getNick());
         TV_message.setText(list_friends.get(position).getLast_message());
 
