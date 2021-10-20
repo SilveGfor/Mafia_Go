@@ -255,6 +255,7 @@ public class PrivateChatsFragment extends Fragment implements OnBackPressedListe
 
                         JSONObject last_message = data.getJSONObject("last_message");
                         message = last_message.getString("message");
+                        //TODO: БАГ
                         my_message = last_message.getBoolean("message");
                         time = getDate(last_message.getString("time"));
                         if (last_message.has("is_read")) {

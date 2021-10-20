@@ -667,7 +667,7 @@ public class ShopAdapter extends BaseAdapter {
                             json.put("nick", MainActivity.NickName);
                             json.put("session_id", MainActivity.Session_id);
                             json.put("dop_type", "chance_of_role");
-                            json.put("status_type", premium_chance[0]);
+                            json.put("chance_type", premium_chance[0]);
                             json.put("store_type", "general");
                             json.put("chance_role", role_chance[0]);
                             json.put("item", num_price[0]);
