@@ -34,6 +34,7 @@ import com.mafiago.adapters.PrivateMessagesAdapter;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.PrivateMessageModel;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +65,8 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
     public TextView TV_nick;
     public TextView TV_answer;
+    public TextView TV_chatBlocked;
+    public TextView TV_BI;
 
     public PrivateMessagesAdapter messageAdapter;
 
@@ -91,6 +94,8 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         IV_avatar = view.findViewById(R.id.fragmentPrivateChat_IV_avatar);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
         IV_ban = view.findViewById(R.id.fragmentPrivateChat_IV_ban);
+        TV_chatBlocked = view.findViewById(R.id.fragmentPrivateChat_TV_chatBlocked);
+        TV_BI = view.findViewById(R.id.fragmentPrivateChat_TV_BI);
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,39 +166,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.on("edit_message", OnEditMessage);
         socket.on("get_profile", OnGetProfile);
         socket.on("my_friend_request", onMySendRequest);
-
-        IV_ban.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                View viewQuestion = getLayoutInflater().inflate(R.layout.dialog_ok_no, null);
-                builder.setView(viewQuestion);
-                AlertDialog alert = builder.create();
-                TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
-                Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
-                Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                TV_text.setText("Вы точно хотите заблокировать чат с игроком " + MainActivity.NickName_2 + "?");
-                btn_yes.setOnClickListener(v1 -> {
-                    alert.cancel();
-                    final JSONObject json = new JSONObject();
-                    try {
-                        json.put("nick", MainActivity.NickName);
-                        json.put("session_id", MainActivity.Session_id);
-                        json.put("user_id", MainActivity.User_id);
-                        json.put("user_id_2", MainActivity.User_id_2);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    socket.emit("block_chat", json);
-                    Log.d("kkk", "Socket_отправка - block_chat - " + json.toString());
-                });
-                btn_no.setOnClickListener(v12 -> {
-                    alert.cancel();
-                });
-                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                alert.show();
-            }
-        });
 
         IV_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -408,9 +380,42 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                 @Override
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
-
-
                     Log.d("kkk", "принял - get_chat_info - " + data);
+
+                    String user_id_1 = "", user_id_2 = "";
+
+                    JSONObject blocked = null;
+                    try {
+                        JSONArray user_ids = data.getJSONArray("user_ids");
+                        user_id_1 = user_ids.getString(0);
+                        user_id_2 = user_ids.getString(1);
+
+                        if (!user_id_1.equals(MainActivity.User_id)) {
+                            String test_id = user_id_1;
+                            user_id_1 = user_id_2;
+                            user_id_2 = test_id;
+                        }
+
+                        blocked = data.getJSONObject("is_blocked");
+                        if (!blocked.getBoolean(user_id_1) && !blocked.getBoolean(user_id_2)) {
+                            setBlockEnable();
+                        }
+                        else
+                        {
+                            if (blocked.getBoolean(user_id_1)) {
+                                setUnblockEnable();
+                            }
+                            else
+                            {
+                                setBlockEnable();
+                            }
+                            hideET();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
                 }
             });
         }
@@ -448,13 +453,26 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    switch (status)
+                    {
+                        case "block":
+                            if (nick.equals(MainActivity.NickName))
+                            {
+                                setUnblockEnable();
+                            }
+                            hideET();
+                        case "unlock":
+                            if (nick.equals(MainActivity.NickName))
+                            {
+                                setBlockEnable();
+                            }
+                            showET();
+                    }
                     if (MainActivity.User_id_2.equals(user_id_2) || MainActivity.NickName.equals(nick)) {
                         if (link == -1) {
-                            Log.d("kkk", "UserMes + " + nick + " - " + message);
                             list_messages.add(new PrivateMessageModel(num, message, time, nick, "UserMes", status, is_read));
                         } else {
-                            Log.d("kkk", "AnswerMes ; " + " ; link = " + link);
-                            list_messages.add(new PrivateMessageModel(num, message, time, nick, "AnswerMes", link, is_read));
+                            list_messages.add(new PrivateMessageModel(num, message, time, nick, "AnswerMes", status, link, is_read));
                         }
                         messageAdapter.notifyDataSetChanged();
                         if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 2) {
@@ -814,5 +832,93 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
         // Помещаем изображение в ImageView
         return decodedByte;
+    }
+
+    public void setBlockEnable() {
+        IV_ban.setImageResource(R.drawable.ic_ban);
+        IV_ban.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View viewQuestion = getLayoutInflater().inflate(R.layout.dialog_ok_no, null);
+                builder.setView(viewQuestion);
+                AlertDialog alert = builder.create();
+                TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                TV_text.setText("Вы точно хотите заблокировать чат с игроком " + MainActivity.NickName_2 + "?");
+                btn_yes.setOnClickListener(v1 -> {
+                    alert.cancel();
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("user_id", MainActivity.User_id);
+                        json.put("user_id_2", MainActivity.User_id_2);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("block_chat", json);
+                    Log.d("kkk", "Socket_отправка - block_chat - " + json.toString());
+                });
+                btn_no.setOnClickListener(v12 -> {
+                    alert.cancel();
+                });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
+        });
+    }
+
+    public void setUnblockEnable() {
+        IV_ban.setImageResource(R.drawable.ic_change);
+        IV_ban.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                View viewQuestion = getLayoutInflater().inflate(R.layout.dialog_ok_no, null);
+                builder.setView(viewQuestion);
+                AlertDialog alert = builder.create();
+                TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                TV_text.setText("Вы точно хотите разблокировать чат с игроком " + MainActivity.NickName_2 + "?");
+                btn_yes.setOnClickListener(v1 -> {
+                    alert.cancel();
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("user_id", MainActivity.User_id);
+                        json.put("user_id_2", MainActivity.User_id_2);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("unlock_chat", json);
+                    Log.d("kkk", "Socket_отправка - unlock_chat - " + json.toString());
+                });
+                btn_no.setOnClickListener(v12 -> {
+                    alert.cancel();
+                });
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
+        });
+    }
+
+    public void hideET() {
+        TV_BI.setVisibility(View.INVISIBLE);
+        ET_input.setVisibility(View.INVISIBLE);
+        RL_send.setVisibility(View.INVISIBLE);
+
+        TV_chatBlocked.setVisibility(View.VISIBLE);
+    }
+
+    public void showET() {
+        TV_BI.setVisibility(View.VISIBLE);
+        ET_input.setVisibility(View.VISIBLE);
+        RL_send.setVisibility(View.VISIBLE);
+
+        TV_chatBlocked.setVisibility(View.INVISIBLE);
     }
 }

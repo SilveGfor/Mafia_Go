@@ -98,7 +98,7 @@ public class PrivateChatsAdapter extends BaseAdapter {
                         TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
                         Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
                         Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                        TV_text.setText("Вы точно хотите заблокировать чат с игроком " + MainActivity.NickName_2 + "?");
+                        TV_text.setText("Вы точно хотите разблокировать чат с игроком " + MainActivity.NickName_2 + "?");
                         btn_yes.setOnClickListener(v1 -> {
                             alert.cancel();
                             final JSONObject json = new JSONObject();
