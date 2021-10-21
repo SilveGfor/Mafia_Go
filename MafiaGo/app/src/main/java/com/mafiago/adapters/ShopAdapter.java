@@ -36,7 +36,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 import static com.mafiago.MainActivity.socket;
 
-public class ShopAdapter extends BaseAdapter {
+public class  ShopAdapter extends BaseAdapter {
     public ArrayList<ShopModel> list_shop;
     public Context context;
     public LayoutInflater layout;
