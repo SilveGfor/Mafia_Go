@@ -59,7 +59,6 @@ public class PrivateMessagesAdapter extends BaseAdapter {
         View view = convertView;
         switch (list_mess.get(position).MesType) {
             case "UserMes":
-
                 if (list_mess.get(position).nickName.equals(MainActivity.NickName))
                 {
                     view = layout.inflate(R.layout.item_my_private_message_usual, null);
