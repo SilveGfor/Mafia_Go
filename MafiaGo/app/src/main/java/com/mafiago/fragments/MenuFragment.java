@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RadioGroup;
@@ -48,14 +49,21 @@ import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.mafiago.MainActivity;
+import com.mafiago.adapters.BustersAdapter;
 import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.models.BusterModel;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
@@ -69,6 +77,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     Button btnTools;
     Button btnDailyTasks;
     RelativeLayout btn_back;
+    RelativeLayout RL_timer;
 
     TextView TV_money;
     TextView TV_exp;
@@ -81,7 +90,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     static final int GALLERY_REQUEST = 1;
 
-    ImageView IV_avatar;
+    CircleImageView IV_avatar;
 
     ImageView Chats;
     ImageView Friends;
@@ -94,6 +103,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     ProgressBar PB_loading;
 
     String base64_screenshot = "", report_nick = "", report_id = "";
+
+    ArrayList<BusterModel> list_busters = new ArrayList<>();
 
     // Идентификатор уведомления
     private static final int NOTIFY_ID = 101;
@@ -136,6 +147,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         btnDailyTasks = view.findViewById(R.id.fragmentMenu_btn_dailyTasks);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        RL_timer = view.findViewById(R.id.fragmentMenu_RL_timer);
 
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
@@ -551,14 +563,19 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 boolean online = false;
                 int money = 0, exp = 0, gold = 0, rang = 0;
                 JSONObject statistic = new JSONObject();
+                JSONObject JO_statuses = new JSONObject();
+                JSONObject JO_colors = new JSONObject();
+                JSONObject JO_chance_of_role = new JSONObject();
                 int game_counter = 0, max_money_score = 0, max_exp_score = 0;
-                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "", main_personal_color = "";
+                String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "", main_personal_color = "", premium_time = "";
                 int was_citizen = 0, was_sheriff = 0, was_doctor = 0, was_lover = 0, was_journalist = 0, was_bodyguard = 0, was_doctor_of_easy_virtue = 0, was_maniac = 0, was_mafia = 0, was_mafia_don = 0, was_terrorist = 0, was_poisoner = 0;
                 //data.remove("avatar");
                 Log.d("kkk", "принял - get_profile - " + data);
-
                 try {
                     statistic = data.getJSONObject("statistics");
+                    JO_statuses = data.getJSONObject("statuses");
+                    JO_colors = data.getJSONObject("personal_colors");
+                    JO_chance_of_role = data.getJSONObject("chance_of_role");
                     game_counter = statistic.getInt("game_counter");
                     max_money_score = statistic.getInt("max_money_score");
                     max_exp_score = statistic.getInt("max_exp_score");
@@ -566,7 +583,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
                     peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
                     avatar = data.getString("avatar");
-                    //"main_status":"альфа-тестер","main_personal_color" personal_colors
+                    //"main_status":"альфа-тестер","main_personal_color" personal_colors premium_time
                     main_status = data.getString("main_status");
                     main_personal_color = data.getString("main_personal_color");
 
@@ -590,8 +607,135 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     money = data.getInt("money");
                     exp = data.getInt("exp");
                     rang = data.getInt("rang");
+
+                    if (!data.isNull("premium_time")) {
+                        IV_avatar.setBorderWidth(4);
+                        JSONObject JO_premium_time = data.getJSONObject("premium_time");
+                        if (JO_premium_time.getInt("months") == 0) {
+                            if (JO_premium_time.getInt("days") == 0) {
+                                if (JO_premium_time.getInt("hours") == 0) {
+                                    if (JO_premium_time.getInt("minutes") == 0) {
+                                        premium_time = JO_premium_time.getInt("seconds") + " сек.";
+                                    } else {
+                                        premium_time = JO_premium_time.getInt("minutes") + " мин. " + JO_premium_time.getInt("seconds") + " сек.";
+                                    }
+                                } else {
+                                    premium_time = JO_premium_time.getInt("hours") + " ч. " + JO_premium_time.getInt("minutes") + " мин.";
+                                }
+                            } else {
+                                premium_time = JO_premium_time.getInt("days") + " д. " + JO_premium_time.getInt("hours") + " ч.";
+                            }
+                        } else {
+                            premium_time = JO_premium_time.getInt("months") + " мес. " + JO_premium_time.getInt("days") + " д.";
+                        }
+                    }
                 } catch (JSONException e) {
                     e.printStackTrace();
+                }
+
+                Iterator iterator;
+                String status;
+
+                for (iterator = JO_statuses.keys(); iterator.hasNext();)
+                {
+                    status = (String) iterator.next();
+                    try {
+                        if (!JO_statuses.getString(status).equals("forever"))
+                        {
+                            JSONObject JO_status = JO_statuses.getJSONObject(status);
+                            String time = "";
+                            if (JO_status.getInt("months") == 0) {
+                                if (JO_status.getInt("days") == 0) {
+                                    if (JO_status.getInt("hours") == 0) {
+                                        if (JO_status.getInt("minutes") == 0) {
+                                            time = JO_status.getInt("seconds") + " сек.";
+                                        } else {
+                                            time = JO_status.getInt("minutes") + " мин.";
+                                        }
+                                    } else {
+                                        time = JO_status.getInt("hours") + " ч.";
+                                    }
+                                } else {
+                                    time = JO_status.getInt("days") + " д.";
+                                }
+                            } else {
+                                time = JO_status.getInt("months") + " мес.";
+                            }
+                            list_busters.add(new BusterModel("status", time, status));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                String color = "";
+
+                for (iterator = JO_colors.keys(); iterator.hasNext();)
+                {
+                    color = (String) iterator.next();
+                    try {
+                        if (!JO_colors.getString(color).equals("forever"))
+                        {
+                            JSONObject JO_color = JO_colors.getJSONObject(color);
+                            String time = "";
+                            if (JO_color.getInt("months") == 0) {
+                                if (JO_color.getInt("days") == 0) {
+                                    if (JO_color.getInt("hours") == 0) {
+                                        if (JO_color.getInt("minutes") == 0) {
+                                            time = JO_color.getInt("seconds") + " сек.";
+                                        } else {
+                                            time = JO_color.getInt("minutes") + " мин.";
+                                        }
+                                    } else {
+                                        time = JO_color.getInt("hours") + " ч.";
+                                    }
+                                } else {
+                                    time = JO_color.getInt("days") + " д.";
+                                }
+                            } else {
+                                time = JO_color.getInt("months") + " мес.";
+                            }
+                            list_busters.add(new BusterModel("color", time, color));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                String role_change = "";
+                boolean is_premium;
+
+                for (iterator = JO_chance_of_role.keys(); iterator.hasNext();)
+                {
+                    role_change = (String) iterator.next();
+                    try {
+                        JSONObject JO_role = JO_chance_of_role.getJSONObject(role_change);
+                        if (!JO_role.isNull("hours")) {
+                            JSONObject JO_role_time = JO_role.getJSONObject("hours");
+                            is_premium = JO_role.getString("type").equals("premium");
+                            String time = "";
+                            if (JO_role_time.getInt("months") == 0) {
+                                if (JO_role_time.getInt("days") == 0) {
+                                    if (JO_role_time.getInt("hours") == 0) {
+                                        if (JO_role_time.getInt("minutes") == 0) {
+                                            time = JO_role_time.getInt("seconds") + " сек.";
+                                        } else {
+                                            time = JO_role_time.getInt("minutes") + " мин.";
+                                        }
+                                    } else {
+                                        time = JO_role_time.getInt("hours") + " ч.";
+                                    }
+                                } else {
+                                    time = JO_role_time.getInt("days") + " д.";
+                                }
+                            } else {
+                                time = JO_role_time.getInt("months") + " мес.";
+                            }
+                            list_busters.add(new BusterModel("chance_of_role", time, role_change, is_premium));
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 if (avatar != null && !avatar.equals("") && !avatar.equals("null")) {
@@ -605,7 +749,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
                 TV_nick.setText(MainActivity.NickName);
                 if (!main_status.equals("")) {
-                    TV_status.setText("{" + main_status + "}");;
+                    TV_status.setText("{" + main_status + "}");
                 }
                 if (!main_personal_color.equals("")) {
                     TV_nick.setTextColor(Color.parseColor(main_personal_color));
@@ -751,6 +895,53 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TV_rang.setText(finalRang + " ранг");
 
                     AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                });
+
+                String finalPremium_time = premium_time;
+
+                RL_timer.setOnClickListener(v -> {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewBusters = getLayoutInflater().inflate(R.layout.dialog_active_busters, null);
+                    builder.setView(viewBusters);
+                    AlertDialog alert = builder.create();
+
+                    CircleImageView CIV_avatar = viewBusters.findViewById(R.id.dialogActiveBusters_IV_avatar);
+                    TextView TV_premiumAccount = viewBusters.findViewById(R.id.dialogActiveBusters_TV_premiumAccount);
+                    TextView TV_noBusters = viewBusters.findViewById(R.id.dialogActiveBusters_TV_noBusters);
+                    TextView TV_premiumTime = viewBusters.findViewById(R.id.dialogActiveBusters_TV_premiumTime);
+                    ShimmerTextView STV_premiumMoney = viewBusters.findViewById(R.id.dialogActiveBusters_STV_premiumMoney);
+                    ShimmerTextView STV_premiumExp = viewBusters.findViewById(R.id.dialogActiveBusters_STV_premiumExp);
+                    ImageView IV_premiumMoney = viewBusters.findViewById(R.id.dialogActiveBusters_IV_money);
+                    ImageView IV_premiumExp = viewBusters.findViewById(R.id.dialogActiveBusters_IV_exp);
+                    ListView LV_activeBusters = viewBusters.findViewById(R.id.dialogActiveBusters_LV_activeBusters);
+
+                    if (list_busters.size() != 0)
+                    {
+                        TV_noBusters.setVisibility(View.INVISIBLE);
+                    }
+                    BustersAdapter bustersAdapter = new BustersAdapter(list_busters, getContext());
+                    LV_activeBusters.setAdapter(bustersAdapter);
+
+                    if (!finalPremium_time.equals(""))
+                    {
+                        if (finalAvatar != null && !finalAvatar.equals("") && !finalAvatar.equals("null")) {
+                            CIV_avatar.setImageBitmap(fromBase64(finalAvatar));
+                            CIV_avatar.setBorderWidth(4);
+                        }
+                        TV_premiumAccount.setText("Премиум-аккаунт");
+                        TV_premiumTime.setText("Осталось: " + finalPremium_time);
+
+                        STV_premiumMoney.setVisibility(View.VISIBLE);
+                        STV_premiumExp.setVisibility(View.VISIBLE);
+                        IV_premiumMoney.setVisibility(View.VISIBLE);
+                        IV_premiumExp.setVisibility(View.VISIBLE);
+                        Shimmer shimmer = new Shimmer();
+                        shimmer.start(STV_premiumMoney);
+                        shimmer.start(STV_premiumExp);
+                    }
+
                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert.show();
                 });

@@ -27,7 +27,7 @@
             android:id="@+id/item_other_private_message_usual_message"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="3dp"
+            android:padding="5dp"
             android:text="Android charting application xml ui design."
             android:textColor="#000000"
             app:layout_constraintEnd_toEndOf="parent"
@@ -46,7 +46,7 @@
             app:layout_constraintTop_toBottomOf="@+id/item_other_private_message_usual_message" />
 
         <TextView
-            android:id="@+id/itemMyPrivateMessageUsual_TV_edited"
+            android:id="@+id/itemOtherPrivateMessageUsual_TV_edited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

@@ -122,12 +122,14 @@
 
             <TextView
                 android:id="@+id/fragmentSettingsProfile_TV_nick"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="4dp"
                 android:text="Римский гусь"
                 android:textSize="18sp"
                 android:visibility="invisible"
+                app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_RL_timer"
                 app:layout_constraintStart_toEndOf="@+id/fragmentSettingsProfile_IV_avatar"
                 app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_IV_avatar" />
 
@@ -139,6 +141,8 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/sheriff_round"
+                app:civ_border_color="@color/gold"
+                app:civ_border_overlay="true"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -166,8 +170,7 @@
                 android:id="@+id/imageView8"
                 android:layout_width="21dp"
                 android:layout_height="14dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginLeft="24dp"
+                android:layout_marginStart="32dp"
                 android:background="@drawable/rang"
                 app:layout_constraintBottom_toBottomOf="@+id/itemDailyTask_IV_prize"
                 app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_TV_nick" />
@@ -241,6 +244,26 @@
                 app:layout_constraintStart_toEndOf="@+id/imageView7"
                 tools:text="1000XP" />
 
+            <RelativeLayout
+                android:id="@+id/fragmentMenu_RL_timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/orange_button"
+                android:padding="5dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <Button
+                    android:id="@+id/fragmentPrivateChat_btn_send"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_booster"
+                    android:clickable="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
+            </RelativeLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 

@@ -28,7 +28,6 @@ import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -60,6 +59,7 @@ public class  ShopAdapter extends BaseAdapter {
         ImageView IV;
         final int[] num_item = {0};
         final int[] num_price = {0};
+        final String[] premium = {"usual"};
         switch (list_shop.get(position).type)
         {
             case "no_ads":
@@ -112,6 +112,7 @@ public class  ShopAdapter extends BaseAdapter {
                 Spinner spinner_convert = view.findViewById(R.id.itemConvertMoney_Spinner);
                 TextView TV_desc_convert = view.findViewById(R.id.itemConvertMoney_TV_desc);
                 IV = view.findViewById(R.id.itemConvertMoney_IV);
+                ImageView IV_money = view.findViewById(R.id.itemConvertMoney_IV_money);
 
                 ArrayAdapter<String> spinnerArrayAdapter_convert = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).list_meaning);
                 spinner_convert.setAdapter(spinnerArrayAdapter_convert);
@@ -121,6 +122,7 @@ public class  ShopAdapter extends BaseAdapter {
                     public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
                         TV_cost.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " золота");
                         num_item[0] = position2;
+                        IV_money.setImageResource(R.drawable.gold);
                     }
 
                     @Override
@@ -170,6 +172,7 @@ public class  ShopAdapter extends BaseAdapter {
                 spinner_convert = view.findViewById(R.id.itemConvertMoney_Spinner);
                 TV_desc_convert = view.findViewById(R.id.itemConvertMoney_TV_desc);
                 IV = view.findViewById(R.id.itemConvertMoney_IV);
+                IV_money = view.findViewById(R.id.itemConvertMoney_IV_money);
 
                 TV_desc_convert.setText("Вы можете конвертировать золото в опыт. Выберите количество опыта, которое вы хотите получить");
                 TV_title.setText("Конвертация золота в опыт");
@@ -183,6 +186,7 @@ public class  ShopAdapter extends BaseAdapter {
                     public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
                         TV_cost.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " золота");
                         num_item[0] = position2;
+                        IV_money.setImageResource(R.drawable.gold);
                     }
 
                     @Override
@@ -236,8 +240,7 @@ public class  ShopAdapter extends BaseAdapter {
                 EditText ET_premiumStatus = view.findViewById(R.id.itemBuyStatus_ET_premiumStatus);
                 Switch switch_status = view.findViewById(R.id.itemBuyStatus_Switch_status);
                 Button btn_buy = view.findViewById(R.id.itemBuyStatus_btn_buy);
-
-                final String[] premium = {"usual"};
+                IV_money = view.findViewById(R.id.itemBuyStatus_IV_money);
 
                 ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).list_meaning);
                 // Вызываем адаптер
@@ -272,21 +275,28 @@ public class  ShopAdapter extends BaseAdapter {
                 switch_status.setOnCheckedChangeListener((buttonView, isChecked) -> {
                     if (isChecked) {
                         premium[0] = "premium";
-                        spinner2.setSelection(1);
                         TV_desc.setText("Статус за золото можно придумать самому");
                         ET_premiumStatus.setVisibility(View.VISIBLE);
                         spinner.setVisibility(View.INVISIBLE);
                         TV_status.setText("{" + ET_premiumStatus.getText() + "}");
                         TV_statusText.setTextColor(Color.parseColor("#F0BF41"));
+                        IV_money.setImageResource(R.drawable.gold);
                     } else {
                         premium[0] = "usual";
-                        spinner2.setSelection(0);
                         TV_desc.setText("Статус за монеты можно выбрать из предложенного списка");
                         ET_premiumStatus.setVisibility(View.INVISIBLE);
                         spinner.setVisibility(View.VISIBLE);
                         String[] choose = context.getResources().getStringArray(R.array.statuses);
                         TV_status.setText(choose[spinner.getSelectedItemPosition()]);
                         TV_statusText.setTextColor(Color.parseColor("#848484"));
+                        IV_money.setImageResource(R.drawable.money);
+                    }
+                    if (spinner2.getSelectedItemPosition() != 0)
+                    {
+                        spinner2.setSelection(0);
+                    }
+                    else {
+                        spinner2.setSelection(1);
                     }
                 });
 
@@ -322,92 +332,139 @@ public class  ShopAdapter extends BaseAdapter {
                     @Override
                     public void afterTextChanged(Editable s) {
                         TV_status.setText("{" + ET_premiumStatus.getText() + "}");
+                        //1-15
                     }
                 });
 
                 btn_buy.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
-                        builder.setView(viewQuestion);
-                        AlertDialog alert = builder.create();
-                        TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
-                        Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
-                        Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                        TV_text.setText("Вы уверены, что хотите совершить покупку?");
-                        btn_yes.setOnClickListener(v1 -> {
-                            final JSONObject json = new JSONObject();
-                            try {
-                                json.put("nick", MainActivity.NickName);
-                                json.put("session_id", MainActivity.Session_id);
-                                json.put("dop_type", "statuses");
-                                json.put("status_type", premium[0]);
-                                json.put("store_type", "general");
-                                json.put("item", num_price[0]);
-                                if (premium[0].equals("usual")) {
-                                    json.put("status", list_shop.get(position).list_meaning[num_item[0]]);
+                        if ((ET_premiumStatus.getText().length() >= 1 && ET_premiumStatus.getText().length() <= 15) || premium[0].equals("usual")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                            builder.setView(viewQuestion);
+                            AlertDialog alert = builder.create();
+                            TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                            Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                            Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                            TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                            btn_yes.setOnClickListener(v1 -> {
+                                final JSONObject json = new JSONObject();
+                                try {
+                                    json.put("nick", MainActivity.NickName);
+                                    json.put("session_id", MainActivity.Session_id);
+                                    json.put("dop_type", "statuses");
+                                    json.put("status_type", premium[0]);
+                                    json.put("store_type", "general");
+                                    json.put("item", num_price[0]);
+                                    if (premium[0].equals("usual")) {
+                                        json.put("status", list_shop.get(position).list_meaning[num_item[0]]);
+                                    } else {
+                                        json.put("status", ET_premiumStatus.getText());
+                                    }
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
                                 }
-                                else
-                                {
-                                    json.put("status", ET_premiumStatus.getText());
-                                }
-                            } catch (JSONException e) {
-                                e.printStackTrace();
+                                socket.emit("buy_item", json);
+                                Log.d("kkk", "Socket_отправка - buy_item - " + json.toString());
+                                alert.cancel();
+                            });
+                            btn_no.setOnClickListener(v12 -> {
+                                alert.cancel();
+                            });
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert.show();
+                        }
+                        else
+                        {
+                            if (ET_premiumStatus.getText().length() == 0)
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                View viewDang = layout.inflate(R.layout.dialog_error, null);
+                                builder.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Пустой статус!");
+                                TV_error.setText("Вы можете придумать статус длиной от 1 символа до 15 включительно");
+                                AlertDialog alert = builder.create();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
                             }
-                            socket.emit("buy_item", json);
-                            Log.d("kkk", "Socket_отправка - buy_item - "+ json.toString());
-                            alert.cancel();
-                        });
-                        btn_no.setOnClickListener(v12 -> {
-                            alert.cancel();
-                        });
-                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        alert.show();
+                            else if (ET_premiumStatus.getText().length() >= 15)
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                View viewDang = layout.inflate(R.layout.dialog_error, null);
+                                builder.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Длинный статус!");
+                                TV_error.setText("Вы можете придумать статус длиной от 1 символа до 15 включительно");
+                                AlertDialog alert = builder.create();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                            }
+                        }
                     }
                 });
 
                 break;
             case "buy_color":
                 view = layout.inflate(R.layout.item_buy_color, null);
-
-                spinner = view.findViewById(R.id.itemBuyColor_Spinner_color);
-                spinner2 = view.findViewById(R.id.itemBuyColor_Spinner_time);
-                TV_status = view.findViewById(R.id.itemBuyColor_status);
+                Spinner spinner_usual = view.findViewById(R.id.itemBuyColor_Spinner_usual);
+                Spinner spinner_premium = view.findViewById(R.id.itemBuyColor_Spinner_premium);
+                Spinner spinner_time = view.findViewById(R.id.itemBuyColor_Spinner_time);
                 TV_desc = view.findViewById(R.id.itemBuyColor_TV_desc);
                 TV_price = view.findViewById(R.id.itemBuyColor_TV_price);
                 TV_nick = view.findViewById(R.id.itemBuyColor_nick);
                 TV_statusText = view.findViewById(R.id.itemBuyColor_TV_statusText);
                 switch_status = view.findViewById(R.id.itemBuyColor_Switch_status);
                 btn_buy = view.findViewById(R.id.itemBuyColor_btn_buy);
+                IV_money = view.findViewById(R.id.itemBuyColor_IV_money);
 
                 num_item[0] = 0;
                 num_price[0] = 0;
 
-                //final String[] premium = {"usual"};
-                String[] list_meaning = new String[list_shop.get(position).list_meaning.length];
-                for (int i = 0; i < list_shop.get(position).list_meaning.length; i++)
+                TV_nick.setText(MainActivity.NickName);
+
+                String[] list_meaning_usual = new String[list_shop.get(position).mas_usual_time.length];
+                for (int i = 0; i < list_shop.get(position).mas_usual_time.length; i++)
                 {
-                    switch (list_shop.get(position).list_meaning[i])
+                    switch (list_shop.get(position).mas_usual_time[i])
                     {
                         case "#8DD3B6":
-                            list_meaning[i] = "мятный цвет";
+                            list_meaning_usual[i] = "мятный цвет";
                             break;
                         case "#AFCAFF":
-                            list_meaning[i] = "светло-синий цвет";
+                            list_meaning_usual[i] = "светло-синий цвет";
                             break;
                         case "#CBFFA1":
-                            list_meaning[i] = "салатовый цвет";
+                            list_meaning_usual[i] = "салатовый цвет";
                             break;
                         default:
-                            list_meaning[i] = list_shop.get(position).list_meaning[i];
+                            list_meaning_usual[i] = list_shop.get(position).mas_usual_time[i];
                             break;
                     }
                 }
 
-                spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_meaning);
-                //Вызываем адаптер
-                spinner.setAdapter(spinnerArrayAdapter);
+                String[] list_meaning_premium = new String[list_shop.get(position).mas_premium_time.length];
+                for (int i = 0; i < list_shop.get(position).mas_premium_time.length; i++)
+                {
+                    switch (list_shop.get(position).mas_premium_time[i])
+                    {
+                        case "#FFE5A1":
+                            list_meaning_premium[i] = "золотой цвет";
+                            break;
+                        case "#AFFFFF":
+                            list_meaning_premium[i] = "голубой цвет";
+                            break;
+                        case "#FFAFCC":
+                            list_meaning_premium[i] = "розовый цвет";
+                            break;
+                        default:
+                            list_meaning_premium[i] = list_shop.get(position).mas_premium_time[i];
+                            break;
+                    }
+                }
 
                 time_mas = new String[list_shop.get(position).list_usual_prices.size()];
                 for (int i = 0; i < list_shop.get(position).list_usual_prices.size(); i++)
@@ -415,18 +472,20 @@ public class  ShopAdapter extends BaseAdapter {
                     time_mas[i] = list_shop.get(position).list_usual_prices.get(i).amount;
                 }
 
-                spinnerArrayAdapter2 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, time_mas);
+                ArrayAdapter<String> spinnerArrayAdapter3 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, time_mas);
                 //Вызываем адаптер
-                spinner2.setAdapter(spinnerArrayAdapter2);
+                spinner_time.setAdapter(spinnerArrayAdapter3);
 
-                TV_nick.setText(MainActivity.NickName);
-
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                spinner_time.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
-                        TV_status.setTextColor(Color.parseColor(list_shop.get(position).list_meaning[position2]));
-                        TV_nick.setTextColor(Color.parseColor(list_shop.get(position).list_meaning[position2]));
-                        num_item[0] = position2;
+                        if (!premium[0].equals("premium")) {
+                            TV_price.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " монет");
+                        }
+                        else {
+                            TV_price.setText("Стоимость: " + list_shop.get(position).list_premium_prices.get(position2).price + " золота");
+                        }
+                        num_price[0] = position2;
                     }
 
                     @Override
@@ -435,16 +494,75 @@ public class  ShopAdapter extends BaseAdapter {
                     }
                 });
 
-                spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                spinnerArrayAdapter = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_meaning_premium);
+                // Вызываем адаптер
+                spinner_premium.setAdapter(spinnerArrayAdapter);
+
+                spinner_premium.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
-                        TV_price.setText("Стоимость: " + list_shop.get(position).list_usual_prices.get(position2).price + " монет");
-                        num_price[0] = position2;
+                        if (!premium[0].equals("usual")) {
+                            TV_nick.setTextColor(Color.parseColor(list_shop.get(position).mas_premium_time[position2]));
+                            num_item[0] = position2;
+                        }
                     }
-
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
 
+                    }
+                });
+
+                spinnerArrayAdapter2 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_meaning_usual);
+                // Вызываем адаптер
+                spinner_usual.setAdapter(spinnerArrayAdapter2);
+                spinner_usual.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position2, long id) {
+                        TV_nick.setTextColor(Color.parseColor(list_shop.get(position).mas_usual_time[position2]));
+                        num_item[0] = position2;
+                    }
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                });
+
+                switch_status.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) {
+                        premium[0] = "premium";
+                        spinner_usual.setVisibility(View.INVISIBLE);
+                        spinner_premium.setVisibility(View.VISIBLE);
+                        TV_desc.setText("Цвет за золото можно выбрать из предложенного списка");
+                        TV_statusText.setTextColor(Color.parseColor("#F0BF41"));
+                        IV_money.setImageResource(R.drawable.gold);
+                        if (spinner_premium.getSelectedItemPosition() != 0)
+                        {
+                            spinner_premium.setSelection(0);
+                        }
+                        else {
+                            spinner_premium.setSelection(1);
+                        }
+                    } else {
+                        premium[0] = "usual";
+                        spinner_usual.setVisibility(View.VISIBLE);
+                        spinner_premium.setVisibility(View.INVISIBLE);
+                        TV_desc.setText("Цвет за монеты можно выбрать из предложенного списка");
+                        TV_statusText.setTextColor(Color.parseColor("#848484"));
+                        IV_money.setImageResource(R.drawable.money);
+                        if (spinner_usual.getSelectedItemPosition() != 0)
+                        {
+                            spinner_usual.setSelection(0);
+                        }
+                        else {
+                            spinner_usual.setSelection(1);
+                        }
+                    }
+                    if (spinner_time.getSelectedItemPosition() != 0)
+                    {
+                        spinner_time.setSelection(0);
+                    }
+                    else {
+                        spinner_time.setSelection(1);
                     }
                 });
 
@@ -465,10 +583,16 @@ public class  ShopAdapter extends BaseAdapter {
                                 json.put("nick", MainActivity.NickName);
                                 json.put("session_id", MainActivity.Session_id);
                                 json.put("dop_type", "personal_colors");
-                                json.put("color_type", "usual");
+                                json.put("color_type", premium[0]);
                                 json.put("store_type", "general");
                                 json.put("item", num_price[0]);
-                                json.put("color", list_shop.get(position).list_meaning[num_item[0]]);
+                                if (premium[0].equals("usual")) {
+                                    json.put("color", list_shop.get(position).mas_usual_time[num_item[0]]);
+                                }
+                                else
+                                {
+                                    json.put("color", list_shop.get(position).mas_premium_time[num_item[0]]);
+                                }
                             } catch (JSONException e) {
                                 e.printStackTrace();
                             }
@@ -487,14 +611,15 @@ public class  ShopAdapter extends BaseAdapter {
             case "buy_chance":
                 view = layout.inflate(R.layout.item_buy_chance, null);
 
-                Spinner spinner_usual = view.findViewById(R.id.itemBuyChance_Spinner_usual);
-                Spinner spinner_premium = view.findViewById(R.id.itemBuyChance_Spinner_premium);
+                spinner_usual = view.findViewById(R.id.itemBuyChance_Spinner_usual);
+                spinner_premium = view.findViewById(R.id.itemBuyChance_Spinner_premium);
                 ShimmerTextView STV_percent = view.findViewById(R.id.itemBuyChance_ShimerText_chance);
                 TV_price = view.findViewById(R.id.itemBuyChance_TV_price);
                 TV_statusText = view.findViewById(R.id.itemBuyChance_TV_switchText);
                 Switch switch_chance = view.findViewById(R.id.itemBuyChance_Switch);
                 Button btn_buy_chance = view.findViewById(R.id.itemBuyChance_btn_buy);
                 TextView TV_question = view.findViewById(R.id.ItemBuyChance_btn_question);
+                IV_money = view.findViewById(R.id.itemBuyChance_IV_money);
 
                 CircleImageView CIV_citizen = view.findViewById(R.id.itemBuyChance_CIV_citizen);
                 CircleImageView CIV_sheriff = view.findViewById(R.id.itemBuyChance_CIV_sheriff);
@@ -514,7 +639,7 @@ public class  ShopAdapter extends BaseAdapter {
                 final String[] premium_chance = {"usual"};
                 final String[] role_chance = {""};
 
-                ArrayAdapter spinnerArrayAdapter3 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).mas_premium_time);
+                spinnerArrayAdapter3 = new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item, list_shop.get(position).mas_premium_time);
                 // Вызываем адаптер
                 spinner_premium.setAdapter(spinnerArrayAdapter3);
 
@@ -561,6 +686,7 @@ public class  ShopAdapter extends BaseAdapter {
                         else {
                             spinner_premium.setSelection(1);
                         }
+                        IV_money.setImageResource(R.drawable.gold);
                     } else {
                         premium_chance[0] = "usual";
                         spinner_usual.setVisibility(View.VISIBLE);
@@ -575,6 +701,7 @@ public class  ShopAdapter extends BaseAdapter {
                         else {
                             spinner_usual.setSelection(1);
                         }
+                        IV_money.setImageResource(R.drawable.money);
                     }
                 });
 

@@ -65,7 +65,13 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_time = view.findViewById(R.id.item_my_private_message_usual_time);
                     TextView txt_mess = view.findViewById(R.id.item_my_private_message_usual_message);
+                    TextView TV_edited = view.findViewById(R.id.itemMyPrivateMessageUsual_TV_edited);
                     ImageView IV_readed = view.findViewById(R.id.itemMyPrivateMessageUsual_IV_readed);
+
+                    if (list_mess.get(position).status.equals("edited"))
+                    {
+                        TV_edited.setVisibility(View.VISIBLE);
+                    }
 
                     if (list_mess.get(position).is_read) {
                         IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.two_tips));
@@ -83,6 +89,12 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_time = view.findViewById(R.id.item_other_private_message_usual_time);
                     TextView txt_mess = view.findViewById(R.id.item_other_private_message_usual_message);
+                    TextView TV_edited = view.findViewById(R.id.itemOtherPrivateMessageUsual_TV_edited);
+
+                    if (list_mess.get(position).status.equals("edited"))
+                    {
+                        TV_edited.setVisibility(View.VISIBLE);
+                    }
 
                     if (!list_mess.get(position).is_read) {
                         final JSONObject json = new JSONObject();
@@ -110,6 +122,12 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                     TextView txt_time = view.findViewById(R.id.item_my_private_message_answer_time);
                     TextView txt_mess = view.findViewById(R.id.item_my_private_message_answer_message);
                     ImageView IV_readed = view.findViewById(R.id.itemMyPrivateMessageAnswer_IV_readed);
+                    TextView TV_edited = view.findViewById(R.id.itemMyPrivateMessageAnswer_TV_edited);
+
+                    if (list_mess.get(position).status.equals("edited"))
+                    {
+                        TV_edited.setVisibility(View.VISIBLE);
+                    }
 
                     if (list_mess.get(position).is_read) {
                         IV_readed.setBackground(ContextCompat.getDrawable(context, R.drawable.two_tips));
@@ -123,7 +141,7 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_answer_nick = view.findViewById(R.id.item_my_private_message_answer_answer_nick);
                     TextView txt_answer_mes = view.findViewById(R.id.item_my_private_message_answer_answer_message);
-                    TextView txt_answer_time = view.findViewById(R.id.item_my_private_message_answer_answer_time);
+                    //TextView txt_answer_time = view.findViewById(R.id.item_my_private_message_answer_answer_time);
 
                     txt_time.setText(list_mess.get(position).time);
                     txt_mess.setText(list_mess.get(position).message);
@@ -136,7 +154,7 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                         {
                             txt_answer_nick.setText(list_mess.get(i).nickName);
                             txt_answer_mes.setText(list_mess.get(i).message);
-                            txt_answer_time.setText(list_mess.get(i).time);
+                            //txt_answer_time.setText(list_mess.get(i).time);
                         }
                     }
                 }
@@ -146,6 +164,12 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_time = view.findViewById(R.id.item_other_private_message_answer_time);
                     TextView txt_mess = view.findViewById(R.id.item_other_private_message_answer_message);
+                    TextView TV_edited = view.findViewById(R.id.itemOtherPrivateMessageAnswer_TV_edited);
+
+                    if (list_mess.get(position).status.equals("edited"))
+                    {
+                        TV_edited.setVisibility(View.VISIBLE);
+                    }
 
                     if (!list_mess.get(position).is_read) {
                         final JSONObject json = new JSONObject();
@@ -167,7 +191,7 @@ public class PrivateMessagesAdapter extends BaseAdapter {
 
                     TextView txt_answer_nick = view.findViewById(R.id.item_other_private_message_answer_answer_nick);
                     TextView txt_answer_mes = view.findViewById(R.id.item_other_private_message_answer_answer_message);
-                    TextView txt_answer_time = view.findViewById(R.id.item_other_private_message_answer_answer_time);
+                    //TextView txt_answer_time = view.findViewById(R.id.item_other_private_message_answer_answer_time);
 
                     txt_time.setText(list_mess.get(position).time);
                     txt_mess.setText(list_mess.get(position).message);
@@ -180,7 +204,7 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                         {
                             txt_answer_nick.setText(list_mess.get(i).nickName);
                             txt_answer_mes.setText(list_mess.get(i).message);
-                            txt_answer_time.setText(list_mess.get(i).time);
+                            //txt_answer_time.setText(list_mess.get(i).time);
                         }
                     }
                 }

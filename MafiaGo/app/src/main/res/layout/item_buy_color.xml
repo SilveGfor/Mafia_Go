@@ -21,6 +21,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <ImageView
+                android:id="@+id/itemBuyColor_IV_money"
+                android:layout_width="15dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginBottom="1dp"
+                app:layout_constraintBottom_toBottomOf="@+id/itemBuyColor_TV_price"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyColor_TV_price"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyColor_TV_price"
+                app:srcCompat="@drawable/money" />
+
             <Button
                 android:id="@+id/itemBuyColor_btn_buy"
                 android:layout_width="0dp"
@@ -65,25 +76,22 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Премиумный цвет"
-                    android:textColor="#848484"
-                    android:visibility="invisible" />
+                    android:textColor="#848484" />
 
                 <Switch
                     android:id="@+id/itemBuyColor_Switch_status"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:visibility="invisible" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/itemBuyColor_TV_price"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:text="Стоимость 7000 монет\nВы можете купить премиум-аккаунт - тогда вы сможете бесплатно поставить себе премиум-статус"
+                android:text="Стоимость 7000"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -115,28 +123,10 @@
                 app:layout_constraintTop_toBottomOf="@+id/itemBuyColor_TV_desc"
                 tools:layout_editor_absoluteX="5dp">
 
-                <TextView
-                    android:id="@+id/itemBuyColor_status"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="4dp"
-                    android:layout_toRightOf="@id/itemMessage_avatar"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:text="{мафиози}"
-                    android:textColor="@color/colorWhite"
-                    android:textSize="12sp"
-                    android:visibility="invisible"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toEndOf="@+id/itemBuyColor_nick"
-                    app:layout_constraintTop_toTopOf="parent" />
-
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/itemMessage_avatar"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:layout_below="@id/itemBuyColor_status"
                     android:src="@drawable/sheriff_alive"
                     app:civ_border_color="#FF0000"
                     app:civ_border_width="0dp"
@@ -174,10 +164,20 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <Spinner
-                android:id="@+id/itemBuyColor_Spinner_color"
+                android:id="@+id/itemBuyColor_Spinner_usual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+            <Spinner
+                android:id="@+id/itemBuyColor_Spinner_premium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
@@ -189,7 +189,7 @@
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/itemBuyColor_Spinner_color" />
+                app:layout_constraintTop_toBottomOf="@+id/itemBuyColor_Spinner_usual" />
 
             <ImageView
                 android:id="@+id/itemShopping_IV"
@@ -211,19 +211,6 @@
                 android:visibility="gone"
                 app:layout_constraintStart_toStartOf="@+id/itemBuyColor_TV_title"
                 app:layout_constraintTop_toTopOf="@+id/itemShopping_IV" />
-
-            <EditText
-                android:id="@+id/itemBuyColor_ET_premiumStatus"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="16dp"
-                android:visibility="invisible"
-                android:hint="Придумайте себе статус"
-                app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
-                app:layout_constraintStart_toStartOf="@+id/constraintLayout3"
-                app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

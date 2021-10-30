@@ -157,6 +157,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.off("edit_message");
         socket.off("get_profile");
         socket.off("my_friend_request");
+        socket.off("read_message");
 
         socket.on("connect", OnConnect);
         socket.on("disconnect", OnDisconnect);
@@ -166,6 +167,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         socket.on("edit_message", OnEditMessage);
         socket.on("get_profile", OnGetProfile);
         socket.on("my_friend_request", onMySendRequest);
+        socket.on("read_message", onReadMessage);
 
         IV_avatar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -228,6 +230,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                         ET_input.setText("");
                         socket.emit("edit_message", json2);
                         Log.d("kkk", "Socket_отправка - edit_message - "+ json2.toString());
+                        hideKeyboard();
                     });
                 });
 
@@ -279,14 +282,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                 TV_answer.setVisibility(View.GONE);
                 ET_input.setText("");
 
-                InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
-                //Find the currently focused view, so we can grab the correct window token from it.
-                View view2 = getActivity().getCurrentFocus();
-                //If no view currently has focus, create a new one, just so we can grab a window token from it
-                if (view2 == null) {
-                    view2 = new View(getActivity());
-                }
-                imm.hideSoftInputFromWindow(view2.getWindowToken(), 0);
+                hideKeyboard();
             } else {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setTitle("Ошибка!")
@@ -461,12 +457,14 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                                 setUnblockEnable();
                             }
                             hideET();
+                            break;
                         case "unlock":
                             if (nick.equals(MainActivity.NickName))
                             {
                                 setBlockEnable();
                             }
                             showET();
+                            break;
                     }
                     if (MainActivity.User_id_2.equals(user_id_2) || MainActivity.NickName.equals(nick)) {
                         if (link == -1) {
@@ -541,24 +539,13 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - edit_message - " + data);
                     String nick = "", message = "", status = "", edited_time = "", time = "", user_id_1 = "", user_id_2 = "";
-                    Boolean is_read = false, modifications_for_message = false;
                     int test_num = -1;
                     try {
-                        if (data.has("is_read")) {
-                            is_read = data.getBoolean("is_read");
-                        }
-                        else
-                        {
-                            is_read = false;
-                        }
                         user_id_1 = data.getString("user_id");
                         user_id_2 = data.getString("user_id_2");
                         test_num = data.getInt("mes_num");
-                        if (data.has("message"))
-                        {
-                            message = data.getString("message");
-                            modifications_for_message = true;
-                        }
+                        message = data.getString("message");
+                        status = data.getString("status");
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -567,16 +554,44 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             || (user_id_2.equals(MainActivity.User_id) && user_id_1.equals(MainActivity.User_id_2))) {
                         for (int i = 0; i < list_messages.size(); i++) {
                             if (list_messages.get(i).num == test_num) {
-                                if (modifications_for_message)
-                                {
-                                    list_messages.get(i).message = message;
-                                }
-                                list_messages.get(i).is_read = is_read;
+                                list_messages.get(i).status = "edited";
+                                list_messages.get(i).message = message;
                                 break;
                             }
                         }
                         messageAdapter.notifyDataSetChanged();
                     }
+                }
+            });
+        }
+    };
+
+    private Emitter.Listener onReadMessage = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            if(getActivity() == null)
+                return;
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    JSONObject data = (JSONObject) args[0];
+                    Log.d("kkk", "принял - read_message - " + data);
+                    String status = "", time = "";
+                    int mes_num = -1;
+                    try {
+                        status = data.getString("status");
+                        time = data.getString("time");
+                        mes_num = data.getInt("mes_num");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    for (int i = 0; i < list_messages.size(); i++) {
+                        if (list_messages.get(i).num == mes_num) {
+                            list_messages.get(i).is_read = true;
+                            break;
+                        }
+                    }
+                    messageAdapter.notifyDataSetChanged();
                 }
             });
         }
@@ -920,5 +935,17 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         RL_send.setVisibility(View.VISIBLE);
 
         TV_chatBlocked.setVisibility(View.INVISIBLE);
+    }
+
+    public void hideKeyboard()
+    {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view2 = getActivity().getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view2 == null) {
+            view2 = new View(getActivity());
+        }
+        imm.hideSoftInputFromWindow(view2.getWindowToken(), 0);
     }
 }

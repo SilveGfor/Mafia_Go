@@ -8,7 +8,7 @@
 
     <androidx.cardview.widget.CardView
         android:id="@+id/fragmentSettingsProfile_CV"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         app:cardBackgroundColor="@color/cards"
@@ -21,27 +21,50 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/dialogEndGame_STV_premiumMoney"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+100%"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/dialogEndGame_TV_money"
+                app:layout_constraintStart_toStartOf="@+id/dialogEndGame_TV_youGet"
+                app:layout_constraintTop_toTopOf="@+id/dialogEndGame_TV_money"
+                app:reflectionColor="@color/gold" />
+
+            <com.romainpiel.shimmer.ShimmerTextView
+                android:id="@+id/dialogEndGame_STV_premiumExp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+100%"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="@+id/dialogEndGame_TV_exp"
+                app:layout_constraintStart_toStartOf="@+id/dialogEndGame_TV_youGet"
+                app:layout_constraintTop_toTopOf="@+id/dialogEndGame_TV_exp"
+                app:reflectionColor="@color/gold" />
+
             <TextView
                 android:id="@+id/dialogEndGame_TV_title"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
                 android:text="Игра закончилась победой мирного населения!"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="16dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/itemProfile_IV_avatar"
                 app:layout_constraintTop_toTopOf="@+id/itemProfile_IV_avatar" />
 
             <ImageView
                 android:id="@+id/itemProfile_IV_avatar"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:layout_marginTop="8dp"
                 android:src="@drawable/game_progress"
                 app:layout_constraintStart_toStartOf="parent"
@@ -65,10 +88,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:text="1000XP"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/dialogEndGame_IV_prize"
                 app:layout_constraintStart_toEndOf="@+id/dialogEndGame_IV_prize"
                 app:layout_constraintTop_toTopOf="@+id/dialogEndGame_IV_prize" />
 
@@ -77,10 +100,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
                 android:text="10 $"
                 android:textColor="@color/white"
                 android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="@+id/dialogEndGame_IV_prize2"
                 app:layout_constraintStart_toEndOf="@+id/dialogEndGame_IV_prize2"
                 app:layout_constraintTop_toTopOf="@+id/dialogEndGame_IV_prize2" />
 
@@ -88,9 +111,10 @@
                 android:id="@+id/dialogEndGame_IV_prize"
                 android:layout_width="15dp"
                 android:layout_height="18dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
                 android:src="@drawable/experience"
-                app:layout_constraintStart_toStartOf="@+id/dialogEndGame_TV_youGet"
+                app:layout_constraintStart_toEndOf="@+id/dialogEndGame_STV_premiumExp"
                 app:layout_constraintTop_toBottomOf="@+id/dialogEndGame_TV_youGet" />
 
             <ImageView

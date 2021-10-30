@@ -49,8 +49,8 @@ public class GoldAdapter extends BaseAdapter {
         TextView TV_cost = view.findViewById(R.id.itemGold_TV_cost);
         ImageView IV_gold = view.findViewById(R.id.itemGold_IV_gold);
 
-        TV_goldCount.setText(list_gold.get(position).skuDetails.getTitle());
-        TV_cost.setText("Вы можете купить " + list_gold.get(position).skuDetails.getTitle() + " за " + list_gold.get(position).skuDetails.getPrice());
+        TV_goldCount.setText(list_gold.get(position).skuDetails.getTitle().replace("(Mafia Go)", ""));
+        TV_cost.setText("Вы можете купить " + list_gold.get(position).skuDetails.getTitle().replace("(Mafia Go)", "") + " за " + list_gold.get(position).skuDetails.getPrice());
 
         switch (list_gold.get(position).num)
         {

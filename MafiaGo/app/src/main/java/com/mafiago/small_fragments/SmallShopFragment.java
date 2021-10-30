@@ -73,7 +73,6 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
     ListView LV_shop;
     ArrayList<ShopModel> list_shop = new ArrayList();
     ShopAdapter shopAdapter;
-    Button btn_busters;
 
     /////////////////
 
@@ -111,6 +110,7 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                     json.put("session_id", MainActivity.Session_id);
                     json.put("store_type", "gold");
                     json.put("product_id", purchase.getSkus().get(i));
+                    json.put("order_id", purchase.getOrderId());
                     json.put("token", purchase.getPurchaseToken());
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -147,8 +147,29 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                                     //if (skuDetails.getSku().equals(skuList.get(1)))
                                     //{
                                         Log.e("kkk", "5 - " + skuDetails);
-                                        Log.e("kkk", "5 - " + skuDetails.getSku());
-                                        list_gold.add(new GoldModel(skuDetails, billingClient, list_gold.size()));
+                                        Log.e("kkk", "5 - " + skuDetails.getTitle());
+                                        switch (skuDetails.getTitle())
+                                        {
+                                            case "500 золота (Mafia Go)":
+                                                list_gold.add(0, new GoldModel(skuDetails, billingClient, 0));
+                                                break;
+                                            case "1000 золота (Mafia Go)":
+                                                list_gold.add(new GoldModel(skuDetails, billingClient, 1));
+                                                break;
+                                            case "1500 золота (Mafia Go)":
+                                                list_gold.add(new GoldModel(skuDetails, billingClient, 2));
+                                                break;
+                                            case "2500 золота (Mafia Go)":
+                                                list_gold.add(new GoldModel(skuDetails, billingClient, 3));
+                                                break;
+                                            case "5000 золота (Mafia Go)":
+                                                list_gold.add(new GoldModel(skuDetails, billingClient, 4));
+                                                break;
+                                            default:
+                                                list_gold.add(new GoldModel(skuDetails, billingClient, list_gold.size()));
+                                                break;
+                                        }
+
                                         mSkuDetails = skuDetails;
                                     //}
                                 }
@@ -156,8 +177,6 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                     goldAdapter.notifyDataSetChanged();
                                 });
-
-
                             }
                         }
                     });
@@ -250,12 +269,9 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
             case 2:
                 view = inflater.inflate(R.layout.small_fragment_shop, container, false);
 
-                btn_busters = view.findViewById(R.id.smallFragmentShop_btn_busters);
                 LV_shop = view.findViewById(R.id.smallFragmentShop_LV_shop);
                 shopAdapter = new ShopAdapter(list_shop, getContext());
                 LV_shop.setAdapter(shopAdapter);
-
-                btn_busters.setVisibility(View.VISIBLE);
 
                 socket.on("get_store", OnGetMainStore);
                 //socket.on("buy_item", OnBuyItem);
@@ -265,7 +281,6 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
             case 3:
                 view = inflater.inflate(R.layout.small_fragment_shop, container, false);
 
-                btn_busters = view.findViewById(R.id.smallFragmentShop_btn_busters);
                 LV_premium = view.findViewById(R.id.smallFragmentShop_LV_shop);
                 premiumAdapter = new PremiumAdapter(list_premium, getContext());
                 LV_premium.setAdapter(premiumAdapter);
@@ -341,10 +356,15 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
 
                     JSONObject JO_colors_common_data;
                     JSONObject JO_colors_usual_data;
+                    JSONObject JO_colors_premium_data;
                     JSONArray JA_usual_colors;
+                    JSONArray JA_premium_colors;
                     JSONArray JA_usual_colors_prices;
-                    String[] list_colors;
-                    ArrayList<ShopModel> list_prices_colors = new ArrayList();
+                    JSONArray JA_premium_colors_prices;
+                    String[] list_usual_colors;
+                    String[] list_premium_colors;
+                    ArrayList<ShopModel> list_prices_colors_usual = new ArrayList();
+                    ArrayList<ShopModel> list_prices_colors_premium = new ArrayList();
 
                     //
 
@@ -415,12 +435,20 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
 
                         JO_colors_common_data = JO_general_data.getJSONObject("personal_colors");
                         JO_colors_usual_data = JO_colors_common_data.getJSONObject("usual");
+                        JO_colors_premium_data = JO_colors_common_data.getJSONObject("premium");
                         JA_usual_colors = JO_colors_usual_data.getJSONArray("colors");
+                        JA_premium_colors = JO_colors_premium_data.getJSONArray("colors");
 
-                        list_colors = new String[JA_usual_colors.length()];
+                        list_usual_colors = new String[JA_usual_colors.length()];
                         for (int i = 0; i < JA_usual_colors.length(); i++)
                         {
-                            list_colors[i] = JA_usual_colors.getString(i);
+                            list_usual_colors[i] = JA_usual_colors.getString(i);
+                        }
+
+                        list_premium_colors = new String[JA_premium_colors.length()];
+                        for (int i = 0; i < JA_premium_colors.length(); i++)
+                        {
+                            list_premium_colors[i] = JA_premium_colors.getString(i);
                         }
 
                         JA_usual_colors_prices = JO_colors_usual_data.getJSONArray("prices");
@@ -432,10 +460,22 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                             price = JO_price.getInt("price");
                             is_sale = JO_price.getBoolean("is_sale");
                             sale_amount = JO_price.getString("sale_amount");
-                            list_prices_colors.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_colors.size()));
+                            list_prices_colors_usual.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_colors_usual.size()));
                         }
 
-                        list_shop.add(new ShopModel("buy_color", list_prices_colors, list_colors));
+                        JA_premium_colors_prices = JO_colors_premium_data.getJSONArray("prices");
+                        for (int i = 0; i < JA_premium_colors_prices.length(); i++)
+                        {
+                            JO_price = JA_premium_colors_prices.getJSONObject(i);
+                            description = JO_price.getString("description");
+                            amount = JO_price.getString("amount");
+                            price = JO_price.getInt("price");
+                            is_sale = JO_price.getBoolean("is_sale");
+                            sale_amount = JO_price.getString("sale_amount");
+                            list_prices_colors_premium.add(new ShopModel(description, amount, price, is_sale, transaction_description, sale_amount, list_prices_colors_premium.size()));
+                        }
+
+                        list_shop.add(new ShopModel("buy_color", list_prices_colors_usual, list_usual_colors, list_prices_colors_premium, list_premium_colors));
 
                         /////////////////
 

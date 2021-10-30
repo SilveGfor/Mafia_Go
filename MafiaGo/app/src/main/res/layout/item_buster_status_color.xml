@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.romainpiel.shimmer.ShimmerTextView
+        android:id="@+id/itemBusterStatusColor_TV_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="Статус"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/itemBusterStatusColor_TV_time"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/itemBusterStatusColor_TV_time" />
+
+    <TextView
+        android:id="@+id/itemBusterStatusColor_TV_object"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/green_button"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:singleLine="true"
+        android:text="{крутой}"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/itemBusterStatusColor_TV_time"
+        app:layout_constraintStart_toEndOf="@+id/itemBusterStatusColor_TV_type"
+        app:layout_constraintTop_toTopOf="@+id/itemBusterStatusColor_TV_time" />
+
+    <TextView
+        android:id="@+id/itemBusterStatusColor_TV_time"
+        android:layout_width="60dp"
+        android:layout_height="25dp"
+        android:layout_marginStart="8dp"
+        android:background="@drawable/grey_button"
+        android:gravity="center"
+        android:text="3 ч."
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/itemBusterStatusColor_TV_object"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

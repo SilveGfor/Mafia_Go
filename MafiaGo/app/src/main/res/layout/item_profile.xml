@@ -129,7 +129,7 @@
         android:id="@+id/fragmentSettingsProfile_CV2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         app:cardBackgroundColor="@color/cards"
         app:cardCornerRadius="8dp"
         app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_CV"
@@ -243,12 +243,12 @@
                         android:id="@+id/itemProfile_TV_gamesCitizen"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:text="Мирный житель: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/imageView2"
                         app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text2" />
 
                     <TextView
@@ -259,8 +259,7 @@
                         android:text="Шериф: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesCitizen"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesCitizen" />
 
                     <TextView
@@ -271,8 +270,7 @@
                         android:text="Доктор: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesSheriff"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesSheriff" />
 
                     <TextView
@@ -283,8 +281,7 @@
                         android:text="Любовница: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesDoctor"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesDoctor" />
 
                     <TextView
@@ -295,8 +292,7 @@
                         android:text="Агент СМИ: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesLover"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesLover" />
 
                     <TextView
@@ -307,8 +303,7 @@
                         android:text="Телохранитель: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesJournalist"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesJournalist" />
 
                     <TextView
@@ -319,8 +314,7 @@
                         android:text="Маньяк: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesBodyguard"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesBodyguard" />
 
                     <TextView
@@ -331,8 +325,7 @@
                         android:text="Доктор лёгкого поведения: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesManiac"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesManiac" />
 
                     <TextView
@@ -343,8 +336,7 @@
                         android:text="Мафия: 67"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue" />
 
                     <TextView
@@ -355,8 +347,7 @@
                         android:text="Дон мафии: 45"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesMafia"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesMafia" />
 
                     <TextView
@@ -367,8 +358,7 @@
                         android:text="Террорист: 65"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesMafiaDon"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesMafiaDon" />
 
                     <TextView
@@ -379,17 +369,15 @@
                         android:text="Отравитель: 34"
                         android:textColor="@color/white"
                         android:textSize="12sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/itemProfile_TV_gamesTerrorist"
                         app:layout_constraintTop_toBottomOf="@+id/itemProfile_TV_gamesTerrorist" />
 
                     <ImageView
                         android:id="@+id/imageView2"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesCitizen"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesCitizen"
+                        app:layout_constraintStart_toStartOf="@+id/dialogOkNo_text2"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesCitizen"
                         app:srcCompat="@drawable/citizen_round" />
 
@@ -397,9 +385,8 @@
                         android:id="@+id/imageView3"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesSheriff"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesSheriff"
+                        app:layout_constraintStart_toStartOf="@+id/imageView2"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesSheriff"
                         app:srcCompat="@drawable/sheriff_round" />
 
@@ -407,9 +394,8 @@
                         android:id="@+id/imageView4"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesDoctor"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesDoctor"
+                        app:layout_constraintStart_toStartOf="@+id/imageView3"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesDoctor"
                         app:srcCompat="@drawable/doctor_round" />
 
@@ -417,9 +403,8 @@
                         android:id="@+id/imageView5"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesLover"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesLover"
+                        app:layout_constraintStart_toStartOf="@+id/imageView4"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesLover"
                         app:srcCompat="@drawable/lover_round" />
 
@@ -427,9 +412,8 @@
                         android:id="@+id/imageView6"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesJournalist"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesJournalist"
+                        app:layout_constraintStart_toStartOf="@+id/imageView5"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesJournalist"
                         app:srcCompat="@drawable/journalist_round" />
 
@@ -437,9 +421,8 @@
                         android:id="@+id/imageView10"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesBodyguard"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesBodyguard"
+                        app:layout_constraintStart_toStartOf="@+id/imageView6"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesBodyguard"
                         app:srcCompat="@drawable/bodyguard_round" />
 
@@ -447,9 +430,8 @@
                         android:id="@+id/imageView11"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesManiac"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesManiac"
+                        app:layout_constraintStart_toStartOf="@+id/imageView10"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesManiac"
                         app:srcCompat="@drawable/maniac_round" />
 
@@ -457,9 +439,8 @@
                         android:id="@+id/imageView12"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
+                        app:layout_constraintStart_toStartOf="@+id/imageView11"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesDoctorOfEasyVirtue"
                         app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
 
@@ -467,9 +448,8 @@
                         android:id="@+id/imageView13"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesMafia"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesMafia"
+                        app:layout_constraintStart_toStartOf="@+id/imageView12"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesMafia"
                         app:srcCompat="@drawable/mafia_round" />
 
@@ -477,9 +457,8 @@
                         android:id="@+id/imageView14"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesMafiaDon"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesMafiaDon"
+                        app:layout_constraintStart_toStartOf="@+id/imageView13"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesMafiaDon"
                         app:srcCompat="@drawable/mafia_don_round" />
 
@@ -487,9 +466,8 @@
                         android:id="@+id/imageView15"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
                         app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesTerrorist"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesTerrorist"
+                        app:layout_constraintStart_toStartOf="@+id/imageView14"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesTerrorist"
                         app:srcCompat="@drawable/terrorist_round" />
 
@@ -497,9 +475,8 @@
                         android:id="@+id/imageView16"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
-                        android:layout_marginEnd="8dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/itemProfile_TV_gamesTerrorist"
+                        app:layout_constraintBottom_toBottomOf="@+id/itemProfile_TV_gamesPoisoner"
+                        app:layout_constraintStart_toStartOf="@+id/imageView15"
                         app:layout_constraintTop_toTopOf="@+id/itemProfile_TV_gamesPoisoner"
                         app:srcCompat="@drawable/poisoner_round" />
 

@@ -1122,6 +1122,15 @@ public class SettingsMainFragment extends Fragment {
                         case "#CBFFA1":
                             list_colors_words[j] = "салатовый цвет" + time;
                             break;
+                        case "#FFE5A1":
+                            list_colors_words[j] = "золотой цвет" + time;
+                            break;
+                        case "#AFFFFF":
+                            list_colors_words[j] = "голубой цвет" + time;
+                            break;
+                        case "#FFAFCC":
+                            list_colors_words[j] = "розовый цвет" + time;
+                            break;
                         default:
                             list_colors_words[j] = color + time;
                             break;

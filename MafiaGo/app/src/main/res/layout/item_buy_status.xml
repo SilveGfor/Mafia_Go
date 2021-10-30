@@ -75,13 +75,12 @@
 
             <TextView
                 android:id="@+id/itemBuyStatus_TV_price"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="8dp"
                 android:gravity="center"
-                android:text="Стоимость 7000 монет\nВы можете купить премиум-аккаунт - тогда вы сможете бесплатно поставить себе премиум-статус"
+                android:text="Стоимость: 7000 монет"
                 android:textColor="@color/colorWhite"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -216,11 +215,21 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
-                android:visibility="invisible"
                 android:hint="Придумайте себе статус"
+                android:visibility="invisible"
                 app:layout_constraintEnd_toEndOf="@+id/constraintLayout3"
                 app:layout_constraintStart_toStartOf="@+id/constraintLayout3"
                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
+
+            <ImageView
+                android:id="@+id/itemBuyStatus_IV_money"
+                android:layout_width="15dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="4dp"
+                app:layout_constraintBottom_toBottomOf="@+id/itemBuyStatus_TV_price"
+                app:layout_constraintStart_toEndOf="@+id/itemBuyStatus_TV_price"
+                app:layout_constraintTop_toTopOf="@+id/itemBuyStatus_TV_price"
+                app:srcCompat="@drawable/money" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

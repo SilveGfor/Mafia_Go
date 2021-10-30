@@ -85,7 +85,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
     public static int Rang;
     public static int MyInviteCode;
     public static Bitmap bitmap_avatar_2;
-    public static String CURRENT_GAME_VERSION = "0.1.0";
+    public static String CURRENT_GAME_VERSION = "0.1.1";
     public static JSONObject USERS = new JSONObject();
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 

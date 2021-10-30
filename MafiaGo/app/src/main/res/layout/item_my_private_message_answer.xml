@@ -26,25 +26,30 @@
 
             <TextView
                 android:id="@+id/item_my_private_message_answer_answer_nick"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:padding="2dp"
                 android:text="Vova_Vor"
+                android:textColor="@color/green"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                android:textColor="@color/green"
-                app:layout_constraintStart_toStartOf="parent"
+                android:singleLine="true"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/imageView17"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/item_my_private_message_answer_answer_message"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/item_my_private_message_answer_answer_nick"
-                android:padding="5dp"
+                android:padding="2dp"
                 android:text="Кто ты?"
                 android:textColor="#000000"
+                android:singleLine="true"
+                android:ellipsize="end"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/item_my_private_message_answer_answer_nick"
                 app:layout_constraintTop_toBottomOf="@+id/item_my_private_message_answer_answer_nick" />
 
@@ -98,7 +103,7 @@
             app:layout_constraintTop_toBottomOf="@+id/relativeLayout" />
 
         <TextView
-            android:id="@+id/itemMyPrivateMessageUsual_TV_edited2"
+            android:id="@+id/itemMyPrivateMessageAnswer_TV_edited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"

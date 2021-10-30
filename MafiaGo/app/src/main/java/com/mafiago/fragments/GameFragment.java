@@ -50,6 +50,8 @@ import com.mafiago.enums.Time;
 import com.mafiago.models.MessageModel;
 import com.mafiago.models.Player;
 import com.mafiago.models.UserModel;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -749,13 +751,43 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
     public void onResume() {
         if (has_paused)
         {
-            if (player.getTime() == Time.LOBBY) {
-                for (int i = 0; i < list_users.size(); i++) {
-                    if (list_users.get(i).getNick().equals(player.getNick())) {
-                        list_users.remove(i);
+            if (!player.is_observer) {
+                if (player.getTime() == Time.LOBBY) {
+                    for (int i = 0; i < list_users.size(); i++) {
+                        if (list_users.get(i).getNick().equals(player.getNick())) {
+                            list_users.remove(i);
+                        }
                     }
+                    json = new JSONObject();
+                    try {
+                        json.put("nick", player.getNick());
+                        json.put("session_id", player.getSession_id());
+                        json.put("room", player.getRoom_num());
+                        json.put("password", MainActivity.Password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_in_room", json);
+                    Log.d("kkk", "Socket_отправка - get_in_room onResume" + json.toString());
+                    has_paused = false;
+                } else {
+                    json = new JSONObject();
+                    try {
+                        json.put("nick", player.getNick());
+                        json.put("room", player.getRoom_num());
+                        json.put("last_message_num", num);
+                        json.put("last_dead_message_num", -1);
+                        json.put("session_id", player.getSession_id());
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("connect_to_room", json);
+                    Log.d("kkk", "connect_to_room - " + json);
                 }
-                json = new JSONObject();
+            }
+            else
+            {
+                JSONObject json = new JSONObject();
                 try {
                     json.put("nick", player.getNick());
                     json.put("session_id", player.getSession_id());
@@ -764,24 +796,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                socket.emit("get_in_room", json);
-                Log.d("kkk", "Socket_отправка - get_in_room onResume" + json.toString());
-                has_paused = false;
-            }
-            else
-            {
-                json = new JSONObject();
-                try {
-                    json.put("nick", player.getNick());
-                    json.put("room", player.getRoom_num());
-                    json.put("last_message_num", num);
-                    json.put("last_dead_message_num", -1);
-                    json.put("session_id", player.getSession_id());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                socket.emit("connect_to_room", json);
-                Log.d("kkk", "connect_to_room - " + json);
+                socket.emit("get_in_room_observer", json);
+                Log.d("kkk", "Socket_отправка - get_in_room_observer - "+ json.toString());
             }
         }
 
@@ -907,7 +923,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     String nick = "";
                     String time = "";
                     int test_num = -1;
+                    int room_id = 0;
                     try {
+                        room_id = data.getInt("room");
                         test_num = data.getInt("num");
                         nick = data.getString("nick");
                         time = data.getString("time");
@@ -918,7 +936,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         return;
                     }
 
-                    if (test_num != num) {
+                    if (test_num != num && room_id == player.getRoom_num()) {
                         if (test_num > num) {
                             num = test_num;
                         }
@@ -1012,22 +1030,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String time;
+                    int room_id;
                     try {
-                        time = data.getString("timer");
-                        if (!time.equals("stop"))
-                        {
-                            if (StopTimer == 1)
-                            {
+                        room_id = data.getInt("room");
+                        if (room_id == player.getRoom_num()) {
+                            time = data.getString("timer");
+                            if (!time.equals("stop")) {
+                                if (StopTimer == 1) {
+                                    timer.setText("\u221e");
+                                    StopTimer = 0;
+                                } else {
+                                    timer.setText(time);
+                                }
+                            } else {
+                                StopTimer = 1;
                                 timer.setText("\u221e");
-                                StopTimer = 0;
                             }
-                            else {
-                                timer.setText(time);
-                            }
-                        }
-                        else {
-                            StopTimer = 1;
-                            timer.setText("\u221e");
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -1046,51 +1064,51 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
             getActivity().runOnUiThread(() -> {
                 JSONObject data = (JSONObject) args[0];
                 String time;
+                int room_id;
                 try {
-                    time = data.getString("time");
-                    switch (time)
-                    {
-                        case "lobby":
-                            player.setTime(Time.LOBBY);
-                            dayTime.setText("лобби");
-                            dayTime.setBackgroundResource(R.drawable.green_button);
-                            Constrain.setBackgroundResource(R.drawable.fon_day);
-                            break;
-                        case "night_love":
-                            DeleteNumbersFromVoting();
-                            player.setTime(Time.NIGHT_LOVE);
-                            dayTime.setText("ночь");
-                            dayTime.setBackgroundResource(R.drawable.died_button);
-                            Constrain.setBackgroundResource(R.drawable.fon_night);
-                            break;
-                        case "night_other":
-                            player.setTime(Time.NIGHT_OTHER);
-                            dayTime.setText("ночь");
-                            dayTime.setBackgroundResource(R.drawable.died_button);
-                            Constrain.setBackgroundResource(R.drawable.fon_night);
-                            break;
-                        case "day":
-                            DeleteNumbersFromVoting();
-                            player.setTime(Time.DAY);
-                            if (player.getStatus().equals("alive") && !player.is_observer) {
-                                dayTime.setText("пропуск дня");
+                    room_id = data.getInt("room");
+                    if (room_id == player.getRoom_num()) {
+                        time = data.getString("time");
+                        switch (time) {
+                            case "lobby":
+                                player.setTime(Time.LOBBY);
+                                dayTime.setText("лобби");
                                 dayTime.setBackgroundResource(R.drawable.green_button);
-                            }
-                            else
-                            {
-                                dayTime.setText("день");
+                                Constrain.setBackgroundResource(R.drawable.fon_day);
+                                break;
+                            case "night_love":
+                                DeleteNumbersFromVoting();
+                                player.setTime(Time.NIGHT_LOVE);
+                                dayTime.setText("ночь");
+                                dayTime.setBackgroundResource(R.drawable.died_button);
+                                Constrain.setBackgroundResource(R.drawable.fon_night);
+                                break;
+                            case "night_other":
+                                player.setTime(Time.NIGHT_OTHER);
+                                dayTime.setText("ночь");
+                                dayTime.setBackgroundResource(R.drawable.died_button);
+                                Constrain.setBackgroundResource(R.drawable.fon_night);
+                                break;
+                            case "day":
+                                DeleteNumbersFromVoting();
+                                player.setTime(Time.DAY);
+                                if (player.getStatus().equals("alive") && !player.is_observer) {
+                                    dayTime.setText("пропуск дня");
+                                    dayTime.setBackgroundResource(R.drawable.green_button);
+                                } else {
+                                    dayTime.setText("день");
+                                    dayTime.setBackgroundResource(R.drawable.grey_button);
+                                }
+                                Constrain.setBackgroundResource(R.drawable.fon_day);
+                                break;
+                            case "voting":
+                                player.setTime(Time.VOTING);
+                                dayTime.setText("Голосование");
                                 dayTime.setBackgroundResource(R.drawable.grey_button);
-                            }
-                            Constrain.setBackgroundResource(R.drawable.fon_day);
-                            break;
-                        case "voting":
-                            player.setTime(Time.VOTING);
-                            dayTime.setText("Голосование");
-                            dayTime.setBackgroundResource(R.drawable.grey_button);
-                            Constrain.setBackgroundResource(R.drawable.fon_day);
-                            break;
+                                Constrain.setBackgroundResource(R.drawable.fon_day);
+                                break;
+                        }
                     }
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -1426,6 +1444,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     JSONObject data = (JSONObject) args[0];
                     String message, time, status, mafia_nick, user_nick, voter, nick;
                     int test_num, money, exp;
+                    boolean is_premium;
                     JSONObject data2;
                     try {
                         status = data.getString("status");
@@ -1441,50 +1460,63 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             switch (status)
                             {
                                 case "game_over":
-                                    money = data.getInt("money");
-                                    exp = data.getInt("exp");
+                                    if (data.has("money")) {
+                                        money = data.getInt("money");
+                                        exp = data.getInt("exp");
+                                        is_premium = data.getBoolean("is_premium");
 
-                                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
-                                    View view_end_game = getLayoutInflater().inflate(R.layout.dialog_end_game, null);
-                                    builder2.setView(view_end_game);
+                                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                                        View view_end_game = getLayoutInflater().inflate(R.layout.dialog_end_game, null);
+                                        builder2.setView(view_end_game);
 
-                                    TextView TV_message = view_end_game.findViewById(R.id.dialogEndGame_TV_title);
-                                    TextView TV_money = view_end_game.findViewById(R.id.dialogEndGame_TV_money);
-                                    TextView TV_exp = view_end_game.findViewById(R.id.dialogEndGame_TV_exp);
+                                        TextView TV_message = view_end_game.findViewById(R.id.dialogEndGame_TV_title);
+                                        TextView TV_money = view_end_game.findViewById(R.id.dialogEndGame_TV_money);
+                                        TextView TV_exp = view_end_game.findViewById(R.id.dialogEndGame_TV_exp);
+                                        ShimmerTextView STV_premiumExp = view_end_game.findViewById(R.id.dialogEndGame_STV_premiumExp);
+                                        ShimmerTextView STV_premiumMoney = view_end_game.findViewById(R.id.dialogEndGame_STV_premiumMoney);
 
-                                    TV_message.setText(message);
-                                    TV_money.setText(String.valueOf(money));
-                                    TV_exp.setText(String.valueOf(exp));
+                                        if (is_premium) {
+                                            STV_premiumExp.setVisibility(View.VISIBLE);
+                                            STV_premiumMoney.setVisibility(View.VISIBLE);
+                                            Shimmer shimmer = new Shimmer();
+                                            shimmer.start(STV_premiumExp);
+                                            shimmer.start(STV_premiumMoney);
+                                        }
 
-                                    AlertDialog alert2 = builder2.create();
-                                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                    alert2.show();
+                                        TV_message.setText(message);
+                                        TV_money.setText(String.valueOf(money));
+                                        TV_exp.setText(String.valueOf(exp));
 
-                                    StopAnimation();
+                                        AlertDialog alert2 = builder2.create();
+                                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        alert2.show();
 
-                                    socket.off("connect");
-                                    socket.off("disconnect");
-                                    socket.off("get_in_room");
-                                    socket.off("user_message");
-                                    socket.off("leave_room");
-                                    socket.off("timer");
-                                    socket.off("time");
-                                    socket.off("role");
-                                    socket.off("restart");
-                                    socket.off("role_action");
-                                    socket.off("know_role");
-                                    socket.off("system_message");
-                                    socket.off("user_error");
-                                    socket.off("mafias");
-                                    socket.off("get_my_game_info");
-                                    socket.off("success_get_in_room");
-                                    socket.off("get_profile");
-                                    socket.off("host_info");
-                                    socket.off("ban_user_in_room");
-                                    socket.off("ban_user_in_room_error");
-                                    socket.off("user_message_delay");
-                                    socket.off("send_complaint");
-                                    socket.off("my_friend_request");
+                                        StopAnimation();
+
+                                        socket.off("connect");
+                                        socket.off("disconnect");
+                                        socket.off("get_in_room");
+                                        socket.off("user_message");
+                                        socket.off("leave_room");
+                                        socket.off("timer");
+                                        socket.off("time");
+                                        socket.off("role");
+                                        socket.off("restart");
+                                        socket.off("role_action");
+                                        socket.off("know_role");
+                                        socket.off("system_message");
+                                        socket.off("user_error");
+                                        socket.off("mafias");
+                                        socket.off("get_my_game_info");
+                                        socket.off("success_get_in_room");
+                                        socket.off("get_profile");
+                                        socket.off("host_info");
+                                        socket.off("ban_user_in_room");
+                                        socket.off("ban_user_in_room_error");
+                                        socket.off("user_message_delay");
+                                        socket.off("send_complaint");
+                                        socket.off("my_friend_request");
+                                    }
                                     break;
                                 case "dead_user":
                                     data2 = data.getJSONObject("message");
@@ -2928,19 +2960,11 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                if (mafia_now < 0) {
+                if (mafia_now <= 0) {
                     mafia_now = mafia_now + mafia_max;
                 }
-                else
-                {
-                    mafia_now = mafia_max;
-                }
-                if (peaceful_now < 0) {
+                if (peaceful_now <= 0) {
                     peaceful_now = peaceful_now + peaceful_max;
-                }
-                else
-                {
-                    peaceful_now = peaceful_max;
                 }
                 TV_mafia_count.setText("Мафия " + mafia_now + "/" + mafia_max);
                 TV_peaceful_count.setText("Мирные " + peaceful_now + "/" + peaceful_max);

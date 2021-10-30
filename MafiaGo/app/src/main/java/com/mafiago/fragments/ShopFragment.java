@@ -179,6 +179,11 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;
+                            case "you_already_have_role_chance_booster":
+                                TV_error.setText("У вас уже куплено увеличение шанса выпадения роли! Вы сможете купить новое после окончания срока действия старого");
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
                             default:
                                 TV_error.setText("Что-то пошло не так");
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));

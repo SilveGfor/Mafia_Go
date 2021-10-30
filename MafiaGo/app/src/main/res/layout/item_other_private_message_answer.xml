@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -14,7 +15,7 @@
         android:layout_weight="3"
         android:src="@drawable/arrow_bg2" />
 
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -23,63 +24,87 @@
         android:background="@drawable/rounded_corner1">
 
         <TextView
-            android:id="@+id/item_other_private_message_answer_message"
+            android:id="@+id/itemOtherPrivateMessageAnswer_TV_edited"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginEnd="4dp"
+            android:text="изменено"
+            android:textColor="#8F8F8F"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/item_other_private_message_answer_time"
+            app:layout_constraintEnd_toStartOf="@+id/item_other_private_message_answer_time"
+            app:layout_constraintTop_toTopOf="@+id/item_other_private_message_answer_time" />
+
+        <TextView
+            android:id="@+id/item_other_private_message_answer_message"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_below="@id/item_other_private_message_answer_CV"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:padding="3dp"
             android:text="Android charting application xml ui design."
             android:textColor="#000000"
-            android:padding="10dp"/>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_other_private_message_answer_CV" />
 
-        <RelativeLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/item_other_private_message_answer_CV"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_other_private_message_answer_time"
             android:layout_margin="5dp"
-            android:background="@drawable/rounded_corner">
+            android:layout_below="@id/item_other_private_message_answer_time"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="5dp">
 
-                <LinearLayout
-                    android:id="@+id/item_other_private_message_answer_LL_answer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/item_other_private_message_answer_answer_nick"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:text="Vova_Vor"
-                        android:textColor="#000000" />
+            <ImageView
+                android:id="@+id/imageView17"
+                android:layout_width="3dp"
+                android:layout_height="0dp"
+                android:background="@color/color_sheriff"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                    <TextView
-                        android:id="@+id/item_other_private_message_answer_answer_message"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:padding="5dp"
-                        android:layout_below="@id/item_other_private_message_answer_answer_nick"
-                        android:text="Кто ты?"
-                        android:textColor="#000000" />
-                </LinearLayout>
+            <TextView
+                android:id="@+id/item_other_private_message_answer_answer_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/item_other_private_message_answer_answer_nick"
+                android:padding="5dp"
+                android:text="Кто ты?"
+                android:textColor="#000000"
+                app:layout_constraintStart_toStartOf="@+id/item_other_private_message_answer_answer_nick"
+                app:layout_constraintTop_toBottomOf="@+id/item_other_private_message_answer_answer_nick" />
 
-                <TextView
-                    android:id="@+id/item_other_private_message_answer_answer_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:layout_alignParentRight="true"
-                    android:padding="5dp"
-                    android:text="21-00"
-                    android:textColor="#8F8F8F" />
-        </RelativeLayout>
+            <TextView
+                android:id="@+id/item_other_private_message_answer_answer_nick"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="2dp"
+                android:text="Vova_Vor"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/color_sheriff"
+                app:layout_constraintStart_toEndOf="@+id/imageView17"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/item_other_private_message_answer_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="2dp"
             android:text="16-00"
             android:textColor="#8F8F8F"
-            android:layout_marginRight="15dp"
-            android:layout_alignParentRight="true" />
-    </RelativeLayout>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_other_private_message_answer_message" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
