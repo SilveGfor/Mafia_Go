@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.core.app.NotificationCompat;
@@ -32,6 +33,8 @@ import com.example.mafiago.R;
 import com.mafiago.adapters.PlayersAdapter;
 import com.mafiago.enums.Role;
 import com.mafiago.models.FineModel;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -61,6 +64,10 @@ public class StartFragment extends Fragment {
     Button btnReg;
 
     ProgressBar PB_loading;
+
+    RelativeLayout RL_back;
+
+    ShimmerTextView STV_text;
 
     EditText ETemail;
     EditText ETpassword;
@@ -105,6 +112,11 @@ public class StartFragment extends Fragment {
         ETpassword = view.findViewById(R.id.fragmentStart_ET_password);
         PB_loading = view.findViewById(R.id.fragmentStart_PB);
         TV_changePassword = view.findViewById(R.id.fragmentStart_TV_forgotPassword);
+        RL_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        STV_text = view.findViewById(R.id.fragmentStart_TV_text);
+
+        Shimmer shimmer = new Shimmer();
+        shimmer.start(STV_text);
 
         PB_loading.setVisibility(View.INVISIBLE);
 
@@ -137,6 +149,13 @@ public class StartFragment extends Fragment {
         {
             Log.d("kkk", "SharedPref mEmail, mPassword - нет данных");
         }
+
+        RL_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().finishAffinity();
+            }
+        });
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override

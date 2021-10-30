@@ -18,11 +18,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
 import com.mafiago.MainActivity;
 import com.mafiago.classes.OnBackPressedListener;
+import com.romainpiel.shimmer.Shimmer;
+import com.romainpiel.shimmer.ShimmerTextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +51,10 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
     Button btnChangePassword;
     Button btnSendCode;
+
+    RelativeLayout RL_back;
+
+    ShimmerTextView STV_text;
 
     EditText ETemail;
     EditText ETpassword1;
@@ -85,6 +92,11 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
         TV_repeatChanging = view.findViewById(R.id.fragmentChangePassword_TV_repeatChanging);
         TV_sendCodeOneMoreTime = view.findViewById(R.id.fragmentChangePassword_TV_sendOneMoreTime);
         loading = view.findViewById(R.id.fragmentChangePassword_PB);
+        RL_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        STV_text = view.findViewById(R.id.fragmentChangePassword_TV_text);
+
+        Shimmer shimmer = new Shimmer();
+        shimmer.start(STV_text);
 
         text_reg.setVisibility(View.GONE);
         btnSendCode.setVisibility(View.GONE);
@@ -96,6 +108,12 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        RL_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
+            }
+        });
 
         if (mSettings.contains(APP_PREFERENCES_WAIT_CODE)) {
             // Получаем значение из настроек
