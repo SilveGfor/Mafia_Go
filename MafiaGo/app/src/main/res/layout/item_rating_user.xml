@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/itemRatingUser_IV_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/sheriff_round"
+        app:layout_constraintStart_toEndOf="@+id/itemRatingUser_TV_place"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/itemRatingUser_TV_nick"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_toEndOf="@+id/itemRatingUser_IV_avatar"
+        android:layout_toRightOf="@+id/itemRatingUser_IV_avatar"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="SilveGfor"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toStartOf="@+id/itemRatingUser_TV_score"
+        app:layout_constraintStart_toEndOf="@+id/itemRatingUser_IV_online"
+        app:layout_constraintTop_toTopOf="@+id/itemRatingUser_IV_avatar" />
+
+    <ImageView
+        android:id="@+id/itemRatingUser_IV_online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@+id/itemRatingUser_IV_avatar"
+        app:layout_constraintTop_toTopOf="@+id/itemRatingUser_TV_nick"
+        app:srcCompat="@drawable/orange_point" />
+
+    <TextView
+        android:id="@+id/itemRatingUser_TV_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:text="36"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/itemRatingUser_TV_place"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="1"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

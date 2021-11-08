@@ -7,6 +7,17 @@
     android:background="?attr/background"
     tools:context="com.mafiago.fragments.CreateCustomRoomFragment">
 
+    <ProgressBar
+        android:id="@+id/fragmentCreateCustomRoom_PB"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <RelativeLayout
         android:id="@+id/fragmentGamesList_RL_back"
         android:layout_width="wrap_content"

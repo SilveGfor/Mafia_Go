@@ -56,20 +56,18 @@
         <EditText
             android:id="@+id/itemChat_ET_message"
             android:layout_width="0dp"
-            android:layout_height="32dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_marginBottom="4dp"
             android:background="@drawable/shape_black"
-            android:ems="10"
-            android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
-            android:lines="5"
             android:hint="Введите сообщение"
+            android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+            android:maxLength="350"
+            android:padding="5dp"
             android:textColor="#FFFFFF"
             android:textColorHint="#FFFFFF"
-            android:padding="5dp"
-            android:textSize="12sp"
+            android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/itemChat_RL_send"
             app:layout_constraintStart_toEndOf="@+id/itemChat_TV_BI" />
@@ -83,13 +81,14 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <Button
-                android:id="@+id/itemChat_btn_send"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:background="@drawable/ic_send"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                <Button
+                    android:id="@+id/itemChat_btn_send"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:background="@drawable/ic_send"
+                    android:clickable="false"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent" />
         </RelativeLayout>
 
         <TextView
@@ -101,6 +100,7 @@
             android:padding="5dp"
             android:text="SilveGfor: Что-то пошло не так"
             android:textColor="@color/white"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/itemChat_ET_message"
             app:layout_constraintEnd_toEndOf="@+id/itemChat_ET_message"
             app:layout_constraintStart_toStartOf="@+id/itemChat_ET_message" />

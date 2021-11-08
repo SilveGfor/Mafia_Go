@@ -72,7 +72,7 @@ import static com.mafiago.MainActivity.url;
 
 public class MenuFragment extends Fragment implements OnBackPressedListener {
 
-    Button btnRules;
+    Button btnRating;
     Button btnGames;
     Button btnTools;
     Button btnDailyTasks;
@@ -128,7 +128,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         View view;
         view = inflater.inflate(R.layout.fragment_menu, container, false);
 
-        btnRules = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
+        btnRating = view.findViewById(R.id.fragmentMenu_btn_rating);
         btnGames = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
         Chats = view.findViewById(R.id.fragmentMenu_IV_chats);
         Friends = view.findViewById(R.id.fragmentMenu_IV_friends);
@@ -152,69 +152,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-
-/*
-        RewardedAd mRewardedAd;
-
-        AdRequest adRequest = new AdRequest.Builder().build();
-
-        RewardedAd.load(this, "ca-app-pub-3940256099942544/5224354917",
-                adRequest, new RewardedAdLoadCallback() {
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                        // Handle the error.
-                        Log.d("kkk", loadAdError.getMessage());
-                        mRewardedAd = null;
-                    }
-
-                    @Override
-                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
-                        mRewardedAd = rewardedAd;
-                        Log.d("kkk", "Ad was loaded.");
-                    }
-                });
-
-        mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
-            @Override
-            public void onAdShowedFullScreenContent() {
-                // Called when ad is shown.
-                Log.d("kkk", "Ad was shown.");
-            }
-
-            @Override
-            public void onAdFailedToShowFullScreenContent(AdError adError) {
-                // Called when ad fails to show.
-                Log.d("kkk", "Ad failed to show.");
-            }
-
-            @Override
-            public void onAdDismissedFullScreenContent() {
-                // Called when ad is dismissed.
-                // Set the ad reference to null so you don't show the ad a second time.
-                Log.d("kkk", "Ad was dismissed.");
-                mRewardedAd = null;
-            }
-        });
-
-        if (mRewardedAd != null) {
-            Activity activityContext = getActivity();
-            mRewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
-                @Override
-                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                    // Handle the reward.
-                    Log.d("kkk", "The user earned the reward.");
-                    int rewardAmount = rewardItem.getAmount();
-                    String rewardType = rewardItem.getType();
-                }
-            });
-        } else {
-            Log.d("kkk", "The rewarded ad wasn't ready yet.");
-        }
-
- */
 
         //TODO: Сделать что-то про последнюю роль
         //SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
@@ -331,10 +268,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             }
         });
 
-        btnRules.setOnClickListener(new View.OnClickListener() {
+        btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RulesFragment()).commit();
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RatingsFragment()).commit();
             }
         });
 
@@ -579,9 +516,9 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     game_counter = statistic.getInt("game_counter");
                     max_money_score = statistic.getInt("max_money_score");
                     max_exp_score = statistic.getInt("max_exp_score");
-                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
-                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
-                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
+                    general_pers_of_wins = statistic.getString("general_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_wins");
                     avatar = data.getString("avatar");
                     //"main_status":"альфа-тестер","main_personal_color" personal_colors premium_time
                     main_status = data.getString("main_status");
@@ -834,8 +771,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     TV_gamesLover.setText("Любовница: " + finalWas_lover);
                     TV_gamesJournalist.setText("Агент СМИ: " + finalWas_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + finalWas_bodyguard);
-                    TV_gamesManiac.setText("Маньяк: " + finalWas_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + finalWas_maniac);
+                    TV_gamesManiac.setText("Маньяк: " + finalWas_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + finalWas_doctor_of_easy_virtue);
                     TV_gamesMafia.setText("Мафия: " + finalWas_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + finalWas_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + finalWas_terrorist);

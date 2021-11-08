@@ -62,12 +62,12 @@
         app:layout_constraintTop_toBottomOf="@+id/fragmentMenu_btn_dailyTasks" />
 
     <Button
-        android:id="@+id/fragmentSettingsProfile_btn_changeNick"
+        android:id="@+id/fragmentMenu_btn_rating"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:background="@drawable/grey_button"
-        android:text="ПРАВИЛА ИГРЫ"
+        android:text="РЕЙТИНГИ"
         app:layout_constraintEnd_toEndOf="@+id/fragmentMenu_btn_dailyTasks"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/fragmentMenu_btn_dailyTasks"
@@ -275,8 +275,8 @@
         android:layout_marginLeft="80dp"
         android:layout_marginTop="16dp"
         app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_IV_telegram"
-        app:layout_constraintStart_toStartOf="@+id/fragmentSettingsProfile_btn_changeNick"
-        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_btn_changeNick"
+        app:layout_constraintStart_toStartOf="@+id/fragmentMenu_btn_rating"
+        app:layout_constraintTop_toBottomOf="@+id/fragmentMenu_btn_rating"
         app:srcCompat="?attr/ic_vk" />
 
     <ImageView
@@ -286,7 +286,7 @@
         android:layout_marginEnd="80dp"
         android:layout_marginRight="80dp"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentMenu_IV_vk"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentSettingsProfile_btn_changeNick"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentMenu_btn_rating"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/fragmentMenu_IV_vk"
         app:layout_constraintTop_toTopOf="@+id/fragmentMenu_IV_vk"

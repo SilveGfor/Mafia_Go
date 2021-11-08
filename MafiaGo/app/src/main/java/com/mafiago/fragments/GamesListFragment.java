@@ -57,7 +57,6 @@ import java.util.Iterator;
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
-import static com.mafiago.MainActivity.USERS;
 import static com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
@@ -137,8 +136,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         IV_screen = view_report.findViewById(R.id.dialogReport_IV_screenshot);
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
-
-        USERS = new JSONObject();
 
         CB_deletePlayingRoom = view.findViewById(R.id.fragmentGamesList_CB_playingRoom);
         CB_deleteNormalRoom = view.findViewById(R.id.fragmentGamesList_CB_normalRoom);
@@ -745,9 +742,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     }
                     max_money_score = statistic.getInt("max_money_score");
                     max_exp_score = statistic.getInt("max_exp_score");
-                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
-                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
-                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
+                    general_pers_of_wins = statistic.getString("general_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_wins");
                     main_status = data.getString("main_status");
                     main_personal_color = data.getString("main_personal_color");
 
@@ -817,8 +814,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     TV_gamesLover.setText("Любовница: " + was_lover);
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
-                    TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
+                    TV_gamesManiac.setText("Маньяк: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_doctor_of_easy_virtue);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);
@@ -1047,8 +1044,8 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     TV_gamesLover.setText("Любовница: " + was_lover);
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
-                    TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
+                    TV_gamesManiac.setText("Маньяк: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_doctor_of_easy_virtue);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);

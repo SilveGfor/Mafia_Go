@@ -411,19 +411,15 @@ public class GameChatFragment extends Fragment {
                             avatar = data.getString("avatar");
                             user_color = data.getString("user_color");
                             list_users.add(new UserModel(nick, avatar, status, user_color));
+                            Log.e("kkk", "GF, добавляю пользователя");
                             MessageModel messageModel = new MessageModel(test_num, nick + " вошёл(-а) в чат", time, nick, "ConnectMes", fromBase64(avatar));
-                            Log.e("kkk", num + "get_in_room GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
-                            boolean good = true;
-                            for (int i = 0; i < list_chat.size(); i++) {
-                                if (list_chat.get(i).num == test_num) {
-                                    good = false;
-                                    break;
-                                }
-                            }
-                            if (test_num != num && good) {
+                            Log.d("kkk", num + "get_in_room GameChatFragment - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
+                            if (test_num != num) {
                                 for (int i = 0; i < list_chat.size(); i++) {
-                                    if (list_chat.get(i).message.equals(nick + " вышел(-а) из чата") || list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
+                                    if (list_chat.get(i).message.equals(nick + " вышел(-а) из чата")) {
                                         list_chat.remove(i);
+                                        Log.e("g", "GCF, i = " + i + " Удаляю сообщение о выходе");
+                                        break;
                                     }
                                 }
                                 if (test_num > num) {
@@ -714,14 +710,14 @@ public class GameChatFragment extends Fragment {
 
                         MessageModel messageModel = new MessageModel(test_num, nick + " вышел(-а) из чата", time, nick, "DisconnectMes", fromBase64(avatar));
 
-                        boolean good = true;
-                        for (int i = 0; i < list_chat.size(); i++) {
-                            if (list_chat.get(i).num == test_num) {
-                                good = false;
-                                break;
+                        if (test_num != num) {
+                            for (int i = 0; i < list_chat.size(); i++) {
+                                if (list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
+                                    list_chat.remove(i);
+                                    Log.e("kkk", "GCF, i = " + i + " Удаляю сообщение о входе");
+                                    break;
+                                }
                             }
-                        }
-                        if (test_num != num && good) {
                             if (test_num > num) {
                                 num = test_num;
                                 list_chat.add(messageModel);
@@ -733,16 +729,12 @@ public class GameChatFragment extends Fragment {
                                     }
                                 }
                             }
-                            for (int i = 0; i < list_chat.size(); i++) {
-                                if (list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
-                                    list_chat.remove(i);
-                                }
-                            }
                             for (int i = 0; i < list_users.size(); i++)
                             {
                                 if (list_users.get(i).getNick().equals(nick))
                                 {
                                     list_users.remove(i);
+                                    Log.e("kkk", "GCF, i = " + i + " Удаляю пользователя");
                                     break;
                                 }
                             }

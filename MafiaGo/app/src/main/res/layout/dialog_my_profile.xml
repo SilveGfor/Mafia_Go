@@ -190,7 +190,6 @@
                         android:id="@+id/dialogOkNo_text"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:text="Статистика"
                         android:textColor="@color/white"
                         app:layout_constraintStart_toStartOf="parent"
@@ -200,7 +199,6 @@
                         android:id="@+id/dialogOkNo_text2"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
                         android:text="Количество игр за роли"
                         android:textColor="@color/white"
@@ -233,11 +231,11 @@
                         android:id="@+id/dialogMyProfile_TV_percentWins"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="24dp"
+                        android:layout_marginStart="16dp"
                         android:text="Процент побед 45%"
                         android:textColor="@color/white"
                         android:textSize="10sp"
-                        app:layout_constraintStart_toEndOf="@+id/dialogMyProfile_TV_maxExp"
+                        app:layout_constraintStart_toEndOf="@+id/dialogMyProfile_TV_maxMoney"
                         app:layout_constraintTop_toTopOf="@+id/dialogMyProfile_TV_gamesCouner" />
 
                     <TextView

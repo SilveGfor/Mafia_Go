@@ -32,10 +32,21 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 import com.google.android.material.tabs.TabLayout;
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
@@ -64,14 +75,20 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.TimeZone;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import io.socket.emitter.Emitter;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.ContentValues.TAG;
 import static  com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
-public class GameFragment extends Fragment implements OnBackPressedListener {
+
+public class GameFragment extends Fragment implements OnBackPressedListener{
+    private RewardedAd mRewardedAd;
+
     public GridView gridView_users;
 
     public TextView timer;
@@ -96,13 +113,14 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     public Animation animation;
 
+    private Timer mTimer;
+    private MyTimerTask mMyTimerTask;
+
     ArrayList<RoleModel> list_roles = new ArrayList<>();
     ArrayList<MessageModel> list_chat = new ArrayList<>();
     ArrayList<UserModel> list_users = new ArrayList<>();
     int[] list_mafias = new int[] {0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9};
     int[] list_peaceful = new int[] {0, 0, 0, 0, 0, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11};
-
-    JSONObject users = new JSONObject();
 
     int answer_id = -1;
     public int StopTimer = 0;
@@ -123,6 +141,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
 
     View view_report;
     ImageView IV_screen;
+
+    ////////////
+    CardView CV_x2;
+    CardView CV_x3;
+    TextView TV_moneyGameOver;
+    TextView TV_expGameOver;
+    ////////////
 
     public JSONObject json;
 
@@ -165,6 +190,45 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         View view = inflater.inflate(R.layout.fragment_game, container, false);
         view_report = inflater.inflate(R.layout.dialog_report, container, false);
         IV_screen = view_report.findViewById(R.id.dialogReport_IV_screenshot);
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        RewardedAd.load(getActivity(), "ca-app-pub-9325171650796125/6129708436",
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        // Handle the error.
+                        Log.d("kkk", "Error " + loadAdError.getMessage());
+                        mRewardedAd = null;
+                    }
+
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                        mRewardedAd = rewardedAd;
+                        Log.d("kkk", "Ad was loaded.");
+                        mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                            @Override
+                            public void onAdShowedFullScreenContent() {
+                                // Called when ad is shown.
+                                Log.d("kkk", "Ad was shown.");
+                            }
+
+                            @Override
+                            public void onAdFailedToShowFullScreenContent(AdError adError) {
+                                // Called when ad fails to show.
+                                Log.d("kkk", "Ad failed to show.");
+                            }
+
+                            @Override
+                            public void onAdDismissedFullScreenContent() {
+                                // Called when ad is dismissed.
+                                // Set the ad reference to null so you don't show the ad a second time.
+                                Log.d("kkk", "Ad was dismissed.");
+                                //mRewardedAd = null;
+                            }
+                        });
+                    }
+                });
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
@@ -374,6 +438,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.off("my_friend_request");
         socket.off("roles_counter");
         socket.off("success_get_in_room_observer");
+        socket.off("get_increased_game_award");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
@@ -401,6 +466,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         socket.on("daily_task_completed", onDailyTaskCompleted);
         socket.on("roles_counter", onRolesCounter);
         socket.on("success_get_in_room_observer", onSuccessGetInRoomObserver);
+        socket.on("get_increased_game_award", onGetIncreasedGameAward);
 
         json = new JSONObject();
         try {
@@ -415,7 +481,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
 
         room_name.setOnClickListener(v -> {
-            if (player.getTime() != Time.LOBBY)
+                        if (player.getTime() != Time.LOBBY)
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_roles_in_room, null);
@@ -884,22 +950,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         time = getDate(time);
                         nick = data.getString("nick");
                         avatar = data.getString("avatar");
-                        users.put(nick, avatar);
                         Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
-                        boolean good = true;
-                        for (int i = 0; i < list_users.size(); i++)
-                        {
-                            if (list_users.get(i).getNick().equals(nick))
-                            {
-                                good = false;
-                                break;
-                            }
-                        }
-                        if (test_num != num && good) {
+                        if (test_num != num) {
                             if (test_num > num) {
                                 num = test_num;
                             }
                             list_users.add(new UserModel(nick, Role.NONE, avatar));
+                            Log.e("kkk", "GF, добавляю пользователя");
                             playersAdapter.notifyDataSetChanged();
                             TV_playersCount.setText("Игроки: " + list_users.size());
                         }
@@ -930,7 +987,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                         nick = data.getString("nick");
                         time = data.getString("time");
                         time = getDate(time);
-                        users.remove(nick);
                         Log.d("kkk", "leave_user - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
                     } catch (JSONException e) {
                         return;
@@ -945,6 +1001,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                             if (list_users.get(i).getNick().equals(nick))
                             {
                                 list_users.remove(i);
+                                Log.e("kkk", "GF, i = " + i + " Удаляю пользователя");
+                                break;
                             }
                         }
                         playersAdapter.notifyDataSetChanged();
@@ -1469,11 +1527,16 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         View view_end_game = getLayoutInflater().inflate(R.layout.dialog_end_game, null);
                                         builder2.setView(view_end_game);
 
+                                        AlertDialog alert2 = builder2.create();
+                                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
                                         TextView TV_message = view_end_game.findViewById(R.id.dialogEndGame_TV_title);
-                                        TextView TV_money = view_end_game.findViewById(R.id.dialogEndGame_TV_money);
-                                        TextView TV_exp = view_end_game.findViewById(R.id.dialogEndGame_TV_exp);
+                                        TV_moneyGameOver = view_end_game.findViewById(R.id.dialogEndGame_TV_money);
+                                        TV_expGameOver = view_end_game.findViewById(R.id.dialogEndGame_TV_exp);
                                         ShimmerTextView STV_premiumExp = view_end_game.findViewById(R.id.dialogEndGame_STV_premiumExp);
                                         ShimmerTextView STV_premiumMoney = view_end_game.findViewById(R.id.dialogEndGame_STV_premiumMoney);
+                                        CV_x2 = view_end_game.findViewById(R.id.dialogEndGame_CV_x2);
+                                        CV_x3 = view_end_game.findViewById(R.id.dialogEndGame_CV_x3);
 
                                         if (is_premium) {
                                             STV_premiumExp.setVisibility(View.VISIBLE);
@@ -1483,12 +1546,92 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                             shimmer.start(STV_premiumMoney);
                                         }
 
-                                        TV_message.setText(message);
-                                        TV_money.setText(String.valueOf(money));
-                                        TV_exp.setText(String.valueOf(exp));
+                                        mTimer = new Timer();
+                                        mMyTimerTask = new MyTimerTask();
 
-                                        AlertDialog alert2 = builder2.create();
-                                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        // singleshot delay 40000 ms
+                                        mTimer.schedule(mMyTimerTask, 200000);
+
+                                        CV_x2.setOnClickListener(v -> {
+                                            if (mRewardedAd != null) {
+                                                mRewardedAd.show(getActivity(), new OnUserEarnedRewardListener() {
+                                                    @Override
+                                                    public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                                                        // Handle the reward.
+                                                        Log.d("kkk", "The user earned the reward.");
+
+                                                        socket.off("get_increased_game_award");
+
+                                                        JSONObject json = new JSONObject();
+                                                        try {
+                                                            json.put("nick", MainActivity.NickName);
+                                                            json.put("session_id", MainActivity.Session_id);
+                                                            json.put("award_type", "advert");
+                                                        } catch (JSONException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                        socket.emit("get_increased_game_award", json);
+                                                        Log.d("kkk", "Socket_отправка - get_increased_game_award - "+ json.toString());
+
+
+                                                        TV_moneyGameOver.setText(TV_moneyGameOver.getText() + " x2");
+                                                        TV_expGameOver.setText(TV_expGameOver.getText() + " x2");
+
+                                                        CV_x2.setVisibility(View.INVISIBLE);
+                                                        CV_x3.setVisibility(View.INVISIBLE);
+                                                    }
+                                                });
+                                            } else {
+                                                Log.d("kkk", "The rewarded ad wasn't ready yet.");
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                builder.setView(viewDang);
+                                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                TV_title.setText("Реклама ещё не загрузилась!");
+                                                TV_error.setText("Попробуйте ещё раз через несколько секунд");
+                                                AlertDialog alert = builder.create();
+                                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                                alert.show();
+                                            }
+                                        });
+
+                                        CV_x3.setOnClickListener(v -> {
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewQuestion = getLayoutInflater().inflate(R.layout.dialog_ok_no, null);
+                                            builder.setView(viewQuestion);
+                                            AlertDialog alert = builder.create();
+                                            TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                                            Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                                            Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                                            TV_text.setText("Вы уверены, что хотите увеличить награду в 3 раза за 50 золота?");
+                                            btn_yes.setOnClickListener(v1 -> {
+                                                JSONObject json = new JSONObject();
+                                                try {
+                                                    json.put("nick", MainActivity.NickName);
+                                                    json.put("session_id", MainActivity.Session_id);
+                                                    json.put("award_type", "gold");
+                                                } catch (JSONException e) {
+                                                    e.printStackTrace();
+                                                }
+                                                socket.emit("get_increased_game_award", json);
+                                                Log.d("kkk", "Socket_отправка - get_increased_game_award - "+ json.toString());
+
+                                                CV_x2.setVisibility(View.INVISIBLE);
+                                                CV_x3.setVisibility(View.INVISIBLE);
+                                                alert.cancel();
+                                            });
+                                            btn_no.setOnClickListener(v12 -> {
+                                                alert.cancel();
+                                            });
+                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            alert.show();
+                                        });
+
+                                        TV_message.setText(message);
+                                        TV_moneyGameOver.setText(String.valueOf(money));
+                                        TV_expGameOver.setText(String.valueOf(exp));
+
                                         alert2.show();
 
                                         StopAnimation();
@@ -1505,11 +1648,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         socket.off("role_action");
                                         socket.off("know_role");
                                         socket.off("system_message");
-                                        socket.off("user_error");
                                         socket.off("mafias");
                                         socket.off("get_my_game_info");
                                         socket.off("success_get_in_room");
-                                        socket.off("get_profile");
                                         socket.off("host_info");
                                         socket.off("ban_user_in_room");
                                         socket.off("ban_user_in_room_error");
@@ -1726,7 +1867,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 alert2.show();
                                 break;
                             case "max_people_in_room":
-                                TV_error.setText("В комнате нет мест");
+                                TV_error.setText("В комнате нет мест!");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
@@ -1744,13 +1885,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 alert.show();
                                 break;
                             case "you_are_playing_in_another_room":
-                                TV_error.setText("Вы играете в другой игре");
+                                TV_error.setText("Вы играете в другой игре!");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;
                             case "game_is_over":
-                                TV_error.setText("Игра закончена");
+                                TV_error.setText("Игра закончена!");
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;
@@ -1785,8 +1926,13 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                                 break;
+                            case "you_dont_have_enough_gold":
+                                TV_error.setText("У вас недостаточно золота!");
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                                break;
                             default:
-                                TV_error.setText("Что-то пошло не так");
+                                TV_error.setText("Что-то пошло не так...");
                                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
@@ -2202,9 +2348,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     }
                     max_money_score = statistic.getInt("max_money_score");
                     max_exp_score = statistic.getInt("max_exp_score");
-                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
-                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
-                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
+                    general_pers_of_wins = statistic.getString("general_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_wins");
                     main_status = data.getString("main_status");
                     main_personal_color = data.getString("main_personal_color");
 
@@ -2274,8 +2420,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     TV_gamesLover.setText("Любовница: " + was_lover);
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
-                    TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
+                    TV_gamesManiac.setText("Маньяк: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_doctor_of_easy_virtue);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);
@@ -2566,8 +2712,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                     TV_gamesLover.setText("Любовница: " + was_lover);
                     TV_gamesJournalist.setText("Агент СМИ: " + was_journalist);
                     TV_gamesBodyguard.setText("Телохранитель: " + was_bodyguard);
-                    TV_gamesManiac.setText("Маньяк: " + was_doctor_of_easy_virtue);
-                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_maniac);
+                    TV_gamesManiac.setText("Маньяк: " + was_maniac);
+                    TV_gamesDoctorOfEasyVirtue.setText("Доктор лёгкого поведения: " + was_doctor_of_easy_virtue);
                     TV_gamesMafia.setText("Мафия: " + was_mafia);
                     TV_gamesMafiaDon.setText("Дон мафии: " + was_mafia_don);
                     TV_gamesTerrorist.setText("Террорист: " + was_terrorist);
@@ -2816,6 +2962,39 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
                                         }
                                     });
                     AlertDialog alert = builder.create();
+                    alert.show();
+                }
+            }
+        });
+    };
+
+    private final Emitter.Listener onGetIncreasedGameAward = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String status = String.valueOf(args[0]);
+                Log.d("kkk", "принял - get_increased_game_award - " + status);
+                if (status.equals("OK"))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewError);
+                    AlertDialog alert;
+                    alert = builder.create();
+
+                    TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                    TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                    ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                    TV_moneyGameOver.setText(TV_moneyGameOver.getText() + " x3");
+                    TV_expGameOver.setText(TV_expGameOver.getText() + " x3");
+
+                    IV.setImageResource(R.drawable.crown_gold_dark);
+                    TV.setText("Вы увеличили свою награду в 3 раза!!");
+                    TV_title.setText("Успешно!");
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert.show();
                 }
             }
@@ -3162,5 +3341,18 @@ public class GameFragment extends Fragment implements OnBackPressedListener {
         });
         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alert.show();
+    }
+
+    class MyTimerTask extends TimerTask {
+        @Override
+        public void run() {
+
+            if (getActivity() != null) {
+                ContextCompat.getMainExecutor(getActivity()).execute(() -> {
+                    CV_x2.setVisibility(View.INVISIBLE);
+                    CV_x3.setVisibility(View.INVISIBLE);
+                });
+            }
+        }
     }
 }

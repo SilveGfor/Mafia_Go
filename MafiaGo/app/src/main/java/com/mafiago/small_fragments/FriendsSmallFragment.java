@@ -90,8 +90,6 @@ public class FriendsSmallFragment extends Fragment {
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
     public static final String APP_PREFERENCES_SHOW_ROLE= "show_role";
 
-    private SharedPreferences mSettings;
-
     public static FriendsSmallFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -112,8 +110,6 @@ public class FriendsSmallFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = null;
-
-        mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
         switch (mPage)
         {

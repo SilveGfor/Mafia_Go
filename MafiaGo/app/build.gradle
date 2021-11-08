@@ -19,8 +19,8 @@ android {
         applicationId 'com.mafiago'
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 15
-        versionName '0.1.1'
+        versionCode 16
+        versionName '0.1.2'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -65,7 +65,7 @@ dependencies {
     implementation 'org.florescu.android.rangeseekbar:rangeseekbar-library:0.3.0'
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
-    implementation 'com.google.android.gms:play-services-ads:20.2.0'
+    implementation 'com.google.android.gms:play-services-ads:20.4.0'
     implementation "com.android.billingclient:billing:4.0.0"
 
 

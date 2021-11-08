@@ -1,0 +1,224 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/smallFragmentRatings_TV_noRatings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Тут ещё никого нет"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/smallFragmentRatings_Spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_btn_1" />
+
+    <Button
+        android:id="@+id/smallFragmentRatings_btn_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/orange_button"
+        android:padding="15dp"
+        android:text="Обычные игры"
+        app:layout_constraintEnd_toStartOf="@+id/smallFragmentRatings_btn_2"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/smallFragmentRatings_btn_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/grey_button"
+        android:padding="15dp"
+        android:text="Кастомные"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_btn_1"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ListView
+        android:id="@+id/smallFragmentRatings_LV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        android:divider="@null"
+        android:dividerHeight="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_CL_places"
+        app:layout_constraintVertical_bias="0.0">
+
+    </ListView>
+
+    <ProgressBar
+        android:id="@+id/smallFragmentRatings_PB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/smallFragmentRatings_CL_places"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_Spinner">
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_questionRatings"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:background="@drawable/orange_button"
+            android:padding="10dp"
+            android:text="?"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/smallFragmentRatings_IV_1"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/smallFragmentRatings_TV_1"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_1"
+            app:layout_constraintTop_toTopOf="@+id/smallFragmentRatings_TV_1" />
+
+        <ImageView
+            android:id="@+id/smallFragmentRatings_IV_4_10"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/smallFragmentRatings_TV_4_10"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_4_10"
+            app:layout_constraintTop_toTopOf="@+id/smallFragmentRatings_TV_4_10" />
+
+        <ImageView
+            android:id="@+id/smallFragmentRatings_IV_11_50"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/smallFragmentRatings_TV_11_50"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_11_50"
+            app:layout_constraintTop_toTopOf="@+id/smallFragmentRatings_TV_11_50" />
+
+        <ImageView
+            android:id="@+id/smallFragmentRatings_IV_51_100"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/smallFragmentRatings_TV_51_100"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_51_100"
+            app:layout_constraintTop_toTopOf="@+id/smallFragmentRatings_TV_51_100" />
+
+        <ImageView
+            android:id="@+id/smallFragmentRatings_IV_2"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/smallFragmentRatings_TV_2"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_2"
+            app:layout_constraintTop_toTopOf="@+id/smallFragmentRatings_TV_2" />
+
+        <ImageView
+            android:id="@+id/smallFragmentRatings_IV_3"
+            android:layout_width="15dp"
+            android:layout_height="18dp"
+            android:layout_marginStart="4dp"
+            app:layout_constraintBottom_toBottomOf="@+id/smallFragmentRatings_TV_3"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_3"
+            app:layout_constraintTop_toTopOf="@+id/smallFragmentRatings_TV_3" />
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1  -  500"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toStartOf="@+id/smallFragmentRatings_TV_4_10"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_4_10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4-10  -  500"
+            android:textColor="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/smallFragmentRatings_TV_1"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_11_50"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="11-50  -  250"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/smallFragmentRatings_TV_4_10"
+            app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_TV_4_10" />
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_51_100"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="51-100  -  100"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/smallFragmentRatings_TV_11_50"
+            app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_TV_11_50" />
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="2  -  250"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/smallFragmentRatings_TV_1"
+            app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_TV_1" />
+
+        <TextView
+            android:id="@+id/smallFragmentRatings_TV_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="3  - 100"
+            android:textColor="@color/white"
+            app:layout_constraintStart_toStartOf="@+id/smallFragmentRatings_TV_2"
+            app:layout_constraintTop_toBottomOf="@+id/smallFragmentRatings_TV_2" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

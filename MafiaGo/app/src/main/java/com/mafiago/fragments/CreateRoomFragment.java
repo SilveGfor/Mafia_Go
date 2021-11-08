@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -68,6 +69,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     SwitchCompat swith_password;
     EditText ET_password;
     ImageView Menu;
+    ProgressBar PB_loading;
 
     String name;
     String password = "";
@@ -106,6 +108,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         swith_password = view.findViewById(R.id.fragmentCreateRoom_Swith_password);
         ET_password = view.findViewById(R.id.fragmentCreateRoom_ET_password);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        PB_loading = view.findViewById(R.id.fragmentCreateRoom_PB);
 
         btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_btn_createRoom);
         btnCustomRoom = view.findViewById(R.id.fragmentCreateRoom_btn_customRoom);
@@ -261,7 +264,9 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
         btnCustomRoom.setOnClickListener(v -> {
             if (MainActivity.Rang >= 2) {
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateCustomRoomFragment()).commit();
+                if (PB_loading.getVisibility() != View.VISIBLE) {
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateCustomRoomFragment()).commit();
+                }
             }
             else
             {
@@ -341,6 +346,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
+                                PB_loading.setVisibility(View.VISIBLE);
                                 SharedPreferences.Editor editor = mSettings.edit();
                                 editor.putStringSet(APP_PREFERENCES_ROLES, roles);
                                 editor.putString(APP_PREFERENCES_ROOM_NAME, name);
@@ -415,10 +421,12 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = mSettings.edit();
-                editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
-                editor.apply();
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                if (PB_loading.getVisibility() != View.VISIBLE) {
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+                    editor.apply();
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                }
             }
         });
 
@@ -427,10 +435,12 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
     @Override
     public void onBackPressed() {
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
-        editor.apply();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+        if (PB_loading.getVisibility() != View.VISIBLE) {
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+            editor.apply();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -495,6 +505,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     try {
+                        PB_loading.setVisibility(View.INVISIBLE);
                         MainActivity.Game_id = data.getInt("room_num");
                         MainActivity.RoomName = name;
                         MainActivity.PlayersMinMaxInfo = "от " + minPlayers + " до " + maxPlayers;
@@ -522,6 +533,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                     try {
                         error = data.getString("error");
                         AlertDialog alert;
+                        PB_loading.setVisibility(View.INVISIBLE);
                         switch (error) {
                             case "you_are_playing_in_another_room":
                                 builder.setTitle("Извините, но вы играете в другой игре")

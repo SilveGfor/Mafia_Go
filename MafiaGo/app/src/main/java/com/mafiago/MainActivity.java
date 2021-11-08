@@ -85,8 +85,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
     public static int Rang;
     public static int MyInviteCode;
     public static Bitmap bitmap_avatar_2;
-    public static String CURRENT_GAME_VERSION = "0.1.1";
-    public static JSONObject USERS = new JSONObject();
+    public static String CURRENT_GAME_VERSION = "0.1.2";
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
     public static String url = "https://mafiagoserver.online:5000";
@@ -279,6 +278,23 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
         });
         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alert.show();
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder.setView(viewError);
+                        AlertDialog alert;
+                        alert = builder.create();
+
+                        TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                        TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                        ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                        IV.setImageResource(R.drawable.crown_gold_dark);
+                        TV.setText("Вы успешно завершили покупку!");
+                        TV_title.setText("Успешно!");
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
 
 
         final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce);

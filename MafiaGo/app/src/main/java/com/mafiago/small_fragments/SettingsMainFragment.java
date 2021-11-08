@@ -35,6 +35,7 @@ import com.example.mafiago.R;
 import com.mafiago.MainActivity;
 import com.mafiago.enums.Role;
 import com.mafiago.fragments.GameFragment;
+import com.mafiago.fragments.RulesFragment;
 import com.mafiago.fragments.StartFragment;
 import com.mafiago.fragments.StudyFragment;
 import com.mafiago.models.RoleModel;
@@ -63,6 +64,7 @@ public class SettingsMainFragment extends Fragment {
     Button btnReportError;
     Button btnExitAccount;
     Button btnSelectTheme;
+    Button btnRules;
 
     TextView TV_usersAgreement;
     TextView TV_privacyPolicy;
@@ -367,6 +369,7 @@ public class SettingsMainFragment extends Fragment {
             btnExitAccount = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
             btnSelectTheme = view.findViewById(R.id.fragmentSettingsMain_chooseTheme);
             btnStudy = view.findViewById(R.id.fragmentSettingsProfile_btn_study);
+            btnRules = view.findViewById(R.id.fragmentSettingsProfile_btn_rules);
             TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
             TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
             TV_inviteCode = view.findViewById(R.id.fragmentSettingsMain_TV_inviteCode);
@@ -600,6 +603,10 @@ public class SettingsMainFragment extends Fragment {
 
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
+            });
+
+            btnRules.setOnClickListener(v -> {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RulesFragment()).commit();
             });
 
             RL_copy.setOnClickListener(new View.OnClickListener() {
@@ -945,9 +952,9 @@ public class SettingsMainFragment extends Fragment {
                     game_counter = statistic.getInt("game_counter");
                     max_money_score = statistic.getInt("max_money_score");
                     max_exp_score = statistic.getInt("max_exp_score");
-                    general_pers_of_wins = statistic.getString("general_pers_of_wins");
-                    mafia_pers_of_wins = statistic.getString("mafia_pers_of_wins");
-                    peaceful_pers_of_wins = statistic.getString("peaceful_pers_of_wins");
+                    general_pers_of_wins = statistic.getString("general_wins");
+                    mafia_pers_of_wins = statistic.getString("mafia_wins");
+                    peaceful_pers_of_wins = statistic.getString("peaceful_wins");
                     avatar = data.getString("avatar");
                     user_id_2 = data.getString("user_id");
                     online = data.getBoolean("is_online");
