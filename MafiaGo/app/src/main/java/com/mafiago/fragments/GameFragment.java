@@ -1422,38 +1422,39 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String role;
-                    try {
-                        role = data.getString("role");
-                        Log.d("kkk", "Socket_принять - role_action " + args[0]);
-                        animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
-                        switch (role)
-                        {
-                            case "doctor":
-                                IV_influence_doctor.setVisibility(View.VISIBLE);
-                                IV_influence_doctor.startAnimation(animation);
-                                break;
-                            case "lover":
-                                StopAnimation();
-                                IV_influence_lover.setVisibility(View.VISIBLE);
-                                IV_influence_lover.startAnimation(animation);
-                                break;
-                            case "sheriff":
-                                IV_influence_sheriff.setVisibility(View.VISIBLE);
-                                IV_influence_sheriff.startAnimation(animation);
-                                break;
-                            case "bodyguard":
-                                IV_influence_bodyguard.setVisibility(View.VISIBLE);
-                                IV_influence_bodyguard.startAnimation(animation);
-                                break;
-                            case "poisoner":
-                                IV_influence_poisoner.setVisibility(View.VISIBLE);
-                                IV_influence_poisoner.startAnimation(animation);
-                                break;
+                    if (player.game_on) {
+                        JSONObject data = (JSONObject) args[0];
+                        String role;
+                        try {
+                            role = data.getString("role");
+                            Log.d("kkk", "Socket_принять - role_action " + args[0]);
+                            animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
+                            switch (role) {
+                                case "doctor":
+                                    IV_influence_doctor.setVisibility(View.VISIBLE);
+                                    IV_influence_doctor.startAnimation(animation);
+                                    break;
+                                case "lover":
+                                    StopAnimation();
+                                    IV_influence_lover.setVisibility(View.VISIBLE);
+                                    IV_influence_lover.startAnimation(animation);
+                                    break;
+                                case "sheriff":
+                                    IV_influence_sheriff.setVisibility(View.VISIBLE);
+                                    IV_influence_sheriff.startAnimation(animation);
+                                    break;
+                                case "bodyguard":
+                                    IV_influence_bodyguard.setVisibility(View.VISIBLE);
+                                    IV_influence_bodyguard.startAnimation(animation);
+                                    break;
+                                case "poisoner":
+                                    IV_influence_poisoner.setVisibility(View.VISIBLE);
+                                    IV_influence_poisoner.startAnimation(animation);
+                                    break;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
                     }
                 }
             });
@@ -1522,6 +1523,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                         money = data.getInt("money");
                                         exp = data.getInt("exp");
                                         is_premium = data.getBoolean("is_premium");
+                                        player.game_on = false;
+                                        DeleteNumbersFromVoting();
 
                                         AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
                                         View view_end_game = getLayoutInflater().inflate(R.layout.dialog_end_game, null);

@@ -10,7 +10,7 @@ public class Player {
 
     private Time time;
     private Role role;
-    public boolean can_click, can_write, voted_at_night, healed_yourself, is_observer;
+    public boolean can_click, can_write, voted_at_night, healed_yourself, is_observer, game_on;
     private int room_num, ban_limit;
 
     public Player(String nick, String session_id, int room_num, String main_role)
@@ -27,6 +27,7 @@ public class Player {
         can_write = true;
         healed_yourself = false;
         is_observer = false;
+        game_on = true;
     }
 
     public Boolean isHost()

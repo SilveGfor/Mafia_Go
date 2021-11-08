@@ -1223,122 +1223,103 @@ public class SettingsMainFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AlertDialog.Builder builder;
-            AlertDialog alert;
+            AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+            View view2;
             switch (status)
             {
                 case "OK":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Профиль успешно изменён!")
-                            .setMessage("Перезайдите в приложение для отображения изменений")
-                            .setIcon(R.drawable.ic_ok)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                    builder2.setView(view2);
+                    TextView TV_title = view2.findViewById(R.id.dialogInformation_TV_title);
+                    TextView TV_text = view2.findViewById(R.id.dialogInformation_TV_text);
+                    TV_title.setText("Профиль успешно изменён!");
+                    TV_text.setText("Перезапустите игру, если вы сменили ник");
                     break;
                 case "incorrect_password":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Старый пароль введён неверно!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Вы неправильно ввели свой старый пароль!");
+                    TV_text.setText("Попробуйте ещё раз");
                     break;
                 case "new_nick_is_the_same_with_old_nick":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Новый ник такой же, как и старый!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Ваш новый ник полностью повторяет старый!");
+                    TV_text.setText("Придумайте новый ник");
                     break;
                 case "incorrect_new_nick ":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Такой ник уже занят!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Такой ник уже занят!");
+                    TV_text.setText("Придумайте другой ник");
                     break;
                 case "last_nick_update_was_less_than_a_month_ago":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Вы уже меняли ник в этом месяце!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Вы уже меняли ник в этом месяце!");
+                    TV_text.setText("Не надо так часто менять ники");
                     break;
                 case "mat_in_new_nick":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Ваш ник не проходит цензуру!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Ваш ник не проходит цензуру!");
+                    TV_text.setText("Придумайте более приличный ник");
                     break;
                 case "cant_change_nick_because_you_are_playing_in_room":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Нельзя менять ник, если вы играете в комнате!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Нельзя изменить ник сейчас!");
+                    TV_text.setText("В Mafia Go нельзя менять ник во время игры в комнате");
                     break;
                 case "cant_change_nick_because_you_are_observer":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Нельзя менять ник, если вы наблюдаете за другой игрой!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Нельзя изменить ник сейчас!");
+                    TV_text.setText("В Mafia Go нельзя менять ник во время наблюдения за игрой");
                     break;
                 case "invalid_personal_color":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Время действия этого цвета истекло!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Время действия этого цвета истекло!");
+                    TV_text.setText("Вы можете купить его в магазине");
                     break;
                 case "invalid_status":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Время действия этого статуса истекло!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Время действия этого статуса истекло!");
+                    TV_text.setText("Вы можете купить его в магазине");
                     break;
                 default:
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Что-то пошло не так!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
-                    alert = builder.create();
+                    view2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(view2);
+                    TV_title = view2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_text = view2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Что-то пошло не так!");
+                    TV_text.setText("Напишите разработчику и подробно опишите проблему");
                     break;
             }
-            alert.show();
+            AlertDialog alert2 = builder2.create();
+            alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert2.show();
+            alert2.show();
         });
     };
 

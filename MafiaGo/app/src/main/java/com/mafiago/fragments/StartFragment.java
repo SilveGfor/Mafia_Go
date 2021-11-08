@@ -260,18 +260,15 @@ public class StartFragment extends Fragment {
                                 if (!AutoRun) {
                                     ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                         PB_loading.setVisibility(View.INVISIBLE);
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Такого аккаунта не существует!")
-                                                .setMessage("")
-                                                .setIcon(R.drawable.ic_info)
-                                                .setCancelable(false)
-                                                .setNegativeButton("Ок",
-                                                        new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                dialog.cancel();
-                                                            }
-                                                        });
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                        builder.setView(viewDang);
+                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                        TV_title.setText("Такого аккаунта не существует!");
+                                        TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании почти");
                                         AlertDialog alert = builder.create();
+                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
                                     });
                                 }
@@ -280,33 +277,30 @@ public class StartFragment extends Fragment {
                                 if (!AutoRun) {
                                     ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                         PB_loading.setVisibility(View.INVISIBLE);
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Неправильный пароль!")
-                                                .setMessage("")
-                                                .setIcon(R.drawable.ic_info)
-                                                .setCancelable(false)
-                                                .setNegativeButton("Ок",
-                                                        new DialogInterface.OnClickListener() {
-                                                            public void onClick(DialogInterface dialog, int id) {
-                                                                dialog.cancel();
-                                                            }
-                                                        });
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                        builder.setView(viewDang);
+                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                        TV_title.setText("Неправильный пароль!");
+                                        TV_error.setText("Если вы забыли пароль, то его всегда можно восстановить по вашей почте");
                                         AlertDialog alert = builder.create();
+                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
                                     });
                                 }
                                 break;
                             case "incorrect_game_version":
                                     ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                        PB_loading.setVisibility(View.INVISIBLE);
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        builder.setTitle("Обновите игру!")
-                                                .setMessage("У вас старая версия")
-                                                .setIcon(R.drawable.ic_info)
-                                                .setCancelable(false)
-                                                .setNegativeButton("Ок",
-                                                        (dialog, id) -> dialog.cancel());
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                                        builder.setView(viewDang);
+                                        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                                        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                                        TV_title.setText("Обновите игру!");
+                                        TV_text.setText("Уже доступно новое обновление");
                                         AlertDialog alert = builder.create();
+                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
                                     });
                                     break;

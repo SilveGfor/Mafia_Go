@@ -150,6 +150,22 @@ public class SmallRatingsFragment extends Fragment {
                 socket.on("get_rating", onGetRating);
                 main_name = "game_counter";
 
+                TV_questionRatings.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                        builder.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                        TV_title.setText("Награды за места в рейтинге");
+                        TV_text.setText("В этой таблице представлены награды за места в рейтинге. '1 - 500 золота' означает, что игрок на первом месте получит эту награду. Награда за день выдаётся в 3 ночи по Москве, награда за неделю выдаётся в 3 ночи в понедельник, награда за месяц выдаётся в 3 ночи в 1 число месяца");
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
+                });
+
                 btn_1.setOnClickListener(v -> {
                     if (!pushed_1)
                     {
@@ -199,15 +215,13 @@ public class SmallRatingsFragment extends Fragment {
                             case 0:
                                 if (pushed_1) {
                                     CallSocket("game_counter_by_day");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
                                 else
                                 {
                                     CallSocket("custom_room_game_counter_by_day");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
+                                list_ratings.clear();
+                                ratingsAdapter.notifyDataSetChanged();
                                 TV_1.setText("1  -  500");
                                 TV_2.setText("2  -  250");
                                 TV_3.setText("3  -  100");
@@ -225,16 +239,14 @@ public class SmallRatingsFragment extends Fragment {
                             case 1:
                                 if (pushed_1) {
                                     CallSocket("game_counter_by_week");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
                                 else {
                                     CallSocket("custom_room_game_counter_by_week");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
-                                TV_1.setText("1  -  500");
-                                TV_2.setText("2  -  250");
+                                list_ratings.clear();
+                                ratingsAdapter.notifyDataSetChanged();
+                                TV_1.setText("1  -  250");
+                                TV_2.setText("2  -  150");
                                 TV_3.setText("3  -  100");
                                 TV_4_10.setText("4-10  -  500");
                                 TV_11_50.setText("11-50  -  250");
@@ -250,14 +262,12 @@ public class SmallRatingsFragment extends Fragment {
                             case 2:
                                 if (pushed_1) {
                                     CallSocket("game_counter_by_month");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
                                 else {
                                     CallSocket("custom_room_game_counter_by_month");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
+                                list_ratings.clear();
+                                ratingsAdapter.notifyDataSetChanged();
                                 TV_1.setText("1  -  500");
                                 TV_2.setText("2  -  300");
                                 TV_3.setText("3  -  200");
@@ -275,14 +285,12 @@ public class SmallRatingsFragment extends Fragment {
                             case 3:
                                 if (pushed_1) {
                                     CallSocket("game_counter");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
                                 else {
                                     CallSocket("custom_room_game_counter");
-                                    list_ratings.clear();
-                                    ratingsAdapter.notifyDataSetChanged();
                                 }
+                                list_ratings.clear();
+                                ratingsAdapter.notifyDataSetChanged();
                                 CL_places.setVisibility(View.GONE);
                                 break;
                         }
@@ -315,6 +323,23 @@ public class SmallRatingsFragment extends Fragment {
                 IV_11_50 = view.findViewById(R.id.smallFragmentRatings_IV_11_50);
                 IV_51_100 = view.findViewById(R.id.smallFragmentRatings_IV_51_100);
                 CL_places = view.findViewById(R.id.smallFragmentRatings_CL_places);
+                TV_questionRatings = view.findViewById(R.id.smallFragmentRatings_TV_questionRatings);
+
+                TV_questionRatings.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                        builder.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                        TV_title.setText("Награды за места в рейтинге");
+                        TV_text.setText("В этой таблице представлены награды за места в рейтинге. '1 - 500 золота' означает, что игрок на первом месте получит эту награду. Награда за день выдаётся в 3 ночи по Москве, награда за неделю выдаётся в 3 ночи в понедельник, награда за месяц выдаётся в 3 ночи в 1 число месяца");
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
+                });
 
                 btn_1.setVisibility(View.GONE);
                 btn_2.setVisibility(View.GONE);
@@ -360,8 +385,8 @@ public class SmallRatingsFragment extends Fragment {
                                 CallSocket("general_wins_by_week");
                                 list_ratings.clear();
                                 ratingsAdapter.notifyDataSetChanged();
-                                TV_1.setText("1  -  500");
-                                TV_2.setText("2  -  250");
+                                TV_1.setText("1  -  250");
+                                TV_2.setText("2  -  150");
                                 TV_3.setText("3  -  100");
                                 TV_4_10.setText("4-10  -  500");
                                 TV_11_50.setText("11-50  -  250");
@@ -428,6 +453,23 @@ public class SmallRatingsFragment extends Fragment {
                 IV_11_50 = view.findViewById(R.id.smallFragmentRatings_IV_11_50);
                 IV_51_100 = view.findViewById(R.id.smallFragmentRatings_IV_51_100);
                 CL_places = view.findViewById(R.id.smallFragmentRatings_CL_places);
+                TV_questionRatings = view.findViewById(R.id.smallFragmentRatings_TV_questionRatings);
+
+                TV_questionRatings.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                        builder.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                        TV_title.setText("Награды за места в рейтинге");
+                        TV_text.setText("В этой таблице представлены награды за места в рейтинге. '1 - 500 золота' означает, что игрок на первом месте получит эту награду. Награда за день выдаётся в 3 ночи по Москве, награда за неделю выдаётся в 3 ночи в понедельник, награда за месяц выдаётся в 3 ночи в 1 число месяца");
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
+                });
 
                 btn_1.setText("Заработанный");
                 btn_2.setText("Общий");
@@ -510,8 +552,8 @@ public class SmallRatingsFragment extends Fragment {
                                     CallSocket("exp_by_week");
                                     list_ratings.clear();
                                     ratingsAdapter.notifyDataSetChanged();
-                                    TV_1.setText("1  -  500");
-                                    TV_2.setText("2  -  250");
+                                    TV_1.setText("1  -  250");
+                                    TV_2.setText("2  -  150");
                                     TV_3.setText("3  -  100");
                                     TV_4_10.setText("4-10  -  500");
                                     TV_11_50.setText("11-50  -  250");
