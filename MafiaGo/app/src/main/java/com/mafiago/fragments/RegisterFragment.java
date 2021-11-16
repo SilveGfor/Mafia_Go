@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -322,7 +323,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                     if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) &&
                             !ETpassword1.getText().toString().trim().equals("") &&
                             !ETnick.getText().toString().trim().equals("") &&
-                            !ETnick.getText().toString().contains(".") &&
+                            (!ETnick.getText().toString().contains(".") && !ETnick.getText().toString().contains("{") && !ETnick.getText().toString().contains("}")) &&
                             ETpassword1.length() >= 7 &&
                             ETpassword1.length() <= 20) {
 
@@ -386,35 +387,34 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                         switch (resp) {
                                             case "incorrect_email":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Пользователь с такой почтой уже есть")
-                                                            .setMessage("")
-                                                            .setIcon(R.drawable.ic_error)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("На эту почту уже зарегистрирован аккаунт!");
+                                                    TV_error.setText("Возьмите другую почту");
                                                     AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                 });
                                                 break;
                                             case "send_code":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Код успешно отправлен на почту!")
-                                                            .setMessage("")
-                                                            .setIcon(R.drawable.mafiago)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
-                                                    AlertDialog alert = builder.create();
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewError);
+                                                    AlertDialog alert;
+                                                    alert = builder.create();
+
+                                                    TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                                                    TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                                                    IV.setImageResource(R.drawable.ic_ok);
+                                                    TV.setText("Код отправлен!");
+                                                    TV_title.setText("Код регистрации успешно отправлен вам на почту!");
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                     ETemail.setVisibility(View.GONE);
                                                     ETnick.setVisibility(View.GONE);
@@ -437,86 +437,71 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 break;
                                             case "bad_email":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Вы ввели некорректную почту!")
-                                                            .setMessage("")
-                                                            .setIcon(R.drawable.ic_error)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("Некорректная почта!");
+                                                    TV_error.setText("Возможно, вы написали лишний пробел или другой символ");
                                                     AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                 });
                                                 break;
                                             case "incorrect_invite_code":
                                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Некорректный код друга!")
-                                                            .setMessage("Проверьте правильность написания")
-                                                            .setIcon(R.drawable.ic_error)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("Некорректный код друга!");
+                                                    TV_error.setText("Проверьте правильность написания");
                                                     AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                 });
                                                 break;
                                             case "incorrect_nick":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Пользователь с таким ником уже есть!")
-                                                            .setMessage("")
-                                                            .setIcon(R.drawable.ic_error)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("Этот ник уже занят!");
+                                                    TV_error.setText("Придумайте себе другой ник");
                                                     AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                 });
                                                 break;
                                             case "mat_nick":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Ваш ник не проходит цензуру!")
-                                                            .setMessage("")
-                                                            .setIcon(R.drawable.ic_error)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("Нецензурный ник!");
+                                                    TV_error.setText("Придумайте себе более приличный ник");
                                                     AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                 });
                                                 break;
                                             default:
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                    builder.setTitle("Что-то пошло не так!")
-                                                            .setMessage("")
-                                                            .setIcon(R.drawable.ic_error)
-                                                            .setCancelable(false)
-                                                            .setNegativeButton("Ок",
-                                                                    new DialogInterface.OnClickListener() {
-                                                                        public void onClick(DialogInterface dialog, int id) {
-                                                                            dialog.cancel();
-                                                                        }
-                                                                    });
+                                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                                    builder.setView(viewDang);
+                                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                                    TV_title.setText("Что-то пошло не так!");
+                                                    TV_error.setText("Напишите разработчику и подробно опишите проблему");
                                                     AlertDialog alert = builder.create();
+                                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                 });
                                                 break;
@@ -553,105 +538,84 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                         }
                     } else {
                         if (!ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ваши пароли не совпадают!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Ваши пароли не совпадают!");
+                            TV_error.setText("Напишите их ещё раз");
                             AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
-                        } else if (ETnick.getText().toString().contains(".")) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ник не должен содержать точку!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
+                        } else if (ETnick.getText().toString().contains(".") || ETnick.getText().toString().contains("{") || ETnick.getText().toString().contains("}")) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Недопустимые символы в нике!");
+                            TV_error.setText("В нике нельзя использовать точки и скобки");
                             AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
                         } else if (ETpassword1.getText().toString().trim().equals("")) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ваш пароль не может быть пустым!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Пустой пароль!");
+                            TV_error.setText("Ваш пароль не может быть пустым");
                             AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
                         } else if (ETnick.getText().toString().trim().equals("")) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ваш ник не может быть пустым!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Пустой ник!");
+                            TV_error.setText("Ваш ник не может быть пустым");
                             AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
                         } else if (ETpassword1.length() < 7) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ваш пароль слишком короткий!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Слишком короткий пароль!");
+                            TV_error.setText("Пароль должен быть не менее, чем 7 символов");
                             AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
                         } else if (ETpassword1.length() > 20) {
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                            builder.setTitle("Ваш пароль слишком длинный!")
-                                    .setMessage("")
-                                    .setIcon(R.drawable.ic_error)
-                                    .setCancelable(false)
-                                    .setNegativeButton("Ок",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    dialog.cancel();
-                                                }
-                                            });
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Слишком длинный пароль!");
+                            TV_error.setText("Ваш пароль должен быть меньше, чем 21 символ");
                             AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
                         }
                     }
                 }
                 else {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("У вас нет подключения к интернету!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_ban)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewDang);
+                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Нет подключения к интернету!");
+                    TV_error.setText("Проверьте соединение сети");
                     AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert.show();
                 }
             }
@@ -699,105 +663,90 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                         switch (resp) {
                             case "incorrect_email":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Пользователь с такой почтой уже есть!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_error)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewDang);
+                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_title.setText("На эту почту уже зарегистрирован аккаунт!");
+                                    TV_error.setText("Возьмите другую почту");
                                     AlertDialog alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
                             case "bad_email":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Некорректная почта!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_error)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewDang);
+                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_title.setText("Некорректная почта!");
+                                    TV_error.setText("Возможно, вы написали лишний пробел или другой символ");
                                     AlertDialog alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
                             case "incorrect_code":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Неверный код!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_error)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewDang);
+                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_title.setText("Неерный код!");
+                                    TV_error.setText("Проверьте правильность написания");
                                     AlertDialog alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
                             case "code_time_out":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Время действия кода истекло!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_error)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                        }
-                                                    });
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewDang);
+                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_title.setText("Время действия кода истекло!");
+                                    TV_error.setText("Зарегистрируйтесь ещё раз, чтобы получить новый код");
                                     AlertDialog alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
                             case "reg_in":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Регистрация прошла успешно!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_ok)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-                                                        }
-                                                    });
-                                    AlertDialog alert = builder.create();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewError);
+                                    AlertDialog alert;
+                                    alert = builder.create();
+
+                                    TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                                    TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                                    ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                                    IV.setImageResource(R.drawable.ic_ok);
+                                    TV.setText("Регистрация успешна!");
+                                    TV_title.setText("Вы успешно зарегистрировались в Mafia Go!");
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
                             default:
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                    builder.setTitle("Что-то пошло не так!")
-                                            .setMessage("")
-                                            .setIcon(R.drawable.ic_error)
-                                            .setCancelable(false)
-                                            .setNegativeButton("Ок",
-                                                    new DialogInterface.OnClickListener() {
-                                                        public void onClick(DialogInterface dialog, int id) {
-                                                            dialog.cancel();
-                                                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StartFragment()).commit();
-                                                        }
-                                                    });
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewDang);
+                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_title.setText("Что-то пошло не так!");
+                                    TV_error.setText("Напишите разработчику и подробно опишите проблему");
                                     AlertDialog alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
@@ -806,18 +755,15 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                 });
             }
             else {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setTitle("У вас нет подключения к интернету!")
-                        .setMessage("")
-                        .setIcon(R.drawable.ic_ban)
-                        .setCancelable(false)
-                        .setNegativeButton("Ок",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        dialog.cancel();
-                                    }
-                                });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                builder.setView(viewDang);
+                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                TV_title.setText("Нет подключения к интернету!");
+                TV_error.setText("Проверьте соединение сети");
                 AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 alert.show();
             }
         });

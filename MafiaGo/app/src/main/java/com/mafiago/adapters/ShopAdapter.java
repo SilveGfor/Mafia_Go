@@ -780,36 +780,51 @@ public class  ShopAdapter extends BaseAdapter {
                 });
 
                 btn_buy_chance.setOnClickListener(v -> {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
-                    builder.setView(viewQuestion);
-                    AlertDialog alert = builder.create();
-                    TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
-                    Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
-                    Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
-                    TV_text.setText("Вы уверены, что хотите совершить покупку?");
-                    btn_yes.setOnClickListener(v1 -> {
-                        final JSONObject json = new JSONObject();
-                        try {
-                            json.put("nick", MainActivity.NickName);
-                            json.put("session_id", MainActivity.Session_id);
-                            json.put("dop_type", "chance_of_role");
-                            json.put("chance_type", premium_chance[0]);
-                            json.put("store_type", "general");
-                            json.put("chance_role", role_chance[0]);
-                            json.put("item", num_price[0]);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        socket.emit("buy_item", json);
-                        Log.e("kkk", "Socket_отправка - buy_item - "+ json.toString());
-                        alert.cancel();
-                    });
-                    btn_no.setOnClickListener(v12 -> {
-                        alert.cancel();
-                    });
-                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    alert.show();
+                    if (!role_chance[0].equals("")) {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View viewQuestion = layout.inflate(R.layout.dialog_ok_no, null);
+                        builder.setView(viewQuestion);
+                        AlertDialog alert = builder.create();
+                        TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                        Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                        Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                        TV_text.setText("Вы уверены, что хотите совершить покупку?");
+                        btn_yes.setOnClickListener(v1 -> {
+                            final JSONObject json = new JSONObject();
+                            try {
+                                json.put("nick", MainActivity.NickName);
+                                json.put("session_id", MainActivity.Session_id);
+                                json.put("dop_type", "chance_of_role");
+                                json.put("chance_type", premium_chance[0]);
+                                json.put("store_type", "general");
+                                json.put("chance_role", role_chance[0]);
+                                json.put("item", num_price[0]);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("buy_item", json);
+                            Log.e("kkk", "Socket_отправка - buy_item - " + json.toString());
+                            alert.cancel();
+                        });
+                        btn_no.setOnClickListener(v12 -> {
+                            alert.cancel();
+                        });
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
+                    else
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        View viewDang = layout.inflate(R.layout.dialog_error, null);
+                        builder.setView(viewDang);
+                        TextView TV_errorName = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_errorText = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_errorName.setText("Выберите роль!");
+                        TV_errorText.setText("Вам надо выбрать роль, для которой вы хотите купить увеличение шанса получения");
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
                 });
 
                 break;

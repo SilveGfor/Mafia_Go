@@ -215,7 +215,7 @@ public class SettingsMainFragment extends Fragment {
                     if (nick.length() >= 3)
                     {
                         if (nick.length() <= 15) {
-                            if (!nick.contains(".")) {
+                            if (!nick.contains(".") && !nick.contains("{") && !nick.contains("}")) {
                                 final JSONObject json2 = new JSONObject();
                                 try {
                                     json2.put("nick", MainActivity.NickName);
@@ -233,7 +233,7 @@ public class SettingsMainFragment extends Fragment {
                                 TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                 TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
                                 TV_title.setText("Некорректный символ!");
-                                TV_error.setText("Нельзя использовать точку в нике");
+                                TV_error.setText("Нельзя точки и скобки");
                                 AlertDialog alert2 = builder2.create();
                                 alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert2.show();
@@ -420,130 +420,106 @@ public class SettingsMainFragment extends Fragment {
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
                     alert.cancel();
                      */
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
                 sheriff.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
                 doctor.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
                 lover.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
-                    alert2.show();;
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert2.show();
                 });
 
                 journalist.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
                 bodyguard.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
                 maniac.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
                 doctor_of_easy_virtue.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
@@ -554,18 +530,15 @@ public class SettingsMainFragment extends Fragment {
                 });
 
                 mafia_don.setOnClickListener(v1 -> {
-                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                    builder2.setTitle("В разработке...")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_razrabotka)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int id) {
-                                            dialog.cancel();
-                                        }
-                                    });
+                    AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                    View viewDang2 = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder2.setView(viewDang2);
+                    TextView TV_title = viewDang2.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang2.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("В разработке...");
+                    TV_error.setText("");
                     AlertDialog alert2 = builder2.create();
+                    alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     alert2.show();
                 });
 
@@ -716,18 +689,15 @@ public class SettingsMainFragment extends Fragment {
                     }
                     else
                     {
-                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getContext());
-                        builder2.setTitle("Заполните все поля!")
-                                .setMessage("")
-                                .setIcon(R.drawable.ic_error)
-                                .setCancelable(false)
-                                .setNegativeButton("Ок",
-                                        new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                dialog.cancel();
-                                            }
-                                        });
+                        AlertDialog.Builder builder2 = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder2.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_title.setText("Не все поля заполнены!");
+                        TV_error.setText("Вы должны заполнить все поля");
                         AlertDialog alert2 = builder2.create();
+                        alert2.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert2.show();
                     }
                 });
@@ -856,14 +826,15 @@ public class SettingsMainFragment extends Fragment {
                                 Log.d("kkk", "Socket_отправка - edit_profile - " + json2.toString());
                                 socket.emit("edit_profile", json2);
                             } else {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                builder.setTitle("Слишком большое изображение!")
-                                        .setMessage("")
-                                        .setIcon(R.drawable.ic_error)
-                                        .setCancelable(false)
-                                        .setNegativeButton("Ок",
-                                                (dialog, id) -> dialog.cancel());
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                builder.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Слишком большое изображение!");
+                                TV_error.setText("Выберите изображение поменьше или обрежьте/сожмите свою картинку");
                                 AlertDialog alert = builder.create();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
                             }
                         } catch (IOException e) {
@@ -1334,42 +1305,50 @@ public class SettingsMainFragment extends Fragment {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            AlertDialog.Builder builder;
-            AlertDialog alert;
             switch (status)
             {
                 case "OK":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Вы успешно сообщили о проблеме!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_ok)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewError);
+                    AlertDialog alert;
                     alert = builder.create();
+
+                    TextView TV = viewError.findViewById(R.id.dialogError_TV_errorText);
+                    TextView TV_title = viewError.findViewById(R.id.dialogError_TV_errorTitle);
+                    ImageView IV = viewError.findViewById(R.id.dialogError_IV);
+
+                    IV.setImageResource(R.drawable.ic_ok);
+                    TV.setText("Проблема успешно отправлена!");
+                    TV_title.setText("Вы успешно сообщили об ошибке в Mafia Go! Мы рассмотрим вашу жалобу и примем меры, большое вам спасибо!");
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                     break;
                 case "problems_limit_exceeded":
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Истрачен лимит ошибок!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_ok)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
+                    builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewDang);
+                    TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Вы истратили лимит отправки проблем!");
+                    TV_error.setText("Приходите завтра");
                     alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                     break;
                 default:
-                    builder = new AlertDialog.Builder(getContext());
-                    builder.setTitle("Что-то пошло не так!")
-                            .setMessage("")
-                            .setIcon(R.drawable.ic_error)
-                            .setCancelable(false)
-                            .setNegativeButton("Ок",
-                                    (dialog, id) -> dialog.cancel());
+                    builder = new AlertDialog.Builder(getActivity());
+                    viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewDang);
+                    TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                    TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Слишком большое изображение!");
+                    TV_error.setText("Выберите изображение поменьше или обрежьте/сожмите свою картинку");
                     alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                     break;
             }
-            alert.show();
             Log.d("kkk", "принял - edit_profile - " + data);
         });
     };
