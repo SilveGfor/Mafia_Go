@@ -88,7 +88,7 @@ public class GamesAdapter extends BaseAdapter {
             View view_listOfUsers = layout.inflate(R.layout.dialog_list_of_users_in_room, null);
             builder.setView(view_listOfUsers);
 
-            ListView LV_users = view_listOfUsers.findViewById(R.id.dialogListOfUsersInRoom_LV);
+            ListView LV_users = view_listOfUsers.findViewById(R.id.dialogFines_LV_listOfFines);
 
             UsersInRoomAdapter usersInRoomAdapter = new UsersInRoomAdapter(list_room.get(position).list_users, context);
             LV_users.setAdapter(usersInRoomAdapter);

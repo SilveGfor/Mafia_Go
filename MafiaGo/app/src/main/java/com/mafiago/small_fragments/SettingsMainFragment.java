@@ -64,6 +64,7 @@ public class SettingsMainFragment extends Fragment {
     Button btnReportError;
     Button btnExitAccount;
     Button btnSelectTheme;
+    Button btnFines;
     Button btnRules;
 
     TextView TV_usersAgreement;
@@ -370,6 +371,7 @@ public class SettingsMainFragment extends Fragment {
             btnSelectTheme = view.findViewById(R.id.fragmentSettingsMain_chooseTheme);
             btnStudy = view.findViewById(R.id.fragmentSettingsProfile_btn_study);
             btnRules = view.findViewById(R.id.fragmentSettingsProfile_btn_rules);
+            btnFines = view.findViewById(R.id.fragmentSettingsProfile_btn_fines);
             TV_usersAgreement = view.findViewById(R.id.fragmentSettingsMain_TV_usersAgreement);
             TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
             TV_inviteCode = view.findViewById(R.id.fragmentSettingsMain_TV_inviteCode);
@@ -380,6 +382,13 @@ public class SettingsMainFragment extends Fragment {
             socket.on("send_problem", onSendProblem);
 
             TV_inviteCode.setText("Пригласительный код для друзей: " + MainActivity.MyInviteCode + "\nВаш друг может указать его при регистрации и сыграть 50 игр - тогда вы оба получите по 100 золота");
+
+            btnFines.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
 
             btnStudy.setOnClickListener(v -> {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -406,7 +415,8 @@ public class SettingsMainFragment extends Fragment {
                 journalist.setImageResource(R.drawable.journalist_dead);
                 bodyguard.setImageResource(R.drawable.bodyguard_dead);
                 maniac.setImageResource(R.drawable.maniac_dead);
-                doctor_of_easy_virtue.setImageResource(R.drawable.doctor_of_easy_virtue_dead);mafia_don.setImageResource(R.drawable.mafia_don_dead);
+                doctor_of_easy_virtue.setImageResource(R.drawable.doctor_of_easy_virtue_dead);
+                mafia_don.setImageResource(R.drawable.mafia_don_dead);
                 terrorist.setImageResource(R.drawable.terrorist_dead);
                 poisoner.setImageResource(R.drawable.poisoner_dead);
 
