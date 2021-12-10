@@ -507,6 +507,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 String general_pers_of_wins = "", mafia_pers_of_wins = "", peaceful_pers_of_wins = "", user_id_2 = "", main_status = "", main_personal_color = "", premium_time = "";
                 int was_citizen = 0, was_sheriff = 0, was_doctor = 0, was_lover = 0, was_journalist = 0, was_bodyguard = 0, was_doctor_of_easy_virtue = 0, was_maniac = 0, was_mafia = 0, was_mafia_don = 0, was_terrorist = 0, was_poisoner = 0;
                 //data.remove("avatar");
+                //data.remove("statistics");
+                //data.remove("chance_of_role");
                 Log.d("kkk", "принял - get_profile - " + data);
                 try {
                     statistic = data.getJSONObject("statistics");

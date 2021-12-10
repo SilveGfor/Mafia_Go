@@ -34,6 +34,7 @@ import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.example.mafiago.R;
 import com.google.android.material.tabs.TabLayout;
+import com.mafiago.MainActivity;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.pager_adapters.SettingsPagerAdapter;
 import com.mafiago.pager_adapters.ShopPagerAdapter;
@@ -55,6 +56,10 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
     ViewPager viewPager;
     RelativeLayout btn_back;
 
+    TextView TV_money;
+    TextView TV_exp;
+    TextView TV_gold;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -65,6 +70,9 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
         viewPager = view.findViewById(R.id.fragmentShop_ViewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        TV_money = view.findViewById(R.id.fragmentShop_TV_money);
+        TV_exp = view.findViewById(R.id.fragmentShop_TV_exp);
+        TV_gold = view.findViewById(R.id.fragmentShop_TV_gold);
 
         // Получаем ViewPager и устанавливаем в него адаптер
         viewPager.setAdapter(
@@ -78,9 +86,22 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
         socket.off("user_error");
         socket.off("get_store");
         socket.off("buy_item");
+        socket.off("get_profile");
 
         socket.on("buy_item", OnBuyItem);
         socket.on("user_error", onUserError);
+        socket.on("get_profile", OnGetProfile);
+
+        final JSONObject json = new JSONObject();
+        try {
+            json.put("nick", MainActivity.NickName);
+            json.put("session_id", MainActivity.Session_id);
+            json.put("info_nick", MainActivity.NickName);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        socket.emit("get_profile", json);
+        Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -225,7 +246,41 @@ public class ShopFragment extends Fragment implements OnBackPressedListener {
                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                         alert.show();
                     }
+
+                    final JSONObject json = new JSONObject();
+                    try {
+                        json.put("nick", MainActivity.NickName);
+                        json.put("session_id", MainActivity.Session_id);
+                        json.put("info_nick", MainActivity.NickName);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    socket.emit("get_profile", json);
+                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
                 }
+            }
+        });
+    };
+
+    private final Emitter.Listener OnGetProfile = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                int money = 0, exp = 0, gold = 0, rang = 0;
+                Log.d("kkk", "принял - get_profile - " + data);
+                try {
+                    money = data.getInt("money");
+                    exp = data.getInt("exp");
+                    gold = data.getInt("gold");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                TV_money.setText(String.valueOf(money));
+                TV_exp.setText(String.valueOf(exp));
+                TV_gold.setText(String.valueOf(gold));
             }
         });
     };

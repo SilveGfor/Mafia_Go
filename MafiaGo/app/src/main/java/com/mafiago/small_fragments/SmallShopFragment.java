@@ -117,6 +117,17 @@ public class SmallShopFragment extends Fragment implements PurchasesUpdatedListe
                 }
                 socket.emit("buy_item", json);
                 Log.d("kkk", "Socket_отправка - buy_item - " + json.toString());
+
+                final JSONObject json2 = new JSONObject();
+                try {
+                    json2.put("nick", MainActivity.NickName);
+                    json2.put("session_id", MainActivity.Session_id);
+                    json2.put("info_nick", MainActivity.NickName);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                socket.emit("get_profile", json2);
+                Log.d("kkk", "Socket_отправка - get_profile - "+ json2.toString());
             }
             Log.e("kkk", String.valueOf(purchase.getSkus()));
         }
