@@ -386,7 +386,16 @@ public class SettingsMainFragment extends Fragment {
             btnFines.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_fines, null);
+                    builder.setView(viewDang);
+                    TextView TV_noFines = viewDang.findViewById(R.id.dialogFines_TV_noFines);
+                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Опасная зона!");
+                    TV_error.setText("Личные сообщения все еще разрабатываются, ими можно пользоваться, но некоторые функции и внешний вид могут не соответствовать ожиданиям");
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
                 }
             });
 
