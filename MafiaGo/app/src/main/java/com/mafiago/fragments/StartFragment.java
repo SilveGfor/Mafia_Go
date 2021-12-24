@@ -79,13 +79,11 @@ public class StartFragment extends Fragment {
     String Session_id = "";
 
     Boolean AutoRun = false;
-    Boolean was_study = false;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
     public static final String APP_PREFERENCES_NICKNAME = "nickname";
-    public static final String APP_PREFERENCES_STUDY = "study";
 
     private SharedPreferences mSettings;
 
@@ -128,7 +126,6 @@ public class StartFragment extends Fragment {
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        was_study = mSettings.getBoolean(APP_PREFERENCES_STUDY, false);
         //if (mSettings.contains(APP_PREFERENCES_EMAIL) && mSettings.contains(APP_PREFERENCES_PASSWORD)) {
         if (!mSettings.getString(APP_PREFERENCES_EMAIL, "").equals("")) {
             // Получаем значение из настроек
@@ -337,17 +334,7 @@ public class StartFragment extends Fragment {
                                     }
                                     socket.emit("connection", json2);
                                     Log.d("kkk", "CONNECTION after Login");
-                                    if (!was_study)
-                                    {
-                                        SharedPreferences.Editor editor = mSettings.edit();
-                                        editor.putBoolean(APP_PREFERENCES_STUDY, true);
-                                        editor.apply();
-                                        StudyFragment studyFragment = StudyFragment.newInstance("mafia");
-                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
-                                    }
-                                    else {
-                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-                                    }
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
                                 }
                                 else {
                                     if (!data.getString("ban_time").equals("forever")) {

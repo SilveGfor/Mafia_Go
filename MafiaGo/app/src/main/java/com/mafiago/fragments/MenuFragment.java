@@ -65,6 +65,7 @@ import java.util.Iterator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.socket.emitter.Emitter;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
@@ -102,6 +103,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
     ProgressBar PB_loading;
 
+    Boolean was_study;
+
     String base64_screenshot = "", report_nick = "", report_id = "";
 
     ArrayList<BusterModel> list_busters = new ArrayList<>();
@@ -113,6 +116,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     private static String CHANNEL_ID = "Notifications channel";
 
     public static final String APP_PREFERENCES = "user";
+    public static final String APP_PREFERENCES_WAS_STUDY = "study";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
@@ -153,6 +157,28 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+
+        new MaterialTapTargetPrompt.Builder(getActivity())
+                .setTarget(btnTools)
+                .setPrimaryText("Это Настройки")
+                .setSecondaryText("Там много всего интересного")
+                .setPromptStateChangeListener((prompt, state) -> {
+                    if(state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+
+                    }
+                    else if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED)
+                    {
+                        new MaterialTapTargetPrompt.Builder(getActivity())
+                                .setTarget(btnTools)
+                                .setPrimaryText("Это Настройки")
+                                .setSecondaryText("Там много всего интересного")
+                                .show();
+                    }
+                    Log.e("kkk", "state = " + String.valueOf(state));
+                })
+                .show();
+
+
         //TODO: Сделать что-то про последнюю роль
         //SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
 
@@ -177,6 +203,40 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
 
 
+        was_study = mSettings.getBoolean(APP_PREFERENCES_WAS_STUDY, false);
+        if (!was_study)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            View viewDang = getLayoutInflater().inflate(R.layout.dialog_answer_about_possibilities, null);
+            builder.setView(viewDang);
+            AlertDialog alert = builder.create();
+
+            Button btn_new = viewDang.findViewById(R.id.dialogAnswerAboutPossibilities_btn_new);
+            Button btn_old = viewDang.findViewById(R.id.dialogAnswerAboutPossibilities_btn_old);
+
+            btn_new.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    StudyFragment studyFragment = StudyFragment.newInstance("mafia");
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    alert.cancel();
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putBoolean(APP_PREFERENCES_WAS_STUDY, true);
+                    editor.apply();
+                }
+            });
+            btn_old.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alert.cancel();
+                }
+            });
+
+            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            alert.show();
+        }
+
+
         //final Animation animation = AnimationUtils.loadAnimation(getContext(), R.anim.bounce_center);
 
         // amplitude 0.2 and frequency 20
@@ -184,36 +244,33 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         //animation.setInterpolator(interpolator);
         //CV_info.startAnimation(animation);
 
-        Menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
-                popup_menu.inflate(R.menu.main_menu);
-                popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.mainMenu_play:
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
-                                return true;
-                            case R.id.mainMenu_shop:
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
-                                return true;
-                            case R.id.mainMenu_friends:
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
-                                return true;
-                            case R.id.mainMenu_chats:
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
-                                return true;
-                            case R.id.mainMenu_settings:
-                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
-                                return true;
-                        }
-                        return true;
+        Menu.setOnClickListener(v -> {
+            PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+            popup_menu.inflate(R.menu.main_menu);
+            popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                @Override
+                public boolean onMenuItemClick(MenuItem item) {
+                    switch (item.getItemId()) {
+                        case R.id.mainMenu_play:
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GamesListFragment()).commit();
+                            return true;
+                        case R.id.mainMenu_shop:
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new ShopFragment()).commit();
+                            return true;
+                        case R.id.mainMenu_friends:
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new FriendsFragment()).commit();
+                            return true;
+                        case R.id.mainMenu_chats:
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new PrivateChatsFragment()).commit();
+                            return true;
+                        case R.id.mainMenu_settings:
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new SettingsFragment()).commit();
+                            return true;
                     }
-                });
-                popup_menu.show();
-            }
+                    return true;
+                }
+            });
+            popup_menu.show();
         });
 
         Telegram.setOnClickListener(v -> {
