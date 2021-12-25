@@ -72,6 +72,7 @@ import static com.mafiago.MainActivity.socket;
 import static com.mafiago.MainActivity.url;
 
 public class MenuFragment extends Fragment implements OnBackPressedListener {
+    private static final String ARG_STUDY = "study";
 
     Button btnRating;
     Button btnGames;
@@ -104,6 +105,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     ProgressBar PB_loading;
 
     Boolean was_study;
+    String study_type = "";
 
     String base64_screenshot = "", report_nick = "", report_id = "";
 
@@ -124,6 +126,22 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     private SharedPreferences mSettings;
 
     public static RewardedAd mRewardedAd;
+
+    public static MenuFragment newInstance(String study_type) {
+        MenuFragment fragment = new MenuFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_STUDY, study_type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            study_type = getArguments().getString(ARG_STUDY);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -158,6 +176,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
 
+        /*
         new MaterialTapTargetPrompt.Builder(getActivity())
                 .setTarget(btnTools)
                 .setPrimaryText("Это Настройки")
@@ -177,6 +196,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                     Log.e("kkk", "state = " + String.valueOf(state));
                 })
                 .show();
+         */
 
 
         //TODO: Сделать что-то про последнюю роль
@@ -204,7 +224,8 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
 
         was_study = mSettings.getBoolean(APP_PREFERENCES_WAS_STUDY, false);
-        if (!was_study)
+        //if (!was_study)
+        if (true)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             View viewDang = getLayoutInflater().inflate(R.layout.dialog_answer_about_possibilities, null);
@@ -234,6 +255,12 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
+        }
+
+        switch (study_type)
+        {
+            case "game":
+                study(btnGames, "Это игра", "Там хорошо");
         }
 
 
@@ -962,5 +989,40 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             return false;
         }
         return status;
+    }
+
+    public void study(View view, String title, String text)
+    {
+        new MaterialTapTargetPrompt.Builder(getActivity())
+                .setTarget(view)
+                .setPrimaryText(title)
+                .setSecondaryText(text)
+                .setPromptStateChangeListener((prompt, state) -> {
+                    if(state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+                        Log.e("kkk", "OK");
+                    }
+                    else if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED)
+                    {
+                        study(view, title, text);
+                    }
+                    Log.e("kkk", "state = " + String.valueOf(state));
+                })
+                .show();
+        funcBlockAll(view);
+    }
+    public void funcBlockAll(View view)
+    {
+        btnRating.setClickable(false);
+        btnGames.setClickable(false);
+        btnTools.setClickable(false);
+        btnDailyTasks.setClickable(false);
+        Chats.setClickable(false);
+        Friends.setClickable(false);
+        Shop.setClickable(false);
+        Competitions.setClickable(false);
+        VK.setClickable(false);
+        Telegram.setClickable(false);
+        Menu.setClickable(false);
+        view.setClickable(true);
     }
 }

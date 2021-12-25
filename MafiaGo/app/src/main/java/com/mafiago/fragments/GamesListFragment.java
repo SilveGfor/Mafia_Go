@@ -61,6 +61,8 @@ import static com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class GamesListFragment extends Fragment implements OnBackPressedListener {
+    private static final String ARG_STUDY = "study";
+    String study_type = "";
 
     public ListView LV_games;
 
@@ -126,6 +128,22 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
 
     private SharedPreferences mSettings;
+
+    public static GamesListFragment newInstance(String study_type) {
+        GamesListFragment fragment = new GamesListFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_STUDY, study_type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            study_type = getArguments().getString(ARG_STUDY);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
