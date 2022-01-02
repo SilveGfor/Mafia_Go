@@ -9,6 +9,20 @@
     android:background="?attr/background"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/fragmentRegister_TV_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        android:text="?"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@+id/fragmentRegister_ET_inviteCode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.17"
+        app:layout_constraintStart_toEndOf="@+id/fragmentRegister_ET_inviteCode" />
+
     <RelativeLayout
         android:id="@+id/fragmentGamesList_RL_back"
         android:layout_width="wrap_content"
@@ -51,17 +65,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_roomName" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="Если вас позвал друг, вы можете ввести его пригласительный код, что даст вам дополнительные бонусы. Узнать свой пригласительный код можно в настройках приложения"
-        android:textSize="10sp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentRegister_ET_inviteCode"
-        app:layout_constraintEnd_toEndOf="@+id/fragmentRegister_ET_inviteCode"
-        app:layout_constraintStart_toStartOf="@+id/fragmentRegister_ET_inviteCode" />
-
     <ImageView
         android:id="@+id/fragmentGame_roomName"
         android:layout_width="wrap_content"
@@ -76,11 +79,9 @@
         android:id="@+id/fragmentRegister_ET_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="70dp"
-        android:layout_marginLeft="70dp"
+        android:layout_marginStart="60dp"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="70dp"
-        android:layout_marginRight="70dp"
+        android:layout_marginEnd="60dp"
         android:background="@drawable/shape_black"
         android:ems="10"
         android:hint="E-mail"
@@ -116,7 +117,7 @@
         android:layout_marginTop="70dp"
         android:background="@drawable/shape_black"
         android:ems="10"
-        android:hint="Введите код друга"
+        android:hint="Код друга (если есть)"
         android:inputType="textPersonName"
         android:padding="10dp"
         android:textColorHint="@color/white"

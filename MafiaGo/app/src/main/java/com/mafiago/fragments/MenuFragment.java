@@ -261,6 +261,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         {
             case "game":
                 study(btnGames, "Это игра", "Там хорошо");
+                break;
         }
 
 
@@ -1009,6 +1010,13 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 })
                 .show();
         funcBlockAll(view);
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GamesListFragment gamesListFragment = GamesListFragment.newInstance("game");
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, gamesListFragment).commit();
+            }
+        });
     }
     public void funcBlockAll(View view)
     {

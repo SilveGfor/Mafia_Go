@@ -248,9 +248,9 @@ public class StartFragment extends Fragment {
                     try {
                         switch (Answer) {
                             case "incorrect_email":
-                                if (!AutoRun) {
-                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                        PB_loading.setVisibility(View.INVISIBLE);
+                                ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                    PB_loading.setVisibility(View.INVISIBLE);
+                                    if (!AutoRun) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                         builder.setView(viewDang);
@@ -261,13 +261,13 @@ public class StartFragment extends Fragment {
                                         AlertDialog alert = builder.create();
                                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
-                                    });
-                                }
+                                    }
+                                });
                                 break;
                             case "incorrect_password":
-                                if (!AutoRun) {
-                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                        PB_loading.setVisibility(View.INVISIBLE);
+                                ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                    PB_loading.setVisibility(View.INVISIBLE);
+                                    if (!AutoRun) {
                                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                         builder.setView(viewDang);
@@ -278,8 +278,9 @@ public class StartFragment extends Fragment {
                                         AlertDialog alert = builder.create();
                                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
-                                    });
-                                }
+                                    }
+                                });
+
                                 break;
                             case "incorrect_game_version":
                                     ContextCompat.getMainExecutor(getContext()).execute(() -> {

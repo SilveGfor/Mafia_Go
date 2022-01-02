@@ -1502,7 +1502,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String message, time, status, mafia_nick, user_nick, voter, nick;
-                    int test_num, money, exp;
+                    int test_num, money, exp, room_id;
                     boolean is_premium;
                     JSONObject data2;
                     try {
@@ -1511,8 +1511,9 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                         time = data.getString("time");
                         time = getDate(time);
                         message = data.getString("message");
+                        room_id = data.getInt("room");
                         Log.d("kkk", "system message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + " , status - " + status + "/" +  data);
-                        if (test_num != num) {
+                        if (test_num != num && room_id == player.getRoom_num()) {
                             if (test_num > num) {
                                 num = test_num;
                             }

@@ -55,6 +55,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import io.socket.emitter.Emitter;
+import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
@@ -63,6 +64,7 @@ import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 public class GamesListFragment extends Fragment implements OnBackPressedListener {
     private static final String ARG_STUDY = "study";
     String study_type = "";
+    boolean blockView = false;
 
     public ListView LV_games;
 
@@ -187,6 +189,13 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
         gamesAdapter = new GamesAdapter(list_room_copy, getContext());
         LV_games.setAdapter(gamesAdapter);
+
+        switch (study_type)
+        {
+            case "game":
+                study(LV_games, "Это список игр", "Тут отображаются все игры");
+                break;
+        }
 
         CB_deletePlayingRoom.setOnCheckedChangeListener((buttonView, isChecked) -> {
             deletePlayingRooms = isChecked;
@@ -369,6 +378,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             e.printStackTrace();
         }
         socket.emit("get_list_of_rooms", json);
+        BlockView();
         Log.d("kkk", "Socket_отправка - get_list_of_rooms - "+ json.toString());
 
         btnCreateRoom.setOnClickListener(new View.OnClickListener() {
@@ -466,15 +476,16 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
 
     @Override
     public void onBackPressed() {
-        if (CB_deleteCustomRoom.getVisibility() == View.VISIBLE) {
-            IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
+        if (!blockView) {
+            if (CB_deleteCustomRoom.getVisibility() == View.VISIBLE) {
+                IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
 
-            TV_playersCount.setVisibility(View.GONE);
-            CB_deletePlayingRoom.setVisibility(View.GONE);
-            CB_deleteNormalRoom.setVisibility(View.GONE);
-            CB_deletePasswordRoom.setVisibility(View.GONE);
-            CB_deleteCustomRoom.setVisibility(View.GONE);
-            RSB_num_users.setVisibility(View.GONE);
+                TV_playersCount.setVisibility(View.GONE);
+                CB_deletePlayingRoom.setVisibility(View.GONE);
+                CB_deleteNormalRoom.setVisibility(View.GONE);
+                CB_deletePasswordRoom.setVisibility(View.GONE);
+                CB_deleteCustomRoom.setVisibility(View.GONE);
+                RSB_num_users.setVisibility(View.GONE);
             /*
             IV_doctor.setVisibility(View.GONE);
             IV_lover.setVisibility(View.GONE);
@@ -486,9 +497,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
             IV_terrorist.setVisibility(View.GONE);
             IV_poisoner.setVisibility(View.GONE);
              */
-        }
-        else {
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            } else {
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+            }
         }
     }
 
@@ -610,6 +621,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 @Override
                 public void run() {
                     PB_loading.setVisibility(View.GONE);
+                    UnblockView();
                     if (args.length != 0)
                     {
                         JSONObject data = (JSONObject) args[0];
@@ -1258,5 +1270,71 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         if (list_room_copy.size() != 0) TV_no_games.setVisibility(View.GONE);
         else TV_no_games.setVisibility(View.VISIBLE);
         gamesAdapter.notifyDataSetChanged();
+    }
+
+    public void study(View view, String title, String text)
+    {
+        new MaterialTapTargetPrompt.Builder(getActivity())
+                .setTarget(view)
+                .setPrimaryText(title)
+                .setSecondaryText(text)
+                .setPromptStateChangeListener((prompt, state) -> {
+                    new MaterialTapTargetPrompt.Builder(getActivity())
+                            .setTarget(RL_filter)
+                            .setPrimaryText("Это фильтр комнат")
+                            .setSecondaryText("Тут можно задать те комнаты, которые вы хотите видеть в списке")
+                            .setPromptStateChangeListener((prompt2, state2) -> {
+                                if(state2 == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+
+                                }
+                                else if (state2 == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
+                                }
+                                IV_filter.setImageResource(R.drawable.ic_arrow_top);
+
+                                TV_playersCount.setVisibility(View.VISIBLE);
+                                CB_deletePlayingRoom.setVisibility(View.VISIBLE);
+                                CB_deleteNormalRoom.setVisibility(View.VISIBLE);
+                                CB_deletePasswordRoom.setVisibility(View.VISIBLE);
+                                CB_deleteCustomRoom.setVisibility(View.VISIBLE);
+                                RSB_num_users.setVisibility(View.VISIBLE);
+                                new MaterialTapTargetPrompt.Builder(getActivity())
+                                        .setTarget(RSB_num_users)
+                                        .setPrimaryText("Тут можно задать количество людей в комнате")
+                                        .setSecondaryText("Тогда вы будете видеть только комнаты с определённым минимальным и максимальным количеством людей")
+                                        .setPromptStateChangeListener((prompt3, state3) -> {
+                                            if(state3 == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
+
+                                            }
+                                            else if (state3 == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
+                                            }
+                                        })
+                                        .show();
+                            })
+                            .show();
+                })
+                .show();
+        funcBlockAll();
+    }
+    public void BlockView(View view)
+    {
+        btnCreateRoom.setClickable(false);
+        Menu.setClickable(false);
+        LV_games.setClickable(false);
+
+        view.setClickable(true);
+    }
+    public void BlockView()
+    {
+        blockView = true;
+        btnCreateRoom.setClickable(false);
+        Menu.setClickable(false);
+        LV_games.setClickable(false);
+    }
+    public void UnblockView()
+    {
+        blockView = true;
+        btnCreateRoom.setClickable(false);
+        Menu.setClickable(false);
+        LV_games.setClickable(false);
     }
 }

@@ -70,6 +70,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
     TextView TV_sendCodeOneMoreTime;
     TextView TV_repeatRegistration;
+    TextView TV_question;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
@@ -100,6 +101,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
         loading = view.findViewById(R.id.fragmentChangePassword_PB);
         RL_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         STV_text = view.findViewById(R.id.fragmentRegister_TV_text);
+        TV_question = view.findViewById(R.id.fragmentRegister_TV_question);
 
         Shimmer shimmer = new Shimmer();
         shimmer.start(STV_text);
@@ -114,6 +116,22 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
+        TV_question.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                builder.setView(viewDang);
+                TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                TV_title.setText("Код друга");
+                TV_text.setText("Если вас позвал друг, то вы можете ввести его пригласительный код, чтобы получить дополнительные бонусы. Ваш друг может найти код в настройках игры");
+                AlertDialog alert = builder.create();
+                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.show();
+            }
+        });
+
         RL_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -126,6 +144,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
             boolean mWait = mSettings.getBoolean(APP_PREFERENCES_WAIT_CODE, false);
             // Выводим на экран данные из настроек
             if (mWait) {
+                ET_inviteCode.setVisibility(View.GONE);
+                TV_question.setVisibility(View.GONE);
                 ETemail.setVisibility(View.GONE);
                 ETnick.setVisibility(View.GONE);
                 ETpassword1.setVisibility(View.GONE);
@@ -149,6 +169,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
 
         TV_repeatRegistration.setOnClickListener(v -> {
+            ET_inviteCode.setVisibility(View.VISIBLE);
+            TV_question.setVisibility(View.VISIBLE);
             ETemail.setVisibility(View.VISIBLE);
             ETnick.setVisibility(View.VISIBLE);
             ETpassword1.setVisibility(View.VISIBLE);
@@ -219,6 +241,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 AlertDialog alert = builder.create();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
+                                ET_inviteCode.setVisibility(View.GONE);
+                                TV_question.setVisibility(View.GONE);
                                 ETemail.setVisibility(View.GONE);
                                 ETnick.setVisibility(View.GONE);
                                 ETpassword1.setVisibility(View.GONE);
@@ -416,6 +440,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                     TV_title.setText("Код регистрации успешно отправлен вам на почту!");
                                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
+                                                    ET_inviteCode.setVisibility(View.GONE);
+                                                    TV_question.setVisibility(View.GONE);
                                                     ETemail.setVisibility(View.GONE);
                                                     ETnick.setVisibility(View.GONE);
                                                     ETpassword1.setVisibility(View.GONE);

@@ -357,6 +357,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                 editor.apply();
                                 socket.emit("create_room", json);
                                 Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
+
                             }
                             else
                             {
