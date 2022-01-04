@@ -943,22 +943,25 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                     String nick;
                     String time;
                     String avatar;
-                    int test_num;
+                    int test_num, room_id;
                     try {
-                        test_num = data.getInt("num");
-                        time = data.getString("time");
-                        time = getDate(time);
-                        nick = data.getString("nick");
-                        avatar = data.getString("avatar");
-                        Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
-                        if (test_num != num) {
-                            if (test_num > num) {
-                                num = test_num;
+                        room_id = data.getInt("room");
+                        if (room_id == player.getRoom_num()) {
+                            test_num = data.getInt("num");
+                            time = data.getString("time");
+                            time = getDate(time);
+                            nick = data.getString("nick");
+                            avatar = data.getString("avatar");
+                            Log.d("kkk", "get_in_room - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + "/ " + data);
+                            if (test_num != num) {
+                                if (test_num > num) {
+                                    num = test_num;
+                                }
+                                list_users.add(new UserModel(nick, Role.NONE, avatar));
+                                Log.e("kkk", "GF, добавляю пользователя");
+                                playersAdapter.notifyDataSetChanged();
+                                TV_playersCount.setText("Игроки: " + list_users.size());
                             }
-                            list_users.add(new UserModel(nick, Role.NONE, avatar));
-                            Log.e("kkk", "GF, добавляю пользователя");
-                            playersAdapter.notifyDataSetChanged();
-                            TV_playersCount.setText("Игроки: " + list_users.size());
                         }
                     } catch (JSONException e) {
                         return;

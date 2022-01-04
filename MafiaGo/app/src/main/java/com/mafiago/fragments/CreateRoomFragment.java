@@ -57,6 +57,8 @@ import static  com.mafiago.MainActivity.socket;
 
 public class CreateRoomFragment extends Fragment implements OnBackPressedListener {
 
+    boolean blockView = false;
+
     EditText ET_RoomName;
 
     RangeSeekBar RSB_num_users;
@@ -356,6 +358,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                 }
                                 editor.apply();
                                 socket.emit("create_room", json);
+                                BlockView();
                                 Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
 
                             }
@@ -436,7 +439,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
     @Override
     public void onBackPressed() {
-        if (PB_loading.getVisibility() != View.VISIBLE) {
+        if (PB_loading.getVisibility() != View.VISIBLE && !blockView) {
             SharedPreferences.Editor editor = mSettings.edit();
             editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
             editor.apply();
@@ -511,6 +514,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                         MainActivity.RoomName = name;
                         MainActivity.PlayersMinMaxInfo = "от " + minPlayers + " до " + maxPlayers;
                         Log.d("kkk", "Принял - create_room: " + MainActivity.Game_id);
+                        UnblockView();
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                     } catch (JSONException e) {
                         return;
@@ -530,6 +534,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String error;
+                    UnblockView();
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     try {
                         error = data.getString("error");
@@ -718,5 +723,22 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
             default:
                 return Role.NONE;
         }
+    }
+
+    public void BlockView()
+    {
+        blockView = true;
+        btnCreateRoom.setClickable(false);
+        btnCustomRoom.setClickable(false);
+        Menu.setClickable(false);
+        btn_back.setClickable(false);
+    }
+    public void UnblockView()
+    {
+        blockView = false;
+        btnCreateRoom.setClickable(true);
+        btnCustomRoom.setClickable(true);
+        Menu.setClickable(true);
+        btn_back.setClickable(true);
     }
 }

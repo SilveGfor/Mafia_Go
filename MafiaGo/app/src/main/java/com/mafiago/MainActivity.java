@@ -119,16 +119,20 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
         }
         else {
             Log.e("kkk", "ok2");
-            fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
-            fragment.ET_message.setSelection(fragment.ET_message.length());
+            if (!fragment.ET_message.getText().toString().contains("[" + nick2 + "]")) {
+                fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
+                fragment.ET_message.setSelection(fragment.ET_message.length());
+            }
         }
 
         fragment = mPageReferenceMap.get(1);
         if (fragment == null) {
         }
         else {
-            fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
-            fragment.ET_message.setSelection(fragment.ET_message.length());
+            if (!fragment.ET_message.getText().toString().contains("[" + nick2 + "]")) {
+                fragment.ET_message.setText(fragment.ET_message.getText() + " [" + nick2 + "] ");
+                fragment.ET_message.setSelection(fragment.ET_message.length());
+            }
         }
       }
 

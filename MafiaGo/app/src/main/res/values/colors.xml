@@ -10,6 +10,7 @@
     <color name="btn_sign_in_stroke">#d66060</color>
     <color name="btn_register">#e27a5d</color>
     <color name="btn_register_stroke">#d16e53</color>
+    <color name="black">#000000</color>
 
     <color name="green">#4D8D58</color>
     <color name="grey">#749595</color>

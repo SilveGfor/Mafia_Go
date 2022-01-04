@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -39,6 +40,8 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.mafiago.R;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
@@ -65,7 +68,6 @@ import java.util.Iterator;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.socket.emitter.Emitter;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
@@ -220,6 +222,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             e.printStackTrace();
         }
         socket.emit("get_profile", json);
+        BlockView();
         Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
 
 
@@ -260,7 +263,109 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         switch (study_type)
         {
             case "game":
-                study(btnGames, "Это игра", "Там хорошо");
+                new TapTargetSequence(getActivity())
+                        .targets(
+                                TapTarget.forView(btnGames,"Button 1","This is Button 1")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.black)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(btnDailyTasks,"Button 2","This is Button 2")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.black)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(btnTools,"Button 34","This is Button 34")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.black)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(btn_back,"Button 3","This is Button 3")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.black)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Competitions,"Button 4","This is Button 4")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.black)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+
+                        Toast.makeText(getActivity(),"Sequence Finished",Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+
+                        Toast.makeText(getActivity(),"GREAT!",Toast.LENGTH_SHORT).show();
+
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+
+                    }
+                }).start();
+
+
                 break;
         }
 
@@ -581,6 +686,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             @Override
             public void run() {
                 JSONObject data = (JSONObject) args[0];
+                UnblockView();
                 String nick = "", avatar = "";
                 boolean online = false;
                 int money = 0, exp = 0, gold = 0, rang = 0;
@@ -992,38 +1098,15 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         return status;
     }
 
-    public void study(View view, String title, String text)
-    {
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                .setTarget(view)
-                .setPrimaryText(title)
-                .setSecondaryText(text)
-                .setPromptStateChangeListener((prompt, state) -> {
-                    if(state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-                        Log.e("kkk", "OK");
-                    }
-                    else if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED)
-                    {
-                        study(view, title, text);
-                    }
-                    Log.e("kkk", "state = " + String.valueOf(state));
-                })
-                .show();
-        funcBlockAll(view);
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GamesListFragment gamesListFragment = GamesListFragment.newInstance("game");
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, gamesListFragment).commit();
-            }
-        });
-    }
-    public void funcBlockAll(View view)
+    public void BlockView()
     {
         btnRating.setClickable(false);
         btnGames.setClickable(false);
         btnTools.setClickable(false);
         btnDailyTasks.setClickable(false);
+        btn_back.setClickable(false);
+        RL_timer.setClickable(false);
+        CV_info.setClickable(false);
         Chats.setClickable(false);
         Friends.setClickable(false);
         Shop.setClickable(false);
@@ -1031,6 +1114,22 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         VK.setClickable(false);
         Telegram.setClickable(false);
         Menu.setClickable(false);
-        view.setClickable(true);
+    }
+    public void UnblockView()
+    {
+        btnRating.setClickable(true);
+        btnGames.setClickable(true);
+        btnTools.setClickable(true);
+        btnDailyTasks.setClickable(true);
+        btn_back.setClickable(true);
+        RL_timer.setClickable(true);
+        CV_info.setClickable(true);
+        Chats.setClickable(true);
+        Friends.setClickable(true);
+        Shop.setClickable(true);
+        Competitions.setClickable(true);
+        VK.setClickable(true);
+        Telegram.setClickable(true);
+        Menu.setClickable(true);
     }
 }

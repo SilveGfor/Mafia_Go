@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 
 import android.util.Base64;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +23,7 @@ import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -194,18 +196,18 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
 
                 AlertDialog alert = builder.create();
 
-                Button btnAnswer = view_menu.findViewById(R.id.dialogChatMenu_btn_answer);
-                Button btnEditMessage = view_menu.findViewById(R.id.dialogChatMenu_btn_edit);
-                Button btnDelete = view_menu.findViewById(R.id.dialogChatMenu_btn_delete);
+                LinearLayout LL_answer = view_menu.findViewById(R.id.dialogChatMenu_LL_answer);
+                LinearLayout LL_edit = view_menu.findViewById(R.id.dialogChatMenu_LL_edit);
+                LinearLayout LL_delete = view_menu.findViewById(R.id.dialogChatMenu_LL_delete);
 
-                btnAnswer.setOnClickListener(v -> {
+                LL_answer.setOnClickListener(v -> {
                     answer_id = list_messages.get(position).num;
                     alert.cancel();
                     TV_answer.setText(list_messages.get(position).nickName + ": " + list_messages.get(position).message);
                     TV_answer.setVisibility(View.VISIBLE);
                 });
 
-                btnEditMessage.setOnClickListener(v -> {
+                LL_edit.setOnClickListener(v -> {
                     alert.cancel();
 
                     btnEdit.setVisibility(View.VISIBLE);
@@ -234,7 +236,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     });
                 });
 
-                btnDelete.setOnClickListener(v -> {
+                LL_delete.setOnClickListener(v -> {
                     alert.cancel();
                     JSONObject json2 = new JSONObject();
                     try {
@@ -250,6 +252,9 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     Log.d("kkk", "Socket_отправка - delete_message - "+ json2.toString());
                 });
                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                alert.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+                alert.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+                alert.getWindow().setGravity(Gravity.BOTTOM);
                 alert.show();
             }
             else {

@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import io.socket.emitter.Emitter;
-import uk.co.samuelwall.materialtaptargetprompt.MaterialTapTargetPrompt;
 
 import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.socket;
@@ -193,7 +192,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         switch (study_type)
         {
             case "game":
-                study(LV_games, "Это список игр", "Тут отображаются все игры");
                 break;
         }
 
@@ -1271,50 +1269,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         else TV_no_games.setVisibility(View.VISIBLE);
         gamesAdapter.notifyDataSetChanged();
     }
-
-    public void study(View view, String title, String text)
-    {
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                .setTarget(view)
-                .setPrimaryText(title)
-                .setSecondaryText(text)
-                .setPromptStateChangeListener((prompt, state) -> {
-                    new MaterialTapTargetPrompt.Builder(getActivity())
-                            .setTarget(RL_filter)
-                            .setPrimaryText("Это фильтр комнат")
-                            .setSecondaryText("Тут можно задать те комнаты, которые вы хотите видеть в списке")
-                            .setPromptStateChangeListener((prompt2, state2) -> {
-                                if(state2 == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-
-                                }
-                                else if (state2 == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
-                                }
-                                IV_filter.setImageResource(R.drawable.ic_arrow_top);
-
-                                TV_playersCount.setVisibility(View.VISIBLE);
-                                CB_deletePlayingRoom.setVisibility(View.VISIBLE);
-                                CB_deleteNormalRoom.setVisibility(View.VISIBLE);
-                                CB_deletePasswordRoom.setVisibility(View.VISIBLE);
-                                CB_deleteCustomRoom.setVisibility(View.VISIBLE);
-                                RSB_num_users.setVisibility(View.VISIBLE);
-                                new MaterialTapTargetPrompt.Builder(getActivity())
-                                        .setTarget(RSB_num_users)
-                                        .setPrimaryText("Тут можно задать количество людей в комнате")
-                                        .setSecondaryText("Тогда вы будете видеть только комнаты с определённым минимальным и максимальным количеством людей")
-                                        .setPromptStateChangeListener((prompt3, state3) -> {
-                                            if(state3 == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-
-                                            }
-                                            else if (state3 == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED) {
-                                            }
-                                        })
-                                        .show();
-                            })
-                            .show();
-                })
-                .show();
-        funcBlockAll();
-    }
     public void BlockView(View view)
     {
         btnCreateRoom.setClickable(false);
@@ -1332,9 +1286,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
     }
     public void UnblockView()
     {
-        blockView = true;
-        btnCreateRoom.setClickable(false);
-        Menu.setClickable(false);
-        LV_games.setClickable(false);
+        blockView = false;
+        btnCreateRoom.setClickable(true);
+        Menu.setClickable(true);
+        LV_games.setClickable(true);
     }
 }

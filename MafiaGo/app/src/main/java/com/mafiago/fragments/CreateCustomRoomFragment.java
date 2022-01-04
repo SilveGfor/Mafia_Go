@@ -52,6 +52,8 @@ import static com.mafiago.MainActivity.socket;
 
 public class CreateCustomRoomFragment extends Fragment implements OnBackPressedListener {
 
+    boolean blockView = false;
+
     EditText ET_RoomName;
 
     RangeSeekBar RSB_num_users;
@@ -363,6 +365,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                                                     }
 
                                                     socket.emit("create_room", json);
+                                                    BlockView();
                                                     Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
                                                 }
                                                 else
@@ -602,10 +605,12 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
 
     @Override
     public void onBackPressed() {
-        SharedPreferences.Editor editor = mSettings.edit();
-        editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
-        editor.apply();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateRoomFragment()).commit();
+        if (!blockView) {
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putString(APP_PREFERENCES_ROOM_NAME, String.valueOf(ET_RoomName.getText()));
+            editor.apply();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new CreateRoomFragment()).commit();
+        }
     }
 
     private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
@@ -674,6 +679,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                         MainActivity.RoomName = name;
                         MainActivity.PlayersMinMaxInfo = "от " + min_people + " до " + max_people;
                         Log.d("kkk", "Принял - create_room: " + MainActivity.Game_id);
+                        UnblockView();
                         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new GameFragment()).commit();
                     } catch (JSONException e) {
                         return;
@@ -693,6 +699,7 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     String error;
+                    UnblockView();
                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                     try {
                         error = data.getString("error");
@@ -817,5 +824,20 @@ public class CreateCustomRoomFragment extends Fragment implements OnBackPressedL
             default:
                 return Role.NONE;
         }
+    }
+
+    public void BlockView()
+    {
+        blockView = true;
+        btnCreateRoom.setClickable(false);
+        Menu.setClickable(false);
+        btn_back.setClickable(false);
+    }
+    public void UnblockView()
+    {
+        blockView = false;
+        btnCreateRoom.setClickable(true);
+        Menu.setClickable(true);
+        btn_back.setClickable(true);
     }
 }
