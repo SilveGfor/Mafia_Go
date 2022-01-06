@@ -566,7 +566,7 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
                             }
                             break;
                         case 19:
-                            MenuFragment menuFragment = MenuFragment.newInstance("game");
+                            MenuFragment menuFragment = MenuFragment.newInstance("settings");
                             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, menuFragment).commit();
                     }
                 });

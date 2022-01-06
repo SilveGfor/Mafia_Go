@@ -57,7 +57,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
     public Button btnEdit;
     public RelativeLayout RL_send;
 
-
     public ImageView IV_avatar;
     RelativeLayout btn_back;
     public ImageView Menu;

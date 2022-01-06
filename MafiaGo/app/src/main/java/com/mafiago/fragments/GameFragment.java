@@ -85,7 +85,6 @@ import static android.content.ContentValues.TAG;
 import static  com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
-
 public class GameFragment extends Fragment implements OnBackPressedListener{
     private RewardedAd mRewardedAd;
 
@@ -105,7 +104,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
     public ImageView IV_influence_bodyguard;
     public ImageView IV_influence_poisoner;
     public ImageView Menu;
-    RelativeLayout btn_back;
+    public RelativeLayout btn_back;
 
     public ConstraintLayout Constrain;
 
@@ -116,13 +115,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
     private Timer mTimer;
     private MyTimerTask mMyTimerTask;
 
-    ArrayList<RoleModel> list_roles = new ArrayList<>();
-    ArrayList<MessageModel> list_chat = new ArrayList<>();
-    ArrayList<UserModel> list_users = new ArrayList<>();
+    public ArrayList<RoleModel> list_roles = new ArrayList<>();
+    public ArrayList<MessageModel> list_chat = new ArrayList<>();
+    public ArrayList<UserModel> list_users = new ArrayList<>();
     int[] list_mafias = new int[] {0, 0, 0, 0, 0, 1, 2, 2, 3, 3, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9};
     int[] list_peaceful = new int[] {0, 0, 0, 0, 0, 4, 4, 5, 5, 6, 6, 7, 7, 8, 8, 9, 9, 10, 10, 11, 11};
 
-    int answer_id = -1;
     public int StopTimer = 0;
     int messages_can_write = 10;
     public String journalist_check = null;
@@ -152,10 +150,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
     public JSONObject json;
 
     String base64_screenshot = "", report_nick = "", report_id = "";
-
-    MessageAdapter messageAdapter;
-
-    public int FirstVisibleItem = 0, VisibleItemsCount = 0, TotalItemsCount = 0;
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
@@ -439,6 +433,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
         socket.off("roles_counter");
         socket.off("success_get_in_room_observer");
         socket.off("get_increased_game_award");
+        socket.off("re_voting");
 
         socket.on("connect", onConnect);
         socket.on("disconnect", onDisconnect);
@@ -1168,6 +1163,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                 dayTime.setBackgroundResource(R.drawable.grey_button);
                                 Constrain.setBackgroundResource(R.drawable.fon_day);
                                 break;
+                            case "re_voting":
+                                player.setTime(Time.REVOTING);
+                                dayTime.setText("Переголосование");
+                                dayTime.setBackgroundResource(R.drawable.grey_button);
+                                Constrain.setBackgroundResource(R.drawable.fon_day);
+                                break;
                         }
                     }
                 } catch (JSONException e) {
@@ -1813,6 +1814,8 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                     data2 = data.getJSONObject("message");
                                     message = data2.getString("message");
                                     break;
+                                case "re_voting":
+                                    break;
                             }
                         }
                     } catch (JSONException e) {
@@ -2113,6 +2116,12 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                             case "voting":
                                 player.setTime(Time.VOTING);
                                 dayTime.setText("Голосование");
+                                dayTime.setBackgroundResource(R.drawable.grey_button);
+                                Constrain.setBackgroundResource(R.drawable.fon_day);
+                                break;
+                            case "re_voting":
+                                player.setTime(Time.REVOTING);
+                                dayTime.setText("Переголосование");
                                 dayTime.setBackgroundResource(R.drawable.grey_button);
                                 Constrain.setBackgroundResource(R.drawable.fon_day);
                                 break;

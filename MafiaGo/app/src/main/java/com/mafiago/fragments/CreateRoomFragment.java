@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -17,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -26,12 +28,15 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.VisibleForTesting;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 
@@ -56,6 +61,8 @@ import static com.mafiago.MainActivity.f;
 import static  com.mafiago.MainActivity.socket;
 
 public class CreateRoomFragment extends Fragment implements OnBackPressedListener {
+    private static final String ARG_STUDY = "study";
+    String study_type = "";
 
     boolean blockView = false;
 
@@ -65,6 +72,8 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
 
     Button btnCreateRoom;
     Button btnCustomRoom;
+
+    Spinner spinnerDayTime;
 
     RelativeLayout btn_back;
     GridView gridView;
@@ -78,6 +87,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     boolean has_password = false;
     int minPlayers = 0;
     int maxPlayers = 0;
+    int dayTime;
 
     ArrayList<RoleModel> list_roles = new ArrayList<>();
 
@@ -93,8 +103,25 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
     public static final String APP_PREFERENCES_MAX_PEOPLE = "max_people";
     public static final String APP_PREFERENCES_MIN_PEOPLE = "min_people";
     public static final String APP_PREFERENCES_ROLES = "roles";
+    public static final String APP_PREFERENCES_DAY_TIME_POSITION = "day_time_position";
 
     private SharedPreferences mSettings;
+
+    public static CreateRoomFragment newInstance(String study_type) {
+        CreateRoomFragment fragment = new CreateRoomFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_STUDY, study_type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            study_type = getArguments().getString(ARG_STUDY);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,6 +138,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         ET_password = view.findViewById(R.id.fragmentCreateRoom_ET_password);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         PB_loading = view.findViewById(R.id.fragmentCreateRoom_PB);
+        spinnerDayTime = view.findViewById(R.id.fragmentCreateRoom_Spinner_dayTime);
 
         btnCreateRoom = view.findViewById(R.id.fragmentCreateRoom_btn_createRoom);
         btnCustomRoom = view.findViewById(R.id.fragmentCreateRoom_btn_customRoom);
@@ -182,6 +210,43 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         minPlayers = min_people;
         SetRoles(max_people);
 
+        String[] timeList = { "45сек", "70 секунд", "1,5 минуты", "2,5 минуты", "5 минут" };
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, timeList);
+        // Вызываем адаптер
+        spinnerDayTime.setAdapter(spinnerArrayAdapter);
+        spinnerDayTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position)
+                {
+                    case 0:
+                        dayTime = 45;
+                        break;
+                    case 1:
+                        dayTime = 70;
+                        break;
+                    case 2:
+                        dayTime = 90;
+                        break;
+                    case 3:
+                        dayTime = 150;
+                        break;
+                    case 4:
+                        dayTime = 300;
+                        break;
+                }
+                SharedPreferences.Editor editor = mSettings.edit();
+                editor.putInt(APP_PREFERENCES_DAY_TIME_POSITION, position);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinnerDayTime.setSelection(mSettings.getInt(APP_PREFERENCES_DAY_TIME_POSITION, 1));
+
         swith_password.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 has_password = true;
@@ -211,6 +276,108 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                     }
                 }
             }
+        }
+
+        switch (study_type)
+        {
+            case "game":
+                new TapTargetSequence(getActivity())
+                        .targets(
+                                TapTarget.forView(ET_RoomName,"У каждой комнаты должо быть название, придумайте своё или воспользуйтесь дефолтным","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(120),
+                                TapTarget.forView(swith_password,"Тут можно установить пароль комнате, чтобы туда могли зайти только те, кто знают пароль","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(spinnerDayTime,"Если хотите, то можете сменить продолжительность дня. Обычно день длится 70 секунд","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(100),
+                                TapTarget.forView(RSB_num_users,"Вы можете выбрать мин. и макс. количество человек в вашей комнате. Игра не начнётся, пока не наберётся минимальное количество людей. Ниже вы можете выбрать роли, которые будут в комнате","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(200),
+                                TapTarget.forView(btnCreateRoom,"А теперь давайте создадим свою первую комнату и научимся там играть!","")
+                                        .outerCircleColor(R.color.notActiveText)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        StudyFragment studyFragment = StudyFragment.newInstance("mafia");
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                    }
+                }).start();
+                break;
         }
 
         gridView.setOnItemClickListener((parent, view1, position, id) -> {
@@ -336,8 +503,10 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                     json.put("min_people_num", RSB_num_users.getSelectedMinValue());
                                     json.put("max_people_num", RSB_num_users.getSelectedMaxValue());
                                     json.put("roles", json_roles);
+                                    json.put("is_custom", false);
                                     json.put("has_password", has_password);
                                     json.put("password", password);
+                                    json.put("day_time", dayTime);
 
                                     for (int i = 0; i < peaceful.length(); i++) {
                                         roles.add(peaceful.getString(i));

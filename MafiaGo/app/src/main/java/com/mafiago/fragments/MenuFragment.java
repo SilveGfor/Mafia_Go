@@ -103,6 +103,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     ImageView VK;
     ImageView Telegram;
     ImageView Menu;
+    ImageView IV_mafiaGo;
 
     ProgressBar PB_loading;
 
@@ -172,6 +173,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         RL_timer = view.findViewById(R.id.fragmentMenu_RL_timer);
+        IV_mafiaGo = view.findViewById(R.id.fragmentMenu_IV_mafiaGo);
 
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
 
@@ -241,12 +243,167 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             btn_new.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    StudyFragment studyFragment = StudyFragment.newInstance("mafia");
-                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
                     alert.cancel();
-                    SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putBoolean(APP_PREFERENCES_WAS_STUDY, true);
-                    editor.apply();
+                    new TapTargetSequence(getActivity())
+                            .targets(
+                                    TapTarget.forView(IV_mafiaGo,"Привет, ты попал в Mafia Go - онлайн версию карточной мафии. Это главное меню нашей игры, тут есть много чего интересного, сейчас я проведу тебе небольшую экскурсию","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(120),
+                                    TapTarget.forView(RL_timer,"Начнём со списка бонусов, тут можно посмотреть информацию о премиум-аккаунте и активных плюшках, которые можно купить в магазине","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(VK,"Наша группа в ВК","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(Telegram,"Наш канал в Telegram, где мы постоянно публикуем новости и рассказываем интересные вещи","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(Shop,"Магазин, где можно покупать разные плюшки за золото","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(Competitions,"Турниры --в разработке--","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(Chats,"Личные сообщения. Тут можно пообщаться с игроками (даже если вы не добавили их в друзья)","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(Friends,"Список друзей, где всегда можно будет посмотреть, кто из ваших друзей онлайн и не только","")
+                                            .outerCircleColor(R.color.orange)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60),
+                                    TapTarget.forView(btnGames,"А это список игр, где и происходит всё самое интересное!","")
+                                            .outerCircleColor(R.color.notActiveText)
+                                            .outerCircleAlpha(0.96f)
+                                            .targetCircleColor(R.color.white)
+                                            .titleTextSize(20)
+                                            .titleTextColor(R.color.white)
+                                            .descriptionTextSize(10)
+                                            .descriptionTextColor(R.color.black)
+                                            .textColor(R.color.white)
+                                            .textTypeface(Typeface.SANS_SERIF)
+                                            .dimColor(R.color.black)
+                                            .drawShadow(true)
+                                            .cancelable(false)
+                                            .tintTarget(true)
+                                            .transparentTarget(true)
+                                            .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+                        @Override
+                        public void onSequenceFinish() {
+                            GamesListFragment gamesListFragment = GamesListFragment.newInstance("game");
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, gamesListFragment).commit();
+                        }
+
+                        @Override
+                        public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        }
+
+                        @Override
+                        public void onSequenceCanceled(TapTarget lastTarget) {
+                        }
+                    }).start();
                 }
             });
             btn_old.setOnClickListener(new View.OnClickListener() {
@@ -262,10 +419,10 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         switch (study_type)
         {
-            case "game":
+            case "settings":
                 new TapTargetSequence(getActivity())
                         .targets(
-                                TapTarget.forView(btnGames,"Button 1","This is Button 1")
+                                TapTarget.forView(btnTools,"Мы научились играть, теперь пройдёмся по оставшимся пунктам программы. Настройки","")
                                         .outerCircleColor(R.color.orange)
                                         .outerCircleAlpha(0.96f)
                                         .targetCircleColor(R.color.white)
@@ -273,71 +430,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                                         .titleTextColor(R.color.white)
                                         .descriptionTextSize(10)
                                         .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.black)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(60),
-                                TapTarget.forView(btnDailyTasks,"Button 2","This is Button 2")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.black)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(60),
-                                TapTarget.forView(btnTools,"Button 34","This is Button 34")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.black)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(60),
-                                TapTarget.forView(btn_back,"Button 3","This is Button 3")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.black)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(60),
-                                TapTarget.forView(Competitions,"Button 4","This is Button 4")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.black)
+                                        .textColor(R.color.white)
                                         .textTypeface(Typeface.SANS_SERIF)
                                         .dimColor(R.color.black)
                                         .drawShadow(true)
@@ -347,25 +440,18 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                                         .targetRadius(60)).listener(new TapTargetSequence.Listener() {
                     @Override
                     public void onSequenceFinish() {
-
-                        Toast.makeText(getActivity(),"Sequence Finished",Toast.LENGTH_SHORT).show();
-
+                        StudyFragment studyFragment = StudyFragment.newInstance("mafia");
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
                     }
 
                     @Override
                     public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-
-                        Toast.makeText(getActivity(),"GREAT!",Toast.LENGTH_SHORT).show();
-
                     }
 
                     @Override
                     public void onSequenceCanceled(TapTarget lastTarget) {
-
                     }
                 }).start();
-
-
                 break;
         }
 
