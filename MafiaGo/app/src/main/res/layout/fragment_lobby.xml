@@ -61,7 +61,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:clickable="true"
-        android:src="@drawable/ic_send"
+        app:srcCompat="@drawable/ic_send"
         app:backgroundTint="#2888C8"
         app:fabSize="mini" />
 

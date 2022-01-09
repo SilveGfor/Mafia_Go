@@ -54,6 +54,7 @@ import com.mafiago.adapters.MessageAdapter;
 import com.mafiago.adapters.PlayersAdapter;
 import com.mafiago.adapters.RoleInRoomAdapter;
 import com.mafiago.classes.OnBackPressedListener;
+import com.mafiago.models.PremiumModel;
 import com.mafiago.models.RoleModel;
 import com.mafiago.pager_adapters.GameChatPagerAdapter;
 import com.mafiago.enums.Role;
@@ -675,6 +676,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                             }
                             break;
                         case VOTING:
+                        case REVOTING:
                             if (player.getRole() == Role.TERRORIST) {
                                 RoleAction(nick);
                             } else {
@@ -1164,6 +1166,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                 Constrain.setBackgroundResource(R.drawable.fon_day);
                                 break;
                             case "re_voting":
+                                DeleteNumbersFromVoting();
                                 player.setTime(Time.REVOTING);
                                 dayTime.setText("Переголосование");
                                 dayTime.setBackgroundResource(R.drawable.grey_button);
@@ -1815,6 +1818,26 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                     message = data2.getString("message");
                                     break;
                                 case "re_voting":
+                                    if (IV_influence_lover.getVisibility() != View.VISIBLE && player.getStatus().equals("alive"))
+                                    {
+                                        if (player.getRole() == Role.TERRORIST) {
+                                            StartAnimation(Role.TERRORIST);
+                                        } else {
+                                            JSONArray nicks_array = data.getJSONArray("re_voting_nicks");
+                                            for (int i = 0; i < nicks_array.length(); i++)
+                                            {
+                                                String array_nick = nicks_array.getString(i);
+                                                for (int j = 0; j < list_users.size(); j++) {
+                                                    if (list_users.get(j).getNick().equals(array_nick) && !array_nick.equals(player.getNick())) {
+                                                        list_users.get(j).setAnimation_type(Role.VOTING);
+                                                    }
+
+                                                }
+                                            }
+                                            player.setCan_click(true);
+                                            playersAdapter.notifyDataSetChanged();
+                                        }
+                                    }
                                     break;
                             }
                         }
@@ -2010,6 +2033,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                         JSONObject data2;
                         JSONObject influences;
                         try {
+                            DeleteNumbersFromVoting();
                             if (data.has("sheriff_checks")) {
                                 data2 = data.getJSONObject("sheriff_checks");
                                 for (Iterator iterator = data2.keys(); iterator.hasNext(); ) {
@@ -2037,21 +2061,22 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                 playersAdapter.notifyDataSetChanged();
                             }
                             if (!data.isNull("voting")) {
-                                DeleteNumbersFromVoting();
                                 JSONObject voting = data.getJSONObject("voting");
+                                Log.e("kkk", "4 " + voting.toString());
                                 for (Iterator iterator = voting.keys(); iterator.hasNext(); ) {
                                     nick = (String) iterator.next();
                                     voted_number = voting.getInt(nick);
+                                    Log.e("kkk", "5 " + nick + voted_number);
                                     for (int i = 0; i < list_users.size(); i++) {
                                         if (list_users.get(i).getNick().equals(nick)) {
                                             list_users.get(i).setVoting_number(voted_number);
+                                            Log.e("kkk", "6 " + i + nick + voted_number);
                                         }
                                     }
                                 }
                                 playersAdapter.notifyDataSetChanged();
-                            } else {
-                                DeleteNumbersFromVoting();
                             }
+
                             can_skip_day = data.getBoolean("can_skip_day");
                             messages_can_write = data.getInt("messages_counter");
                             role = data.getString("role");
@@ -2210,6 +2235,39 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                             }
                                         }
                                     }
+                                    break;
+                                case REVOTING:
+                                    if (!data.isNull("re_voting_nicks"))
+                                    {
+                                        Log.e("kkk", "1");
+                                        if (IV_influence_lover.getVisibility() != View.VISIBLE && player.getStatus().equals("alive")) {
+                                            if (player.getRole() == Role.TERRORIST) {
+                                                if (can_act) StartAnimation(Role.TERRORIST);
+                                            } else {
+                                                if (can_vote) {
+                                                    try {
+                                                        JSONArray nicks_array = data.getJSONArray("re_voting_nicks");
+                                                        Log.e("kkk", "2 " + nicks_array);
+                                                        for (int i = 0; i < nicks_array.length(); i++)
+                                                        {
+                                                            String array_nick = nicks_array.getString(i);
+                                                            for (int j = 0; j < list_users.size(); j++) {
+                                                                if (list_users.get(j).getNick().equals(array_nick) && !array_nick.equals(player.getNick())) {
+                                                                    list_users.get(j).setAnimation_type(Role.VOTING);
+                                                                    Log.e("kkk", "2 " + list_users.get(j).getNick());
+                                                                }
+                                                            }
+                                                        }
+                                                    } catch (JSONException e) {
+                                                        e.printStackTrace();
+                                                    }
+                                                    player.setCan_click(true);
+                                                    playersAdapter.notifyDataSetChanged();
+                                                }
+                                            }
+                                        }
+                                    }
+                                    break;
                             }
                         } else {
                             player.setCan_write(true);

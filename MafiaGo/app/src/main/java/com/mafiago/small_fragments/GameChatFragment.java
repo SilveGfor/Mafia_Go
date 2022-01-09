@@ -854,6 +854,10 @@ public class GameChatFragment extends Fragment {
                                         message = data2.getString("message");
                                         messageModel = new MessageModel(test_num, message, time, "Server", "JournalistMes");
                                         break;
+                                    case "re_voting":
+                                        message = data.getString("message");
+                                        messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
+                                        break;
                                 }
 
                                 //если num из data больше нашего num, то просто вставляем сообщение в список на 1 место, else вставляем сообщение на нужное место

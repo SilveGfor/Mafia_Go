@@ -230,7 +230,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         was_study = mSettings.getBoolean(APP_PREFERENCES_WAS_STUDY, false);
         //if (!was_study)
-        if (true)
+        if (false)
         {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             View viewDang = getLayoutInflater().inflate(R.layout.dialog_answer_about_possibilities, null);

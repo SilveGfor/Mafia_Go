@@ -240,7 +240,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:src="@drawable/ic_skip"
+        app:srcCompat="@drawable/ic_skip"
         app:backgroundTint="#F44336"
         app:fabSize="mini"
         android:padding="5dp"

@@ -210,7 +210,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
         minPlayers = min_people;
         SetRoles(max_people);
 
-        String[] timeList = { "45сек", "70 секунд", "1,5 минуты", "2,5 минуты", "5 минут" };
+        String[] timeList = { "45 секунд", "70 секунд", "1,5 минуты", "2,5 минуты", "5 минут" };
         ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, timeList);
         // Вызываем адаптер
         spinnerDayTime.setAdapter(spinnerArrayAdapter);
@@ -491,6 +491,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                     if (name.length() >= 1) {
                         if (name.length() <= 25) {
                             if (password.length() >= 1 || !has_password) {
+                                BlockView();
                                 Set<String> roles = new HashSet<String>();
                                 final JSONObject json = new JSONObject();
                                 final JSONObject json_roles = new JSONObject();
@@ -527,7 +528,6 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                 }
                                 editor.apply();
                                 socket.emit("create_room", json);
-                                BlockView();
                                 Log.d("kkk", "Socket_отправка - create_room - " + json.toString());
 
                             }
