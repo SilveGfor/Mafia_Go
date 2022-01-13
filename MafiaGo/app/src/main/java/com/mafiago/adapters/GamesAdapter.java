@@ -4,6 +4,7 @@ package com.mafiago.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +20,10 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mafiago.R;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mafiago.MainActivity;
+import com.mafiago.fragments.CreateRoomFragment;
 import com.mafiago.fragments.GameFragment;
 import com.mafiago.models.RoomModel;
 
@@ -82,6 +86,77 @@ public class GamesAdapter extends BaseAdapter {
         TextView txt_min_max_people = view.findViewById(R.id.itemGame_TV_minMaxPlayers);
         TextView txt_num_people = view.findViewById(R.id.itemGame_TV_playersInRoom);
         TextView TV_customRoom = view.findViewById(R.id.itemGame_TV_customRoom);
+
+        /*
+        if (list_room.get(position).is_test)
+        {
+            new TapTargetSequence((AppCompatActivity) context)
+                    .targets(
+                            TapTarget.forView(txt_room_name,"Название комнаты","")
+                                    .outerCircleColor(R.color.orange)
+                                    .outerCircleAlpha(0.96f)
+                                    .targetCircleColor(R.color.white)
+                                    .titleTextSize(20)
+                                    .titleTextColor(R.color.white)
+                                    .descriptionTextSize(10)
+                                    .descriptionTextColor(R.color.black)
+                                    .textColor(R.color.white)
+                                    .textTypeface(Typeface.SANS_SERIF)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true)
+                                    .cancelable(false)
+                                    .tintTarget(true)
+                                    .transparentTarget(true)
+                                    .targetRadius(120),
+                            TapTarget.forView(TV_roomState,"мнаты вы хотите видеть в списке","")
+                                    .outerCircleColor(R.color.orange)
+                                    .outerCircleAlpha(0.96f)
+                                    .targetCircleColor(R.color.white)
+                                    .titleTextSize(20)
+                                    .titleTextColor(R.color.white)
+                                    .descriptionTextSize(10)
+                                    .descriptionTextColor(R.color.black)
+                                    .textColor(R.color.white)
+                                    .textTypeface(Typeface.SANS_SERIF)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true)
+                                    .cancelable(false)
+                                    .tintTarget(true)
+                                    .transparentTarget(true)
+                                    .targetRadius(60),
+                            TapTarget.forView(txt_num_people,"Если вы хотите создать свою комнату, то вам сюда","")
+                                    .outerCircleColor(R.color.notActiveText)
+                                    .outerCircleAlpha(0.96f)
+                                    .targetCircleColor(R.color.white)
+                                    .titleTextSize(20)
+                                    .titleTextColor(R.color.white)
+                                    .descriptionTextSize(10)
+                                    .descriptionTextColor(R.color.black)
+                                    .textColor(R.color.white)
+                                    .textTypeface(Typeface.SANS_SERIF)
+                                    .dimColor(R.color.black)
+                                    .drawShadow(true)
+                                    .cancelable(false)
+                                    .tintTarget(true)
+                                    .transparentTarget(true)
+                                    .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+                @Override
+                public void onSequenceFinish() {
+                    //AppCompatActivity activity = (AppCompatActivity) context.getSu;
+                    //CreateRoomFragment createRoomFragment = CreateRoomFragment.newInstance("game");
+                    //.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, createRoomFragment).commit();
+                }
+
+                @Override
+                public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                }
+
+                @Override
+                public void onSequenceCanceled(TapTarget lastTarget) {
+                }
+            }).start();
+        }
+         */
 
         btn_players.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
