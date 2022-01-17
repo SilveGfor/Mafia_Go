@@ -180,29 +180,6 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
 
-        /*
-        new MaterialTapTargetPrompt.Builder(getActivity())
-                .setTarget(btnTools)
-                .setPrimaryText("Это Настройки")
-                .setSecondaryText("Там много всего интересного")
-                .setPromptStateChangeListener((prompt, state) -> {
-                    if(state == MaterialTapTargetPrompt.STATE_FOCAL_PRESSED) {
-
-                    }
-                    else if (state == MaterialTapTargetPrompt.STATE_NON_FOCAL_PRESSED)
-                    {
-                        new MaterialTapTargetPrompt.Builder(getActivity())
-                                .setTarget(btnTools)
-                                .setPrimaryText("Это Настройки")
-                                .setSecondaryText("Там много всего интересного")
-                                .show();
-                    }
-                    Log.e("kkk", "state = " + String.valueOf(state));
-                })
-                .show();
-         */
-
-
         //TODO: Сделать что-то про последнюю роль
         //SetBackgroundRole(mSettings.getString(APP_PREFERENCES_LAST_ROLE, "mafia"));
 
@@ -280,8 +257,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                                             .targetRadius(60)).listener(new TapTargetSequence.Listener() {
                         @Override
                         public void onSequenceFinish() {
-                            GamesListFragment gamesListFragment = GamesListFragment.newInstance("game");
-                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, gamesListFragment).commit();
+                            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new StudyGamesListFragment()).commit();
                         }
 
                         @Override

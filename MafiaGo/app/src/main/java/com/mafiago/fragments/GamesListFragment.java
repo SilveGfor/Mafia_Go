@@ -245,6 +245,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 if (CB_deleteCustomRoom.getVisibility() != View.VISIBLE) {
                     IV_filter.setImageResource(R.drawable.ic_arrow_top);
 
+                    ET_search.setVisibility(View.VISIBLE);
                     TV_playersCount.setVisibility(View.VISIBLE);
                     CB_deletePlayingRoom.setVisibility(View.VISIBLE);
                     CB_deleteNormalRoom.setVisibility(View.VISIBLE);
@@ -267,6 +268,7 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                 {
                     IV_filter.setImageResource(R.drawable.ic_arrow_bottom);
 
+                    ET_search.setVisibility(View.GONE);
                     TV_playersCount.setVisibility(View.GONE);
                     CB_deletePlayingRoom.setVisibility(View.GONE);
                     CB_deleteNormalRoom.setVisibility(View.GONE);
@@ -470,104 +472,9 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
         switch (study_type)
         {
             case "game":
-                socket.off("add_room_to_list_of_rooms");
-                socket.off("delete_room_from_list_of_rooms");
-                socket.off("update_list_of_rooms");
-                socket.off("get_profile");
-                socket.off("send_complaint");
-                socket.off("my_friend_request");
-
-                RoomModel model = new RoomModel("Комната 1", 5, 8, 4, 0, new ArrayList<>(), false, new ArrayList<>(), false, false, true);
-                list_room_copy.clear();
-                list_room_copy.add(model);
-                gamesAdapter.notifyDataSetChanged();
-
                 new TapTargetSequence(getActivity())
                         .targets(
-                                TapTarget.forView(LV_games,"Тут находятся все игровые комнаты. Ты можешь толи зайти в чью-то комнату, толи создать свою","")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.white)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(300),
-                                TapTarget.forView(btnCreateRoom,"Если выю комнату, то вам сюда","")
-                                        .outerCircleColor(R.color.notActiveText)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.white)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(60)).listener(new TapTargetSequence.Listener() {
-                    @Override
-                    public void onSequenceFinish() {
-                        //AppCompatActivity activity = (AppCompatActivity) context.getSu;
-                        //CreateRoomFragment createRoomFragment = CreateRoomFragment.newInstance("game");
-                        //.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, createRoomFragment).commit();
-                    }
-
-                    @Override
-                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                    }
-
-                    @Override
-                    public void onSequenceCanceled(TapTarget lastTarget) {
-                    }
-                }).start();
-
-                /*
-                new TapTargetSequence(getActivity())
-                        .targets(
-                                TapTarget.forView(LV_games,"Список игр","")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.white)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(120),
-                                TapTarget.forView(RL_filter,"В фильтре комнат можно выбрать, какие комнаты вы хотите видеть в списке","")
-                                        .outerCircleColor(R.color.orange)
-                                        .outerCircleAlpha(0.96f)
-                                        .targetCircleColor(R.color.white)
-                                        .titleTextSize(20)
-                                        .titleTextColor(R.color.white)
-                                        .descriptionTextSize(10)
-                                        .descriptionTextColor(R.color.black)
-                                        .textColor(R.color.white)
-                                        .textTypeface(Typeface.SANS_SERIF)
-                                        .dimColor(R.color.black)
-                                        .drawShadow(true)
-                                        .cancelable(false)
-                                        .tintTarget(true)
-                                        .transparentTarget(true)
-                                        .targetRadius(60),
-                                TapTarget.forView(btnCreateRoom,"Если вы хотите создать свою комнату, то вам сюда","")
+                                TapTarget.forView(btnCreateRoom,"Каждый игрок может создать комнату, сейчас расскажу как","")
                                         .outerCircleColor(R.color.notActiveText)
                                         .outerCircleAlpha(0.96f)
                                         .targetCircleColor(R.color.white)
@@ -597,7 +504,6 @@ public class GamesListFragment extends Fragment implements OnBackPressedListener
                     public void onSequenceCanceled(TapTarget lastTarget) {
                     }
                 }).start();
-               */
                 break;
         }
 

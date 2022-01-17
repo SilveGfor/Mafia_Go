@@ -347,7 +347,7 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                         .tintTarget(true)
                                         .transparentTarget(true)
                                         .targetRadius(200),
-                                TapTarget.forView(btnCreateRoom,"А теперь давайте создадим свою первую комнату и научимся там играть!","")
+                                TapTarget.forView(btnCreateRoom,"На этом пока всё!","")
                                         .outerCircleColor(R.color.notActiveText)
                                         .outerCircleAlpha(0.96f)
                                         .targetCircleColor(R.color.white)
@@ -365,8 +365,6 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                         .targetRadius(60)).listener(new TapTargetSequence.Listener() {
                     @Override
                     public void onSequenceFinish() {
-                        StudyFragment studyFragment = StudyFragment.newInstance("mafia");
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
                     }
 
                     @Override

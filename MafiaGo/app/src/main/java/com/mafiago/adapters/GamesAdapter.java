@@ -4,7 +4,6 @@ package com.mafiago.adapters;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,15 +14,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mafiago.R;
-import com.getkeepsafe.taptargetview.TapTarget;
-import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mafiago.MainActivity;
-import com.mafiago.fragments.CreateRoomFragment;
 import com.mafiago.fragments.GameFragment;
 import com.mafiago.models.RoomModel;
 
@@ -63,7 +60,7 @@ public class GamesAdapter extends BaseAdapter {
 
         //ProgressBar PB_users = view.findViewById(R.id.Item_game_progressBar);
 
-        Button btn_players = view.findViewById(R.id.ItemFriend_btn_block);
+        RelativeLayout RL_info = view.findViewById(R.id.itemGame_RL_info);
 
         ArrayList<String> list_roles = list_room.get(position).list_roles;
 
@@ -78,6 +75,10 @@ public class GamesAdapter extends BaseAdapter {
         ImageView IV_bodyguard = view.findViewById(R.id.itemGame_bodyguard);
         ImageView IV_lock = view.findViewById(R.id.itemGame_lock);
 
+        ImageView IV_citizen = view.findViewById(R.id.itemGame_citizen);
+        ImageView IV_sheriff = view.findViewById(R.id.itemGame_sheriff);
+        ImageView IV_mafia = view.findViewById(R.id.itemGame_mafia);
+
         //PB_users.setMax(list_room.get(position).max_people);
         //PB_users.setProgress(list_room.get(position).num_people);
 
@@ -87,78 +88,7 @@ public class GamesAdapter extends BaseAdapter {
         TextView txt_num_people = view.findViewById(R.id.itemGame_TV_playersInRoom);
         TextView TV_customRoom = view.findViewById(R.id.itemGame_TV_customRoom);
 
-        /*
-        if (list_room.get(position).is_test)
-        {
-            new TapTargetSequence((AppCompatActivity) context)
-                    .targets(
-                            TapTarget.forView(txt_room_name,"Название комнаты","")
-                                    .outerCircleColor(R.color.orange)
-                                    .outerCircleAlpha(0.96f)
-                                    .targetCircleColor(R.color.white)
-                                    .titleTextSize(20)
-                                    .titleTextColor(R.color.white)
-                                    .descriptionTextSize(10)
-                                    .descriptionTextColor(R.color.black)
-                                    .textColor(R.color.white)
-                                    .textTypeface(Typeface.SANS_SERIF)
-                                    .dimColor(R.color.black)
-                                    .drawShadow(true)
-                                    .cancelable(false)
-                                    .tintTarget(true)
-                                    .transparentTarget(true)
-                                    .targetRadius(120),
-                            TapTarget.forView(TV_roomState,"мнаты вы хотите видеть в списке","")
-                                    .outerCircleColor(R.color.orange)
-                                    .outerCircleAlpha(0.96f)
-                                    .targetCircleColor(R.color.white)
-                                    .titleTextSize(20)
-                                    .titleTextColor(R.color.white)
-                                    .descriptionTextSize(10)
-                                    .descriptionTextColor(R.color.black)
-                                    .textColor(R.color.white)
-                                    .textTypeface(Typeface.SANS_SERIF)
-                                    .dimColor(R.color.black)
-                                    .drawShadow(true)
-                                    .cancelable(false)
-                                    .tintTarget(true)
-                                    .transparentTarget(true)
-                                    .targetRadius(60),
-                            TapTarget.forView(txt_num_people,"Если вы хотите создать свою комнату, то вам сюда","")
-                                    .outerCircleColor(R.color.notActiveText)
-                                    .outerCircleAlpha(0.96f)
-                                    .targetCircleColor(R.color.white)
-                                    .titleTextSize(20)
-                                    .titleTextColor(R.color.white)
-                                    .descriptionTextSize(10)
-                                    .descriptionTextColor(R.color.black)
-                                    .textColor(R.color.white)
-                                    .textTypeface(Typeface.SANS_SERIF)
-                                    .dimColor(R.color.black)
-                                    .drawShadow(true)
-                                    .cancelable(false)
-                                    .tintTarget(true)
-                                    .transparentTarget(true)
-                                    .targetRadius(60)).listener(new TapTargetSequence.Listener() {
-                @Override
-                public void onSequenceFinish() {
-                    //AppCompatActivity activity = (AppCompatActivity) context.getSu;
-                    //CreateRoomFragment createRoomFragment = CreateRoomFragment.newInstance("game");
-                    //.getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, createRoomFragment).commit();
-                }
-
-                @Override
-                public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
-                }
-
-                @Override
-                public void onSequenceCanceled(TapTarget lastTarget) {
-                }
-            }).start();
-        }
-         */
-
-        btn_players.setOnClickListener(v -> {
+        RL_info.setOnClickListener(v -> {
             AlertDialog.Builder builder = new AlertDialog.Builder(context);
             View view_listOfUsers = layout.inflate(R.layout.dialog_list_of_users_in_room, null);
             builder.setView(view_listOfUsers);
@@ -252,6 +182,15 @@ public class GamesAdapter extends BaseAdapter {
                 case "doctor_of_easy_virtue":
                     IV_doctor_of_easy_virtue.setVisibility(View.VISIBLE);
                     break;
+                case "mafia":
+                    IV_mafia.setVisibility(View.VISIBLE);
+                    break;
+                case "citizen":
+                    IV_citizen.setVisibility(View.VISIBLE);
+                    break;
+                case "sheriff":
+                    IV_sheriff.setVisibility(View.VISIBLE);
+                    break;
             }
         }
 
@@ -267,7 +206,7 @@ public class GamesAdapter extends BaseAdapter {
             TV_roomState.setText("Игра идёт");
             TV_roomState.setTextColor(Color.parseColor("#F44336"));
         } else {
-            TV_roomState.setText("Набор в комнату");
+            TV_roomState.setText("Набор");
             //TV_roomState.setTextColor(Color.parseColor("#4CAF50"));
         }
 

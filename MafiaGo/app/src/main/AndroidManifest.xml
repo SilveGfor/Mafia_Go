@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.mafiago">
 
-    <supports-screens android:anyDensity="false" />
-
     <application
         android:usesCleartextTraffic="true"
         android:allowBackup="true"

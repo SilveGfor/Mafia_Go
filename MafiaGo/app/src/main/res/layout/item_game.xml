@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <RelativeLayout
+        android:id="@+id/itemGame_RL_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/orange_button"
+        android:padding="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/itemGame_TV_minMaxPlayers"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/itemGame_TV_minMaxPlayers">
+
+        <Button
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@android:drawable/ic_dialog_info"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/itemGame_TV_roomName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:text="Комната 1"
         android:textColor="@color/white"
-        android:textSize="24sp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toStartOf="@+id/itemGame_TV_roomState"
         app:layout_constraintStart_toEndOf="@+id/itemGame_lock"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -32,25 +50,24 @@
         android:id="@+id/itemGame_TV_roomState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="идёт набор в комнату"
         android:textColor="?attr/item_game_text_green"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_roomName" />
+        app:layout_constraintBottom_toBottomOf="@+id/itemGame_TV_roomName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/itemGame_TV_minMaxPlayers"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:text="от 3 до 8 игроков"
         android:textColor="?attr/item_game_text_green"
         android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="@+id/itemGame_TV_roomState"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_TV_roomState"
-        app:layout_constraintTop_toTopOf="@+id/itemGame_TV_roomState" />
+        app:layout_constraintBottom_toBottomOf="@+id/itemGame_TV_playersInRoom"
+        app:layout_constraintStart_toEndOf="@+id/itemGame_TV_playersInRoom"
+        app:layout_constraintTop_toTopOf="@+id/itemGame_TV_playersInRoom" />
 
     <TextView
         android:id="@+id/itemGame_TV_playersInRoom"
@@ -60,130 +77,133 @@
         android:text="Игроков: 6"
         android:textColor="?attr/item_game_text_grey"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_roomState" />
+        app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_roomName" />
 
     <TextView
         android:id="@+id/itemGame_TV_customRoom"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginStart="16dp"
         android:text="кастомная"
         android:textColor="@color/red"
         android:visibility="gone"
-        app:layout_constraintEnd_toStartOf="@+id/ItemFriend_btn_block"
-        app:layout_constraintTop_toTopOf="@+id/itemGame_TV_playersInRoom" />
+        app:layout_constraintBottom_toBottomOf="@+id/itemGame_TV_minMaxPlayers"
+        app:layout_constraintStart_toEndOf="@+id/itemGame_TV_minMaxPlayers"
+        app:layout_constraintTop_toTopOf="@+id/itemGame_TV_minMaxPlayers" />
 
-    <Button
-        android:id="@+id/ItemFriend_btn_block"
-        android:layout_width="wrap_content"
-        android:layout_height="35dp"
-        android:background="@drawable/grey_button"
-        android:padding="10dp"
-        android:text="информация"
-        android:textSize="12sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <ImageView
-        android:id="@+id/itemGame_maniac"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/textView11"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/maniac_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_bodyguard"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_maniac"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/bodyguard_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_doctor_of_easy_virtue"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_bodyguard"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_poisoner"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_doctor_of_easy_virtue"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/poisoner_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_mafia_don"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_poisoner"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/mafia_don_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_terrorist"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_mafia_don"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/terrorist_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_journalist"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_terrorist"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/journalist_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_lover"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_journalist"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/lover_round" />
-
-    <ImageView
-        android:id="@+id/itemGame_doctor"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="8dp"
-        android:visibility="gone"
-        app:layout_constraintStart_toEndOf="@+id/itemGame_lover"
-        app:layout_constraintTop_toTopOf="@+id/textView11"
-        app:srcCompat="@drawable/doctor_round" />
-
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
+    <HorizontalScrollView
+        android:id="@+id/itemGame_SV"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_marginTop="8dp"
-        android:visibility="invisible"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/itemGame_RL_info"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_playersInRoom" />
+        app:layout_constraintTop_toBottomOf="@+id/itemGame_TV_minMaxPlayers">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/itemGame_citizen"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/citizen_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_doctor"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/doctor_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_sheriff"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/sheriff_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_lover"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/lover_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_journalist"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/journalist_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_bodyguard"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/bodyguard_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_doctor_of_easy_virtue"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/doctor_of_easy_virtue_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_maniac"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/maniac_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_mafia"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/mafia_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_mafia_don"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/mafia_don_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_poisoner"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/poisoner_round" />
+
+            <ImageView
+                android:id="@+id/itemGame_terrorist"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginStart="8dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/terrorist_round" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

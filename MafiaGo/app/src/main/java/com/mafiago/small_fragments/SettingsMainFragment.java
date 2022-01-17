@@ -381,7 +381,7 @@ public class SettingsMainFragment extends Fragment {
 
             socket.on("send_problem", onSendProblem);
 
-            TV_inviteCode.setText("Пригласительный код для друзей: " + MainActivity.MyInviteCode + "\nВаш друг может указать его при регистрации и сыграть 50 игр - тогда вы оба получите по 100 золота");
+            TV_inviteCode.setText("Пригласительный код для друзей: " + MainActivity.MyInviteCode + "\nВаш друг может указать его при регистрации и сыграть 50 игр - тогда вы оба получите по 500 золота");
 
             btnFines.setOnClickListener(new View.OnClickListener() {
                 @Override

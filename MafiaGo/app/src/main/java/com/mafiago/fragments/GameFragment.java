@@ -477,7 +477,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
         Log.d("kkk", "Socket_отправка - get_in_room from main "+ json.toString());
 
         room_name.setOnClickListener(v -> {
-                        if (player.getTime() != Time.LOBBY)
+            if (player.getTime() != Time.LOBBY)
             {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_roles_in_room, null);
@@ -1177,10 +1177,10 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                StopAnimation();
                 if (player.getStatus().equals("alive"))
                 {
                     player.setCan_write(false);
-                    StopAnimation();
                     switch (player.getTime())
                     {
                         case NIGHT_LOVE:
