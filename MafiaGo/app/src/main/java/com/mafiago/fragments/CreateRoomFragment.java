@@ -347,7 +347,23 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                         .tintTarget(true)
                                         .transparentTarget(true)
                                         .targetRadius(200),
-                                TapTarget.forView(btnCreateRoom,"На этом пока всё!","")
+                                TapTarget.forView(btnCustomRoom,"Кастомные комнаты доступны со 2 ранга","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Menu,"На любом экране игры есть это меню, с помощью него можно быстро переходить на другие экраны. Давай перейдём в настройки","")
                                         .outerCircleColor(R.color.notActiveText)
                                         .outerCircleAlpha(0.96f)
                                         .targetCircleColor(R.color.white)
@@ -365,6 +381,25 @@ public class CreateRoomFragment extends Fragment implements OnBackPressedListene
                                         .targetRadius(60)).listener(new TapTargetSequence.Listener() {
                     @Override
                     public void onSequenceFinish() {
+                        PopupMenu popup_menu = new PopupMenu(getActivity(), Menu);
+                        popup_menu.inflate(R.menu.main_menu);
+                        popup_menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(MenuItem item) {
+                                switch (item.getItemId()) {
+                                    case R.id.mainMenu_play:
+                                    case R.id.mainMenu_shop:
+                                    case R.id.mainMenu_friends:
+                                    case R.id.mainMenu_chats:
+                                    case R.id.mainMenu_settings:
+                                        SettingsFragment settingsFragment = SettingsFragment.newInstance("profile");
+                                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, settingsFragment).commit();
+                                        return true;
+                                }
+                                return true;
+                            }
+                        });
+                        popup_menu.show();
                     }
 
                     @Override

@@ -55,6 +55,7 @@ import com.mafiago.MainActivity;
 import com.mafiago.adapters.BustersAdapter;
 import com.mafiago.classes.OnBackPressedListener;
 import com.mafiago.models.BusterModel;
+import com.mafiago.models.ShopModel;
 import com.romainpiel.shimmer.Shimmer;
 import com.romainpiel.shimmer.ShimmerTextView;
 
@@ -81,7 +82,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     Button btnTools;
     Button btnDailyTasks;
     RelativeLayout btn_back;
-    RelativeLayout RL_timer;
+    RelativeLayout RL_boosters;
 
     TextView TV_money;
     TextView TV_exp;
@@ -125,6 +126,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
+    public static final String APP_PREFERENCES_FULLSCREEN = "fullscreen";
 
     private SharedPreferences mSettings;
 
@@ -172,7 +174,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         btnDailyTasks = view.findViewById(R.id.fragmentMenu_btn_dailyTasks);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
-        RL_timer = view.findViewById(R.id.fragmentMenu_RL_timer);
+        RL_boosters = view.findViewById(R.id.fragmentMenu_RL_boosters);
         IV_mafiaGo = view.findViewById(R.id.fragmentMenu_IV_mafiaGo);
 
         IV_avatar = view.findViewById(R.id.fragmentSettingsProfile_IV_avatar);
@@ -206,9 +208,12 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
 
         was_study = mSettings.getBoolean(APP_PREFERENCES_WAS_STUDY, false);
-        //if (!was_study)
-        if (true)
+        if (!was_study)
         {
+            SharedPreferences.Editor editor = mSettings.edit();
+            editor.putBoolean(APP_PREFERENCES_WAS_STUDY, true);
+            editor.apply();
+
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             View viewDang = getLayoutInflater().inflate(R.layout.dialog_answer_about_possibilities, null);
             builder.setView(viewDang);
@@ -273,6 +278,30 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
             btn_old.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Boolean fullscreen = mSettings.getBoolean(APP_PREFERENCES_FULLSCREEN, false);
+                    if (!fullscreen)
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewQuestion = inflater.inflate(R.layout.dialog_ok_no, null);
+                        builder.setView(viewQuestion);
+                        AlertDialog alert = builder.create();
+                        TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                        Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                        Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                        TV_text.setText("Хотите включить полноэкранный режим? Вы всегда можете поменять этот параметр в настройках");
+                        btn_yes.setOnClickListener(v1 -> {
+                            SharedPreferences.Editor editor = mSettings.edit();
+                            editor.putBoolean(APP_PREFERENCES_FULLSCREEN, true);
+                            editor.apply();
+                            reset();
+                            alert.cancel();
+                        });
+                        btn_no.setOnClickListener(v12 -> {
+                            alert.cancel();
+                        });
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    }
                     alert.cancel();
                 }
             });
@@ -283,10 +312,124 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
         switch (study_type)
         {
-            case "settings":
+            case "end":
                 new TapTargetSequence(getActivity())
                         .targets(
-                                TapTarget.forView(btnTools,"Мы научились играть, теперь пройдёмся по оставшимся пунктам программы. Настройки","")
+                                TapTarget.forView(CV_info,"В главном меню тоже можно посмотреть свой профиль","")
+                                        .id(1)
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(120),
+                                TapTarget.forView(RL_boosters,"Ещё можно посмотреть список активных бустеров, которые можно купить в магазине","")
+                                        .id(2)
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(VK,"Наша группа в ВК","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Telegram,"Наш канал в Телеграм, где мы постоянно публикуем новости и другие важные и интересные вещи!","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Shop,"Уже упомянутый магазин, где можно купить золото, премиум-аккаунт, цветной ник, статус и другие полезные вещи","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Competitions,"Официальные турниры по нашей игре","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Chats,"Все личные сообщения находятся тут. Написать личное сообщение можно любому игроку, не обязательно добавлять его в друзья","")
+                                        .outerCircleColor(R.color.orange)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60),
+                                TapTarget.forView(Friends,"Список друзей, где можно увидеть, в каких комнатах играют ваши друзья и даже присоединиться к ним","")
                                         .outerCircleColor(R.color.orange)
                                         .outerCircleAlpha(0.96f)
                                         .targetCircleColor(R.color.white)
@@ -304,12 +447,38 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                                         .targetRadius(60)).listener(new TapTargetSequence.Listener() {
                     @Override
                     public void onSequenceFinish() {
-                        StudyFragment studyFragment = StudyFragment.newInstance("mafia");
-                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, studyFragment).commit();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewQuestion = inflater.inflate(R.layout.dialog_ok_no, null);
+                        builder.setView(viewQuestion);
+                        AlertDialog alert = builder.create();
+                        TextView TV_text = viewQuestion.findViewById(R.id.dialogOkNo_text);
+                        Button btn_yes = viewQuestion.findViewById(R.id.dialogOkNo_btn_yes);
+                        Button btn_no = viewQuestion.findViewById(R.id.dialogOkNo_btn_no);
+                        TV_text.setText("На этом наше обучение подошло к концу!\nХотите включить полноэкранный режим? Вы всегда можете поменять этот параметр в настройках");
+                        btn_yes.setOnClickListener(v1 -> {
+                            SharedPreferences.Editor editor = mSettings.edit();
+                            editor.putBoolean(APP_PREFERENCES_FULLSCREEN, true);
+                            editor.apply();
+                            reset();
+                            alert.cancel();
+                        });
+                        btn_no.setOnClickListener(v12 -> {
+                            alert.cancel();
+                        });
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
                     }
 
                     @Override
                     public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                        if (lastTarget.id() == 1)
+                        {
+                            CV_info.callOnClick();
+                        }
+                        else if (lastTarget.id() == 2)
+                        {
+                            RL_boosters.callOnClick();
+                        }
                     }
 
                     @Override
@@ -474,6 +643,12 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         });
 
         return view;
+    }
+
+    private void reset()
+    {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
     }
 
     @Override
@@ -981,7 +1156,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
 
                 String finalPremium_time = premium_time;
 
-                RL_timer.setOnClickListener(v -> {
+                RL_boosters.setOnClickListener(v -> {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     View viewBusters = getLayoutInflater().inflate(R.layout.dialog_active_busters, null);
                     builder.setView(viewBusters);
@@ -1055,7 +1230,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         btnTools.setClickable(false);
         btnDailyTasks.setClickable(false);
         btn_back.setClickable(false);
-        RL_timer.setClickable(false);
+        RL_boosters.setClickable(false);
         CV_info.setClickable(false);
         Chats.setClickable(false);
         Friends.setClickable(false);
@@ -1072,7 +1247,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         btnTools.setClickable(true);
         btnDailyTasks.setClickable(true);
         btn_back.setClickable(true);
-        RL_timer.setClickable(true);
+        RL_boosters.setClickable(true);
         CV_info.setClickable(true);
         Chats.setClickable(true);
         Friends.setClickable(true);

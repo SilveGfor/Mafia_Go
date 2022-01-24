@@ -129,7 +129,7 @@
                 android:text="Римский гусь"
                 android:textSize="18sp"
                 android:visibility="invisible"
-                app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_RL_timer"
+                app:layout_constraintEnd_toStartOf="@+id/fragmentMenu_RL_boosters"
                 app:layout_constraintStart_toEndOf="@+id/fragmentSettingsProfile_IV_avatar"
                 app:layout_constraintTop_toTopOf="@+id/fragmentSettingsProfile_IV_avatar" />
 
@@ -245,7 +245,7 @@
                 tools:text="1000XP" />
 
             <RelativeLayout
-                android:id="@+id/fragmentMenu_RL_timer"
+                android:id="@+id/fragmentMenu_RL_boosters"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"

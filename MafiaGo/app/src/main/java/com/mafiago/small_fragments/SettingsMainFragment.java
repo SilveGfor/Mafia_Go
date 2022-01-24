@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
@@ -28,16 +29,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.mafiago.MainActivity;
 import com.mafiago.enums.Role;
 import com.mafiago.fragments.GameFragment;
 import com.mafiago.fragments.RulesFragment;
+import com.mafiago.fragments.SettingsFragment;
 import com.mafiago.fragments.StartFragment;
 import com.mafiago.fragments.StudyFragment;
+import com.mafiago.fragments.StudyGamesListFragment;
 import com.mafiago.models.RoleModel;
 
 import org.json.JSONException;
@@ -64,8 +70,11 @@ public class SettingsMainFragment extends Fragment {
     Button btnReportError;
     Button btnExitAccount;
     Button btnSelectTheme;
+    Button btnFullscreen;
     Button btnFines;
     Button btnRules;
+
+    ScrollView SV_main;
 
     TextView TV_usersAgreement;
     TextView TV_privacyPolicy;
@@ -92,12 +101,15 @@ public class SettingsMainFragment extends Fragment {
     Spinner spinner;
     Spinner spinner2;
 
+    ScrollView SV_profile;
+
     TextView TV_game_counter;
     TextView TV_max_money_score;
     TextView TV_max_exp_score;
     TextView TV_general_pers_of_wins;
     TextView TV_mafia_pers_of_wins;
     TextView TV_peaceful_pers_of_wins;
+    TextView TV_statistic;
 
     Button btnChangeAvatar;
     Button btnChangeNick;
@@ -110,6 +122,7 @@ public class SettingsMainFragment extends Fragment {
     public static final String APP_PREFERENCES_LAST_ROLE = "role";
     public static final String APP_PREFERENCES_SHOW_ROLE= "show_role";
     public static final String APP_PREFERENCES_THEME= "theme";
+    public static final String APP_PREFERENCES_FULLSCREEN = "fullscreen";
 
     private SharedPreferences mSettings;
 
@@ -155,6 +168,8 @@ public class SettingsMainFragment extends Fragment {
             TV_general_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentWins);
             TV_mafia_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentMafiaWins);
             TV_peaceful_pers_of_wins = view.findViewById(R.id.fragmentSettingsProfile_TV_percentPeacefulWins);
+            TV_statistic = view.findViewById(R.id.fragmentSettingsProfile_TV_statistic);
+            SV_profile = view.findViewById(R.id.fragmentSettingsProfile_SV);
 
             btnChangeAvatar = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
             btnChangeNick = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
@@ -369,6 +384,7 @@ public class SettingsMainFragment extends Fragment {
             btnReportError = view.findViewById(R.id.fragmentSettingsProfile_btn_changeAvatar);
             btnExitAccount = view.findViewById(R.id.fragmentSettingsProfile_btn_changeNick);
             btnSelectTheme = view.findViewById(R.id.fragmentSettingsMain_chooseTheme);
+            btnFullscreen = view.findViewById(R.id.fragmentSettingsMain_btn_fullscreen);
             btnStudy = view.findViewById(R.id.fragmentSettingsProfile_btn_study);
             btnRules = view.findViewById(R.id.fragmentSettingsProfile_btn_rules);
             btnFines = view.findViewById(R.id.fragmentSettingsProfile_btn_fines);
@@ -376,6 +392,7 @@ public class SettingsMainFragment extends Fragment {
             TV_privacyPolicy = view.findViewById(R.id.fragmentSettingsMain_TV_privacyPolicy);
             TV_inviteCode = view.findViewById(R.id.fragmentSettingsMain_TV_inviteCode);
             RL_copy = view.findViewById(R.id.fragmentSettingsMain_RL_copy);
+            SV_main = view.findViewById(R.id.fragmentSettingsMain_SV);
 
             socket.off("send_problem");
 
@@ -616,7 +633,6 @@ public class SettingsMainFragment extends Fragment {
             });
 
             String theme = mSettings.getString(APP_PREFERENCES_THEME, "dark");
-            Log.e("kkk", theme);
             if (theme.equals("dark"))
             {
                 btnSelectTheme.setText("Выбрать светлую тему");
@@ -633,6 +649,28 @@ public class SettingsMainFragment extends Fragment {
                 }
                 else {
                     editor.putString(APP_PREFERENCES_THEME, "dark");
+                }
+                editor.apply();
+                reset();
+            });
+
+            Boolean fullscreen = mSettings.getBoolean(APP_PREFERENCES_FULLSCREEN, false);
+            if (fullscreen)
+            {
+                btnFullscreen.setText("Не полный экран");
+            }
+            else
+            {
+                btnFullscreen.setText("Полный экран");
+            }
+
+            btnFullscreen.setOnClickListener(v -> {
+                SharedPreferences.Editor editor = mSettings.edit();
+                if (fullscreen) {
+                    editor.putBoolean(APP_PREFERENCES_FULLSCREEN, false);
+                }
+                else {
+                    editor.putBoolean(APP_PREFERENCES_FULLSCREEN, true);
                 }
                 editor.apply();
                 reset();
@@ -750,10 +788,190 @@ public class SettingsMainFragment extends Fragment {
         return view;
     }
 
-    private void reset()
-    {
+    private void reset() {
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);
+    }
+
+    public void startProfileStudy() {
+        new TapTargetSequence(getActivity())
+                .targets(
+                        TapTarget.forView(spinner,"В настройках профиля можно поменять информацию о своём аккаунте. Например, тут можно поменять себе статус, который будет отображаться рядом с ником (Статусы можно купить в магазине)","")
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(120),
+                        TapTarget.forView(spinner2,"Смена цвета ника (цвет тоже можно купить в магазине)","")
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(120),
+                        TapTarget.forView(TV_money,"Количество монет, опыта и золота отображается здесь","")
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(100),
+                        TapTarget.forView(TV_statistic,"Статиска этого аккаунта","")
+                                .id(1)
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(100),
+                        TapTarget.forView(btnChangeNick,"Ещё у нас можно бесплатно менять ник каждый месяц","")
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+            @Override
+            public void onSequenceFinish() {
+                SettingsFragment settingsFragment = SettingsFragment.newInstance("main");
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, settingsFragment).commit();
+            }
+
+            @Override
+            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                if (lastTarget.id() == 1) {
+                    SV_profile.post(new Runnable() {
+                        public void run() {
+                            SV_profile.scrollTo(0, SV_profile.getBottom());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onSequenceCanceled(TapTarget lastTarget) {
+            }
+        }).start();
+    }
+
+    public void startMainStudy() {
+        new TapTargetSequence(getActivity())
+                .targets(
+                        TapTarget.forView(TV_inviteCode,"В основных настройках первым мы видим пригласительный код. Ваш друг может ввести его при регистрации и сыграть 50 игр - тогда вы оба получите по 500 золота","")
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(120),
+                        TapTarget.forView(btnStudy,"В обучении можно выбрать роль, за которую вы хотите научиться играть. В прошлой игре вы освоили роль мафии, но тут есть ещё много интересных ролей)","")
+                                .outerCircleColor(R.color.orange)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(60),
+                        TapTarget.forView(btnReportError,"Если вдруг вы нашли ошибку или баг - сообщите нам об этом!)","")
+                                .outerCircleColor(R.color.notActiveText)
+                                .outerCircleAlpha(0.96f)
+                                .targetCircleColor(R.color.white)
+                                .titleTextSize(20)
+                                .titleTextColor(R.color.white)
+                                .descriptionTextSize(10)
+                                .descriptionTextColor(R.color.black)
+                                .textColor(R.color.white)
+                                .textTypeface(Typeface.SANS_SERIF)
+                                .dimColor(R.color.black)
+                                .drawShadow(true)
+                                .cancelable(false)
+                                .tintTarget(true)
+                                .transparentTarget(true)
+                                .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+            @Override
+            public void onSequenceFinish() {
+                SettingsFragment settingsFragment = SettingsFragment.newInstance("menu");
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, settingsFragment).commit();
+            }
+
+            @Override
+            public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                if (lastTarget.id() == 1) {
+                    SV_profile.post(new Runnable() {
+                        public void run() {
+                            SV_profile.scrollTo(0, SV_profile.getBottom());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onSequenceCanceled(TapTarget lastTarget) {
+            }
+        }).start();
     }
 
     @Override

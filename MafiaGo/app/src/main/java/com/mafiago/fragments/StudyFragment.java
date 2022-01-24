@@ -554,7 +554,7 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
                             }
                             break;
                         case 16:
-                            list_chat.add(new MessageModel(0, "Я научил тебя всему, что знал сам. Теперь иди и побеждай!", "19-00", dev, "UsersMes", "last_message", "разработчик", null, ""));
+                            list_chat.add(new MessageModel(0, "Я научил тебя всему, что знал сам. Теперь иди и побеждай!\n Кстати, после смерти каждый игрок может написать одно последнее сообщение, оно будет обозначаться таким цветом, после этого можно перелистнуть чат направо и пообщаться в чате мёртвых", "19-00", dev, "UsersMes", "last_message", "разработчик", null, ""));
 
                             playersAdapter.notifyDataSetChanged();
                             messageAdapter.notifyDataSetChanged();

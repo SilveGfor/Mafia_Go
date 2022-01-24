@@ -5,9 +5,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
+
     <ScrollView
+        android:id="@+id/fragmentSettingsProfile_SV"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -16,7 +23,6 @@
                 android:id="@+id/fragmentSettingsProfile_CV"
                 android:layout_width="269dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
                 app:cardBackgroundColor="?attr/card_background"
                 app:cardCornerRadius="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -116,7 +122,7 @@
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView8"
                         app:layout_constraintStart_toEndOf="@+id/imageView8"
-                        app:layout_constraintTop_toTopOf="@+id/imageView8"/>
+                        app:layout_constraintTop_toTopOf="@+id/imageView8" />
 
                     <TextView
                         android:id="@+id/fragmentSettingsProfile_TV_gold"
@@ -126,7 +132,7 @@
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView9"
                         app:layout_constraintStart_toEndOf="@+id/imageView9"
-                        app:layout_constraintTop_toTopOf="@+id/imageView9"/>
+                        app:layout_constraintTop_toTopOf="@+id/imageView9" />
 
                     <ImageView
                         android:id="@+id/itemDailyTask_IV_prize"
@@ -145,7 +151,7 @@
                         android:textSize="14sp"
                         app:layout_constraintBottom_toBottomOf="@+id/imageView7"
                         app:layout_constraintStart_toEndOf="@+id/imageView7"
-                        app:layout_constraintTop_toTopOf="@+id/imageView7"/>
+                        app:layout_constraintTop_toTopOf="@+id/imageView7" />
 
                     <Spinner
                         android:id="@+id/fragmentSettingsProfile_Spinner_statuce"
@@ -187,7 +193,7 @@
                     android:layout_height="match_parent">
 
                     <TextView
-                        android:id="@+id/dialogOkNo_text"
+                        android:id="@+id/fragmentSettingsProfile_TV_statistic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
@@ -206,7 +212,7 @@
                         android:textSize="12sp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/dialogOkNo_text" />
+                        app:layout_constraintTop_toBottomOf="@+id/fragmentSettingsProfile_TV_statistic" />
 
                     <TextView
                         android:id="@+id/fragmentSettingsProfile_TV_maxMoney"

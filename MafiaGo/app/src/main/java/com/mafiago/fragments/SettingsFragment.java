@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,6 +31,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.mafiago.R;
+import com.getkeepsafe.taptargetview.TapTarget;
+import com.getkeepsafe.taptargetview.TapTargetSequence;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.mafiago.MainActivity;
@@ -49,11 +52,31 @@ import static com.mafiago.MainActivity.socket;
 import static com.mafiago.fragments.MenuFragment.GALLERY_REQUEST;
 
 public class SettingsFragment extends Fragment implements OnBackPressedListener {
+    private static final String ARG_STUDY = "study";
+
+    String study_type = "";
 
     TabLayout tab;
     ViewPager viewPager;
     ImageView Menu;
     RelativeLayout btn_back;
+    TextView TV_settings;
+
+    public static SettingsFragment newInstance(String study_type) {
+        SettingsFragment fragment = new SettingsFragment();
+        Bundle args = new Bundle();
+        args.putString(ARG_STUDY, study_type);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            study_type = getArguments().getString(ARG_STUDY);
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +88,7 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         viewPager = view.findViewById(R.id.fragmentSettings_ViewPager);
         Menu = view.findViewById(R.id.fragmentMenu_IV_menu);
         btn_back = view.findViewById(R.id.fragmentGamesList_RL_back);
+        TV_settings = view.findViewById(R.id.fragmentSettings_TV_settings);
 
         Menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +123,8 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
         });
 
         // Получаем ViewPager и устанавливаем в него адаптер
-        viewPager.setAdapter(
-                new SettingsPagerAdapter(getActivity().getSupportFragmentManager(), getActivity()));
+        SettingsPagerAdapter settingsPagerAdapter = new SettingsPagerAdapter(getActivity().getSupportFragmentManager(), getActivity());
+        viewPager.setAdapter(settingsPagerAdapter);
 
         // Передаём ViewPager в TabLayout
         tab.setupWithViewPager(viewPager);
@@ -111,6 +135,117 @@ public class SettingsFragment extends Fragment implements OnBackPressedListener 
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
             }
         });
+
+        switch (study_type)
+        {
+            case "profile":
+                new TapTargetSequence(getActivity())
+                        .targets(
+
+                                TapTarget.forView(tab,"В настройках есть 2 экрана: Настройки профиля и основные настройки, тут их можно переключать","")
+                                        .outerCircleColor(R.color.notActiveText)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        settingsPagerAdapter.startProfileStudy();
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                    }
+                }).start();
+                break;
+            case "main":
+                viewPager.setCurrentItem(1);
+                new TapTargetSequence(getActivity())
+                        .targets(
+
+                                TapTarget.forView(tab,"Теперь переключимся на основные настройки","")
+                                        .outerCircleColor(R.color.notActiveText)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(60)).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        settingsPagerAdapter.startMainStudy();
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                    }
+                }).start();
+                break;
+            case "menu":
+                new TapTargetSequence(getActivity())
+                        .targets(
+
+                                TapTarget.forView(btn_back,"Вернёмся обратно в главное меню","")
+                                        .outerCircleColor(R.color.notActiveText)
+                                        .outerCircleAlpha(0.96f)
+                                        .targetCircleColor(R.color.white)
+                                        .titleTextSize(20)
+                                        .titleTextColor(R.color.white)
+                                        .descriptionTextSize(10)
+                                        .descriptionTextColor(R.color.black)
+                                        .textColor(R.color.white)
+                                        .textTypeface(Typeface.SANS_SERIF)
+                                        .dimColor(R.color.black)
+                                        .drawShadow(true)
+                                        .cancelable(false)
+                                        .tintTarget(true)
+                                        .transparentTarget(true)
+                                        .targetRadius(40)).listener(new TapTargetSequence.Listener() {
+                    @Override
+                    public void onSequenceFinish() {
+                        MenuFragment menuFragment = MenuFragment.newInstance("end");
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, menuFragment).commit();
+                    }
+
+                    @Override
+                    public void onSequenceStep(TapTarget lastTarget, boolean targetClicked) {
+                    }
+
+                    @Override
+                    public void onSequenceCanceled(TapTarget lastTarget) {
+                    }
+                }).start();
+                break;
+
+        }
+
+
 
         return  view;
     }

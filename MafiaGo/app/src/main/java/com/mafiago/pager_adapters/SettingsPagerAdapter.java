@@ -18,12 +18,16 @@ import com.google.android.material.tabs.TabLayout;
 import com.mafiago.small_fragments.GameChatFragment;
 import com.mafiago.small_fragments.SettingsMainFragment;
 
+import java.util.concurrent.TimeUnit;
+
 import static com.mafiago.MainActivity.socket;
 
 public class SettingsPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 2;
     private String tabTitles[] = new String[] { "Настройки профиля", "Основные"};
+    private SettingsMainFragment fragment1;
+    private SettingsMainFragment fragment2;
     private Context context;
 
     public SettingsPagerAdapter(FragmentManager fm, Context context) {
@@ -36,12 +40,38 @@ public class SettingsPagerAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override public Fragment getItem(int position) {
-        return SettingsMainFragment.newInstance(position + 1);
-
+        if (position == 0)
+        {
+            Log.d("kkk", "getItem " + position);
+            fragment1 = SettingsMainFragment.newInstance(position + 1);
+            return fragment1;
+        }
+        else
+        {
+            Log.d("kkk", "getItem " + position);
+            fragment2 = SettingsMainFragment.newInstance(position + 1);
+            return fragment2;
+        }
     }
 
     @Override public CharSequence getPageTitle(int position) {
         // генерируем заголовок в зависимости от позиции
         return tabTitles[position];
+    }
+
+    public void startProfileStudy()
+    {
+        if (fragment1 != null) {
+            fragment1.startProfileStudy();
+        }
+    }
+
+    public void startMainStudy()
+    {
+        Log.d("kkk", "startProfileStudy1");
+        Log.d("kkk", "startProfileStudy2" + fragment1);
+        if (fragment2 != null) {
+            fragment2.startMainStudy();
+        }
     }
 }

@@ -103,6 +103,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_THEME = "theme";
+    public static final String APP_PREFERENCES_FULLSCREEN = "fullscreen";
 
     NotificationCompat.Builder builder;
     NotificationManager manager;
@@ -174,11 +175,11 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
     protected void onCreate(Bundle savedInstanceState) {
         mSettings = this.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         String theme = mSettings.getString(APP_PREFERENCES_THEME, "dark");
+        Boolean fullscreen = mSettings.getBoolean(APP_PREFERENCES_FULLSCREEN, false);
         Theme = theme;
         if (theme.equals("dark")) {
             setTheme(R.style.DarkTheme);
-        } else
-        {
+        } else {
             setTheme(R.style.LightTheme);
         }
         setContentView(R.layout.activity_main);
@@ -193,39 +194,31 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
 
         socket.connect();
 
-        final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                | View.SYSTEM_UI_FLAG_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        currentApiVersion = android.os.Build.VERSION.SDK_INT;
+        if (fullscreen) {
+            final int flags = View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                    | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
+            currentApiVersion = android.os.Build.VERSION.SDK_INT;
 
-
-        if(currentApiVersion >= Build.VERSION_CODES.KITKAT)
-        {
-            getWindow().getDecorView().setSystemUiVisibility(flags);
-            final View decorView = getWindow().getDecorView();
-            decorView
-                    .setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
-                    {
-
-                        @Override
-                        public void onSystemUiVisibilityChange(int visibility)
-                        {
-                            if((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0)
-                            {
-                                decorView.setSystemUiVisibility(flags);
+            if (currentApiVersion >= Build.VERSION_CODES.KITKAT) {
+                getWindow().getDecorView().setSystemUiVisibility(flags);
+                final View decorView = getWindow().getDecorView();
+                decorView.setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener() {
+                            @Override
+                            public void onSystemUiVisibilityChange(int visibility) {
+                                if ((visibility & View.SYSTEM_UI_FLAG_FULLSCREEN) == 0) {
+                                    decorView.setSystemUiVisibility(flags);
+                                }
                             }
-                        }
-                    });
+                        });
+            }
         }
 
+
         /*
-        int uiOptions = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
-        getWindow().
-                getDecorView().
-                setSystemUiVisibility(uiOptions);
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
