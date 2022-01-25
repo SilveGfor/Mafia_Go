@@ -306,6 +306,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
                 }
             });
 
+            alert.setCancelable(false);
             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
             alert.show();
         }
@@ -645,8 +646,7 @@ public class MenuFragment extends Fragment implements OnBackPressedListener {
         return view;
     }
 
-    private void reset()
-    {
+    private void reset() {
         Intent intent = new Intent(getContext(), MainActivity.class);
         startActivity(intent);
     }

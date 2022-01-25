@@ -59,6 +59,7 @@ import static android.app.Activity.RESULT_OK;
 import static com.mafiago.MainActivity.f;
 import static com.mafiago.MainActivity.nick;
 import static com.mafiago.MainActivity.socket;
+import static com.mafiago.fragments.MenuFragment.APP_PREFERENCES_WAS_STUDY;
 
 public class SettingsMainFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
@@ -431,6 +432,8 @@ public class SettingsMainFragment extends Fragment {
                 ImageView poisoner = viewDang.findViewById(R.id.dialogCustomRoles_poisoner);
                 TextView TV_choose = viewDang.findViewById(R.id.dialogCustomRoles_TV_choose);
 
+                Button btn_startStudy = viewDang.findViewById(R.id.dialogCustomRoles_btn_startStudy);
+
                 citizen.setImageResource(R.drawable.citizen_dead);
                 sheriff.setImageResource(R.drawable.sheriff_dead);
                 doctor.setImageResource(R.drawable.doctor_dead);
@@ -446,6 +449,16 @@ public class SettingsMainFragment extends Fragment {
                 TV_choose.setText("Выберите роль для обучения");
 
                 AlertDialog alert = builder.create();
+
+                btn_startStudy.setVisibility(View.VISIBLE);
+
+                btn_startStudy.setOnClickListener(v15 -> {
+                    SharedPreferences.Editor editor = mSettings.edit();
+                    editor.putBoolean(APP_PREFERENCES_WAS_STUDY, false);
+                    editor.putBoolean(APP_PREFERENCES_FULLSCREEN, false);
+                    editor.apply();
+                    reset();
+                });
 
                 citizen.setOnClickListener(v1 -> {
                     /*

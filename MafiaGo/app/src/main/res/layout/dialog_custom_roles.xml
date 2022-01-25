@@ -7,6 +7,20 @@
     android:layout_height="wrap_content"
     android:background="@drawable/round_black_dialog">
 
+    <Button
+        android:id="@+id/dialogCustomRoles_btn_startStudy"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="30dp"
+        android:background="@drawable/orange_button"
+        android:text="Начальное обучение"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/dialogCustomRoles_poisoner"
+        app:layout_constraintStart_toStartOf="@+id/dialogCustomRoles_mafia"
+        app:layout_constraintTop_toBottomOf="@+id/dialogCustomRoles_mafia" />
+
     <TextView
         android:id="@+id/dialogCustomRoles_TV_choose"
         android:layout_width="wrap_content"
