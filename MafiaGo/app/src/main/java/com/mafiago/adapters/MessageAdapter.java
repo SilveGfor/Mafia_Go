@@ -11,6 +11,7 @@
  import android.view.View;
  import android.view.ViewGroup;
  import android.widget.BaseAdapter;
+ import android.widget.ImageView;
  import android.widget.TextView;
 
  import com.mafiago.MainActivity;
@@ -69,41 +70,10 @@
                         ViewGroup parent)
     {
         View view = convertView;
-        boolean showRole = mSettings.getBoolean(APP_PREFERENCES_SHOW_ROLE, true);
         switch (list_mess.get(position).mesType) {
             case "UsersMes":
-                view = layout.inflate(R.layout.item_message, null);
-
-                CircleImageView IV_avatar = view.findViewById(R.id.itemMessage_avatar);
-
-                if (list_mess.get(position).avatar != null) {
-                    IV_avatar.setImageBitmap(list_mess.get(position).avatar);
-                }
-
-                IV_avatar.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        final JSONObject json = new JSONObject();
-                        try {
-                            json.put("nick", MainActivity.NickName);
-                            json.put("session_id", MainActivity.Session_id);
-                            json.put("info_nick", list_mess.get(position).nickName);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        socket.emit("get_profile", json);
-                        Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
-                    }
-                });
-
-                //TextView txt_time = view.findViewById(R.id.itemMessage_time);
-                TextView TV_message = view.findViewById(R.id.itemMessage_message);
-                TextView TV_nick = view.findViewById(R.id.itemMessage_nick);
-                TextView TV_status = view.findViewById(R.id.itemMessage_status);
-
-                String color= "#FFFFFF";
-                switch (list_mess.get(position).textType)
-                {
+                String color = "#FFFFFF";
+                switch (list_mess.get(position).textType) {
                     case "alive":
                     case "dead":
                         color = "#FFFFFF";
@@ -112,73 +82,70 @@
                         color = "#FFB7AC";
                         break;
                 }
-
-                //TODO: сделать сияние только админам
-                if (list_mess.get(position).nickName.equals("SilveGfor"))
+                int previous_position = position - 1;
+                if (position != 0 && list_mess.get(previous_position).nickName.equals(list_mess.get(position).nickName) && (list_mess.get(previous_position).mesType.equals("UsersMes") || list_mess.get(previous_position).mesType.equals("AnswerMes")))
                 {
-                    Shimmer shimmer = new Shimmer();
-                    //shimmer.start(txt_nick);
+                    view = layout.inflate(R.layout.item_message_small, null);
+                    TextView TV_message = view.findViewById(R.id.itemMessageSmall_message);
+                    TV_message.setTextColor(Color.parseColor(color));
+                    TV_message.setText(list_mess.get(position).message);
                 }
+                else {
+                    view = layout.inflate(R.layout.item_message, null);
 
-                /*
-                switch (list_mess.get(position).status_text) {
-                    case "user":
-                        break;
-                    case "moderator":
-                        TV_status.setVisibility(View.VISIBLE);
-                        TV_status.setText("модератор");
-                        TV_status.setTextColor(Color.parseColor("#C71585"));
-                        break;
-                    case "admin":
-                        TV_status.setVisibility(View.VISIBLE);
-                        TV_status.setText("админ");
-                        TV_status.setTextColor(Color.parseColor("#FF0000"));
-                        break;
-                    case "head_admin":
-                        TV_status.setVisibility(View.VISIBLE);
-                        TV_status.setText("глав. админ");
-                        TV_status.setTextColor(Color.parseColor("#008B8B"));
-                        break;
-                    case "designer":
-                        TV_status.setVisibility(View.VISIBLE);
-                        TV_status.setText("дизайнер");
-                        TV_status.setTextColor(Color.parseColor("#8A2BE2"));
-                        break;
-                    case "developer":
-                        TV_status.setVisibility(View.VISIBLE);
-                        TV_status.setText("разработчик");
-                        TV_status.setTextColor(Color.parseColor("#8B0000"));
-                        break;
-                    default:
-                }
+                    CircleImageView IV_avatar = view.findViewById(R.id.itemMessage_avatar);
 
-                 */
+                    if (list_mess.get(position).avatar != null) {
+                        IV_avatar.setImageBitmap(list_mess.get(position).avatar);
+                    }
 
-                if (!list_mess.get(position).status_text.equals(""))
-                {
-                    TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
-                }
-                else
-                {
-                    TV_nick.setText(list_mess.get(position).nickName);
-                }
+                    IV_avatar.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            final JSONObject json = new JSONObject();
+                            try {
+                                json.put("nick", MainActivity.NickName);
+                                json.put("session_id", MainActivity.Session_id);
+                                json.put("info_nick", list_mess.get(position).nickName);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            socket.emit("get_profile", json);
+                            Log.d("kkk", "Socket_отправка - get_profile - " + json.toString());
+                        }
+                    });
 
-                //txt_time.setTextColor(Color.parseColor(color));
-                TV_message.setTextColor(Color.parseColor(color));
-                TV_nick.setTextColor(Color.parseColor(color));
+                    //TextView txt_time = view.findViewById(R.id.itemMessage_time);
+                    TextView TV_message = view.findViewById(R.id.itemMessage_message);
+                    TextView TV_nick = view.findViewById(R.id.itemMessage_nick);
+                    TextView TV_status = view.findViewById(R.id.itemMessage_status);
 
-                if (!list_mess.get(position).user_color.equals(""))
-                {
-                    TV_nick.setTextColor(Color.parseColor(list_mess.get(position).user_color));
-                }
-                else
-                {
+                    //TODO: сделать сияние только админам
+                    if (list_mess.get(position).nickName.equals("SilveGfor")) {
+                        Shimmer shimmer = new Shimmer();
+                        //shimmer.start(txt_nick);
+                    }
+
+                    if (!list_mess.get(position).status_text.equals("")) {
+                        TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
+                    } else {
+                        TV_nick.setText(list_mess.get(position).nickName);
+                    }
+
+                    //txt_time.setTextColor(Color.parseColor(color));
+                    TV_message.setTextColor(Color.parseColor(color));
                     TV_nick.setTextColor(Color.parseColor(color));
+
+                    if (!list_mess.get(position).user_color.equals("")) {
+                        TV_nick.setTextColor(Color.parseColor(list_mess.get(position).user_color));
+                    } else {
+                        TV_nick.setTextColor(Color.parseColor(color));
+                    }
+
+                    //txt_time.setText(list_mess.get(position).time);
+
+                    TV_message.setText(list_mess.get(position).message);
                 }
-
-                //txt_time.setText(list_mess.get(position).time);
-
-                TV_message.setText(list_mess.get(position).message);
 
                 break;
 
@@ -236,11 +203,11 @@
                 view = layout.inflate(R.layout.item_message, null);
 
                 //txt_time = view.findViewById(R.id.itemMessage_time);
-                TV_message = view.findViewById(R.id.itemMessage_message);
-                TV_nick = view.findViewById(R.id.itemMessage_nick);
-                TV_status = view.findViewById(R.id.itemMessage_status);
+                TextView TV_message = view.findViewById(R.id.itemMessage_message);
+                TextView TV_nick = view.findViewById(R.id.itemMessage_nick);
+                TextView TV_status = view.findViewById(R.id.itemMessage_status);
 
-                IV_avatar = view.findViewById(R.id.itemMessage_avatar);
+                ImageView IV_avatar = view.findViewById(R.id.itemMessage_avatar);
 
                 if (list_mess.get(position).avatar != null) {
                     IV_avatar.setImageBitmap(list_mess.get(position).avatar);
@@ -281,124 +248,159 @@
                 TV_nick.setTextColor(Color.parseColor("#AFFFFF"));
                 break;
             case "AnswerMes":
-                view = layout.inflate(R.layout.item_answer_message, null);
-                //txt_time = view.findViewById(R.id.itemAnswerMessage_time);
-                TV_message = view.findViewById(R.id.itemAnswerMessage_message);
-                TV_status = view.findViewById(R.id.itemAnswerMessage_status);
-                TV_nick= view.findViewById(R.id.itemAnswerMessage_nick);
+                previous_position = position - 1;
+                if (position != 0 && list_mess.get(previous_position).nickName.equals(list_mess.get(position).nickName) && (list_mess.get(previous_position).mesType.equals("UsersMes") || list_mess.get(previous_position).mesType.equals("AnswerMes")))
+                {
+                    view = layout.inflate(R.layout.item_message_answer_small, null);
+                    TV_message = view.findViewById(R.id.itemMessageAnswerSmall_message);
+                    TextView TV_answer_message = view.findViewById(R.id.itemAnswerMessageSmall_answerMessage);
+                    TextView TV_answer_nick = view.findViewById(R.id.itemAnswerMessageSmall_answerNick);
 
-                TextView TV_answer_message = view.findViewById(R.id.itemAnswerMessage_answerMessage);
-                TextView TV_answer_status = view.findViewById(R.id.itemAnswerMessage_answerStatus);
-                TextView TV_answer_nick = view.findViewById(R.id.itemAnswerMessage_answerNick);
-
-                int id = list_mess.get(position).answerId;
-
-                IV_avatar = view.findViewById(R.id.itemAnswerMessage_avatar);
-
-                if (list_mess.get(position).avatar != null) {
-                    IV_avatar.setImageBitmap(list_mess.get(position).avatar);
-                }
-
-                IV_avatar.setOnClickListener(v -> {
-                    final JSONObject json = new JSONObject();
-                    try {
-                        json.put("nick", MainActivity.NickName);
-                        json.put("session_id", MainActivity.Session_id);
-                        json.put("info_nick", list_mess.get(position).nickName);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                    color = "#FFFFFF";
+                    switch (list_mess.get(position).textType) {
+                        case "alive":
+                        case "dead":
+                            color = "#FFFFFF";
+                            break;
+                        case "last_message":
+                            color = "#FFB7AC";
+                            break;
                     }
-                    socket.emit("get_profile", json);
-                    Log.d("kkk", "Socket_отправка - get_profile - "+ json.toString());
-                });
+                    TV_message.setTextColor(Color.parseColor(color));
+                    TV_message.setText(list_mess.get(position).message);
 
-                if (!list_mess.get(position).status_text.equals(""))
-                {
-                    TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
-                }
-                else
-                {
-                    TV_nick.setText(list_mess.get(position).nickName);
-                }
+                    int id = list_mess.get(position).answerId;
+                    for (int i = 0; i < list_mess.size(); i++) {
+                        if (id == list_mess.get(i).num) {
+                            if (!list_mess.get(i).status_text.equals("")) {
+                                TV_answer_nick.setText(list_mess.get(i).nickName + " {" + list_mess.get(i).status_text + "}");
+                            } else {
+                                TV_answer_nick.setText(list_mess.get(i).nickName);
+                            }
+                            TV_answer_message.setText(list_mess.get(i).message);
+                            color = "#FFFFFF";
+                            switch (list_mess.get(i).textType) {
+                                case "alive":
+                                case "dead":
+                                    color = "#FFFFFF";
+                                    break;
+                                case "last_message":
+                                    color = "#FFB7AC";
+                                    break;
+                            }
 
-
-                //txt_time.setText(list_mess.get(position).time);
-                TV_message.setText(list_mess.get(position).message);
-
-                if (list_mess.get(position).nickName.equals("SilveGfor"))
-                {
-                    Shimmer shimmer = new Shimmer();
-                    //shimmer.start(txt_nick);
-                }
-
-                for (int i = 0; i < list_mess.size(); i++)
-                {
-                    if (id == list_mess.get(i).num)
-                    {
-                        if (!list_mess.get(i).status_text.equals(""))
-                        {
-                            TV_answer_nick.setText(list_mess.get(i).nickName + " {" + list_mess.get(i).status_text + "}");
+                            if (!list_mess.get(i).user_color.equals("")) {
+                                TV_answer_nick.setTextColor(Color.parseColor(list_mess.get(i).user_color));
+                            } else {
+                                TV_answer_nick.setTextColor(Color.parseColor(color));
+                            }
+                            TV_answer_message.setTextColor(Color.parseColor(color));
                         }
-                        else
-                        {
-                            TV_answer_nick.setText(list_mess.get(i).nickName);
-                        }
-                        TV_answer_message.setText(list_mess.get(i).message);
-                        color= "#FFFFFF";
-                        switch (list_mess.get(i).textType)
-                        {
-                            case "alive":
-                            case "dead":
-                                color = "#FFFFFF";
-                                break;
-                            //case "dead":
-                            //color = "#999999";
-                            //break;
-                            case "last_message":
-                                color = "#FFB7AC";
-                                break;
-                        }
-
-                        if (!list_mess.get(i).user_color.equals(""))
-                        {
-                            TV_answer_nick.setTextColor(Color.parseColor(list_mess.get(i).user_color));
-                        }
-                        else
-                        {
-                            TV_answer_nick.setTextColor(Color.parseColor(color));
-                        }
-
-                        TV_answer_message.setTextColor(Color.parseColor(color));
                     }
                 }
+                else {
+                    view = layout.inflate(R.layout.item_message_answer, null);
+                    //txt_time = view.findViewById(R.id.itemAnswerMessage_time);
+                    TV_message = view.findViewById(R.id.itemAnswerMessage_message);
+                    TV_status = view.findViewById(R.id.itemAnswerMessage_status);
+                    TV_nick = view.findViewById(R.id.itemAnswerMessage_nick);
 
-                color= "#FFFFFF";
-                switch (list_mess.get(position).textType)
-                {
-                    case "alive":
-                    case "dead":
-                        color = "#FFFFFF";
-                        break;
-                    //case "dead":
-                    //color = "#999999";
-                    //break;
-                    case "last_message":
-                        color = "#FFB7AC";
-                        break;
-                }
+                    TextView TV_answer_message = view.findViewById(R.id.itemAnswerMessage_answerMessage);
+                    TextView TV_answer_status = view.findViewById(R.id.itemAnswerMessage_answerStatus);
+                    TextView TV_answer_nick = view.findViewById(R.id.itemAnswerMessage_answerNick);
 
-                if (!list_mess.get(position).user_color.equals(""))
-                {
-                    TV_nick.setTextColor(Color.parseColor(list_mess.get(position).user_color));
-                }
-                else
-                {
-                    TV_nick.setTextColor(Color.parseColor(color));
-                }
+                    int id = list_mess.get(position).answerId;
 
-                TV_message.setTextColor(Color.parseColor(color));
-                //txt_time.setTextColor(Color.parseColor(color));
-                //txt_answer_mes.setTextColor(Color.parseColor("#3E4A5A"));
+                    IV_avatar = view.findViewById(R.id.itemAnswerMessage_avatar);
+
+                    if (list_mess.get(position).avatar != null) {
+                        IV_avatar.setImageBitmap(list_mess.get(position).avatar);
+                    }
+
+                    IV_avatar.setOnClickListener(v -> {
+                        final JSONObject json = new JSONObject();
+                        try {
+                            json.put("nick", MainActivity.NickName);
+                            json.put("session_id", MainActivity.Session_id);
+                            json.put("info_nick", list_mess.get(position).nickName);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        socket.emit("get_profile", json);
+                        Log.d("kkk", "Socket_отправка - get_profile - " + json.toString());
+                    });
+
+                    if (!list_mess.get(position).status_text.equals("")) {
+                        TV_nick.setText(list_mess.get(position).nickName + " {" + list_mess.get(position).status_text + "}");
+                    } else {
+                        TV_nick.setText(list_mess.get(position).nickName);
+                    }
+
+
+                    //txt_time.setText(list_mess.get(position).time);
+                    TV_message.setText(list_mess.get(position).message);
+
+                    if (list_mess.get(position).nickName.equals("SilveGfor")) {
+                        Shimmer shimmer = new Shimmer();
+                        //shimmer.start(txt_nick);
+                    }
+
+                    for (int i = 0; i < list_mess.size(); i++) {
+                        if (id == list_mess.get(i).num) {
+                            if (!list_mess.get(i).status_text.equals("")) {
+                                TV_answer_nick.setText(list_mess.get(i).nickName + " {" + list_mess.get(i).status_text + "}");
+                            } else {
+                                TV_answer_nick.setText(list_mess.get(i).nickName);
+                            }
+                            TV_answer_message.setText(list_mess.get(i).message);
+                            color = "#FFFFFF";
+                            switch (list_mess.get(i).textType) {
+                                case "alive":
+                                case "dead":
+                                    color = "#FFFFFF";
+                                    break;
+                                //case "dead":
+                                //color = "#999999";
+                                //break;
+                                case "last_message":
+                                    color = "#FFB7AC";
+                                    break;
+                            }
+
+                            if (!list_mess.get(i).user_color.equals("")) {
+                                TV_answer_nick.setTextColor(Color.parseColor(list_mess.get(i).user_color));
+                            } else {
+                                TV_answer_nick.setTextColor(Color.parseColor(color));
+                            }
+
+                            TV_answer_message.setTextColor(Color.parseColor(color));
+                        }
+                    }
+
+                    color = "#FFFFFF";
+                    switch (list_mess.get(position).textType) {
+                        case "alive":
+                        case "dead":
+                            color = "#FFFFFF";
+                            break;
+                        //case "dead":
+                        //color = "#999999";
+                        //break;
+                        case "last_message":
+                            color = "#FFB7AC";
+                            break;
+                    }
+
+                    if (!list_mess.get(position).user_color.equals("")) {
+                        TV_nick.setTextColor(Color.parseColor(list_mess.get(position).user_color));
+                    } else {
+                        TV_nick.setTextColor(Color.parseColor(color));
+                    }
+
+                    TV_message.setTextColor(Color.parseColor(color));
+                    //txt_time.setTextColor(Color.parseColor(color));
+                    //txt_answer_mes.setTextColor(Color.parseColor("#3E4A5A"));
+                }
                 break;
             case "SystemMes":
                 view = layout.inflate(R.layout.item_system_message, null);
