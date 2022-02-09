@@ -62,6 +62,7 @@
         android:text="Мирных: 5"
         android:textColor="@color/red"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_playersCount"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_timer"
         app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_playersCount" />
@@ -74,6 +75,7 @@
         android:text="Мафий: 3"
         android:textColor="@color/green"
         android:textSize="12sp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="@+id/fragmentGame_TV_playersCount"
         app:layout_constraintEnd_toStartOf="@+id/fragmentGame_TV_mafiaCount"
         app:layout_constraintTop_toTopOf="@+id/fragmentGame_TV_playersCount" />
