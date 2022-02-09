@@ -86,7 +86,7 @@ public class StudyGamesListFragment extends Fragment {
                                 .tintTarget(true)
                                 .transparentTarget(true)
                                 .targetRadius(80),
-                        TapTarget.forView(TV_roomName1,"<<Комната 1>> - название этой комнаты","")
+                        TapTarget.forView(TV_roomName1,"Комната 1 - название этой комнаты","")
                                 .outerCircleColor(R.color.orange)
                                 .outerCircleAlpha(0.96f)
                                 .targetCircleColor(R.color.white)
@@ -133,7 +133,6 @@ public class StudyGamesListFragment extends Fragment {
                                 .cancelable(false)
                                 .tintTarget(true)
                                 .transparentTarget(true)
-
                                 .targetRadius(60),
                         TapTarget.forView(SV1,"Доступные роли в комнате","")
                                 .outerCircleColor(R.color.orange)
@@ -167,7 +166,7 @@ public class StudyGamesListFragment extends Fragment {
                                 .tintTarget(true)
                                 .transparentTarget(true)
                                 .targetRadius(60),
-                        TapTarget.forView(IV_lock2,"Значок блокироваки обозначает комнату с паролем","")
+                        TapTarget.forView(IV_lock2,"Значок блокировки обозначает комнату с паролем","")
                                 .outerCircleColor(R.color.orange)
                                 .outerCircleAlpha(0.96f)
                                 .targetCircleColor(R.color.white)
