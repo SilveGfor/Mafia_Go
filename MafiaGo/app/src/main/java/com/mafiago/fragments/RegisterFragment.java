@@ -347,7 +347,9 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                     if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) &&
                             !ETpassword1.getText().toString().trim().equals("") &&
                             !ETnick.getText().toString().trim().equals("") &&
-                            (!ETnick.getText().toString().contains(".") && !ETnick.getText().toString().contains("{") && !ETnick.getText().toString().contains("}")) &&
+                            (!ETnick.getText().toString().contains(".") &&
+                            !ETnick.getText().toString().contains("{") &&
+                            !ETnick.getText().toString().contains("}")) &&
                             ETpassword1.length() >= 7 &&
                             ETpassword1.length() <= 20) {
 

@@ -224,7 +224,7 @@ public class StartFragment extends Fragment {
             json.put("password", MainActivity.password);
             json.put("current_game_version", MainActivity.CURRENT_GAME_VERSION);
 
-            Log.d("kkk", "Отправил: " + json);
+            Log.d("kkk", "Отправил: " + json + " на url: " + url);
 
             RequestBody body = RequestBody.create(
                     MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
@@ -247,7 +247,7 @@ public class StartFragment extends Fragment {
                     Log.d("kkk", "Принял: " + Answer);
                     try {
                         switch (Answer) {
-                            case "incorrect_email":
+                            case "incorrect_nick":
                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                     PB_loading.setVisibility(View.INVISIBLE);
                                     if (!AutoRun) {
@@ -307,7 +307,7 @@ public class StartFragment extends Fragment {
                                     MainActivity.Sid = data.get("sid").toString();
                                     MainActivity.Role = data.get("role").toString();
                                     MainActivity.Rang = data.getInt("rang");
-                                    MainActivity.MyInviteCode = data.getInt("my_invite_code");
+                                    MainActivity.MyInviteCode = data.getString("my_invite_code");
                                     if (data.getString("avatar") == null || data.getString("avatar").equals("") || data.getString("avatar").equals("null")) {
                                         ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -337,189 +337,14 @@ public class StartFragment extends Fragment {
                                     Log.d("kkk", "CONNECTION after Login");
                                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
                                 }
-                                else {
-                                    if (!data.getString("ban_time").equals("forever")) {
-                                        JSONObject fine = data.getJSONObject("fine");
-                                        JSONObject dataBanTime = data.getJSONObject("ban_time");
-
-                                        String admin_comment;
-                                        String creation_time;
-                                        int exp = 0;
-                                        int hour;
-                                        int money = 0;
-                                        String reason;
-
-                                        int days, hours, minutes, seconds;
-
-                                        admin_comment = fine.getString("admin_comment");
-                                        creation_time = fine.getString("creation_time");
-                                        if (fine.has("exp")) exp = fine.getInt("exp");
-                                        if (fine.has("money")) money = fine.getInt("money");
-                                        hour = fine.getInt("hour");
-                                        reason = fine.getString("reason");
-
-                                        days = dataBanTime.getInt("days");
-                                        hours = dataBanTime.getInt("hours");
-                                        minutes = dataBanTime.getInt("minutes");
-                                        seconds = dataBanTime.getInt("seconds");
-
-
-                                        int finalMoney = money;
-                                        int finalExp = exp;
-                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                            PB_loading.setVisibility(View.INVISIBLE);
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                            View viewBan = getLayoutInflater().inflate(R.layout.dialog_you_have_been_banned, container, false);
-                                            builder.setView(viewBan);
-                                            AlertDialog alert = builder.create();
-                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                            TextView TV_reason = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_reason);
-                                            TextView TV_comment = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_comment);
-                                            TextView TV_banTime = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_banTime);
-                                            TextView TV_timeYouMustWait = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_timeYouMustWait);
-                                            TextView IV_money = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_money);
-                                            TextView IV_exp = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
-
-                                            TV_reason.setText("Причина: " + reason);
-                                            TV_comment.setText("Комментарий: " + admin_comment);
-                                            TV_banTime.setText("Время бана: " + hour + "ч");
-                                            IV_money.setText(String.valueOf(finalMoney));
-                                            IV_exp.setText(String.valueOf(finalExp));
-
-                                            if (days == 0) {
-                                                if (hours == 0) {
-                                                    if (minutes == 0) {
-                                                        TV_timeYouMustWait.setText("Вы сможете зайти через " + seconds + " с");
-                                                    } else {
-                                                        TV_timeYouMustWait.setText("Вы сможете зайти через " + minutes + " м " + seconds + " с");
-                                                    }
-                                                } else {
-                                                    TV_timeYouMustWait.setText("Вы сможете зайти через " + hours + " ч " + minutes + " м");
-                                                }
-
-                                            } else {
-                                                TV_timeYouMustWait.setText("Вы сможете зайти через " + days + " д " + hours + " ч");
-                                            }
-
-
-                                            alert.show();
-                                        });
-                                    }
-                                    else
-                                    {
-                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                            PB_loading.setVisibility(View.INVISIBLE);
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                            View viewBan = getLayoutInflater().inflate(R.layout.dialog_you_have_been_banned, container, false);
-                                            builder.setView(viewBan);
-                                            AlertDialog alert = builder.create();
-                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-
-                                            TextView TV_reason = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_reason);
-                                            TextView TV_comment = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_comment);
-                                            TextView TV_banTime = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_banTime);
-                                            TextView TV_timeYouMustWait = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_timeYouMustWait);
-                                            TextView IV_money = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_money);
-                                            TextView IV_exp = viewBan.findViewById(R.id.dialogYouHaveBeenBanned_TV_exp);
-
-                                            try {
-                                                if (data.getJSONObject("fine").has("reason"))
-                                                {
-                                                    JSONObject fine = data.getJSONObject("fine");
-
-                                                    String admin_comment;
-                                                    String creation_time;
-                                                    int exp = 0;
-                                                    int hour;
-                                                    int money = 0;
-                                                    String reason;
-
-                                                    int days, hours, minutes, seconds;
-
-                                                    admin_comment = fine.getString("admin_comment");
-                                                    creation_time = fine.getString("creation_time");
-                                                    if (fine.has("exp")) exp = fine.getInt("exp");
-                                                    if (fine.has("money")) money = fine.getInt("money");
-                                                    if (!fine.getString("hour").equals("forever"))
-                                                    {
-                                                        hour = fine.getInt("hour");
-                                                        TV_banTime.setText("Время бана: " + hour + "ч");
-                                                    }
-                                                    else
-                                                    {
-                                                        TV_banTime.setText("Время бана: ВЕЧНОСТЬ");
-                                                    }
-
-                                                    reason = fine.getString("reason");
-
-                                                    TV_reason.setText("Причина: " + reason);
-                                                    TV_comment.setText("Комментарий: " + admin_comment);
-
-                                                    IV_money.setText(String.valueOf(money));
-                                                    IV_exp.setText(String.valueOf(exp));
-                                                }
-                                                else
-                                                {
-                                                    TV_reason.setText("Причина: Разработчик игры решил вас забанить!");
-                                                    TV_comment.setText("Комментарий: Если вас забанил разработчик, то вы сделали что-то очень плохое, так что подумайте над своим поведением!");
-                                                    TV_banTime.setText("Время бана: ВЕЧНОСТЬ");
-                                                    IV_money.setText(String.valueOf(0));
-                                                    IV_exp.setText(String.valueOf(0));
-                                                }
-                                            } catch (JSONException e) {
-                                                e.printStackTrace();
-                                            }
-
-                                            TV_timeYouMustWait.setText("Вы забанены навсегда!");
-
-
-
-                                            alert.show();
-                                        });
-                                    }
-                                }
                                 break;
                         }
                     } catch (Exception e) {
-                        /*
-                        createNotificationChannel();
-                        createNotification(String.valueOf(e.getStackTrace()[0]).substring(20), "message");
-                        builder.setStyle(new NotificationCompat.InboxStyle()
-                                .addLine(String.valueOf(e)));
-                        showNotification(друг_айди);
-                        друг_айди++;
-                         */
                         Log.d("kkk", String.valueOf(e.getMessage()));
-                        /*
-                        createNotificationChannel();
-                        createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");
-                        builder.setStyle(new NotificationCompat.InboxStyle()
-                                .addLine(String.valueOf(e.getMessage())));
-                        showNotification(друг_айди);
-                        друг_айди++;
-                         */
                     }
                 }
             });
         } catch (Exception e) {
-            /*
-            createNotificationChannel();
-            createNotification(String.valueOf(e.getStackTrace()[0]).substring(20), "message");
-            builder.setStyle(new NotificationCompat.InboxStyle()
-                    .addLine(String.valueOf(e)));
-            showNotification(друг_айди);
-            друг_айди++;
-             */
-
-            /*
-            createNotificationChannel();
-            createNotification(String.valueOf(e.getStackTrace()[0]).substring(41), "message");
-            builder.setStyle(new NotificationCompat.InboxStyle()
-                    .addLine(String.valueOf(e.getMessage())));
-            showNotification(друг_айди);
-            друг_айди++;
-             */
         }
     }
 
@@ -541,6 +366,7 @@ public class StartFragment extends Fragment {
         }
         return status;
     }
+
     private void createNotificationChannel() {
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String CHANNEL_NAME = "MAFIAGOCHANNEL" ;

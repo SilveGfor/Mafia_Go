@@ -19,6 +19,7 @@ import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.util.Log;
 import android.view.View;
 
@@ -45,10 +46,13 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import io.socket.engineio.client.transports.Polling;
+import io.socket.engineio.client.transports.WebSocket;
 import okhttp3.CipherSuite;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
@@ -57,6 +61,8 @@ import okhttp3.TlsVersion;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
 
 
   public class MainActivity extends AppCompatActivity implements GameFragment.OnUserSelectedListener {
@@ -83,7 +89,7 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
     public static boolean onResume = false;
     public static int Game_id;
     public static int Rang;
-    public static int MyInviteCode;
+    public static String MyInviteCode;
     public static Bitmap bitmap_avatar_2;
     public static String CURRENT_GAME_VERSION = "0.1.3";
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
@@ -137,18 +143,12 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
         }
       }
 
+      //public static Socket socket;
+
     public static Socket socket;
-    {
-        IO.Options options = IO.Options.builder()
-                .setReconnection(true)
-                .setReconnectionAttempts(Integer.MAX_VALUE)
-                .setReconnectionDelay(1_000)
-                .setReconnectionDelayMax(3_000)
-                .setRandomizationFactor(0.5)
-                .setTimeout(20_000)
-                .build();
-        socket = IO.socket(URI.create(url), options); //главный namespace
-    }
+
+
+
 
       private int currentApiVersion;
 
@@ -191,6 +191,27 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
             public void onInitializationComplete(InitializationStatus initializationStatus) {
             }
         });
+
+        client = new OkHttpClient.Builder().//connectionSpecs(Collections.singletonList(spec)).
+                connectTimeout(30, TimeUnit.SECONDS).callTimeout(30, TimeUnit.SECONDS).
+                readTimeout(30, TimeUnit.SECONDS).build();
+        IO.setDefaultOkHttpCallFactory(client);
+        IO.setDefaultOkHttpWebSocketFactory(client);
+
+        IO.Options options = IO.Options.builder()
+                .setTransports(new String[] { WebSocket.NAME })
+                .setForceNew(false)
+                .setReconnection(true)
+                .setReconnectionAttempts(Integer.MAX_VALUE)
+                .setReconnectionDelay(1_000)
+                .setReconnectionDelayMax(3_000)
+                .setRandomizationFactor(0.5)
+                .setTimeout(20_000)
+                .build();
+
+        socket = IO.socket(URI.create(url), options); //главный namespace
+
+        //socket = new Socket(url);
 
         socket.connect();
 
@@ -310,15 +331,14 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
                         CipherSuite.TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA)
                 .build();
 
-        client = new OkHttpClient.Builder().//connectionSpecs(Collections.singletonList(spec)).
-                connectTimeout(30, TimeUnit.SECONDS).callTimeout(30, TimeUnit.SECONDS).
-                readTimeout(30, TimeUnit.SECONDS).build();
 
-        this.startService(new Intent(this, BackgroundTask.class));
 
-        //socket.on("connect", onConnect);
-        //socket.on("disconnect", onDisconnect);
-        //socket.on("ping", onPing);
+        //this.startService(new Intent(this, BackgroundTask.class));
+
+        socket.on("connect", onConnect);
+        socket.on("disconnect", onDisconnect);
+        socket.on(EVENT_CONNECT_ERROR, onEvent);
+        socket.on("ping", onPing);
         //socket.on("chat_message", OnChatMessage);
 
         //TODO: Фоновый режим
@@ -390,14 +410,39 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
                 e.printStackTrace();
             }
             socket.emit("connection", json2);
-            Log.d("kkk", "CONNECTION");
+            Log.d("kkk", "CONNECTION1" + args);
+            Log.d("kkk", "CONNECTION1 args.length - " + args.length);
+            if (args.length > 0) {
+                Log.d("kkk", "CONNECTION1 args[0] - " + args[0]);
+            }
+            Log.d("kkk", "CONNECTION1 IO.protocol - " + IO.protocol);
+            //socket.connect();
         }
     };
 
     private Emitter.Listener onDisconnect = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-                    Log.d("kkk", "DISCONNECTION");
+                    Log.d("kkk", "DISCONNECTION1" + socket + args);
+                    Log.d("kkk", "D - " + socket.isActive());
+                    Log.d("kkk", "D - " + socket.listeners("get_profile"));
+                    Log.d("kkk", "D - " + socket.toString());
+                    Log.d("kkk", "D - " + socket.getClass());
+                    Log.d("kkk", "D - " + socket.id());
+                    Log.d("kkk", "args.toString() - " + args.toString());
+                    Log.d("kkk", "args.length - " + args.length);
+                    Log.d("kkk", "args[0] - " + args[0]);
+                    Log.d("kkk", "IO.protocol - " + IO.protocol);
+        }
+    };
+
+    private Emitter.Listener onEvent = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+                    Log.d("kkk", "onEventConnectError" + args.toString());
+                    Log.d("kkk", "args.length - " + args.length);
+                    Log.d("kkk", "args[0] - " + args[0]);
+                    //socket.connect();
         }
     };
 
@@ -466,7 +511,10 @@ import com.google.android.gms.ads.initialization.OnInitializationCompleteListene
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            //Log.d("kkk", "PING - " + args[0]);
+            Log.d("kkk", "PING - " + args[0]);
+            final JSONObject json2 = new JSONObject();
+            socket.emit("pong", json2);
+            Log.d("kkk", "PONG");
         }
     };
 

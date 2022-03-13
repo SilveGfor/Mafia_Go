@@ -60,12 +60,12 @@ public class BackgroundTask extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flag, int startId) {
-        socket.on("connect", onConnect);
-        socket.on("disconnect", onDisconnect);
+        //socket.on("connect", onConnect);
+        //socket.on("disconnect", onDisconnect);
         socket.on("chat_message", OnChatMessage);
         socket.on("friend_request", OnFriendRequest);
         socket.on("accept_friend_request", OnAcceptFriendRequest);
-        socket.on("ping", onPing);
+        //socket.on("ping", onPing);
         socket.on("new_fine", onNewFine);
 
         manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -231,7 +231,7 @@ public class BackgroundTask extends Service {
     private Emitter.Listener onPing = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
-            //Log.d("kkk", "PING2 - " + args[0]);
+            Log.d("kkk", "PING2 - " + args[0]);
             /*
             createNotificationChannel();
             createNotification("PING", "ping");
