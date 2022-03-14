@@ -69,8 +69,8 @@ public class StartFragment extends Fragment {
 
     ShimmerTextView STV_text;
 
-    EditText ETemail;
-    EditText ETpassword;
+    EditText ET_email;
+    EditText ET_password;
 
     TextView TV_changePassword;
 
@@ -83,7 +83,6 @@ public class StartFragment extends Fragment {
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
-    public static final String APP_PREFERENCES_NICKNAME = "nickname";
 
     private SharedPreferences mSettings;
 
@@ -106,8 +105,8 @@ public class StartFragment extends Fragment {
         //поиск айди кнопок
         btnSignIn = view.findViewById(R.id.fragmentStart_btn_enter);
         btnReg = view.findViewById(R.id.fragmentStart_btn_register);
-        ETemail = view.findViewById(R.id.fragmentRegister_ET_email);
-        ETpassword = view.findViewById(R.id.fragmentStart_ET_password);
+        ET_email = view.findViewById(R.id.fragmentRegister_ET_email);
+        ET_password = view.findViewById(R.id.fragmentStart_ET_password);
         PB_loading = view.findViewById(R.id.fragmentStart_PB);
         TV_changePassword = view.findViewById(R.id.fragmentStart_TV_forgotPassword);
         RL_back = view.findViewById(R.id.fragmentGamesList_RL_back);
@@ -116,17 +115,12 @@ public class StartFragment extends Fragment {
         Shimmer shimmer = new Shimmer();
         shimmer.start(STV_text);
 
-        PB_loading.setVisibility(View.INVISIBLE);
-
         manager = (NotificationManager) getActivity().getSystemService(NOTIFICATION_SERVICE);
 
         createNotificationChannel();
 
-        //MainActivity.mPlayer= MediaPlayer.create(getContext(), R.raw.fon_music);
-
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
-        //if (mSettings.contains(APP_PREFERENCES_EMAIL) && mSettings.contains(APP_PREFERENCES_PASSWORD)) {
         if (!mSettings.getString(APP_PREFERENCES_EMAIL, "").equals("")) {
             // Получаем значение из настроек
             String mEmail = mSettings.getString(APP_PREFERENCES_EMAIL, "");
@@ -140,7 +134,7 @@ public class StartFragment extends Fragment {
             MainActivity.nick = mEmail;
             MainActivity.password = mPassword;
 
-            Login(container);
+            Login();
         }
         else
         {
@@ -158,15 +152,15 @@ public class StartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
-                    MainActivity.nick = ETemail.getText().toString();
-                    MainActivity.password = ETpassword.getText().toString();
+                    MainActivity.nick = ET_email.getText().toString();
+                    MainActivity.password = ET_password.getText().toString();
                     SharedPreferences.Editor editor = mSettings.edit();
-                    editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ETemail.getText()));
-                    editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword.getText()));
+                    editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ET_email.getText()));
+                    editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ET_password.getText()));
                     editor.apply();
-                    if (!ETpassword.getText().toString().equals("") && !ETemail.getText().toString().equals("")) {
+                    if (!ET_password.getText().toString().equals("") && !ET_email.getText().toString().equals("")) {
                         AutoRun = false;
-                        Login(container);
+                        Login();
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
@@ -212,13 +206,11 @@ public class StartFragment extends Fragment {
         return view;
     }
 
-    public void Login(ViewGroup container) {
+    public void Login() {
         try {
             final JSONObject json = new JSONObject();
             PB_loading.setVisibility(View.VISIBLE);
             final String[] resp = {""};
-            SharedPreferences mSettings;
-            mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
 
             json.put("email", MainActivity.nick);
             json.put("password", MainActivity.password);
@@ -239,6 +231,20 @@ public class StartFragment extends Fragment {
                 public void onFailure(Call call, IOException e) {
 
                     Log.d("kkk", "Failure: " + e.getMessage());
+                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                        PB_loading.setVisibility(View.INVISIBLE);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_title.setText("Ошибка!");
+                        TV_error.setText("Сообщите разработчику об ошибке: " + e.getMessage());
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    });
                 }
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
@@ -336,6 +342,24 @@ public class StartFragment extends Fragment {
                                     socket.emit("connection", json2);
                                     Log.d("kkk", "CONNECTION after Login");
                                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                                }
+                                else
+                                {
+                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                        PB_loading.setVisibility(View.INVISIBLE);
+
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                        builder.setView(viewDang);
+                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                        TV_title.setText("Ошибка сервера!");
+                                        TV_error.setText("Напишите разработчикам и подробно опишите проблему");
+                                        AlertDialog alert = builder.create();
+                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        alert.show();
+
+                                    });
                                 }
                                 break;
                         }
