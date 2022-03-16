@@ -941,8 +941,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         TV_chatBlocked.setVisibility(View.INVISIBLE);
     }
 
-    public void hideKeyboard()
-    {
+    public void hideKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view2 = getActivity().getCurrentFocus();
