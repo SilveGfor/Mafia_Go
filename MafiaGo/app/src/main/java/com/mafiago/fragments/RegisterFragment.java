@@ -58,11 +58,11 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
     ShimmerTextView STV_text;
 
-    EditText ETnick;
-    EditText ETemail;
-    EditText ETpassword1;
-    EditText ETpassword2;
-    EditText ETcode;
+    EditText ET_nick;
+    EditText ET_email;
+    EditText ET_password1;
+    EditText ET_password2;
+    EditText ET_code;
     EditText ET_inviteCode;
     TextView text_reg;
 
@@ -89,12 +89,12 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
         btnReg = view.findViewById(R.id.fragmentRegister_btn_reg);
         btnSendCode = view.findViewById(R.id.fragmentChangePassword_btn_sendCode);
 
-        ETnick = view.findViewById(R.id.fragmentRegister_ET_nick);
-        ETemail = view.findViewById(R.id.fragmentRegister_ET_email);
-        ETcode = view.findViewById(R.id.fragmentChangePassword_ET_code);
+        ET_nick = view.findViewById(R.id.fragmentRegister_ET_nick);
+        ET_email = view.findViewById(R.id.fragmentRegister_ET_email);
+        ET_code = view.findViewById(R.id.fragmentChangePassword_ET_code);
         ET_inviteCode = view.findViewById(R.id.fragmentRegister_ET_inviteCode);
-        ETpassword1 = view.findViewById(R.id.fragmentRegister_ET_password1);
-        ETpassword2 = view.findViewById(R.id.fragmentRegister_ET_password2);
+        ET_password1 = view.findViewById(R.id.fragmentRegister_ET_password1);
+        ET_password2 = view.findViewById(R.id.fragmentRegister_ET_password2);
         text_reg = view.findViewById(R.id.fragmentChangePassword_TV_infoChange);
         TV_repeatRegistration = view.findViewById(R.id.fragmentChangePassword_TV_repeatChanging);
         TV_sendCodeOneMoreTime = view.findViewById(R.id.fragmentChangePassword_TV_sendOneMoreTime);
@@ -108,7 +108,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
         text_reg.setVisibility(View.GONE);
         btnSendCode.setVisibility(View.GONE);
-        ETcode.setVisibility(View.GONE);
+        ET_code.setVisibility(View.GONE);
         TV_repeatRegistration.setVisibility(View.GONE);
         TV_sendCodeOneMoreTime.setVisibility(View.GONE);
 
@@ -146,20 +146,20 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
             if (mWait) {
                 ET_inviteCode.setVisibility(View.GONE);
                 TV_question.setVisibility(View.GONE);
-                ETemail.setVisibility(View.GONE);
-                ETnick.setVisibility(View.GONE);
-                ETpassword1.setVisibility(View.GONE);
-                ETpassword2.setVisibility(View.GONE);
+                ET_email.setVisibility(View.GONE);
+                ET_nick.setVisibility(View.GONE);
+                ET_password1.setVisibility(View.GONE);
+                ET_password2.setVisibility(View.GONE);
                 btnReg.setVisibility(View.GONE);
                 text_reg.setVisibility(View.VISIBLE);
                 btnSendCode.setVisibility(View.VISIBLE);
-                ETcode.setVisibility(View.VISIBLE);
+                ET_code.setVisibility(View.VISIBLE);
                 TV_repeatRegistration.setVisibility(View.VISIBLE);
                 TV_sendCodeOneMoreTime.setVisibility(View.VISIBLE);
             } else {
                 text_reg.setVisibility(View.GONE);
                 btnSendCode.setVisibility(View.GONE);
-                ETcode.setVisibility(View.GONE);
+                ET_code.setVisibility(View.GONE);
                 TV_repeatRegistration.setVisibility(View.GONE);
                 TV_sendCodeOneMoreTime.setVisibility(View.GONE);
             }
@@ -171,14 +171,14 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
         TV_repeatRegistration.setOnClickListener(v -> {
             ET_inviteCode.setVisibility(View.VISIBLE);
             TV_question.setVisibility(View.VISIBLE);
-            ETemail.setVisibility(View.VISIBLE);
-            ETnick.setVisibility(View.VISIBLE);
-            ETpassword1.setVisibility(View.VISIBLE);
-            ETpassword2.setVisibility(View.VISIBLE);
+            ET_email.setVisibility(View.VISIBLE);
+            ET_nick.setVisibility(View.VISIBLE);
+            ET_password1.setVisibility(View.VISIBLE);
+            ET_password2.setVisibility(View.VISIBLE);
             btnReg.setVisibility(View.VISIBLE);
             text_reg.setVisibility(View.GONE);
             btnSendCode.setVisibility(View.GONE);
-            ETcode.setVisibility(View.GONE);
+            ET_code.setVisibility(View.GONE);
             TV_repeatRegistration.setVisibility(View.GONE);
             TV_sendCodeOneMoreTime.setVisibility(View.GONE);
             SharedPreferences.Editor editor = mSettings.edit();
@@ -206,8 +206,21 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
             call.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
-                    Log.d("kkk", "Всё плохо");
-                    Log.d("kkk", e.toString());
+                    Log.d("kkk", "Failure: " + e.toString());
+                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                        loading.setVisibility(View.INVISIBLE);
+
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                        builder.setView(viewDang);
+                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                        TV_title.setText("Ошибка!");
+                        TV_error.setText("Сообщите разработчику об ошибке: " + e.getMessage());
+                        AlertDialog alert = builder.create();
+                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                        alert.show();
+                    });
                 }
 
                 @Override
@@ -217,6 +230,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                     switch (resp) {
                         case "incorrect_email":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                 builder.setView(viewDang);
@@ -231,6 +246,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             break;
                         case "send_code":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
                                 builder.setView(viewDang);
@@ -243,14 +260,14 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 alert.show();
                                 ET_inviteCode.setVisibility(View.GONE);
                                 TV_question.setVisibility(View.GONE);
-                                ETemail.setVisibility(View.GONE);
-                                ETnick.setVisibility(View.GONE);
-                                ETpassword1.setVisibility(View.GONE);
-                                ETpassword2.setVisibility(View.GONE);
+                                ET_email.setVisibility(View.GONE);
+                                ET_nick.setVisibility(View.GONE);
+                                ET_password1.setVisibility(View.GONE);
+                                ET_password2.setVisibility(View.GONE);
                                 btnReg.setVisibility(View.GONE);
                                 text_reg.setVisibility(View.VISIBLE);
                                 btnSendCode.setVisibility(View.VISIBLE);
-                                ETcode.setVisibility(View.VISIBLE);
+                                ET_code.setVisibility(View.VISIBLE);
                                 TV_repeatRegistration.setVisibility(View.VISIBLE);
                                 TV_sendCodeOneMoreTime.setVisibility(View.VISIBLE);
                             });
@@ -259,13 +276,15 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
                             editor.putString(APP_PREFERENCES_EMAIL, mSettings.getString(APP_PREFERENCES_EMAIL, ""));
                             editor.putString(APP_PREFERENCES_NICKNAME, finalNick);
-                            editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
+                            editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ET_password1.getText()));
                             editor.apply();
 
 
                             break;
                         case "incorrect_invite_code":
                             ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                 builder.setView(viewDang);
@@ -280,6 +299,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             break;
                         case "bad_email":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                 builder.setView(viewDang);
@@ -294,6 +315,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             break;
                         case "incorrect_nick":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                 builder.setView(viewDang);
@@ -308,6 +331,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             break;
                         case "mat_nick":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                 builder.setView(viewDang);
@@ -322,13 +347,15 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             break;
                         default:
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                loading.setVisibility(View.INVISIBLE);
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                 View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                 builder.setView(viewDang);
                                 TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                 TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                TV_title.setText("Непредвиденная ошибка!");
-                                TV_error.setText("Напишите разработчику игры и подробно опишите проблему");
+                                TV_title.setText("Ошибка!");
+                                TV_error.setText("Сообщите разработчику об ошибке: " + resp);
                                 AlertDialog alert = builder.create();
                                 alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                 alert.show();
@@ -344,16 +371,16 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
-                    if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) &&
-                            !ETpassword1.getText().toString().trim().equals("") &&
-                            !ETnick.getText().toString().trim().equals("") &&
-                            (!ETnick.getText().toString().contains(".") &&
-                            !ETnick.getText().toString().contains("{") &&
-                            !ETnick.getText().toString().contains("}")) &&
-                            ETpassword1.length() >= 7 &&
-                            ETpassword1.length() <= 20) {
+                    if (ET_password1.getText().toString().equals(ET_password2.getText().toString()) &&
+                            !ET_password1.getText().toString().trim().equals("") &&
+                            !ET_nick.getText().toString().trim().equals("") &&
+                            (!ET_nick.getText().toString().contains(".") &&
+                            !ET_nick.getText().toString().contains("{") &&
+                            !ET_nick.getText().toString().contains("}")) &&
+                            ET_password1.length() >= 7 &&
+                            ET_password1.length() <= 20) {
 
-                        String nick = ETnick.getText().toString();
+                        String nick = ET_nick.getText().toString();
                         int flag = 0;
                         for (int i = 0; i < nick.length(); i ++)
                         {
@@ -375,7 +402,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
                                 loading.setVisibility(View.VISIBLE);
 
-                                String email = ETemail.getText().toString().toLowerCase().trim();
+                                String email = ET_email.getText().toString().toLowerCase().trim();
 
                                 final JSONObject json = new JSONObject();
                                 try {
@@ -396,23 +423,32 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 call.enqueue(new Callback() {
                                     @Override
                                     public void onFailure(Call call, IOException e) {
-                                        Log.d("kkk", "Всё плохо");
+                                        Log.d("kkk", "Failure: " + e.toString());
                                         ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                            loading.setVisibility(View.GONE);
+                                            loading.setVisibility(View.INVISIBLE);
+
+                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                            builder.setView(viewDang);
+                                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                            TV_title.setText("Ошибка!");
+                                            TV_error.setText("Сообщите разработчику об ошибке: " + e.getMessage());
+                                            AlertDialog alert = builder.create();
+                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                            alert.show();
                                         });
-                                        Log.d("kkk", e.toString());
                                     }
 
                                     @Override
                                     public void onResponse(Call call, Response response) throws IOException {
                                         resp = response.body().string().toString();
                                         Log.d("kkk", "Принял - " + resp);
-                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                            loading.setVisibility(View.GONE);
-                                        });
                                         switch (resp) {
                                             case "incorrect_email":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewDang);
@@ -427,6 +463,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 break;
                                             case "send_code":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewError);
@@ -438,20 +476,20 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                     ImageView IV = viewError.findViewById(R.id.dialogError_IV);
 
                                                     IV.setImageResource(R.drawable.ic_ok);
-                                                    TV.setText("Код отправлен!");
-                                                    TV_title.setText("Код регистрации успешно отправлен вам на почту!");
+                                                    TV.setText("Если вам не пришёл код, то проверьте правильность написания вашей почты. Возможно, вы перепутали домен вашей почты (@gmail.com/@mail.ru и т.д.)!");
+                                                    TV_title.setText("Код подтверждения отправлен вам на почту");
                                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
                                                     ET_inviteCode.setVisibility(View.GONE);
                                                     TV_question.setVisibility(View.GONE);
-                                                    ETemail.setVisibility(View.GONE);
-                                                    ETnick.setVisibility(View.GONE);
-                                                    ETpassword1.setVisibility(View.GONE);
-                                                    ETpassword2.setVisibility(View.GONE);
+                                                    ET_email.setVisibility(View.GONE);
+                                                    ET_nick.setVisibility(View.GONE);
+                                                    ET_password1.setVisibility(View.GONE);
+                                                    ET_password2.setVisibility(View.GONE);
                                                     btnReg.setVisibility(View.GONE);
                                                     text_reg.setVisibility(View.VISIBLE);
                                                     btnSendCode.setVisibility(View.VISIBLE);
-                                                    ETcode.setVisibility(View.VISIBLE);
+                                                    ET_code.setVisibility(View.VISIBLE);
                                                     TV_repeatRegistration.setVisibility(View.VISIBLE);
                                                     TV_sendCodeOneMoreTime.setVisibility(View.VISIBLE);
                                                 });
@@ -460,11 +498,13 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
                                                 editor.putString(APP_PREFERENCES_EMAIL, email);
                                                 editor.putString(APP_PREFERENCES_NICKNAME, finalNick);
-                                                editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
+                                                editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ET_password1.getText()));
                                                 editor.apply();
                                                 break;
                                             case "bad_email":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewDang);
@@ -479,6 +519,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 break;
                                             case "incorrect_invite_code":
                                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewDang);
@@ -493,6 +535,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 break;
                                             case "incorrect_nick":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewDang);
@@ -507,6 +551,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 break;
                                             case "mat_nick":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewDang);
@@ -521,13 +567,15 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                 break;
                                             default:
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                                    loading.setVisibility(View.INVISIBLE);
+
                                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                                     builder.setView(viewDang);
                                                     TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                                     TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                                    TV_title.setText("Что-то пошло не так!");
-                                                    TV_error.setText("Напишите разработчику и подробно опишите проблему");
+                                                    TV_title.setText("Ошибка!");
+                                                    TV_error.setText("Сообщите разработчику об ошибке: " + resp);
                                                     AlertDialog alert = builder.create();
                                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                                     alert.show();
@@ -565,7 +613,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             alert2.show();
                         }
                     } else {
-                        if (!ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
+                        if (!ET_password1.getText().toString().equals(ET_password2.getText().toString())) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                             builder.setView(viewDang);
@@ -576,7 +624,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             AlertDialog alert = builder.create();
                             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
-                        } else if (ETnick.getText().toString().contains(".") || ETnick.getText().toString().contains("{") || ETnick.getText().toString().contains("}")) {
+                        } else if (ET_nick.getText().toString().contains(".") || ET_nick.getText().toString().contains("{") || ET_nick.getText().toString().contains("}")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                             builder.setView(viewDang);
@@ -587,7 +635,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             AlertDialog alert = builder.create();
                             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
-                        } else if (ETpassword1.getText().toString().trim().equals("")) {
+                        } else if (ET_password1.getText().toString().trim().equals("")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                             builder.setView(viewDang);
@@ -598,7 +646,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             AlertDialog alert = builder.create();
                             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
-                        } else if (ETnick.getText().toString().trim().equals("")) {
+                        } else if (ET_nick.getText().toString().trim().equals("")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                             builder.setView(viewDang);
@@ -609,7 +657,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             AlertDialog alert = builder.create();
                             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
-                        } else if (ETpassword1.length() < 7) {
+                        } else if (ET_password1.length() < 7) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                             builder.setView(viewDang);
@@ -620,7 +668,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                             AlertDialog alert = builder.create();
                             alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                             alert.show();
-                        } else if (ETpassword1.length() > 20) {
+                        } else if (ET_password1.length() > 20) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                             View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                             builder.setView(viewDang);
@@ -657,7 +705,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                 loading.setVisibility(View.VISIBLE);
                 final JSONObject json = new JSONObject();
                 try {
-                    json.put("code", ETcode.getText());
+                    json.put("code", ET_code.getText());
                     json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
                     json.put("password", mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
                     json.put("nick", mSettings.getString(APP_PREFERENCES_NICKNAME, ""));
@@ -674,23 +722,32 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                 call.enqueue(new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d("kkk", "Всё плохо");
+                        Log.d("kkk", "Failure: " + e.getMessage());
                         ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                            loading.setVisibility(View.GONE);
+                            loading.setVisibility(View.INVISIBLE);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Ошибка!");
+                            TV_error.setText("Сообщите разработчику об ошибке: " + e.getMessage());
+                            AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert.show();
                         });
-                        Log.d("kkk", e.toString());
                     }
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
                         resp = response.body().string().toString();
                         Log.d("kkk", "Принял - " + resp);
-                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                            loading.setVisibility(View.GONE);
-                        });
                         switch (resp) {
                             case "incorrect_email":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    loading.setVisibility(View.INVISIBLE);
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                     builder.setView(viewDang);
@@ -705,6 +762,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 break;
                             case "bad_email":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    loading.setVisibility(View.INVISIBLE);
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                     builder.setView(viewDang);
@@ -719,6 +778,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 break;
                             case "incorrect_code":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    loading.setVisibility(View.INVISIBLE);
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                     builder.setView(viewDang);
@@ -733,6 +794,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 break;
                             case "code_time_out":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    loading.setVisibility(View.INVISIBLE);
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                     builder.setView(viewDang);
@@ -747,6 +810,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 break;
                             case "reg_in":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                    loading.setVisibility(View.INVISIBLE);
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     View viewError = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                     builder.setView(viewError);
@@ -759,20 +824,22 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
 
                                     IV.setImageResource(R.drawable.ic_ok);
                                     TV.setText("Регистрация успешна!");
-                                    TV_title.setText("Вы успешно зарегистрировались в Mafia Go!");
+                                    TV_title.setText("Вы зарегистрировались в Mafia Go!");
                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
                                 });
                                 break;
                             default:
-                                ContextCompat.getMainExecutor(getContext()).execute(()  -> {
+                                ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                    loading.setVisibility(View.INVISIBLE);
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
                                     builder.setView(viewDang);
                                     TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                     TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                    TV_title.setText("Что-то пошло не так!");
-                                    TV_error.setText("Напишите разработчику и подробно опишите проблему");
+                                    TV_title.setText("Ошибка!");
+                                    TV_error.setText("Сообщите разработчику об ошибке: " + resp);
                                     AlertDialog alert = builder.create();
                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
