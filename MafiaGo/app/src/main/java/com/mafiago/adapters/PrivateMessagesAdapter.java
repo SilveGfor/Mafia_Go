@@ -209,6 +209,13 @@ public class PrivateMessagesAdapter extends BaseAdapter {
                     }
                 }
                 break;
+            case "Time":
+                view = layout.inflate(R.layout.item_private_message_time, null);
+
+                TextView TV_time = view.findViewById(R.id.itemPrivateMessageTime_TV);
+
+                TV_time.setText(list_mess.get(position).time);
+                break;
         }
         return view;
     }

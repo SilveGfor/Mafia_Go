@@ -434,7 +434,8 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                 public void run() {
                     JSONObject data = (JSONObject) args[0];
                     Log.d("kkk", "принял - chat_message - " + data);
-                    String nick = "", message = "", status = "", edited_time = "", time = "", user_id_2 = "";
+                    String nick = "", message = "", status = "", edited_time = "", user_id_2 = "";
+                    Date time = new Date();
                     Boolean is_read = false;
                     int link = -1;
                     try {
@@ -448,8 +449,7 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             is_read = true;
                         }
                         user_id_2 = data.getString("user_id");
-                        time = data.getString("time");
-                        time = getDate(time);
+                        time = getDate(data.getString("time"));
                         message = data.getString("message");
                         status = data.getString("status");
                         link = data.getInt("link");
@@ -474,10 +474,14 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             break;
                     }
                     if (MainActivity.User_id_2.equals(user_id_2) || MainActivity.NickName.equals(nick)) {
+                        if (NeedToShowDay(time))
+                        {
+                            list_messages.add(new PrivateMessageModel(num, message, getStringDate(time), nick, "Time", status, is_read));
+                        }
                         if (link == -1) {
-                            list_messages.add(new PrivateMessageModel(num, message, time, nick, "UserMes", status, is_read));
+                            list_messages.add(new PrivateMessageModel(num, message, getStringTime(time), nick, "UserMes", status, is_read));
                         } else {
-                            list_messages.add(new PrivateMessageModel(num, message, time, nick, "AnswerMes", status, link, is_read));
+                            list_messages.add(new PrivateMessageModel(num, message, getStringTime(time), nick, "AnswerMes", status, link, is_read));
                         }
                         messageAdapter.notifyDataSetChanged();
                         if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 2) {
@@ -512,7 +516,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                         user_id_2 = data.getString("user_id_2");
                         test_num = data.getInt("mes_num");
                         time = data.getString("time");
-                        time = getDate(time);
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -827,57 +830,51 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
         });
     };
 
-    public String getDate(String ourDate) {
+    public Date getDate(String date) {
         try
         {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-            Date value = formatter.parse(ourDate);
-            currentDate = formatter.parse(ourDate);
-
-
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm"); //this format changeable
-            dateFormatter.setTimeZone(TimeZone.getDefault());
-            ourDate = dateFormatter.format(value);
+            return formatter.parse(date);
         }
         catch (Exception e)
         {
-            ourDate = "00:00";
+            return new Date();
         }
-        return ourDate;
     }
 
-    public boolean NeedToShowDay(String date)
-    {
+    public String getStringDate(Date date) {
         try
         {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+            String[] seasons  = new String[] {"января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря"};
+            return date.getDate() + " " + seasons[date.getMonth()];
+        }
+        catch (Exception e)
+        {
+            return "ошибка";
+        }
+    }
 
-            Date now = formatter.parse(date);
+    public String getStringTime(Date date) {
+        try
+        {
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm"); //this format changeable
+            dateFormatter.setTimeZone(TimeZone.getDefault());
+            return dateFormatter.format(date);
+        }
+        catch (Exception e)
+        {
+            return "00:00";
+        }
+    }
+
+    public boolean NeedToShowDay(Date now) {
+        try
+        {
             Date past = currentDate;
 
             currentDate = now;
             return now.getDate() != past.getDate();
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    public boolean NeedToShowMonth(String date)
-    {
-        try
-        {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
-            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
-
-            Date now = formatter.parse(date);
-            Date past = currentDate;
-
-            currentDate = now;
-            return now.getMonth() != past.getMonth();
         }
         catch (Exception e) {
             e.printStackTrace();

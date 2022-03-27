@@ -33,10 +33,9 @@
     public Context context;
     public LayoutInflater layout;
 
-     public static final String APP_PREFERENCES = "user";
-     public static final String APP_PREFERENCES_SHOW_ROLE= "show_role";
-
-     private SharedPreferences mSettings;
+    public static final String APP_PREFERENCES = "user";
+    public static final String APP_PREFERENCES_SHOW_ROLE= "show_role";
+    private SharedPreferences mSettings;
 
     public MessageAdapter(ArrayList<MessageModel> list_mess, Context context)
     {
