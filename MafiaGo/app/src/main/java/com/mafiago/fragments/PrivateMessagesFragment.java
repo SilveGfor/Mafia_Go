@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.cert.TrustAnchor;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -72,6 +73,8 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
     public PrivateMessagesAdapter messageAdapter;
 
     public int num = -1;
+
+    public Date currentDate = new Date();
 
     public int FirstVisibleItem = 0, VisibleItemsCount = 0,TotalItemsCount = 0;
 
@@ -830,6 +833,8 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
             formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
             Date value = formatter.parse(ourDate);
+            currentDate = formatter.parse(ourDate);
+
 
             SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm"); //this format changeable
             dateFormatter.setTimeZone(TimeZone.getDefault());
@@ -840,6 +845,44 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
             ourDate = "00:00";
         }
         return ourDate;
+    }
+
+    public boolean NeedToShowDay(String date)
+    {
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date now = formatter.parse(date);
+            Date past = currentDate;
+
+            currentDate = now;
+            return now.getDate() != past.getDate();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean NeedToShowMonth(String date)
+    {
+        try
+        {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSS");
+            formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            Date now = formatter.parse(date);
+            Date past = currentDate;
+
+            currentDate = now;
+            return now.getMonth() != past.getMonth();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
     public Bitmap fromBase64(String image) {
