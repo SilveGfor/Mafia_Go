@@ -263,7 +263,7 @@ public class StartFragment extends Fragment {
                                         TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                         TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
                                         TV_title.setText("Такого аккаунта не существует!");
-                                        TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании почти");
+                                        TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании почты");
                                         AlertDialog alert = builder.create();
                                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
