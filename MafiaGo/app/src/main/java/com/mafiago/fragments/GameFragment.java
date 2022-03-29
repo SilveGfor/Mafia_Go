@@ -1421,6 +1421,7 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
         }
     };
 
+    //действие какой-то роли
     private final Emitter.Listener onRoleAction = new Emitter.Listener() {
         @Override
         public void call(final Object... args) {
