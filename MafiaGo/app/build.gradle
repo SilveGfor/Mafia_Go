@@ -19,8 +19,8 @@ android {
         applicationId 'com.mafiago'
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 17
-        versionName '0.1.3'
+        versionCode 18
+        versionName '0.1.4'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

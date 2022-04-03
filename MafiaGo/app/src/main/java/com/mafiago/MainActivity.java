@@ -91,7 +91,7 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     public static int Rang;
     public static String MyInviteCode;
     public static Bitmap bitmap_avatar_2;
-    public static String CURRENT_GAME_VERSION = "0.1.3";
+    public static String CURRENT_GAME_VERSION = "0.1.4";
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
     public static String url = "https://mafiagoserver.online:5000";
