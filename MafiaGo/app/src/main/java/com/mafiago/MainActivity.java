@@ -87,6 +87,7 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     public static String PlayersMinMaxInfo = "";
     public static String Password = "";
     public static boolean onResume = false;
+    public static boolean PORT_APK = false;
     public static int Game_id;
     public static int Rang;
     public static String MyInviteCode;
@@ -110,6 +111,7 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_THEME = "theme";
     public static final String APP_PREFERENCES_FULLSCREEN = "fullscreen";
+    public static final String APP_PREFERENCES_PORT = "port";
 
     NotificationCompat.Builder builder;
     NotificationManager manager;
@@ -183,6 +185,12 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
             setTheme(R.style.LightTheme);
         }
         setContentView(R.layout.activity_main);
+
+        String port = mSettings.getString(APP_PREFERENCES_PORT, "5000");
+        if (PORT_APK)
+        {
+            url = "https://mafiagoserver.online:" + port;
+        }
 
         super.onCreate(savedInstanceState);
 

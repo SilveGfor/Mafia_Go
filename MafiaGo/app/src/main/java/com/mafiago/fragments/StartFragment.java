@@ -5,6 +5,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -13,10 +14,14 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -53,11 +58,13 @@ import okhttp3.Response;
 
 import static android.content.Context.NOTIFICATION_SERVICE;
 import static com.mafiago.MainActivity.client;
+import static com.mafiago.MainActivity.f;
 import static com.mafiago.MainActivity.socket;
+import static com.mafiago.MainActivity.PORT_APK;
 
 public class StartFragment extends Fragment {
 
-    private static final String url= MainActivity.url + "/login";
+    private String url = MainActivity.url + "/login";
 
     //кнопки
     Button btnSignIn;
@@ -66,6 +73,8 @@ public class StartFragment extends Fragment {
     ProgressBar PB_loading;
 
     RelativeLayout RL_back;
+
+    ImageView IV_gameName;
 
     ShimmerTextView STV_text;
 
@@ -83,6 +92,7 @@ public class StartFragment extends Fragment {
     public static final String APP_PREFERENCES = "user";
     public static final String APP_PREFERENCES_EMAIL = "email";
     public static final String APP_PREFERENCES_PASSWORD = "password";
+    public static final String APP_PREFERENCES_PORT = "port";
 
     private SharedPreferences mSettings;
 
@@ -111,6 +121,7 @@ public class StartFragment extends Fragment {
         TV_changePassword = view.findViewById(R.id.fragmentStart_TV_forgotPassword);
         RL_back = view.findViewById(R.id.fragmentGamesList_RL_back);
         STV_text = view.findViewById(R.id.fragmentStart_TV_text);
+        IV_gameName = view.findViewById(R.id.fragmentStart_gameName);
 
         Shimmer shimmer = new Shimmer();
         shimmer.start(STV_text);
@@ -120,6 +131,52 @@ public class StartFragment extends Fragment {
         createNotificationChannel();
 
         mSettings = getActivity().getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+
+        if (PORT_APK) {
+            IV_gameName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewChangeNick = inflater.inflate(R.layout.dialog_change_nick, container, false);
+                    builder.setView(viewChangeNick);
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+                    EditText ET_nick = viewChangeNick.findViewById(R.id.dialogChangeNick_ET_newNick);
+                    Button btn_changeNick = viewChangeNick.findViewById(R.id.dialogChangeNick_btn_changeNick);
+
+                    ET_nick.setText(mSettings.getString(APP_PREFERENCES_PORT, "5000"));
+                    btn_changeNick.setText("https://mafiagoserver.online:" + ET_nick.getText());
+                    btn_changeNick.setAllCaps(false);
+                    ET_nick.setHint("Введите новый порт");
+
+                    ET_nick.addTextChangedListener(new TextWatcher() {
+                        @Override
+                        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                        }
+                        @Override
+                        public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        }
+                        @Override
+                        public void afterTextChanged(Editable s) {
+                            btn_changeNick.setText("https://mafiagoserver.online:" + ET_nick.getText());
+                        }
+                    });
+
+                    btn_changeNick.setOnClickListener(v13 -> {
+                        SharedPreferences.Editor editor = mSettings.edit();
+                        editor.putString(APP_PREFERENCES_PORT, String.valueOf(ET_nick.getText()));
+                        editor.apply();
+                        alert.cancel();
+                        reset();
+                    });
+
+                    alert.show();
+                }
+            });
+            Animation animation = AnimationUtils.loadAnimation(getActivity(), R.anim.voting);
+            IV_gameName.startAnimation(animation);
+        }
 
         if (!mSettings.getString(APP_PREFERENCES_EMAIL, "").equals("")) {
             // Получаем значение из настроек
@@ -416,5 +473,10 @@ public class StartFragment extends Fragment {
 
     private  void showNotification(int NOTIFY_ID) {
         manager.notify(NOTIFY_ID, builder.build());
+    }
+
+    private void reset() {
+        Intent intent = new Intent(getContext(), MainActivity.class);
+        startActivity(intent);
     }
 }

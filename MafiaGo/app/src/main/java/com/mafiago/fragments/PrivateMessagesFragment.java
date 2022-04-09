@@ -524,7 +524,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                         for (int i = 0; i < list_messages.size(); i++) {
                             if (list_messages.get(i).num == test_num) {
                                 list_messages.remove(i);
-                                break;
                             }
                         }
                         messageAdapter.notifyDataSetChanged();
@@ -566,7 +565,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                             if (list_messages.get(i).num == test_num) {
                                 list_messages.get(i).status = "edited";
                                 list_messages.get(i).message = message;
-                                break;
                             }
                         }
                         messageAdapter.notifyDataSetChanged();
@@ -598,7 +596,6 @@ public class PrivateMessagesFragment extends Fragment implements OnBackPressedLi
                     for (int i = 0; i < list_messages.size(); i++) {
                         if (list_messages.get(i).num == mes_num) {
                             list_messages.get(i).is_read = true;
-                            break;
                         }
                     }
                     messageAdapter.notifyDataSetChanged();
