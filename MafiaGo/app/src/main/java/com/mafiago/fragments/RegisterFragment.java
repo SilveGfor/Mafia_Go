@@ -785,7 +785,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                     builder.setView(viewDang);
                                     TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                     TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                    TV_title.setText("Неерный код!");
+                                    TV_title.setText("Неверный код!");
                                     TV_error.setText("Проверьте правильность написания");
                                     AlertDialog alert = builder.create();
                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
