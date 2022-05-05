@@ -714,7 +714,6 @@ public class GameChatFragment extends Fragment {
                             for (int i = 0; i < list_chat.size(); i++) {
                                 if (list_chat.get(i).message.equals(nick + " вошёл(-а) в чат")) {
                                     list_chat.remove(i);
-                                    Log.e("kkk", "GCF, i = " + i + " Удаляю сообщение о входе");
                                     break;
                                 }
                             }
@@ -734,7 +733,6 @@ public class GameChatFragment extends Fragment {
                                 if (list_users.get(i).getNick().equals(nick))
                                 {
                                     list_users.remove(i);
-                                    Log.e("kkk", "GCF, i = " + i + " Удаляю пользователя");
                                     break;
                                 }
                             }
@@ -945,7 +943,7 @@ public class GameChatFragment extends Fragment {
         });
     };
 
-    private final Emitter.Listener OnHostInfo = args -> {
+    private Emitter.Listener OnHostInfo = args -> {
         if(getActivity() == null)
             return;
         getActivity().runOnUiThread(new Runnable() {
@@ -968,39 +966,36 @@ public class GameChatFragment extends Fragment {
         });
     };
 
-    private Emitter.Listener onRoleAction = new Emitter.Listener() {
-        @Override
-        public void call(final Object... args) {
-            if(getActivity() == null)
-                return;
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    JSONObject data = (JSONObject) args[0];
-                    String role;
-                    try {
-                        role = data.getString("role");
-                        Log.d("kkk", "Socket_принять - role_action " + args[0]);
-                        switch (role)
-                        {
-                            case "doctor":
-                                break;
-                            case "lover":
-                                break;
-                            case "sheriff":
-                                break;
-                            case "bodyguard":
-                                break;
-                            case "poisoner":
-                                poisoner = true;
-                                break;
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+    private Emitter.Listener onRoleAction = args -> {
+        if(getActivity() == null)
+            return;
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                JSONObject data = (JSONObject) args[0];
+                String role;
+                try {
+                    role = data.getString("role");
+                    Log.d("kkk", "Socket_принять - role_action " + args[0]);
+                    switch (role)
+                    {
+                        case "doctor":
+                            break;
+                        case "lover":
+                            break;
+                        case "sheriff":
+                            break;
+                        case "bodyguard":
+                            break;
+                        case "poisoner":
+                            poisoner = true;
+                            break;
                     }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            });
-        }
+            }
+        });
     };
 
     private Emitter.Listener onSuccessGetInRoomObserver = new Emitter.Listener() {

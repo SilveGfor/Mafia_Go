@@ -206,12 +206,12 @@ public class StudyFragment extends Fragment implements OnBackPressedListener {
             dev = "VlAn_VOR";
         }
 
-        list_users.add(new UserModel(MainActivity.NickName, Role.NONE, null));
-        list_users.add(new UserModel(dev, Role.NONE, null));
-        list_users.add(new UserModel("Игрок 1", Role.NONE, null));
-        list_users.add(new UserModel("Игрок 2", Role.NONE, null));
-        list_users.add(new UserModel("Игрок 3", Role.NONE, null));
-        list_users.add(new UserModel("Игрок 4", Role.NONE, null));
+        list_users.add(new UserModel(MainActivity.NickName, Role.NONE, null, "", ""));
+        list_users.add(new UserModel(dev, Role.NONE, null, "разработчик", ""));
+        list_users.add(new UserModel("Игрок 1", Role.NONE, null, "", ""));
+        list_users.add(new UserModel("Игрок 2", Role.NONE, null, "", ""));
+        list_users.add(new UserModel("Игрок 3", Role.NONE, null, "", ""));
+        list_users.add(new UserModel("Игрок 4", Role.NONE, null, "", ""));
         list_chat.add(new MessageModel(0, MainActivity.NickName + " вошёл(-а) в чат", "19-00", MainActivity.NickName, "ConnectMes", null));
         list_chat.add(new MessageModel(0, dev + " вошёл(-а) в чат", "19-00", MainActivity.NickName, "ConnectMes", null));
         list_chat.add(new MessageModel(0, "Игрок 1 вошёл(-а) в чат", "19-00", MainActivity.NickName, "ConnectMes", null));

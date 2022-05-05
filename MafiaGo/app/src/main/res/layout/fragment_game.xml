@@ -8,6 +8,87 @@
     android:layout_height="match_parent"
     android:background="@drawable/fon_day">
 
+    <TextView
+        android:id="@+id/fragmentGame_TV_answerMes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/shape_transparent_black"
+        android:padding="5dp"
+        android:text="SilveGfor: Что-то пошло не так"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentGame_ET"
+        app:layout_constraintEnd_toEndOf="@+id/fragmentGame_ET"
+        app:layout_constraintStart_toStartOf="@+id/fragmentGame_ET" />
+
+    <EditText
+        android:id="@+id/fragmentGame_ET"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/shape_black"
+        android:hint="Введите сообщение"
+        android:inputType="textCapSentences|textMultiLine|textNoSuggestions"
+        android:maxLength="350"
+        android:padding="5dp"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#FFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/fragmentGame_RL_send"
+        app:layout_constraintStart_toEndOf="@+id/itemChat_TV_BI3" />
+
+    <RelativeLayout
+        android:id="@+id/fragmentGame_RL_send"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/orange_button"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <Button
+            android:id="@+id/fragmentGame_btn_send"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/ic_send"
+            android:clickable="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/itemChat_TV_BI3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="8dp"
+        android:text="Вы:"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ListView
+        android:id="@+id/fragmentGame_LV_chat"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_alignParentStart="true"
+
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:divider="@null"
+        android:dividerHeight="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentGame_TV_answerMes"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8">
+
+    </ListView>
+
     <RelativeLayout
         android:id="@+id/fragmentGamesList_RL_back"
         android:layout_width="wrap_content"
@@ -119,7 +200,7 @@
     <GridView
         android:id="@+id/fragmentGame_listUsers"
         android:layout_width="0dp"
-        android:layout_height="220dp"
+        android:layout_height="225dp"
 
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
@@ -140,45 +221,11 @@
         app:layout_constraintStart_toStartOf="@+id/fragmentGame_listUsers"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_listUsers" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/fragmentGame_tabLayout"
-        android:layout_width="0dp"
-        android:layout_height="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:tabIndicatorColor="@color/white">
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/fragmentGame_VP_chat"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="9dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentGame_tabLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
-
     <ImageView
         android:id="@+id/fragmentGame_ic_doctor"
         android:layout_width="30dp"
         android:layout_height="26dp"
         android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/textView8"
         app:layout_constraintStart_toEndOf="@+id/textView8"
@@ -242,7 +289,7 @@
         android:paddingRight="30dp"
         android:text="лобби"
         android:textSize="16sp"
-        app:layout_constraintBottom_toTopOf="@+id/fragmentGame_VP_chat"
+        app:layout_constraintBottom_toTopOf="@+id/fragmentGame_LV_chat"
         app:layout_constraintEnd_toEndOf="@+id/fragmentGame_listUsers"
         app:layout_constraintTop_toBottomOf="@+id/fragmentGame_listUsers" />
 

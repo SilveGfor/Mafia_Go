@@ -12,7 +12,8 @@ public class UserModel {
     private Role role;
     private int voting_number;
 
-    public UserModel(String nick, Role role, String avatar) {
+    //для основного фрагмента игры
+    public UserModel(String nick, Role role, String avatar, String status, String user_color) {
         this.nick = nick;
         alive = true;
         animation_type = Role.NONE;
@@ -20,6 +21,8 @@ public class UserModel {
         voting_number = 0;
         checked = false;
         this.avatar = avatar;
+        this.status = status;
+        this.user_color = user_color;
     }
 
     public UserModel(String nick, Boolean alive) {
