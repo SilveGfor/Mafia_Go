@@ -207,7 +207,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                 alert.show();
                             });
                             break;
-                        case "send_code":
+                        case "ok":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                 builder.setTitle("Код успешно отправлен на почту!")
@@ -320,7 +320,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                             alert.show();
                                         });
                                         break;
-                                    case "send_code":
+                                    case "ok":
                                         ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                             builder.setTitle("Код успешно отправлен на почту!")
@@ -491,7 +491,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                             loading.setVisibility(View.GONE);
                         });
                         switch (resp) {
-                            case "password_updated":
+                            case "ok":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                     builder.setTitle("Пароль успешно обновлён!")

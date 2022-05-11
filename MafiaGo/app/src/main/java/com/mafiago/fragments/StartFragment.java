@@ -33,6 +33,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.common.hash.Hashing;
 import com.mafiago.MainActivity;
 import com.example.mafiago.R;
 import com.mafiago.adapters.PlayersAdapter;
@@ -46,6 +47,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -273,6 +276,12 @@ public class StartFragment extends Fragment {
             json.put("password", MainActivity.password);
             json.put("current_game_version", MainActivity.CURRENT_GAME_VERSION);
 
+            //MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            //byte[] hash = digest.digest(MainActivity.password.getBytes(StandardCharsets.UTF_8));
+
+            String hash = Hashing.sha512().hashString(MainActivity.password, StandardCharsets.UTF_8).toString();
+
+            Log.d("kkk", "hash = " + hash);
             Log.d("kkk", "Отправил: " + json + " на url: " + url);
 
             RequestBody body = RequestBody.create(
@@ -310,23 +319,6 @@ public class StartFragment extends Fragment {
                     Log.d("kkk", "Принял: " + Answer);
                     try {
                         switch (Answer) {
-                            case "incorrect_nick":
-                                ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                    PB_loading.setVisibility(View.INVISIBLE);
-                                    if (!AutoRun) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                                        builder.setView(viewDang);
-                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                        TV_title.setText("Такого аккаунта не существует!");
-                                        TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании почты");
-                                        AlertDialog alert = builder.create();
-                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                        alert.show();
-                                    }
-                                });
-                                break;
                             case "incorrect_password":
                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                     PB_loading.setVisibility(View.INVISIBLE);
@@ -336,14 +328,13 @@ public class StartFragment extends Fragment {
                                         builder.setView(viewDang);
                                         TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
                                         TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                        TV_title.setText("Неправильный пароль!");
-                                        TV_error.setText("Если вы забыли пароль, то его всегда можно восстановить по вашей почте");
+                                        TV_title.setText("Неправильный логин или пароль!");
+                                        TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании пароля");
                                         AlertDialog alert = builder.create();
                                         alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                         alert.show();
                                     }
                                 });
-
                                 break;
                             case "incorrect_game_version":
                                     ContextCompat.getMainExecutor(getContext()).execute(() -> {

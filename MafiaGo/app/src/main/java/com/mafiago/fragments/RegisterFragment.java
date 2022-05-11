@@ -244,7 +244,7 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                 alert.show();
                             });
                             break;
-                        case "send_code":
+                        case "ok":
                             ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                 loading.setVisibility(View.INVISIBLE);
 
@@ -461,7 +461,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                                     alert.show();
                                                 });
                                                 break;
-                                            case "send_code":
+                                            //case "send_code":
+                                            case "ok":
                                                 ContextCompat.getMainExecutor(getContext()).execute(() -> {
                                                     loading.setVisibility(View.INVISIBLE);
 
@@ -808,7 +809,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                     alert.show();
                                 });
                                 break;
-                            case "reg_in":
+                            //case "reg_in":
+                            case "ok":
                                 ContextCompat.getMainExecutor(getContext()).execute(()  -> {
                                     loading.setVisibility(View.INVISIBLE);
 
@@ -827,6 +829,8 @@ public class RegisterFragment extends Fragment implements OnBackPressedListener 
                                     TV_title.setText("Вы зарегистрировались в Mafia Go!");
                                     alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                                     alert.show();
+
+                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new RegisterFragment()).commit();
                                 });
                                 break;
                             default:
