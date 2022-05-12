@@ -73,7 +73,7 @@ public class PlayersAdapter extends BaseAdapter
                 break;
             case SHERIFF:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.sheriff_alive); }
-                else { IV_role.setImageResource(R.drawable.sheriff_dead); }
+                else { IV_role.setImageResource(R.drawable.sheriff_alive); }
                 break;
             case DOCTOR:
                 if (list_users.get(position).getAlive()) { IV_role.setImageResource(R.drawable.doctor_alive); }
