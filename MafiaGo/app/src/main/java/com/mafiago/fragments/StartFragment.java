@@ -68,6 +68,7 @@ import static com.mafiago.MainActivity.PORT_APK;
 public class StartFragment extends Fragment {
 
     private String url = MainActivity.url + "/login";
+    private String url_salt = MainActivity.url + "/get-salt";
 
     //кнопки
     Button btnSignIn;
@@ -185,16 +186,10 @@ public class StartFragment extends Fragment {
             // Получаем значение из настроек
             String mEmail = mSettings.getString(APP_PREFERENCES_EMAIL, "");
             String mPassword = mSettings.getString(APP_PREFERENCES_PASSWORD, "");
-            // Выводим на экран данные из настроек
-            Log.d("kkk", "SharedPref mEmail - " + mEmail);
-            Log.d("kkk", "SharedPref mPassword - " + mPassword);
 
             AutoRun = true;
 
-            MainActivity.nick = mEmail;
-            MainActivity.password = mPassword;
-
-            Login();
+            GetSalt(mEmail, mPassword);
         }
         else
         {
@@ -212,15 +207,13 @@ public class StartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
-                    MainActivity.nick = ET_email.getText().toString();
-                    MainActivity.password = ET_password.getText().toString();
                     SharedPreferences.Editor editor = mSettings.edit();
                     editor.putString(APP_PREFERENCES_EMAIL, String.valueOf(ET_email.getText()));
                     editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ET_password.getText()));
                     editor.apply();
                     if (!ET_password.getText().toString().equals("") && !ET_email.getText().toString().equals("")) {
                         AutoRun = false;
-                        Login();
+                        GetSalt(ET_email.getText().toString(), ET_password.getText().toString());
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
@@ -266,158 +259,216 @@ public class StartFragment extends Fragment {
         return view;
     }
 
-    public void Login() {
+    public void GetSalt(String email, String password) {
+        final JSONObject json = new JSONObject();
+        PB_loading.setVisibility(View.VISIBLE);
+
         try {
-            final JSONObject json = new JSONObject();
-            PB_loading.setVisibility(View.VISIBLE);
-            final String[] resp = {""};
-
             json.put("email", MainActivity.nick);
-            json.put("password", MainActivity.password);
-            json.put("current_game_version", MainActivity.CURRENT_GAME_VERSION);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            //MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            //byte[] hash = digest.digest(MainActivity.password.getBytes(StandardCharsets.UTF_8));
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
 
-            String hash = Hashing.sha512().hashString(MainActivity.password, StandardCharsets.UTF_8).toString();
+        Request request = new Request.Builder()
+                .url(url_salt).post(body)
+                .build();
 
-            Log.d("kkk", "hash = " + hash);
-            Log.d("kkk", "Отправил: " + json + " на url: " + url);
-
-            RequestBody body = RequestBody.create(
-                    MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
-
-            Request request = new Request.Builder()
-                    .url(url).post(body)
-                    .build();
-
-            Call call = client.newCall(request);
-            call.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-
-                    Log.d("kkk", "Failure: " + e.getMessage());
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("kkk", "Failure: " + e.getMessage());
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String Answer = response.body().string();
+                Log.d("kkk", "Принял: " + Answer);
+                if (Answer.equals("incorrect_email"))
+                {
                     ContextCompat.getMainExecutor(getContext()).execute(() -> {
                         PB_loading.setVisibility(View.INVISIBLE);
-
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                        builder.setView(viewDang);
-                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                        TV_title.setText("Ошибка!");
-                        TV_error.setText("Сообщите разработчику об ошибке: " + e.getMessage());
-                        AlertDialog alert = builder.create();
-                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                        alert.show();
+                        if (!AutoRun) {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                            TV_title.setText("Неправильный логин или пароль!");
+                            TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании пароля");
+                            AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert.show();
+                        }
                     });
                 }
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    resp[0] = response.body().string();
-                    String Answer = resp[0];
-                    Log.d("kkk", "Принял: " + Answer);
+                else
+                {
                     try {
-                        switch (Answer) {
-                            case "incorrect_password":
-                                ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                    PB_loading.setVisibility(View.INVISIBLE);
-                                    if (!AutoRun) {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                                        builder.setView(viewDang);
-                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                        TV_title.setText("Неправильный логин или пароль!");
-                                        TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании пароля");
-                                        AlertDialog alert = builder.create();
-                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                        alert.show();
-                                    }
-                                });
-                                break;
-                            case "incorrect_game_version":
-                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
-                                        builder.setView(viewDang);
-                                        TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
-                                        TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
-                                        TV_title.setText("Обновите игру!");
-                                        TV_text.setText("Уже доступно новое обновление");
-                                        AlertDialog alert = builder.create();
-                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                        alert.show();
-                                    });
-                                    break;
-                            default:
-                                JSONObject data = new JSONObject(resp[0]);
-                                if (data.has("session_id"))
-                                {
-                                    NickName = data.get("nick").toString();
-                                    Email = data.get("email").toString();
-                                    Session_id = data.get("session_id").toString();
-                                    MainActivity.User_id = data.get("user_id").toString();
-                                    MainActivity.Sid = data.get("sid").toString();
-                                    MainActivity.Role = data.get("role").toString();
-                                    MainActivity.Rang = data.getInt("rang");
-                                    MainActivity.MyInviteCode = data.getString("my_invite_code");
-                                    if (data.getString("avatar") == null || data.getString("avatar").equals("") || data.getString("avatar").equals("null")) {
-                                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                                            builder.setView(viewDang);
-                                            TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                                            TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                            TV_title.setText("Ух ты!");
-                                            TV_error.setText("Вы не поставили аватарку. Её можно установить в настройках");
-                                            AlertDialog alert = builder.create();
-                                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                            alert.show();
-                                        });
-                                    }
-
-                                    MainActivity.NickName = NickName;
-                                    MainActivity.Session_id = Session_id;
-                                    MainActivity.onResume = true;
-                                    final JSONObject json2 = new JSONObject();
-                                    try {
-                                        json2.put("nick", NickName);
-                                        json2.put("session_id", Session_id);
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    }
-                                    socket.emit("connection", json2);
-                                    Log.d("kkk", "CONNECTION after Login");
-                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
-                                }
-                                else
-                                {
-                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
-                                        PB_loading.setVisibility(View.INVISIBLE);
-
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
-                                        builder.setView(viewDang);
-                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
-                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
-                                        TV_title.setText("Ошибка сервера!");
-                                        TV_error.setText("Напишите разработчикам и подробно опишите проблему");
-                                        AlertDialog alert = builder.create();
-                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                                        alert.show();
-
-                                    });
-                                }
-                                break;
-                        }
-                    } catch (Exception e) {
-                        Log.d("kkk", String.valueOf(e.getMessage()));
+                        JSONObject data = new JSONObject(Answer);
+                        String salt = data.getString("salt");
+                        Login(salt, email, password);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
                 }
-            });
-        } catch (Exception e) {
+            }
+        });
+    }
+
+    public void Login(String salt, String email, String password) {
+        JSONObject json = new JSONObject();
+
+        String hash_pas = Hashing.sha512().hashString(password + salt, StandardCharsets.UTF_8).toString();
+        hash_pas += salt;
+
+        try {
+            json.put("email", email);
+            json.put("password", hash_pas);
+            json.put("current_game_version", MainActivity.CURRENT_GAME_VERSION);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+
+        Log.d("kkk", "Отправил: " + json + " на url: " + url);
+
+        RequestBody body = RequestBody.create(
+                MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
+
+        Request request = new Request.Builder()
+                .url(url).post(body)
+                .build();
+
+        Call call = client.newCall(request);
+        call.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("kkk", "Failure: " + e.getMessage());
+                ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                    PB_loading.setVisibility(View.INVISIBLE);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                    builder.setView(viewDang);
+                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                    TV_title.setText("Ошибка!");
+                    TV_error.setText("Сообщите разработчику об ошибке: " + e.getMessage());
+                    AlertDialog alert = builder.create();
+                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                    alert.show();
+                });
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String Answer = response.body().string();
+                Log.d("kkk", "Принял: " + Answer);
+                switch (Answer) {
+                    case "incorrect_password":
+                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                            PB_loading.setVisibility(View.INVISIBLE);
+                            if (!AutoRun) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                builder.setView(viewDang);
+                                TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                TV_title.setText("Неправильный логин или пароль!");
+                                TV_error.setText("Возможно, вы указали неверный домен почты (например: @mail.ru вместо @gmail.com) или ошиблись в написании пароля");
+                                AlertDialog alert = builder.create();
+                                alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                alert.show();
+                            }
+                        });
+                        break;
+                    case "incorrect_game_version":
+                        ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                            PB_loading.setVisibility(View.INVISIBLE);
+
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            View viewDang = getLayoutInflater().inflate(R.layout.dialog_information, null);
+                            builder.setView(viewDang);
+                            TextView TV_title = viewDang.findViewById(R.id.dialogInformation_TV_title);
+                            TextView TV_text = viewDang.findViewById(R.id.dialogInformation_TV_text);
+                            TV_title.setText("Обновите игру!");
+                            TV_text.setText("Уже доступно новое обновление");
+                            AlertDialog alert = builder.create();
+                            alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                            alert.show();
+                        });
+                        break;
+                    default:
+
+                        try {
+                            JSONObject data = new JSONObject(Answer);
+                            if (data.has("session_id"))
+                            {
+                                NickName = data.get("nick").toString();
+                                Email = data.get("email").toString();
+                                Session_id = data.get("session_id").toString();
+                                MainActivity.User_id = data.get("user_id").toString();
+                                MainActivity.Sid = data.get("sid").toString();
+                                MainActivity.Role = data.get("role").toString();
+                                MainActivity.Rang = data.getInt("rang");
+                                MainActivity.MyInviteCode = data.getString("my_invite_code");
+                                if (data.getString("avatar") == null || data.getString("avatar").equals("") || data.getString("avatar").equals("null")) {
+                                    ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                        View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                        builder.setView(viewDang);
+                                        TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                        TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                        TV_title.setText("Ух ты!");
+                                        TV_error.setText("Вы не поставили аватарку. Её можно установить в настройках");
+                                        AlertDialog alert = builder.create();
+                                        alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                        alert.show();
+                                    });
+                                }
+
+                                MainActivity.NickName = NickName;
+                                MainActivity.Session_id = Session_id;
+                                MainActivity.onResume = true;
+                                final JSONObject json2 = new JSONObject();
+                                try {
+                                    json2.put("nick", NickName);
+                                    json2.put("session_id", Session_id);
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                                socket.emit("connection", json2);
+                                Log.d("kkk", "CONNECTION after Login");
+                                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.MainActivity, new MenuFragment()).commit();
+                            }
+                            else
+                            {
+                                ContextCompat.getMainExecutor(getContext()).execute(() -> {
+                                    PB_loading.setVisibility(View.INVISIBLE);
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                                    View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
+                                    builder.setView(viewDang);
+                                    TextView TV_title = viewDang.findViewById(R.id.dialogError_TV_errorTitle);
+                                    TextView TV_error = viewDang.findViewById(R.id.dialogError_TV_errorText);
+                                    TV_title.setText("Ошибка сервера!");
+                                    TV_error.setText("Напишите разработчикам и подробно опишите проблему");
+                                    AlertDialog alert = builder.create();
+                                    alert.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                    alert.show();
+
+                                });
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        break;
+                }
+
+            }
+        });
     }
 
     public boolean isNetworkOnline(Context context) {

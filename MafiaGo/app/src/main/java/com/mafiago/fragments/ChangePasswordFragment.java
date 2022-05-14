@@ -56,10 +56,10 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
     ShimmerTextView STV_text;
 
-    EditText ETemail;
-    EditText ETpassword1;
-    EditText ETpassword2;
-    EditText ETcode;
+    EditText ET_email;
+    EditText ET_password1;
+    EditText ET_password2;
+    EditText ET_code;
     TextView text_reg;
 
     ProgressBar loading;
@@ -80,14 +80,13 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_change_password, container, false);
 
-
         btnChangePassword = view.findViewById(R.id.fragmentChangePassword_btn_change);
         btnSendCode = view.findViewById(R.id.fragmentChangePassword_btn_sendCode);
 
-        ETemail = view.findViewById(R.id.fragmentChangePassword_ET_email);
-        ETcode = view.findViewById(R.id.fragmentChangePassword_ET_code);
-        ETpassword1 = view.findViewById(R.id.fragmentChangePassword_ET_password1);
-        ETpassword2 = view.findViewById(R.id.fragmentChangePassword_ET_password2);
+        ET_email = view.findViewById(R.id.fragmentChangePassword_ET_email);
+        ET_code = view.findViewById(R.id.fragmentChangePassword_ET_code);
+        ET_password1 = view.findViewById(R.id.fragmentChangePassword_ET_password1);
+        ET_password2 = view.findViewById(R.id.fragmentChangePassword_ET_password2);
         text_reg = view.findViewById(R.id.fragmentChangePassword_TV_infoChange);
         TV_repeatChanging = view.findViewById(R.id.fragmentChangePassword_TV_repeatChanging);
         TV_sendCodeOneMoreTime = view.findViewById(R.id.fragmentChangePassword_TV_sendOneMoreTime);
@@ -100,7 +99,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
         text_reg.setVisibility(View.GONE);
         btnSendCode.setVisibility(View.GONE);
-        ETcode.setVisibility(View.GONE);
+        ET_code.setVisibility(View.GONE);
         TV_repeatChanging.setVisibility(View.GONE);
         TV_sendCodeOneMoreTime.setVisibility(View.GONE);
 
@@ -120,19 +119,19 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
             boolean mWait = mSettings.getBoolean(APP_PREFERENCES_WAIT_CODE, false);
             // Выводим на экран данные из настроек
             if (mWait) {
-                ETemail.setVisibility(View.GONE);
-                ETpassword1.setVisibility(View.GONE);
-                ETpassword2.setVisibility(View.GONE);
+                ET_email.setVisibility(View.GONE);
+                ET_password1.setVisibility(View.GONE);
+                ET_password2.setVisibility(View.GONE);
                 btnChangePassword.setVisibility(View.GONE);
                 text_reg.setVisibility(View.VISIBLE);
                 btnSendCode.setVisibility(View.VISIBLE);
-                ETcode.setVisibility(View.VISIBLE);
+                ET_code.setVisibility(View.VISIBLE);
                 TV_repeatChanging.setVisibility(View.VISIBLE);
                 TV_sendCodeOneMoreTime.setVisibility(View.VISIBLE);
             } else {
                 text_reg.setVisibility(View.GONE);
                 btnSendCode.setVisibility(View.GONE);
-                ETcode.setVisibility(View.GONE);
+                ET_code.setVisibility(View.GONE);
                 TV_repeatChanging.setVisibility(View.GONE);
                 TV_sendCodeOneMoreTime.setVisibility(View.GONE);
             }
@@ -142,13 +141,13 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
 
 
         TV_repeatChanging.setOnClickListener(v -> {
-            ETemail.setVisibility(View.VISIBLE);
-            ETpassword1.setVisibility(View.VISIBLE);
-            ETpassword2.setVisibility(View.VISIBLE);
+            ET_email.setVisibility(View.VISIBLE);
+            ET_password1.setVisibility(View.VISIBLE);
+            ET_password2.setVisibility(View.VISIBLE);
             btnChangePassword.setVisibility(View.VISIBLE);
             text_reg.setVisibility(View.GONE);
             btnSendCode.setVisibility(View.GONE);
-            ETcode.setVisibility(View.GONE);
+            ET_code.setVisibility(View.GONE);
             TV_repeatChanging.setVisibility(View.GONE);
             TV_sendCodeOneMoreTime.setVisibility(View.GONE);
             SharedPreferences.Editor editor = mSettings.edit();
@@ -222,20 +221,20 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                                 });
                                 AlertDialog alert = builder.create();
                                 alert.show();
-                                ETemail.setVisibility(View.GONE);
-                                ETpassword1.setVisibility(View.GONE);
-                                ETpassword2.setVisibility(View.GONE);
+                                ET_email.setVisibility(View.GONE);
+                                ET_password1.setVisibility(View.GONE);
+                                ET_password2.setVisibility(View.GONE);
                                 btnChangePassword.setVisibility(View.GONE);
                                 text_reg.setVisibility(View.VISIBLE);
                                 btnSendCode.setVisibility(View.VISIBLE);
-                                ETcode.setVisibility(View.VISIBLE);
+                                ET_code.setVisibility(View.VISIBLE);
                                 TV_repeatChanging.setVisibility(View.VISIBLE);
                                 TV_sendCodeOneMoreTime.setVisibility(View.VISIBLE);
                             });
                             SharedPreferences.Editor editor = mSettings.edit();
                             editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
                             editor.putString(APP_PREFERENCES_EMAIL, mSettings.getString(APP_PREFERENCES_EMAIL, ""));
-                            editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
+                            editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ET_password1.getText()));
                             editor.apply();
                             break;
                         default:
@@ -264,13 +263,13 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
             @Override
             public void onClick(View v) {
                 if (isNetworkOnline(getContext())) {
-                    if (ETpassword1.getText().toString().equals(ETpassword2.getText().toString()) &&
-                            !ETpassword1.getText().toString().trim().equals("") &&
-                            ETpassword1.length() >= 7 &&
-                            ETpassword1.length() <= 20) {
+                    if (ET_password1.getText().toString().equals(ET_password2.getText().toString()) &&
+                            !ET_password1.getText().toString().trim().equals("") &&
+                            ET_password1.length() >= 7 &&
+                            ET_password1.length() <= 20) {
                         loading.setVisibility(View.VISIBLE);
 
-                        String email = ETemail.getText().toString().toLowerCase().trim();
+                        String email = ET_email.getText().toString().toLowerCase().trim();
 
                         final JSONObject json = new JSONObject();
                         try {
@@ -335,13 +334,13 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                                             });
                                             AlertDialog alert = builder.create();
                                             alert.show();
-                                            ETemail.setVisibility(View.GONE);
-                                            ETpassword1.setVisibility(View.GONE);
-                                            ETpassword2.setVisibility(View.GONE);
+                                            ET_email.setVisibility(View.GONE);
+                                            ET_password1.setVisibility(View.GONE);
+                                            ET_password2.setVisibility(View.GONE);
                                             btnChangePassword.setVisibility(View.GONE);
                                             text_reg.setVisibility(View.VISIBLE);
                                             btnSendCode.setVisibility(View.VISIBLE);
-                                            ETcode.setVisibility(View.VISIBLE);
+                                            ET_code.setVisibility(View.VISIBLE);
                                             TV_repeatChanging.setVisibility(View.VISIBLE);
                                             TV_sendCodeOneMoreTime.setVisibility(View.VISIBLE);
                                         });
@@ -349,7 +348,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                         SharedPreferences.Editor editor = mSettings.edit();
                                         editor.putBoolean(APP_PREFERENCES_WAIT_CODE, true);
                                         editor.putString(APP_PREFERENCES_EMAIL, email);
-                                        editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ETpassword1.getText()));
+                                        editor.putString(APP_PREFERENCES_PASSWORD, String.valueOf(ET_password1.getText()));
                                         editor.apply();
                                         break;
                                     default:
@@ -375,7 +374,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                     }
                     else
                     {
-                        if (!ETpassword1.getText().toString().equals(ETpassword2.getText().toString())) {
+                        if (!ET_password1.getText().toString().equals(ET_password2.getText().toString())) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Ваши пароли не совпадают!")
                                     .setMessage("")
@@ -389,7 +388,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                             });
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } else if (ETpassword1.getText().toString().trim().equals("")) {
+                        } else if (ET_password1.getText().toString().trim().equals("")) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Ваш пароль не может быть пустым!")
                                     .setMessage("")
@@ -403,7 +402,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                             });
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } else if (ETpassword1.length() < 7) {
+                        } else if (ET_password1.length() < 7) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Ваш пароль слишком короткий!")
                                     .setMessage("")
@@ -417,7 +416,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                                             });
                             AlertDialog alert = builder.create();
                             alert.show();
-                        } else if (ETpassword1.length() > 20) {
+                        } else if (ET_password1.length() > 20) {
                             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                             builder.setTitle("Ваш пароль слишком длинный!")
                                     .setMessage("")
@@ -460,7 +459,7 @@ public class ChangePasswordFragment extends Fragment implements OnBackPressedLis
                 loading.setVisibility(View.VISIBLE);
                 final JSONObject json = new JSONObject();
                 try {
-                    json.put("code", ETcode.getText());
+                    json.put("code", ET_code.getText());
                     json.put("email", mSettings.getString(APP_PREFERENCES_EMAIL, ""));
                     json.put("password", mSettings.getString(APP_PREFERENCES_PASSWORD, ""));
                 } catch (JSONException e) {

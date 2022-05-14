@@ -116,6 +116,9 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     NotificationCompat.Builder builder;
     NotificationManager manager;
 
+     public static Socket socket;
+     private int currentApiVersion;
+
     private SharedPreferences mSettings;
 
     public void onUserSelected(String nick2) {
@@ -144,34 +147,6 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
             }
         }
       }
-
-      //public static Socket socket;
-
-    public static Socket socket;
-
-
-
-
-      private int currentApiVersion;
-
-      /*
-      @SuppressLint("NewApi")
-      @Override
-      public void onWindowFocusChanged(boolean hasFocus)
-      {
-          super.onWindowFocusChanged(hasFocus);
-          if(currentApiVersion >= Build.VERSION_CODES.KITKAT && hasFocus)
-          {
-              getWindow().getDecorView().setSystemUiVisibility(
-                      View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                              | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                              | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                              | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                              | View.SYSTEM_UI_FLAG_FULLSCREEN
-                              | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
-          }
-      }
-       */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -596,7 +571,6 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
             flag = 0;
         }
     }
-
  */
 }
 
