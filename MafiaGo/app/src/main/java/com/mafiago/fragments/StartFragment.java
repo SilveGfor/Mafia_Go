@@ -189,7 +189,8 @@ public class StartFragment extends Fragment {
 
             AutoRun = true;
 
-            GetSalt(mEmail, mPassword);
+            Login("", mEmail, mPassword);
+            //GetSalt(mEmail, mPassword);
         }
         else
         {
@@ -213,7 +214,8 @@ public class StartFragment extends Fragment {
                     editor.apply();
                     if (!ET_password.getText().toString().equals("") && !ET_email.getText().toString().equals("")) {
                         AutoRun = false;
-                        GetSalt(ET_email.getText().toString(), ET_password.getText().toString());
+                        Login("", ET_email.getText().toString(), ET_password.getText().toString());
+                        //GetSalt(ET_email.getText().toString(), ET_password.getText().toString());
                     } else {
                         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                         View viewDang = getLayoutInflater().inflate(R.layout.dialog_error, null);
@@ -264,10 +266,12 @@ public class StartFragment extends Fragment {
         PB_loading.setVisibility(View.VISIBLE);
 
         try {
-            json.put("email", MainActivity.nick);
+            json.put("email", email);
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        Log.d("kkk", "Отправил: " + json + " на url: " + url_salt);
 
         RequestBody body = RequestBody.create(
                 MediaType.parse("application/json; charset=utf-8"), String.valueOf(json));
@@ -304,11 +308,11 @@ public class StartFragment extends Fragment {
                         }
                     });
                 }
-                else
-                {
+                else {
                     try {
                         JSONObject data = new JSONObject(Answer);
                         String salt = data.getString("salt");
+                        MainActivity.Salt = salt;
                         Login(salt, email, password);
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -321,12 +325,12 @@ public class StartFragment extends Fragment {
     public void Login(String salt, String email, String password) {
         JSONObject json = new JSONObject();
 
-        String hash_pas = Hashing.sha512().hashString(password + salt, StandardCharsets.UTF_8).toString();
-        hash_pas += salt;
+        //String hash_pas = Hashing.sha512().hashString(salt + password, StandardCharsets.UTF_8).toString();
+        //hash_pas += ":" + salt;
 
         try {
             json.put("email", email);
-            json.put("password", hash_pas);
+            json.put("password", password);
             json.put("current_game_version", MainActivity.CURRENT_GAME_VERSION);
         } catch (JSONException e) {
             e.printStackTrace();
