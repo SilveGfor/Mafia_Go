@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/MafiaGo.iml" filepath="$PROJECT_DIR$/.idea/modules/MafiaGo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.androidTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.unitTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/MafiaGo.app.unitTest.iml" />
     </modules>
   </component>
 </project>

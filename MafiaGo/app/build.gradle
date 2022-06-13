@@ -19,7 +19,7 @@ android {
         applicationId 'com.mafiago'
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 18
+        versionCode 19
         versionName '0.1.4'
 
         vectorDrawables.useSupportLibrary = true

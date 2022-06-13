@@ -88,7 +88,7 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     public static String Password = "";
     public static String Salt = "";
     public static boolean onResume = false;
-    public static boolean PORT_APK = true;
+    public static boolean PORT_APK = false;
     public static int Game_id;
     public static int Rang;
     public static String MyInviteCode;
@@ -96,7 +96,7 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     public static String CURRENT_GAME_VERSION = "0.1.4";
     public static Map<Integer, GameChatFragment> mPageReferenceMap = new HashMap<>();
 
-    public static String url = "https://mafiagoserver.online:5000";
+    public static String url = "http://mafiagoserver.ru:5000";
 
     public static String password = "";
     public static String nick = "";
@@ -165,7 +165,7 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
         String port = mSettings.getString(APP_PREFERENCES_PORT, "5000");
         if (PORT_APK)
         {
-            url = "https://mafiagoserver.online:" + port;
+            url = "http://mafiagoserver.ru:" + port;
         }
 
         super.onCreate(savedInstanceState);
