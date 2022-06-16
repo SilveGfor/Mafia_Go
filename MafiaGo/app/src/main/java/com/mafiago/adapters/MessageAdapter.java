@@ -73,9 +73,8 @@
             case "UsersMes":
                 String color = "#FFFFFF";
                 switch (list_mess.get(position).textType) {
-                    case "alive":
                     case "dead":
-                        color = "#FFFFFF";
+                        color = "#cccccc";
                         break;
                     case "last_message":
                         color = "#FFB7AC";

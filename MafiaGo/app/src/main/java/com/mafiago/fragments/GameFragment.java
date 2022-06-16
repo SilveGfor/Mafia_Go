@@ -1851,9 +1851,6 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                         MessageModel messageModel = new MessageModel(test_num, "Ошибка вывода сообщения", time, "Server", "SystemMes");
                         Log.d("kkk", "system message - " + " Длина listchat = " + list_chat.size() + " /  testnum = " + test_num + " / num = " + num + " , status - " + status + "/" +  data);
                         if (test_num != num && room_id == player.getRoom_num()) {
-                            if (test_num > num) {
-                                num = test_num;
-                            }
                             switch (status)
                             {
                                 case "game_over":
@@ -2153,17 +2150,26 @@ public class GameFragment extends Fragment implements OnBackPressedListener{
                                     messageModel = new MessageModel(test_num, message, time, "Server", "SystemMes");
                                     break;
                             }
+                            Log.d("kkK", String.valueOf(messageModel.message));
+                            Log.d("kkK", String.valueOf(list_chat.size()));
+                            Log.d("kkK", String.valueOf("test_num " + test_num));
+                            Log.d("kkK", String.valueOf("num " + num));
                             if (test_num > num) {
                                 num = test_num;
                                 list_chat.add(messageModel);
+                                Log.d("kkk", "1");
                             } else {
+                                Log.d("kkk", "2.1");
                                 for (int i = 0; i < list_chat.size(); i++) {
+                                    Log.d("kkk", "if " + test_num + " < " + list_chat.get(i).num);
                                     if (test_num < list_chat.get(i).num) {
                                         list_chat.add(i, messageModel);
+                                        Log.d("kkk", "2");
                                         break;
                                     }
                                 }
                             }
+                            Log.d("kkK", String.valueOf(list_chat.size()));
                             messageAdapter.notifyDataSetChanged();
                             playersAdapter.notifyDataSetChanged();
                             if (TotalItemsCount < FirstVisibleItem + VisibleItemsCount + 3) {
