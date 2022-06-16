@@ -1,4 +1,4 @@
-  package com.mafiago;
+package com.mafiago;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
@@ -63,7 +63,6 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
-
 
   public class MainActivity extends AppCompatActivity implements GameFragment.OnUserSelectedListener {
 
