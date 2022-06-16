@@ -117,8 +117,8 @@ import static io.socket.client.Socket.EVENT_CONNECT_ERROR;
     NotificationCompat.Builder builder;
     NotificationManager manager;
 
-     public static Socket socket;
-     private int currentApiVersion;
+    public static Socket socket;
+    private int currentApiVersion;
 
     private SharedPreferences mSettings;
 
